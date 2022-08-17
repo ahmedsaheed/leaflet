@@ -1,22 +1,28 @@
 {
-  "name": "electron-quick-start",
+  "private": true,
+  "name": "my-nextron-app",
+  "description": "My application description",
   "version": "1.0.0",
-  "description": "A minimal Electron application",
-  "main": "main.js",
+  "author": "Yoshihide Shiono <shiono.yoshihide@gmail.com>",
+  "main": "app/background.js",
   "scripts": {
-    "start": "electron ."
+    "dev": "nextron",
+    "build": "nextron build",
+    "postinstall": "electron-builder install-app-deps"
   },
-  "repository": "https://github.com/electron/electron-quick-start",
-  "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
-  ],
-  "author": "GitHub",
-  "license": "CC0-1.0",
+  "dependencies": {
+    "electron-serve": "^1.1.0",
+    "electron-store": "^8.0.1"
+  },
   "devDependencies": {
-    "electron": "^20.0.1"
+    "autoprefixer": "^10.4.7",
+    "electron": "^18.2.0",
+    "electron-builder": "^23.0.3",
+    "next": "^12.1.6",
+    "nextron": "^8.1.0",
+    "postcss": "^8.4.13",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
+    "tailwindcss": "^3.0.24"
   }
 }
