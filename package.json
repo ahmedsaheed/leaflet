@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "electron-serve": "^1.1.0",
-    "electron-store": "^8.0.1"
+    "electron-store": "^8.0.1",
+    "remarkable": "^2.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.7",
