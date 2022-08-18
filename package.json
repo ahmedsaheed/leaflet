@@ -13,7 +13,17 @@
   "dependencies": {
     "electron-serve": "^1.1.0",
     "electron-store": "^8.0.1",
-    "remarkable": "^2.0.1"
+    "highlight.js": "^11.6.0",
+    "rehype-highlight": "^5.0.2",
+    "rehype-katex": "^6.0.2",
+    "rehype-raw": "^6.1.1",
+    "rehype-stringify": "^9.0.3",
+    "remark-gfm": "^3.0.1",
+    "remark-math": "^5.1.1",
+    "remark-parse": "^10.0.1",
+    "remark-rehype": "^10.1.0",
+    "remarkable": "^2.0.1",
+    "unified": "^10.1.2"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.7",

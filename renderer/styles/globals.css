@@ -13,3 +13,17 @@
     @apply text-white font-bold px-4 py-2 rounded bg-blue-600 hover:bg-blue-500;
   }
 }
+
+li{
+    list-style: circle;
+}
+ul{
+    margin-left: 2em;
+}
+
+h2{
+    font-size: 1.5em;
+    margin-bottom: 0.5em;
+}
+
+
