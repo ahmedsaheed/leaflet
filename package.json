@@ -11,6 +11,7 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
+    "@fontsource/ia-writer-duospace": "^4.5.3",
     "electron-serve": "^1.1.0",
     "electron-store": "^8.0.1",
     "highlight.js": "^11.6.0",

@@ -2,15 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
+
+@media (prefers-color-scheme: dark) {
   body {
-    @apply bg-gray-900 text-white;
+    background: #333;
+    color: white;
+    font-family: "iA Writer Duospace", sans-serif;
   }
 }
 
-@layer components {
-  .btn-blue {
-    @apply text-white font-bold px-4 py-2 rounded bg-blue-600 hover:bg-blue-500;
+@media (prefers-color-scheme: light) {
+  body {
+    background: #ddd;
+    color: black;
+    font-family: "iA Writer Duospace", sans-serif;
   }
 }
 

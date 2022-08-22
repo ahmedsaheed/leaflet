@@ -3,6 +3,7 @@ import { Remarkable } from 'remarkable';
 import hljs from 'highlight.js';
 import katex from 'remarkable-katex';
 import {useEffect} from "react";
+import "@fontsource/ia-writer-duospace"
 
 export default function  Next(){
   const md = new Remarkable('full',{
@@ -47,10 +48,9 @@ export default function  Next(){
   }
 
   return (
-    <div className="MarkdownEditor">
+    <div className="MarkdownEditor" style={{marginLeft: "30%", paddingTop: "10vh"}}>
       {isVisble ? (
               <div>
-        <h3>Output</h3>
         <div
             style={{marginTop: "2em"}}
           className="content list-decimal"
@@ -63,7 +63,7 @@ export default function  Next(){
              <div> 
         <textarea autoFocus id="markdown-content" defaultValue={value} onChange={handleChange} 
           className=" h-full w-full"
-          style={{ marginTop: "2em", minHeight: "60vh", backgroundColor: 'transparent', border: '1px solid #ccc', borderRadius: '4px'}} 
+          style={{ marginTop: "2em", minHeight: "60vh", backgroundColor: 'transparent'}} 
         />
         </div>
       )}
