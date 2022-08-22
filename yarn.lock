@@ -3463,6 +3463,11 @@
   dependencies:
     "escape-string-regexp" "^4.0.0"
 
+"mathjax-electron@^3.0.0":
+  "integrity" "sha512-pMm2u+8XM72ieo3Z3y4JrEO7VrpbZUnRQBFfL14l48gkZhBUPivo3nlLzYjoKPDBL1Z9qVcBDu1aD8ZhHYW3iA=="
+  "resolved" "https://registry.npmjs.org/mathjax-electron/-/mathjax-electron-3.0.0.tgz"
+  "version" "3.0.0"
+
 "mdast-util-definitions@^5.0.0":
   "integrity" "sha512-rQ+Gv7mHttxHOBx2dkF4HWTg+EE+UR78ptQWDylzPKaQuVGdG4HIoY3SrS/pCp80nZ04greFvXbVFHT+uf0JVQ=="
   "resolved" "https://registry.npmjs.org/mdast-util-definitions/-/mdast-util-definitions-5.1.1.tgz"
@@ -4602,6 +4607,11 @@
     "@types/mdast" "^3.0.0"
     "mdast-util-to-hast" "^12.1.0"
     "unified" "^10.0.0"
+
+"remarkable-katex@^1.2.1":
+  "integrity" "sha512-Y1VquJBZnaVsfsVcKW2hmjT+pDL7mp8l5WAVlvuvViltrdok2m1AIKmJv8SsH+mBY84PoMw67t3kTWw1dIm8+g=="
+  "resolved" "https://registry.npmjs.org/remarkable-katex/-/remarkable-katex-1.2.1.tgz"
+  "version" "1.2.1"
 
 "remarkable@^2.0.1":
   "integrity" "sha512-YJyMcOH5lrR+kZdmB0aJJ4+93bEojRZ1HGDn9Eagu6ibg7aVZhc3OWbbShRid+Q5eAfsEqWxpe+g5W5nYNfNiA=="

@@ -26,4 +26,9 @@ h2{
     margin-bottom: 0.5em;
 }
 
+blockquote{
+    border-left: 2px solid grey;
+    padding-left: 0.7em;
+    margin-inline-end: 0;
+}
 

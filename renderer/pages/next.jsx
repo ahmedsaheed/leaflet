@@ -1,13 +1,15 @@
 import React from 'react';
 import { Remarkable } from 'remarkable';
-import hljs from 'highlight.js'
-
+import hljs from 'highlight.js';
+import katex from 'remarkable-katex';
 
 class Next extends React.Component {
   constructor(props) {
     super(props);
      
- this.md = new Remarkable({
+ this.md = new Remarkable('full',{
+     html: true,
+     typographer: true,
   highlight: function (str, lang) {
     if (lang && hljs.getLanguage(lang)) {
       try {
@@ -19,9 +21,9 @@ class Next extends React.Component {
       return hljs.highlightAuto(str).value;
     } catch (err) {}
 
-    return ''; // use external default escaping
   }
 });
+    this.md.use(katex);
     this.handleChange = this.handleChange.bind(this);
     this.state = { value: 'Hello, **world**!' };
   }
