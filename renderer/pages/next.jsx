@@ -1,7 +1,5 @@
 import React from 'react';
 import { Remarkable } from 'remarkable';
-import { markdownToHtml } from '../lib/mdToHtml.ts';
-import {useState} from 'react';
 import hljs from 'highlight.js'
 
 
