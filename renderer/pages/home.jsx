@@ -1,30 +1,76 @@
 import React from 'react';
-import Head from 'next/head';
-import Link from 'next/link';
+import { Remarkable } from 'remarkable';
+import hljs from 'highlight.js';
+import katex from 'remarkable-katex';
+import {useEffect} from "react";
 
-function Home() {
+export default function  Next(){
+  const md = new Remarkable('full',{
+     html: true,
+     typographer: true,
+  highlight: function (str, lang) {
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        return hljs.highlight(lang, str).value;
+      } catch (err) {}
+    }
+
+    try {
+      return hljs.highlightAuto(str).value;
+    } catch (err) {}
+
+  }
+});
+    md.use(katex);
+
+  const [value, setValue] = React.useState('Hello, **world**!');
+  const [isVisble, setIsVisble] = React.useState(false);
+  useEffect(() => {
+        document.addEventListener("keydown", detectKeydown, true)
+    }, [])
+
+ const detectKeydown = (e) => {
+        if (e.key === "k" && (e.ctrlKey || e.metaKey)) {
+            setIsVisble(!isVisble)
+        }else if(e.key === "Escape"){
+            setIsVisble(false)
+            }
+                }
+
+
+  function handleChange(e) {
+    setValue(e.target.value);
+  }
+
+  function getRawMarkup() {
+    return { __html: md.render(value) };
+  }
+
   return (
-    <React.Fragment>
-      <Head>
-        <title>Home - Nextron (with-javascript-tailwindcss)</title>
-      </Head>
-      <div className='grid grid-col-1 text-2xl w-full text-center'>
-        <img className='ml-auto mr-auto' src='/images/logo.png' />
-        <span>⚡ Electron ⚡</span>
-        <span>+</span>
-        <span>Next.js</span>
-        <span>+</span>
-        <span>tailwindcss</span>
-        <span>=</span>
-        <span>💕 </span>
-      </div>
-      <div className='mt-1 w-full flex-wrap flex justify-center'>
-        <Link href='/next'>
-          <a className='btn-blue'>Go to next page</a>
-        </Link>
-      </div>
-    </React.Fragment>
+    <div className="MarkdownEditor">
+      {isVisble ? (
+              <div>
+        <h3>Output</h3>
+        <div
+            style={{marginTop: "2em"}}
+          className="content list-decimal"
+          dangerouslySetInnerHTML={ getRawMarkup()}
+        />
+        </div>
+
+
+      ) : (
+             <div> 
+        <textarea autoFocus id="markdown-content" defaultValue={value} onChange={handleChange} 
+          className=" h-full w-full"
+          style={{ marginTop: "2em", minHeight: "60vh", backgroundColor: 'transparent', border: '1px solid #ccc', borderRadius: '4px'}} 
+        />
+        </div>
+      )}
+   
+
+          </div>
+
   );
 }
 
-export default Home;
