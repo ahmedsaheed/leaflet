@@ -22,6 +22,11 @@
     border-radius: 5px;
 }
 
+.fs{
+background-color: #2b2b2b;
+border-right: 1px solid #232223;
+}
+
 
 }
 
@@ -44,7 +49,15 @@
     border-radius: 5px;
 }
 
+.fs{
+    background-color: rgba(255, 255, 255, .15);
+    backdrop-filter: blur(5px);
+    border-right: 1px solid #f0f0f0;
+
 }
+}
+
+
 li{
     list-style: disc;
 }
@@ -100,4 +113,9 @@ p{
 }
 a{
     border-bottom: 1px solid #ccc;
+}
+
+.mainer{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
 }

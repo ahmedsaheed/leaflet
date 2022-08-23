@@ -5,6 +5,7 @@ import katex from "remarkable-katex";
 import { useEffect } from "react";
 import "@fontsource/ia-writer-duospace";
 import ButtomBar from "../components/buttomBar";
+import Fs from "../components/fs";
 
 export default function Next() {
   const [scroll, setScroll] = React.useState(0);
@@ -71,9 +72,14 @@ You can download [builds](https://hundredrabbits.itch.io/left) for **OSX, Window
   }
 
   return (
+<>
+ <div className="mainer" style={{ minHeight: "100vh",}}>
+      <div >
+      <Fs/>
+</div>
     <div
       className="MarkdownEditor"
-      style={{ marginLeft: "30%", paddingTop: "10vh", paddingRight: "20px" }}
+      style={{paddingRight: "20px", minWidth: "100vh"  , paddingTop: "10vh"}}
     >
       {isVisble ? (
         <>
@@ -106,5 +112,6 @@ You can download [builds](https://hundredrabbits.itch.io/left) for **OSX, Window
         progress={scroll.toFixed(1).toString()}
       />
     </div>
-  );
+      </div>
+ </> );
 }
