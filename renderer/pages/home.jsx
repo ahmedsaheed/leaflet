@@ -80,7 +80,6 @@ You can download [builds](https://hundredrabbits.itch.io/left) for **OSX, Window
       <Fs/>
 </div>
     <div
-      className="MarkdownEditor"
       style={{paddingRight: "20px", minWidth: "100vh"  , paddingTop: "10vh"}}
     >
       {isVisble ? (

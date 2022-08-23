@@ -7,14 +7,14 @@ import Clock from 'react-live-clock';
 export default function ButtomBar({word, mode, progress, loader}) {
 
     return(
-        <div className="fixed inset-x-0 bottom-0 ButtomBar" style={{marginLeft: "30%", maxHeight: "10vh", marginTop: "20px"}}>
+        <div className="fixed inset-x-0 bottom-0 ButtomBar" style={{marginLeft: "28%", maxHeight: "10vh", marginTop: "20px"}}>
         <container className="Left" style={{float: "left", paddingLeft: "40px",paddingTop: "5px", paddingBottom: "5px"}}>
             <span>{`${mode} Mode`}</span>
             <div style={{display: "inline", marginRight:"40px"}}></div>
             <span>{`${Countable(word)} words`}</span>
          <div style={{display: "inline", marginRight:"40px"}}></div>
         <div style={{ display: "inline",color: "grey"}} dangerouslySetInnerHTML ={{__html: loader}} />
-        {" "}{progress}%
+       <span className = {progress == 100.00 ? "whites" : "greys" }> {" "}{progress}% </span>
 
         </container>
         <container className="Right" style={{float: "right", paddingRight: "40px" ,paddingTop: "5px", paddingBottom: "5px"}}>
@@ -23,9 +23,8 @@ export default function ButtomBar({word, mode, progress, loader}) {
        
 
         </span>
-         <div style={{display: "inline", marginLeft: "40px"}}></div>
-        <span style={{float: "right"}}><Clock format="HH:mm:ss" interval={1000} ticking={true} /></span>
-           
+         <div style={{display: "inline", marginLeft: "20px"}}></div>
+  <Clock style={{float: "right"}} format="HH:mm:ss" interval={1000} ticking={true} />           
 
         </container>
         

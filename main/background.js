@@ -1,6 +1,9 @@
-import { app } from 'electron';
+import { app, ipcMain, shell } from 'electron';
 import serve from 'electron-serve';
 import { createWindow } from './helpers';
+import io from './helpers'
+import path from 'path';
+import open from 'open';
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -14,9 +17,18 @@ if (isProd) {
   await app.whenReady();
 
   const mainWindow = createWindow('main', {
-    width: 1000,
-    height: 600,
+     width: 800,
+     height: 462,
+     minWidth: 400,
+     minHeight: 360,
+      resizable: false
   });
+
+    mainWindow.webContents.on('new-window', function(e, url) {
+  e.preventDefault();
+  setTimeout(() => { require('electron').shell.openExternal(url) }, 500)
+ });
+
 
   if (isProd) {
     await mainWindow.loadURL('app://./home.html');
@@ -30,3 +42,14 @@ if (isProd) {
 app.on('window-all-closed', () => {
   app.quit();
 });
+// return list of files
+ipcMain.handle( 'app:get-files', () => {
+    return io.getFiles();
+} );
+
+// listen to file(s) add event
+ipcMain.handle( 'app:on-file-add', ( event, files = [] ) => {
+    io.addFiles( files );
+} );
+
+
