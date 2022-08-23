@@ -7,6 +7,24 @@ import "@fontsource/ia-writer-duospace"
 import ButtomBar from "../components/buttomBar";
 
 export default function  Next(){
+   
+    const [scroll, setScroll] = React.useState(0);
+  
+  const onScroll = () => {
+    const Scrolled = document.documentElement.scrollTop;
+    const MaxHeight =
+      document.documentElement.scrollHeight -
+      document.documentElement.clientHeight;
+    const ScrollPercent = (Scrolled / MaxHeight) * 100;
+    setScroll(ScrollPercent);
+  };
+
+    if (typeof window !== "undefined") {
+         window.addEventListener("scroll", onScroll);
+
+}
+ 
+
   const md = new Remarkable('full',{
      html: true,
      typographer: true,
@@ -67,13 +85,19 @@ You can download [builds](https://hundredrabbits.itch.io/left) for **OSX, Window
   return (
     <div className="MarkdownEditor" style={{marginLeft: "30%", paddingTop: "10vh", paddingRight: "20px"}}>
       {isVisble ? (
-              <div>
+          <>
+       
+  
         <div
             style={{marginTop: "2em", marginBottom: "5em"}}
           className="content list-decimal"
           dangerouslySetInnerHTML={ getRawMarkup()}
         />
-        </div>
+
+        
+          </>
+     
+
 
 
       ) : (
@@ -85,7 +109,7 @@ You can download [builds](https://hundredrabbits.itch.io/left) for **OSX, Window
         </div>
       )}
    
-        <ButtomBar word={value.toString()} mode={isVisble ? "Preview" : "Insert"} />
+        <ButtomBar word={value.toString()} mode={isVisble ? "Preview" : "Insert"} progress={ scroll.toFixed(1).toString() } />
           </div>
 
   );
