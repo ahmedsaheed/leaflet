@@ -7,6 +7,21 @@ import "@fontsource/ia-writer-duospace";
 import ButtomBar from "../components/buttomBar";
 
 export default function Next() {
+  const [scroll, setScroll] = React.useState(0);
+
+  const onScroll = () => {
+    const Scrolled = document.documentElement.scrollTop;
+    const MaxHeight =
+      document.documentElement.scrollHeight -
+      document.documentElement.clientHeight;
+    const ScrollPercent = (Scrolled / MaxHeight) * 100;
+    setScroll(ScrollPercent);
+  };
+
+  if (typeof window !== "undefined") {
+    window.addEventListener("scroll", onScroll);
+  }
+
   const md = new Remarkable("full", {
     html: true,
     typographer: true,
@@ -23,36 +38,17 @@ export default function Next() {
     },
   });
   md.use(katex);
-
   const markdown = `
-        ## Left
+## Left
+<img src="https://raw.githubusercontent.com/hundredrabbits/100r.co/master/media/content/characters/left.hello.png" width="300"/>
+<a href="http://wiki.xxiivv.com/Left" target="_blank"></a>Left is <b>distractionless plaintext editor</b> designed to quickly navigate between segments of an essay, or multiple documents. It features an auto-complete, synonyms suggestions, writing statistics, markup-based navigation and a speed-reader.
+ 
+The <a href="http://github.com/hundredrabbits/Left" target="_blank" rel="noreferrer" class="external ">application</a> was initially created to help Rek with the writing of the upcoming novel Wiktopher, and later made available as a free and <a href="https://github.com/hundredrabbits/Left" target="_blank" rel="noreferrer" class="external ">open source</a> software.
+Learn more by reading the <a href="https://100r.co/site/left.html" target="_blank" rel="noreferrer" class="external ">manual</a>, or have a look at a <a href="https://www.youtube.com/watch?v=QloUoqqhXGE" target="_blank" rel="noreferrer" class="external ">tutorial video</a>. If you need <b>help</b>, visit the <a href="https://hundredrabbits.itch.io/left/community" target="_blank" rel="noreferrer" class="external ">Community</a>.
+## Install & Run
+You can download [builds](https://hundredrabbits.itch.io/left) for **OSX, Windows and Linux**, or if you wish to build it yourself, follow these steps:
 
-        <img src="https://raw.githubusercontent.com/hundredrabbits/100r.co/master/media/content/characters/left.hello.png" width="300"/>
-
-        <a href="http://wiki.xxiivv.com/Left" target="_blank"></a>Left is <b>distractionless plaintext editor</b> designed to quickly navigate between segments of an essay, or multiple documents. It features an auto-complete, synonyms suggestions, writing statistics, markup-based navigation and a speed-reader.
-        
-        The <a href="http://github.com/hundredrabbits/Left" target="_blank" rel="noreferrer" class="external ">application</a> was initially created to help Rek with the writing of the upcoming novel Wiktopher, and later made available as a free and <a href="https://github.com/hundredrabbits/Left" target="_blank" rel="noreferrer" class="external ">open source</a> software.
-
-        Learn more by reading the <a href="https://100r.co/site/left.html" target="_blank" rel="noreferrer" class="external ">manual</a>, or have a look at a <a href="https://www.youtube.com/watch?v=QloUoqqhXGE" target="_blank" rel="noreferrer" class="external ">tutorial video</a>. If you need <b>help</b>, visit the <a href="https://hundredrabbits.itch.io/left/community" target="_blank" rel="noreferrer" class="external ">Community</a>.
-
-        ## Install & Run
-
-        You can download [builds](https://hundredrabbits.itch.io/left) for **OSX, Windows and Linux**, or if you wish to build it yourself, follow these steps:
-
-      `;
-  const [scroll, setScroll] = React.useState(0);
-  const onScroll = () => {
-    const Scrolled = document.documentElement.scrollTop;
-    const MaxHeight =
-      document.documentElement.scrollHeight -
-      document.documentElement.clientHeight;
-    const ScrollPercent = (Scrolled / MaxHeight) * 100;
-    setScroll(ScrollPercent);
-  };
-
-  if (typeof window !== "undefined") {
-    window.addEventListener("scroll", onScroll);
-  }
+`;
   const [value, setValue] = React.useState(markdown);
   const [isVisble, setIsVisble] = React.useState(false);
   useEffect(() => {
@@ -70,7 +66,6 @@ export default function Next() {
   function handleChange(e) {
     setValue(e.target.value);
   }
-
   function getRawMarkup() {
     return { __html: md.render(value) };
   }
