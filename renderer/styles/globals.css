@@ -5,6 +5,7 @@
 
 @media (prefers-color-scheme: dark) {
   body {
+      -webkit-app-region: drag;
     background: #333;
     color: white;
     font-family: "iA Writer Duospace", sans-serif;
@@ -26,6 +27,7 @@
 
 @media (prefers-color-scheme: light) {
   body {
+      -webkit-app-region: drag;
     background: #ddd;
     color: black;
     font-family: "iA Writer Duospace", sans-serif;
