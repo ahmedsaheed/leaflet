@@ -4,6 +4,7 @@ import hljs from 'highlight.js';
 import katex from 'remarkable-katex';
 import {useEffect} from "react";
 import "@fontsource/ia-writer-duospace"
+import ButtomBar from "../components/buttomBar";
 
 export default function  Next(){
   const md = new Remarkable('full',{
@@ -48,11 +49,11 @@ export default function  Next(){
   }
 
   return (
-    <div className="MarkdownEditor" style={{marginLeft: "30%", paddingTop: "10vh"}}>
+    <div className="MarkdownEditor" style={{marginLeft: "30%", paddingTop: "10vh", paddingRight: "20px"}}>
       {isVisble ? (
               <div>
         <div
-            style={{marginTop: "2em"}}
+            style={{marginTop: "2em", marginBottom: "2em"}}
           className="content list-decimal"
           dangerouslySetInnerHTML={ getRawMarkup()}
         />
@@ -61,14 +62,14 @@ export default function  Next(){
 
       ) : (
              <div> 
-        <textarea autoFocus id="markdown-content" defaultValue={value} onChange={handleChange} 
+        <textarea   id="markdown-content" defaultValue={value} onChange={handleChange} 
           className=" h-full w-full"
-          style={{ marginTop: "2em", minHeight: "60vh", backgroundColor: 'transparent'}} 
+          style={{ marginTop: "2em", minHeight: "100vh", backgroundColor: 'transparent', marginBottom: "2em"}} 
         />
         </div>
       )}
    
-
+        <ButtomBar word={value.toString()} mode={isVisble ? "Preview" : "Insert"} />
           </div>
 
   );
