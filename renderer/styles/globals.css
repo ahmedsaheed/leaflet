@@ -15,7 +15,7 @@
   .ButtomBar{
     background-color: #2b2b2b}
 
-    pre {
+    pre code {
     font-family: "iA Writer Duospace", sans-serif;
     background-color: #232223; 
     border-radius: 5px;
@@ -36,7 +36,7 @@
     background-color: rgba(255, 255, 255, .15);  
  backdrop-filter: blur(5px);}
 
-     pre {
+     pre code {
     font-family: "iA Writer Duospace", sans-serif;
     background-color:rgb(222, 226, 230);
     border-radius: 5px;
