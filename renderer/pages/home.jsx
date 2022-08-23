@@ -71,6 +71,8 @@ You can download [builds](https://hundredrabbits.itch.io/left) for **OSX, Window
     return { __html: md.render(value) };
   }
 
+     const progress = ['|', '|', '|', '|', '|', '|', '|', '|', '|', '|'].map((v, i) => { return i < (scroll/100) * 10 ? '<b>|</b>' : v }).join('')
+
   return (
 <>
  <div className="mainer" style={{ minHeight: "100vh",}}>
@@ -83,11 +85,12 @@ You can download [builds](https://hundredrabbits.itch.io/left) for **OSX, Window
     >
       {isVisble ? (
         <>
-          <div
+                          <div 
             style={{ marginTop: "2em", marginBottom: "5em" }}
-            className="content list-decimal"
+            className="third"
             dangerouslySetInnerHTML={getRawMarkup()}
           />
+
         </>
       ) : (
         <div>
@@ -110,6 +113,7 @@ You can download [builds](https://hundredrabbits.itch.io/left) for **OSX, Window
         word={value.toString()}
         mode={isVisble ? "Preview" : "Insert"}
         progress={scroll.toFixed(1).toString()}
+        loader = {progress}
       />
     </div>
       </div>
