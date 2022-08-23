@@ -53,7 +53,7 @@ export default function  Next(){
       {isVisble ? (
               <div>
         <div
-            style={{marginTop: "2em", marginBottom: "2em"}}
+            style={{marginTop: "2em", marginBottom: "5em"}}
           className="content list-decimal"
           dangerouslySetInnerHTML={ getRawMarkup()}
         />
