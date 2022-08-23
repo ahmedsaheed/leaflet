@@ -11,7 +11,7 @@ export default function ButtomBar({word, mode, progress}) {
         <container className="Left" style={{float: "left", paddingLeft: "40px",paddingTop: "5px", paddingBottom: "5px"}}>
             <span>{`${mode} Mode`}</span>
             <div style={{display: "inline", marginRight:"40px"}}></div>
-            <span>{Countable(word)}</span>
+            <span>{`${Countable(word)} words`}</span>
         </container>
         <container className="Right" style={{float: "right", paddingRight: "40px" ,paddingTop: "5px", paddingBottom: "5px"}}>
          <span style={{float: "left"}}>
