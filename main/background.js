@@ -154,6 +154,10 @@ ipcMain.handle( 'app:on-fs-dialog-open', ( event ) => {
       properties: [ 'openFile', 'multiSelections' ],
   } );
 
+  if( !files) {
+      return;
+  }
+
   addFiles( files.map( filepath => {
       return {
           name: path.parse( filepath ).base,

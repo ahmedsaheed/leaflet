@@ -1,12 +1,11 @@
-import React from "react";
-import { useEffect } from "react";
-import "@fontsource/ia-writer-duospace";
-import ButtomBar from "../components/buttomBar";
-import Fs from "../components/fs";
+import React, { useEffect } from "react";
 import { ipcRenderer } from "electron";
-import fs from "fs";
 import {progress} from "../components/progress.ts";
 import {getMarkdown} from "../lib/mdParser";
+import ButtomBar from "../components/buttomBar";
+import Fs from "../components/fs";
+import fs from "fs";
+
 
 export default function Next() {
   const [value, setValue] = React.useState("");
@@ -60,6 +59,13 @@ export default function Next() {
   useEffect(() => {
     document.addEventListener("keydown", detectKeydown, true);
   }, []);
+  //get the index and set the value
+
+  const onFileClick = (index) => {
+    //TODO remember that index starts from one, so when called always -1
+    console.log(files)
+    setValue(files[2].body);
+  }
 
   const detectKeydown = (e) => {
     if (e.key === "k" && (e.ctrlKey || e.metaKey)) {
@@ -72,13 +78,39 @@ export default function Next() {
   function handleChange(e) {
     setValue(e.target.value);
   }
+  const openWindow = () => {
+    ipcRenderer.invoke("app:on-fs-dialog-open").then(() => {
+      ipcRenderer.invoke("getTheFile").then((files = []) => {
+        setFiles(files);
+      });
+    });
+  };
 
 
   return (
     <>
       <div className="mainer" style={{ minHeight: "100vh" }}>
         <div>
-          <Fs notes={files} />
+          {/* <Fs notes={files} /> */}
+          <div className="fs fixed" style={{ minWidth: "50vh", minHeight: "100vh" }}>
+      <div style={{ marginTop: "10vh", paddingTop: "2em", paddingLeft: "1em" }}>
+        <h1>Welcome</h1>
+        {/* Iterate and map contents in file */}
+
+        <div style={{ marginTop: "2vh", marginBottom: "2vh" }}>
+          {files.map((file, index) => (
+            <>
+            <button onClick={() => onFileClick(file.index)}><ol className="files">{`${file.name.toString().toUpperCase()}`}</ol></button>
+             
+              <ol className="files">{`${file.index}`}</ol>
+            </>
+          ))}
+        </div>
+        <button style={{ float: "bottom" }} onClick={openWindow}>
+          Click to Add File
+        </button>
+      </div>
+    </div>
         </div>
         <div
           style={{
