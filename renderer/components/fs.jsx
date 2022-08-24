@@ -39,6 +39,22 @@ export default function Fs() {
        setIsDropzoneActive(false);
     };
 
+            const openWindow = () => {
+           
+
+             
+                    ipcRenderer.invoke( 'app:on-fs-dialog-open' ).then( () => {
+                        ipcRenderer.invoke( 'getTheFile' ).then( ( files = [] ) => {
+                            setFiles(files);
+                            setAddFile(false);
+                        });
+                    });
+      
+               
+            
+            
+           
+        }
         const onDragEnter = () => {  setIsDropzoneActive(true); };
         const onDragLeave = () => {  setIsDropzoneActive(false); };
     
@@ -54,7 +70,7 @@ export default function Fs() {
                       
                     </div>
                 ))}
-                {/* <button style={{float: "bottom"}} onClick={setAddFile(true)}>Click to Add File</button> */}
+                <button style={{float: "bottom"}} onClick={openWindow}>Click to Add File</button>
             </div>    
         </div>
         )
