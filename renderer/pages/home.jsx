@@ -1,7 +1,4 @@
 import React from "react";
-import { Remarkable } from "remarkable";
-import hljs from "highlight.js";
-import katex from "remarkable-katex";
 import { useEffect } from "react";
 import "@fontsource/ia-writer-duospace";
 import ButtomBar from "../components/buttomBar";
@@ -9,57 +6,37 @@ import Fs from "../components/fs";
 import { ipcRenderer } from "electron";
 import fs from "fs";
 import {progress} from "../components/progress.ts";
+import {getMarkdown} from "../lib/mdParser";
 
 export default function Next() {
-  const md = new Remarkable("full", {
-    html: true,
-    typographer: true,
-    highlight: function (str, lang) {
-      if (lang && hljs.getLanguage(lang)) {
-        try {
-          return hljs.highlight(lang, str).value;
-        } catch (err) {}
-      }
-
-      try {
-        return hljs.highlightAuto(str).value;
-      } catch (err) {}
-    },
-  });
-  md.use(katex);
   const [value, setValue] = React.useState("");
   const [isVisble, setIsVisble] = React.useState(false);
   const [scroll, setScroll] = React.useState(0);
   const [files, setFiles] = React.useState([]);
   const [save, setSave] = React.useState(false);
 
-  //if keydown cmd + s save the file
-  useEffect(() => {
-    document.addEventListener(
-      "keydown",
-      (e) => {
-        if (e.key === "s" && (e.ctrlKey || e.metaKey)) {
-          saver();
-          setSave(true);
-        }
-      },
-      false
-    );
-  }, [value, files]);
+  //TODO: IMPLEMENT SAVE FUNCTION
+  // useEffect(() => {
+  //   document.addEventListener(
+  //     "keydown",
+  //     (e) => {
+  //       if (e.key === "s" && (e.ctrlKey || e.metaKey)) {
+  //         saver();
+  //         setSave(true);
+  //       }
+  //     },
+  //     false
+  //   );
+  // }, [value, files]);
 
-  const saver = () => {
-    if (files[0].body !== value) {
-      try {
-        fs.writeFileSync(`${files[0].path}`, value, (err) => {
-          if (err) throw err;
-          console.log("The file has been saved!");
-        });
-        setSave(true);
-      } catch (e) {
-        console.log(e);
-      }
-    } else return;
-  };
+  // const saver = () => {
+  //     //write a function to update the file
+  //     fs.writeFile(files[0].path, value, (err) => {
+  //       if (err) throw err;
+  //       console.log("The file has been saved!");
+  //     }
+  //     );
+  // };
 
   useEffect(() => {
     ipcRenderer.invoke("getTheFile").then((files = []) => {
@@ -67,9 +44,8 @@ export default function Next() {
       setValue(files[0] ? `${files[0].body}` : "");
     });
   }, []);
-  //assign the file body at index 0 to markdown
-  const markdown = files[0] ? `${files[0].body}` : "";
 
+  //SCROLL
   const onScroll = () => {
     const Scrolled = document.documentElement.scrollTop;
     const MaxHeight =
@@ -96,15 +72,13 @@ export default function Next() {
   function handleChange(e) {
     setValue(e.target.value);
   }
-  function getRawMarkup() {
-    return { __html: md.render(value) };
-  }
+
 
   return (
     <>
       <div className="mainer" style={{ minHeight: "100vh" }}>
         <div>
-          <Fs />
+          <Fs notes={files} />
         </div>
         <div
           style={{
@@ -118,7 +92,7 @@ export default function Next() {
               <div
                 style={{ marginTop: "2em", marginBottom: "5em" }}
                 className="third"
-                dangerouslySetInnerHTML={getRawMarkup()}
+                dangerouslySetInnerHTML={getMarkdown(value)}
               />
             </>
           ) : (

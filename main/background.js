@@ -74,8 +74,8 @@ const checkForDir = () => {
 
 const getFiles = () => {
   checkForDir();
-  const files = fs.readdirSync( appDir );
- 
+  const files = fs.readdirSync( appDir ); 
+  let place = 0
 
   //return only files that end with .md
   return files.filter( file => file.endsWith( '.md' ) ).map( filename => {
@@ -83,8 +83,10 @@ const getFiles = () => {
       const fileStats = fs.statSync( filePath );
       //get the body of the file
       const content = fs.readFileSync( filePath, 'utf8' );
+      place++;
 
       return {
+          index: place,
           name: filename,
           body: content,
           path: filePath,
@@ -128,6 +130,7 @@ const openFile = ( filename ) => {
       open( filePath );
   }
 };
+
 const watchFiles = ( win ) => {
   chokidar.watch( appDir ).on( 'unlink', ( filepath ) => {
       win.webContents.send( 'app:delete-file', path.parse( filepath ).base );

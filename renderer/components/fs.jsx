@@ -4,8 +4,9 @@ import dragDrop from "drag-drop";
 import { useEffect } from "react";
 import { useState } from "react";
 
-export default function Fs() {
-  const [files, setFiles] = useState([]);
+export default function Fs({notes}) {
+  const [files, setFiles] = useState(notes);
+  const [index, setIndex] = useState(0);
   const [addFile, setAddFile] = useState(false);
   const [isDropzoneActive, setIsDropzoneActive] = useState(false);
 
@@ -58,9 +59,10 @@ export default function Fs() {
         {/* Iterate and map contents in file */}
 
         <div style={{ marginTop: "2vh", marginBottom: "2vh" }}>
-          {files.map((file, index) => (
+          {notes.map((file, index) => (
             <>
-              <ol className="files">{`${file.name}`}</ol>
+              <ol className="files">{`${file.name.toString().toUpperCase()}`}</ol>
+              <ol className="files">{`${file.index}`}</ol>
             </>
           ))}
         </div>
