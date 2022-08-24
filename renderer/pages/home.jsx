@@ -7,6 +7,7 @@ import "@fontsource/ia-writer-duospace";
 import ButtomBar from "../components/buttomBar";
 import Fs from "../components/fs";
 import {ipcRenderer} from 'electron';
+import fs from "fs";
 
 export default function Next() {
   const md = new Remarkable("full", {
@@ -29,6 +30,34 @@ export default function Next() {
   const [isVisble, setIsVisble] = React.useState(false);
   const [scroll, setScroll] = React.useState(0);
   const [files, setFiles] = React.useState([]);
+  const [save , setSave] = React.useState(false);
+
+  //if keydown cmd + s save the file
+  useEffect(() => {
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "s" && (e.ctrlKey || e.metaKey)) {
+        saver();
+        setSave(true);
+      }
+
+    }, false);
+  } , [value, files]);
+
+  const saver = () => {
+    if (files[0].body !== value) {
+      try{
+        fs.writeFileSync(`${files[0].path}`, value, (err) => {
+          if (err) throw err;
+          console.log("The file has been saved!");
+        },);
+        setSave(true);
+      }catch(e){
+        console.log(e);
+      }
+        
+      }else return;
+
+  }
 
   useEffect(() => {
     ipcRenderer.invoke("getTheFile").then((files = []) => {
