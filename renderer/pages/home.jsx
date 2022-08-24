@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import "@fontsource/ia-writer-duospace";
 import ButtomBar from "../components/buttomBar";
 import Fs from "../components/fs";
-import {ipcRenderer} from 'electron';
+import { ipcRenderer } from "electron";
 import fs from "fs";
 
 export default function Next() {
@@ -30,34 +30,35 @@ export default function Next() {
   const [isVisble, setIsVisble] = React.useState(false);
   const [scroll, setScroll] = React.useState(0);
   const [files, setFiles] = React.useState([]);
-  const [save , setSave] = React.useState(false);
+  const [save, setSave] = React.useState(false);
 
   //if keydown cmd + s save the file
   useEffect(() => {
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "s" && (e.ctrlKey || e.metaKey)) {
-        saver();
-        setSave(true);
-      }
-
-    }, false);
-  } , [value, files]);
+    document.addEventListener(
+      "keydown",
+      (e) => {
+        if (e.key === "s" && (e.ctrlKey || e.metaKey)) {
+          saver();
+          setSave(true);
+        }
+      },
+      false
+    );
+  }, [value, files]);
 
   const saver = () => {
     if (files[0].body !== value) {
-      try{
+      try {
         fs.writeFileSync(`${files[0].path}`, value, (err) => {
           if (err) throw err;
           console.log("The file has been saved!");
-        },);
+        });
         setSave(true);
-      }catch(e){
+      } catch (e) {
         console.log(e);
       }
-        
-      }else return;
-
-  }
+    } else return;
+  };
 
   useEffect(() => {
     ipcRenderer.invoke("getTheFile").then((files = []) => {
@@ -67,8 +68,6 @@ export default function Next() {
   }, []);
   //assign the file body at index 0 to markdown
   const markdown = files[0] ? `${files[0].body}` : "";
-
-
 
   const onScroll = () => {
     const Scrolled = document.documentElement.scrollTop;

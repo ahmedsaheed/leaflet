@@ -19,16 +19,8 @@ Learn more by reading the <a href="https://100r.co/site/left.html" target="_blan
 You can download [builds](https://hundredrabbits.itch.io/left) for **OSX, Windows and Linux**, or if you wish to build it yourself, follow these steps:
 
 `;
-const appDir = path.resolve( os.homedir(), 'dairy' );
-const checkForDir = () => {
-if(!fs.existsSync(appDir)){
-  //create the directory
-  fs.mkdirSync(appDir);
-  //create the file hello.md
-  fs.writeFileSync(path.resolve(appDir, 'hello.md'), markdown);
-}
-}
 
+const appDir = path.resolve( os.homedir(), 'dairy' );
 const isProd = process.env.NODE_ENV === 'production';
 
 if (isProd) {
@@ -48,7 +40,12 @@ if (isProd) {
       resizable: false
   });
 
-    mainWindow.webContents.on('new-window', function(e, url) {
+  app.on('activate', function () {
+    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+  })
+  
+
+  mainWindow.webContents.on('new-window', function(e, url) {
   e.preventDefault();
   setTimeout(() => { require('electron').shell.openExternal(url) }, 500)
  });
@@ -62,6 +59,15 @@ if (isProd) {
     mainWindow.webContents.openDevTools();
   }
 })();
+
+const checkForDir = () => {
+  if(!fs.existsSync(appDir)){
+    //create the directory
+    fs.mkdirSync(appDir);
+    //create the file hello.md
+    fs.writeFileSync(path.resolve(appDir, 'hello.md'), markdown);
+  }
+  }
 
 const filesAdded = ( size ) => {
   const notif = new Notification( {
@@ -181,7 +187,7 @@ ipcMain.on( 'app:on-file-copy', ( event, file ) => {
 } );
 
 app.on('window-all-closed', () => {
-  app.quit();
+  if (process.platform !== 'darwin') app.quit()
 });
 
 
