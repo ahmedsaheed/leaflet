@@ -8,7 +8,6 @@
     background: #333;
     color: white;
     font-family: "iA Writer Duospace", sans-serif;
-
     font-size: 12px;
   }
   .ButtomBar {
@@ -36,6 +35,10 @@
 
   .greys {
     color: grey;
+  }
+  .selected::before{
+    content: "• ";
+  
   }
 }
 
@@ -160,8 +163,4 @@ a {
 }
 .files:hover{
   cursor: pointer;
-}
-.selected::before{
-  content: "• ";
-
 }

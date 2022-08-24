@@ -118,7 +118,7 @@ export default function Next() {
         <div style={{ marginTop: "2vh", marginBottom: "2vh" }}>
           {files.map((file, index) => (
             <>
-            <ol className="files"><button className={name === file.name ? "selected" : "" } onClick={() => {setValue(file.body); setName(file.name)}}>{`${file.name.toString()}`}</button></ol>
+            <ol className="files"><button className={name === file.name ? "selected" : "greys" } onClick={() => {setValue(file.body); setName(file.name)}}>{`${file.name.toString()}`}</button></ol>
             </>
           ))}
         </div>
