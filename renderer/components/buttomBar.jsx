@@ -3,8 +3,7 @@ import Countable from 'wordcount';
 
 
 
-export default function ButtomBar({word, mode, progress, loader}) {
-
+export default function ButtomBar({word, mode,loader}) {
     return(
         <div className="fixed inset-x-0 bottom-0 ButtomBar" style={{marginLeft: "28%", maxHeight: "10vh", marginTop: "20px"}}>
         <container className="Left" style={{float: "left", paddingLeft: "40px",paddingTop: "5px", paddingBottom: "5px"}}>
@@ -13,7 +12,7 @@ export default function ButtomBar({word, mode, progress, loader}) {
             <span>{`${Countable(word)} words`}</span>
          <div style={{display: "inline", marginRight:"40px"}}></div>
         <div style={{ display: "inline",color: "grey"}} dangerouslySetInnerHTML ={{__html: loader}} />
-       <span className = {progress == 100.00 ? "whites" : "greys" }> {" "}{progress}% </span>
+
 
         </container>
         <container className="Right" style={{float: "right", paddingRight: "40px" ,paddingTop: "5px", paddingBottom: "5px"}}>

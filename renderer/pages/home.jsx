@@ -8,21 +8,6 @@ import ButtomBar from "../components/buttomBar";
 import Fs from "../components/fs";
 
 export default function Next() {
-  const [scroll, setScroll] = React.useState(0);
-
-  const onScroll = () => {
-    const Scrolled = document.documentElement.scrollTop;
-    const MaxHeight =
-      document.documentElement.scrollHeight -
-      document.documentElement.clientHeight;
-    const ScrollPercent = (Scrolled / MaxHeight) * 100;
-    setScroll(ScrollPercent);
-  };
-
-  if (typeof window !== "undefined") {
-    window.addEventListener("scroll", onScroll);
-  }
-
   const md = new Remarkable("full", {
     html: true,
     typographer: true,
@@ -52,6 +37,25 @@ You can download [builds](https://hundredrabbits.itch.io/left) for **OSX, Window
 `;
   const [value, setValue] = React.useState(markdown);
   const [isVisble, setIsVisble] = React.useState(false);
+  const [scroll, setScroll] = React.useState(0);
+
+  const onScroll = () => {
+    const Scrolled = document.documentElement.scrollTop;
+    const MaxHeight =
+      document.documentElement.scrollHeight -
+      document.documentElement.clientHeight;
+    const ScrollPercent = (Scrolled / MaxHeight) * 100;
+    setScroll(ScrollPercent);
+  };
+  if (typeof window !== "undefined") {
+    window.addEventListener("scroll", onScroll);
+  }
+  const progress = ["|", "|", "|", "|", "|", "|", "|", "|", "|", "|"]
+    .map((v, i) => {
+      return i < (scroll / 100) * 10 ? "<b>|</b>" : v;
+    })
+    .join("");
+  const scroller = `${progress} ${scroll.toFixed(1)}%`;
   useEffect(() => {
     document.addEventListener("keydown", detectKeydown, true);
   }, []);
@@ -71,50 +75,51 @@ You can download [builds](https://hundredrabbits.itch.io/left) for **OSX, Window
     return { __html: md.render(value) };
   }
 
-     const progress = ['|', '|', '|', '|', '|', '|', '|', '|', '|', '|'].map((v, i) => { return i < (scroll/100) * 10 ? '<b>|</b>' : v }).join('')
-
   return (
-<>
- <div className="mainer" style={{ minHeight: "100vh",}}>
-      <div >
-      <Fs/>
-</div>
-    <div
-      style={{paddingRight: "20px", minWidth: "100vh"  , paddingTop: "10vh"}}
-    >
-      {isVisble ? (
-        <>
-                          <div 
-            style={{ marginTop: "2em", marginBottom: "5em" }}
-            className="third"
-            dangerouslySetInnerHTML={getRawMarkup()}
-          />
-
-        </>
-      ) : (
+    <>
+      <div className="mainer" style={{ minHeight: "100vh" }}>
         <div>
-          <textarea
-            id="markdown-content"
-            defaultValue={value}
-            onChange={handleChange}
-            className=" h-full w-full"
-            style={{
-              marginTop: "2em",
-              minHeight: "100vh",
-              backgroundColor: "transparent",
-              marginBottom: "2em",
-            }}
+          <Fs />
+        </div>
+        <div
+          style={{
+            paddingRight: "20px",
+            minWidth: "100vh",
+            paddingTop: "10vh",
+          }}
+        >
+          {isVisble ? (
+            <>
+              <div
+                style={{ marginTop: "2em", marginBottom: "5em" }}
+                className="third"
+                dangerouslySetInnerHTML={getRawMarkup()}
+              />
+            </>
+          ) : (
+            <div>
+              <textarea
+                id="markdown-content"
+                defaultValue={value}
+                onChange={handleChange}
+                className=" h-full w-full"
+                style={{
+                  marginTop: "2em",
+                  minHeight: "100vh",
+                  backgroundColor: "transparent",
+                  marginBottom: "2em",
+                }}
+              />
+            </div>
+          )}
+
+          <ButtomBar
+            word={value.toString()}
+            mode={isVisble ? "Preview" : "Insert"}
+            loader={scroller}
           />
         </div>
-      )}
-
-      <ButtomBar
-        word={value.toString()}
-        mode={isVisble ? "Preview" : "Insert"}
-        progress={scroll.toFixed(1).toString()}
-        loader = {progress}
-      />
-    </div>
       </div>
- </> );
+    </>
+  );
 }
