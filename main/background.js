@@ -58,7 +58,7 @@ if (isProd) {
 const filesAdded = ( size ) => {
   const notif = new Notification( {
       title: 'Files added',
-      body: `${ size } file(s) has been successfully added.`
+      body: `${ size } ${size > 1 ? "files" : "file" } has been successfully added.`
   } );
 
   notif.show();
