@@ -112,7 +112,7 @@ export default function Next() {
           {/* <Fs notes={files} /> */}
           <div className="fs fixed" style={{ minWidth: "50vh", minHeight: "100vh" }}>
       <div style={{ marginTop: "10vh", paddingTop: "2em", paddingLeft: "1em" }}>
-        <h1>Welcome</h1>
+        <h1>EXPLORER</h1>
         {/* Iterate and map contents in file */}
 
         <div style={{ marginTop: "2vh", marginBottom: "2vh" }}>
@@ -122,7 +122,7 @@ export default function Next() {
             </>
           ))}
         </div>
-        <button style={{ float: "bottom" }} onClick={openWindow}>
+        <button className="fixed bottom-10" onClick={openWindow}>
           Click to Add File
         </button>
       </div>

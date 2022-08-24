@@ -164,5 +164,4 @@ a {
 .selected::before{
   content: "• ";
 
-  font-size: 1.5em;
 }
