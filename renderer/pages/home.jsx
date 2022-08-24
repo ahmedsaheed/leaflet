@@ -4,6 +4,7 @@ import { progress } from "../components/progress.ts";
 import { getMarkdown } from "../lib/mdParser";
 import ButtomBar from "../components/buttomBar";
 import Fs from "../components/fs";
+const fs = require( 'fs-extra' );
 
 export default function Next() {
   const [value, setValue] = React.useState("");
@@ -11,37 +12,19 @@ export default function Next() {
   const [scroll, setScroll] = React.useState(0);
   const [files, setFiles] = React.useState([]);
   const [name, setName] = React.useState("");
-
-  //TODO: IMPLEMENT SAVE FUNCTION
-  // useEffect(() => {
-  //   document.addEventListener(
-  //     "keydown",
-  //     (e) => {
-  //       if (e.key === "s" && (e.ctrlKey || e.metaKey)) {
-  //         saver();
-  //         setSave(true);
-  //       }
-  //     },
-  //     false
-  //   );
-  // }, [value, files]);
-
-  // const saver = () => {
-  //     //write a function to update the file
-  //     fs.writeFile(files[0].path, value, (err) => {
-  //       if (err) throw err;
-  //       console.log("The file has been saved!");
-  //     }
-  //     );
-  // };
+  const [index, setIndex] = React.useState(0);
+  const [path, setPath] = React.useState("");
 
   useEffect(() => {
     ipcRenderer.invoke("getTheFile").then((files = []) => {
       setFiles(files);
       setValue(files[0] ? `${files[0].body}` : "");
       setName(files[0] ? `${files[0].name}` : "");
+      setPath(files[0] ? `${files[0].path}` : "");
     });
   }, []);
+
+  // function to save the file on cms + s using fs-extra
 
   //SCROLL
   const onScroll = () => {
@@ -84,13 +67,15 @@ export default function Next() {
         <div>
           <div
             className="fs fixed"
-            style={{ minWidth: "50vh", minHeight: "100vh" }}
+            style={{ width: "50vh", maxWidth: "50vh", minHeight: "100vh" }}
           >
             <div
               style={{
                 marginTop: "10vh",
                 paddingTop: "2em",
                 paddingLeft: "1em",
+                overflow: "scroll",
+                whiteSpace: "pre-wrap",
               }}
             >
               <h1>EXPLORER</h1>
@@ -103,9 +88,12 @@ export default function Next() {
                         onClick={() => {
                           setValue(file.body);
                           setName(file.name);
+                          setIndex(file.index - 1);
+                          setPath(file.path);
                         }}
                       >{`${file.name.toString()}`}</button>
                     </ol>
+
                   </>
                 ))}
               </div>

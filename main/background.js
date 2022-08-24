@@ -72,6 +72,7 @@ const checkForDir = () => {
     fs.writeFileSync(path.resolve(appDir, 'hello.md'), markdown);
   }
   }
+  
 
 const getFiles = () => {
   checkForDir();
