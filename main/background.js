@@ -37,7 +37,8 @@ if (isProd) {
      height: 462,
      minWidth: 400,
      minHeight: 360,
-      resizable: false
+      resizable: false,
+      fullscreen: false,
   });
 
     mainWindow.webContents.on('new-window', function(e, url) {

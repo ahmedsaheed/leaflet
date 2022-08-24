@@ -1,14 +1,9 @@
 import React, { useEffect } from "react";
 import { ipcRenderer } from "electron";
-import {progress} from "../components/progress.ts";
-// import {getMarkdown} from "../lib/mdParser";
+import { progress } from "../components/progress.ts";
+import { getMarkdown } from "../lib/mdParser";
 import ButtomBar from "../components/buttomBar";
 import Fs from "../components/fs";
-import fs from "fs";
-import { Remarkable } from "remarkable";
-import hljs from "highlight.js";
-import katex from "remarkable-katex";
-
 
 export default function Next() {
   const [value, setValue] = React.useState("");
@@ -40,27 +35,6 @@ export default function Next() {
   //     );
   // };
 
-  const md = new Remarkable("full", {
-    html: true,
-    typographer: true,
-    highlight: function (str, lang) {
-      if (lang && hljs.getLanguage(lang)) {
-        try {
-          return hljs.highlight(lang, str).value;
-        } catch (err) {}
-      }
-
-      try {
-        return hljs.highlightAuto(str).value;
-      } catch (err) {}
-    },
-  });
-  md.use(katex);
-
-  const getMarkdown =() => {
-    console.log(value.toString());
-    return { __html: md.render(value) };
-  }
   useEffect(() => {
     ipcRenderer.invoke("getTheFile").then((files = []) => {
       setFiles(files);
@@ -104,29 +78,42 @@ export default function Next() {
     });
   };
 
-
   return (
     <>
       <div className="mainer" style={{ minHeight: "100vh" }}>
         <div>
-          {/* <Fs notes={files} /> */}
-          <div className="fs fixed" style={{ minWidth: "50vh", minHeight: "100vh" }}>
-      <div style={{ marginTop: "10vh", paddingTop: "2em", paddingLeft: "1em" }}>
-        <h1>EXPLORER</h1>
-        {/* Iterate and map contents in file */}
-
-        <div style={{ marginTop: "2vh", marginBottom: "2vh" }}>
-          {files.map((file, index) => (
-            <>
-            <ol className="files"><button className={name === file.name ? "selected" : "greys" } onClick={() => {setValue(file.body); setName(file.name)}}>{`${file.name.toString()}`}</button></ol>
-            </>
-          ))}
-        </div>
-        <button className="fixed bottom-10" onClick={openWindow}>
-          Click to Add File
-        </button>
-      </div>
-    </div>
+          <div
+            className="fs fixed"
+            style={{ minWidth: "50vh", minHeight: "100vh" }}
+          >
+            <div
+              style={{
+                marginTop: "10vh",
+                paddingTop: "2em",
+                paddingLeft: "1em",
+              }}
+            >
+              <h1>EXPLORER</h1>
+              <div style={{ marginTop: "2vh", marginBottom: "2vh" }}>
+                {files.map((file, index) => (
+                  <>
+                    <ol className="files">
+                      <button
+                        className={name === file.name ? "selected" : "greys"}
+                        onClick={() => {
+                          setValue(file.body);
+                          setName(file.name);
+                        }}
+                      >{`${file.name.toString()}`}</button>
+                    </ol>
+                  </>
+                ))}
+              </div>
+              <button className="fixed bottom-2" onClick={openWindow}>
+                Click to Add File
+              </button>
+            </div>
+          </div>
         </div>
         <div
           style={{
@@ -140,7 +127,7 @@ export default function Next() {
               <div
                 style={{ marginTop: "2em", marginBottom: "5em" }}
                 className="third"
-                dangerouslySetInnerHTML={getMarkdown()}
+                dangerouslySetInnerHTML={getMarkdown(value)}
               />
             </>
           ) : (
