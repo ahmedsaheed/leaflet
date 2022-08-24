@@ -41,7 +41,6 @@ export default function Fs() {
     ipcRenderer.invoke("app:on-fs-dialog-open").then(() => {
       ipcRenderer.invoke("getTheFile").then((files = []) => {
         setFiles(files);
-        setAddFile(false);
       });
     });
   };
