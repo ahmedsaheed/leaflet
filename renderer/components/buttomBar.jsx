@@ -1,6 +1,5 @@
 import React from 'react';
 import Countable from 'wordcount';
-import Clock from 'react-live-clock';
 
 
 
@@ -24,7 +23,7 @@ export default function ButtomBar({word, mode, progress, loader}) {
 
         </span>
          <div style={{display: "inline", marginLeft: "20px"}}></div>
-  <Clock style={{float: "right"}} format="HH:mm:ss" interval={1000} ticking={true} />           
+  {/* <Clock style={{float: "right"}} format="HH:mm:ss" interval={1000} ticking={true} />            */}
 
         </container>
         
