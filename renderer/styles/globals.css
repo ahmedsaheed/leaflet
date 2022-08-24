@@ -2,164 +2,159 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @media (prefers-color-scheme: dark) {
   body {
-      -webkit-app-region: drag;
+    -webkit-app-region: drag;
     background: #333;
     color: white;
     font-family: "iA Writer Duospace", sans-serif;
 
-        font-size: 12px;
-
+    font-size: 12px;
   }
-  .ButtomBar{
-    background-color: #2b2b2b}
+  .ButtomBar {
+    background-color: #2b2b2b;
+  }
 
-    pre  {
+  pre {
     font-family: "iA Writer Duospace", sans-serif;
-    background-color: #232223; 
+    background-color: #232223;
     border-radius: 5px;
-}
+  }
 
-.fs{
-background-color: #2b2b2b;
-border-right: 1px solid #232223;
-}
+  .fs {
+    background-color: #2b2b2b;
+    border-right: 1px solid #232223;
+  }
 
-b{
+  b {
     font-weight: bold;
-    color: #fff
-  
-}
-.whites{
-    color: #fff
-} 
+    color: #fff;
+  }
+  .whites {
+    color: #fff;
+  }
 
-.greys{
+  .greys {
     color: grey;
-}
-
+  }
 }
 
 @media (prefers-color-scheme: light) {
   body {
-      -webkit-app-region: drag;
+    -webkit-app-region: drag;
     background: #ddd;
     color: black;
     font-family: "iA Writer Duospace", sans-serif;
 
-        font-size: 12px;
+    font-size: 12px;
   }
- .ButtomBar{
-    background-color: rgba(255, 255, 255, .15);  
- backdrop-filter: blur(5px);}
+  .ButtomBar {
+    background-color: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(5px);
+  }
 
-     pre  {
+  pre {
     font-family: "iA Writer Duospace", sans-serif;
-    background-color:rgb(222, 226, 230);
+    background-color: rgb(222, 226, 230);
     border-radius: 5px;
-}
+  }
 
-.fs{
-    background-color: rgba(255, 255, 255, .15);
+  .fs {
+    background-color: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(5px);
     border-right: 1px solid #f0f0f0;
+  }
 
-}
-
-b{
+  b {
     font-weight: bold;
     color: black;
-  
-}
+  }
 
-.whites{
+  .whites {
     color: black;
-} 
+  }
 
-.greys{
+  .greys {
     color: grey;
-}
-}
-
-
-li{
-    list-style: disc;
-}
-ul, ol {
-    margin-left: 2em;
+  }
 }
 
-h2{
-    font-size: 1.5em;
-    margin-bottom: 0.5em;
+li {
+  list-style: disc;
 }
-hr{
-    margin-bottom: 2em;
-    margin-top: 2em;
+ul,
+ol {
+  margin-left: 2em;
 }
 
-img{
-    margin-top: 1em;
-    margin-bottom: 1em;
-     animation: cool-fadein 1s;
+h2 {
+  font-size: 1.5em;
+  margin-bottom: 0.5em;
+}
+hr {
+  margin-bottom: 2em;
+  margin-top: 2em;
+}
+
+img {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  animation: cool-fadein 1s;
 }
 @keyframes cool-fadein {
-    
-        0% {
-          mask: linear-gradient(90deg, #000 25%, #000000e6 50%, #00000000) 150% 0 / 400% no-repeat;
-          opacity: .2;
-        }
-        100% {
-          mask: linear-gradient(90deg, #000 25%, #000000e6 50%, #00000000) 0 / 400% no-repeat;
-          opacity: 1;
-        }
-    }
+  0% {
+    mask: linear-gradient(90deg, #000 25%, #000000e6 50%, #00000000) 150% 0 /
+      400% no-repeat;
+    opacity: 0.2;
+  }
+  100% {
+    mask: linear-gradient(90deg, #000 25%, #000000e6 50%, #00000000) 0 / 400%
+      no-repeat;
+    opacity: 1;
+  }
+}
 
-blockquote{
-    border-left: 2px solid grey;
-    padding-left: 0.7em;
-    margin-inline-end: 0;
+blockquote {
+  border-left: 2px solid grey;
+  padding-left: 0.7em;
+  margin-inline-end: 0;
 }
 textarea:focus-visible {
-    outline: none;
+  outline: none;
 }
 
-code{
-    font-family: "iA Writer Duospace", sans-serif;
-    margin: 0.8em;
-    overflow-x: auto;
-    white-space: pre-wrap;
+code {
+  font-family: "iA Writer Duospace", sans-serif;
+  margin: 1em;
+  overflow-x: auto;
+  white-space: pre-wrap;
 }
 
-p{
-    margin: 0.8em 0;
-
+p {
+  margin: 0.8em 0;
 }
-a{
-    border-bottom: 1px solid #ccc;
+a {
+  border-bottom: 1px solid #ccc;
 }
 
-.mainer{
-    display: grid;
-    grid-template-columns: 1fr  2fr;
+.mainer {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
 }
 
 .third {
-    animation-name: animateIn;
-    animation-duration: 2s;
-    animation-fill-mode: both;
-    animation-timing-function: ease-in-out;
+  animation-name: animateIn;
+  animation-duration: 2s;
+  animation-fill-mode: both;
+  animation-timing-function: ease-in-out;
 }
 @keyframes animateIn {
-    0% {
-        opacity: 0;
-        /* transform: scale(0.6) translateY(-8px); */
-    }
+  0% {
+    opacity: 0;
+    /* transform: scale(0.6) translateY(-8px); */
+  }
 
-    100% {
-        opacity: 1;
-    }
+  100% {
+    opacity: 1;
+  }
 }
-
