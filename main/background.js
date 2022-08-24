@@ -1,7 +1,6 @@
 import { app, ipcMain, shell , dialog } from 'electron';
 import serve from 'electron-serve';
 import { createWindow } from './helpers';
-import io from './helpers'
 import path from 'path';
 import open from 'open';
 const fs = require( 'fs-extra' );
@@ -60,7 +59,8 @@ const getFiles = () => {
   const files = fs.readdirSync( appDir );
   console.log( files );
 
-  return files.map( filename => {
+  //return only files that end with .md
+  return files.filter( file => file.endsWith( '.md' ) ).map( filename => {
       const filePath = path.resolve( appDir, filename );
       const fileStats = fs.statSync( filePath );
 
