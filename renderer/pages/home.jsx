@@ -8,6 +8,7 @@ import ButtomBar from "../components/buttomBar";
 import Fs from "../components/fs";
 import { ipcRenderer } from "electron";
 import fs from "fs";
+import {progress} from "../components/progress.ts";
 
 export default function Next() {
   const md = new Remarkable("full", {
@@ -80,12 +81,6 @@ export default function Next() {
   if (typeof window !== "undefined") {
     window.addEventListener("scroll", onScroll);
   }
-  const progress = ["|", "|", "|", "|", "|", "|", "|", "|", "|", "|"]
-    .map((v, i) => {
-      return i < (scroll / 100) * 10 ? "<b>|</b>" : v;
-    })
-    .join("");
-  const scroller = `${progress} ${scroll.toFixed(1)}%`;
   useEffect(() => {
     document.addEventListener("keydown", detectKeydown, true);
   }, []);
@@ -146,7 +141,7 @@ export default function Next() {
           <ButtomBar
             word={value.toString()}
             mode={isVisble ? "Preview" : "Insert"}
-            loader={scroller}
+            loader={progress(scroll)}
           />
         </div>
       </div>
