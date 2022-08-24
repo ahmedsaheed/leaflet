@@ -158,3 +158,6 @@ a {
     opacity: 1;
   }
 }
+.files:hover{
+  cursor: pointer;
+}

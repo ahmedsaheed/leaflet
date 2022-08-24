@@ -9,11 +9,11 @@ export default function Fs() {
     const [addFile, setAddFile] = useState(false)
     const [ isDropzoneActive, setIsDropzoneActive ] = useState(false);
     
-    useEffect(() => {
+   useEffect(() => {
       ipcRenderer.invoke('getTheFile').then((files = []) => {
         setFiles(files);
       });
-    }, []);
+    }, []); 
     
     useEffect(() => {
     ipcRenderer.on('app:delete-file', (event, filename) => {
@@ -64,12 +64,15 @@ export default function Fs() {
             <h1>Welcome</h1>
                 {/* Iterate and map contents in file */}
 
+                <div  style={{marginTop: "2vh", marginBottom: "2vh"}}>
                 {files.map((file, index) => (
-                    <div key={index}>
-                        <ol>{`${file.name} ${file.size}`}</ol>
-                      
-                    </div>
+                      <>
+                        <ol className="files">{`${file.name}`}</ol>
+                        </>
+
+                        
                 ))}
+                </div>
                 <button style={{float: "bottom"}} onClick={openWindow}>Click to Add File</button>
             </div>    
         </div>

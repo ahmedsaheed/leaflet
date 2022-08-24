@@ -8,8 +8,26 @@ const os = require( 'os' );
 const { Notification } = require( 'electron' );
 const chokidar = require( 'chokidar' );
 
+  const markdown = `
+## Left
+<img src="https://raw.githubusercontent.com/hundredrabbits/100r.co/master/media/content/characters/left.hello.png" width="300"/>
+<a href="http://wiki.xxiivv.com/Left" target="_blank"></a>Left is <b>distractionless plaintext editor</b> designed to quickly navigate between segments of an essay, or multiple documents. It features an auto-complete, synonyms suggestions, writing statistics, markup-based navigation and a speed-reader.
+ 
+The <a href="http://github.com/hundredrabbits/Left" target="_blank" rel="noreferrer" class="external ">application</a> was initially created to help Rek with the writing of the upcoming novel Wiktopher, and later made available as a free and <a href="https://github.com/hundredrabbits/Left" target="_blank" rel="noreferrer" class="external ">open source</a> software.
+Learn more by reading the <a href="https://100r.co/site/left.html" target="_blank" rel="noreferrer" class="external ">manual</a>, or have a look at a <a href="https://www.youtube.com/watch?v=QloUoqqhXGE" target="_blank" rel="noreferrer" class="external ">tutorial video</a>. If you need <b>help</b>, visit the <a href="https://hundredrabbits.itch.io/left/community" target="_blank" rel="noreferrer" class="external ">Community</a>.
+## Install & Run
+You can download [builds](https://hundredrabbits.itch.io/left) for **OSX, Windows and Linux**, or if you wish to build it yourself, follow these steps:
 
+`;
 const appDir = path.resolve( os.homedir(), 'dairy' );
+const checkForDir = () => {
+if(!fs.existsSync(appDir)){
+  //create the directory
+  fs.mkdirSync(appDir);
+  //create the file hello.md
+  fs.writeFileSync(path.resolve(appDir, 'hello.md'), markdown);
+}
+}
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -55,7 +73,7 @@ const filesAdded = ( size ) => {
 };
 
 const getFiles = () => {
-  console.log("here too");
+  checkForDir();
   const files = fs.readdirSync( appDir );
   console.log( files );
 
@@ -63,9 +81,12 @@ const getFiles = () => {
   return files.filter( file => file.endsWith( '.md' ) ).map( filename => {
       const filePath = path.resolve( appDir, filename );
       const fileStats = fs.statSync( filePath );
+      //get the content of the file
+      const content = fs.readFileSync( filePath, 'utf8' );
 
       return {
           name: filename,
+          body: content,
           path: filePath,
           size: Number( fileStats.size / 1000 ).toFixed( 1 ), // kb
       };
@@ -73,6 +94,7 @@ const getFiles = () => {
 };
 
 const addFiles = ( files = [] ) => {
+  checkForDir();
     
   // ensure `appDir` exists
   fs.ensureDirSync( appDir );
@@ -91,6 +113,7 @@ const addFiles = ( files = [] ) => {
 };
 
 const deleteFile = ( filename ) => {
+  fs.ensureDirSync( appDir );
   const filePath = path.resolve( appDir, filename );
 
   // remove file from the file system
@@ -100,6 +123,7 @@ const deleteFile = ( filename ) => {
 };
 
 const openFile = ( filename ) => {
+  checkForDir();
   const filePath = path.resolve( appDir, filename );
 
   // open a file using default application
