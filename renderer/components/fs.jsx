@@ -39,38 +39,19 @@ export default function Fs() {
        setIsDropzoneActive(false);
     };
 
-            // const openWindow = () => {
-        //     useEffect(() => {
-
-        //         if  (addFile){
-        //             ipcRenderer.invoke( 'app:on-fs-dialog-open' ).then( () => {
-        //                 ipcRenderer.invoke( 'getTheFile' ).then( ( files = [] ) => {
-        //                     setFiles(files);
-        //                     setAddFile(false);
-        //                 });
-        //             });
-        //         }
-
-        //        return;
-               
-            
-        //     })
-           
-        // }
         const onDragEnter = () => {  setIsDropzoneActive(true); };
         const onDragLeave = () => {  setIsDropzoneActive(false); };
     
         return(
             <div className="fs fixed" style={{minWidth: "50vh", minHeight: "100vh",}}>
-            <div style={{marginTop: "10vh", padding: "2em"}}>
-            <h1>Todo:</h1>
-                <p> Implement File System </p>
+            <div style={{marginTop: "10vh", paddingTop: "2em", paddingLeft: "1em"}}>
+            <h1>Welcome</h1>
                 {/* Iterate and map contents in file */}
 
                 {files.map((file, index) => (
                     <div key={index}>
-                        <p>{file.name}</p>
-                        <p>{file.size}</p>
+                        <ol>{`${file.name} ${file.size}`}</ol>
+                      
                     </div>
                 ))}
                 {/* <button style={{float: "bottom"}} onClick={setAddFile(true)}>Click to Add File</button> */}
