@@ -161,3 +161,8 @@ a {
 .files:hover{
   cursor: pointer;
 }
+.selected::before{
+  content: "• ";
+
+  font-size: 1.5em;
+}
