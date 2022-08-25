@@ -20,7 +20,13 @@ export const getMarkdown = (value: string) => {
       });
       md.use(katex);
 
-     return { __html: md.render(value) };
+      try{
+        return { __html: md.render(value) };
+      }catch(err){
+        return { __html: "Can't Render Something not right!" };
+      }
+
+     
 }
 
 
