@@ -5,7 +5,7 @@ export default function ButtomBar({ word, mode, loader }) {
   return (
     <div
       className="fixed inset-x-0 bottom-0 ButtomBar"
-      style={{ marginLeft: "28%", maxHeight: "10vh", marginTop: "20px" }}
+      style={{ marginLeft: "30%", maxHeight: "10vh", marginTop: "20px" }}
     >
       <container
         className="Left"

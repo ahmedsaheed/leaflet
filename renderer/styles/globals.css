@@ -19,6 +19,11 @@
     background-color: #232223;
     border-radius: 5px;
   }
+  code{
+    background-color: #232223;
+  }
+
+ 
 
   .fs {
     background-color: #2b2b2b;
@@ -62,6 +67,11 @@
     border-radius: 5px;
   }
 
+  code{
+    background-color: rgb(222, 226, 230);
+    
+  }
+
   .fs {
     background-color: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(5px);
@@ -79,6 +89,14 @@
 
   .greys {
     color: grey;
+  }
+  .selected::before{
+    content: "• ";
+  
+  }
+  hr{
+    border: 1px solid grey;
+  
   }
 }
 
@@ -128,10 +146,14 @@ textarea:focus-visible {
 
 code {
   font-family: "iA Writer Duospace", sans-serif;
-  margin: 1em;
-  overflow-x: auto;
-  white-space: pre-wrap;
+  padding: 0.2em 0.4em;
+  border-radius: 5px;
 }
+pre code {
+  display: block;
+  overflow-x: auto;
+  padding: 1em; 
+ }
 
 p {
   margin: 0.8em 0;

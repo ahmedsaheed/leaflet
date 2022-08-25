@@ -129,7 +129,8 @@ export default function Next() {
                 ))}
               </div>
           
-               <button className={`${marker ? "tick " : ""} fixed bottom-8`}
+          <div className = "fixed bottom-10">
+               <button className={`${marker ? "tick " : ""}`}
                 onClick={() =>{
                 try{
                   saveFile();
@@ -146,12 +147,13 @@ export default function Next() {
               }}
                >
                Save File
-             </button>
+             </button><br/>
              
              
-              <button className="fixed bottom-2" onClick={openWindow}>
+              <button onClick={openWindow}>
                 Click to Add File
               </button>
+              </div>
             </div>
             </div>
           </div>
