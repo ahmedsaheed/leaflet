@@ -30,8 +30,6 @@ export default function Next() {
       setPath(files[0] ? `${files[0].path}` : "");
     });
   }, []);
-
-  //write a funtion to update the files
   const Update = () => {
     ipcRenderer.invoke("getTheFile").then((files = []) => {
       setFiles(files);
@@ -58,7 +56,6 @@ export default function Next() {
     });
   }
 
-  //TODO: Create new file button with file name input box
   const createNewFile = () => {
     ipcRenderer.invoke("createNewFile", fileName).then(() => {
       setFiles(files);
@@ -69,12 +66,11 @@ export default function Next() {
 
   const saveFile = () => {
     fs.writeFile(path, value, (err) => {
-      console.log("The file has been saved!");
       Update();
     });
   };
 
-  //function to save the file when cms + s is pressed
+  //CMD+S
   // const saveFileOnKeyPress = (e) => {
   //   if (e.key === "s" && (e.ctrlKey || e.metaKey)) {
   //     saveFile();
@@ -88,6 +84,7 @@ export default function Next() {
   // } , [])
 
   //SCROLL
+ 
   const onScroll = () => {
     const Scrolled = document.documentElement.scrollTop;
     const MaxHeight =
@@ -165,7 +162,7 @@ export default function Next() {
                   whiteSpace: "pre-wrap",
                 }}
               >
-                <h1>EXPLORER</h1>
+                <p>EXPLORER</p>
                 <div style={{ marginTop: "2vh", marginBottom: "2vh" }}>
                   {files.map((file, index) => (
                     <>
@@ -182,7 +179,6 @@ export default function Next() {
                       </ol>
                     </>
                   ))}
-                  {/* create a form to collect file name */}
                   {fileNameBox ? (
                     <form
                       onSubmit={(e) => {
@@ -191,7 +187,6 @@ export default function Next() {
                       }}
                     >
                       <input
-                        //add auto focus to the input box
                         autoFocus
                         className="createFile"
                         type="text"
