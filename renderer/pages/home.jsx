@@ -151,19 +151,18 @@ export default function Next() {
             className="fs fixed"
             style={{ width: "30vw", maxWidth: "30vw", minHeight: "100vh" }}
           >
-            <div style={{ overflow: "hidden" }}>
+            <div>
               <div
                 style={{
                   height: "100vh",
                   marginTop: "10vh",
                   paddingTop: "2em",
                   paddingLeft: "1em",
-                  overflow: "scroll",
-                  whiteSpace: "pre-wrap",
+              
                 }}
               >
                 <p>EXPLORER</p>
-                <div style={{ marginTop: "2vh", marginBottom: "2vh" }}>
+                <div className="fileBody" style={{ marginTop: "2vh", marginBottom: "2vh", maxHeight: "40vh", overflow:"scroll" }}>
                   {files.map((file, index) => (
                     <>
                       <ol className="files">

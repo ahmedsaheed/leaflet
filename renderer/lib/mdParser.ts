@@ -26,7 +26,7 @@ export const getMarkdown = (value: string) => {
       try{
         return { __html: md.render(value) };
       }catch(err){
-        return { __html: "Can't Render Something not right!" };
+        return { __html: "Couldn't render, Something not right!" };
       }
 
      

@@ -13,7 +13,7 @@ const chokidar = require( 'chokidar' );
 const markdown = `
 # Leaflet
 
-<img src="https://raw.githubusercontent.com/hundredrabbits/100r.co/master/media/content/characters/left.hello.png" width="300"/>
+[[toc]]
 
 <a href="http://wiki.xxiivv.com/Left" target="_blank"></a>Left is <b>distractionless plaintext editor</b> designed to quickly navigate between segments of an essay, or multiple documents. It features an auto-complete, synonyms suggestions, writing statistics, markup-based navigation and a speed-reader.
  $(ax^2 + bx + c = 0)$  
@@ -259,8 +259,16 @@ const today = new Date();
 var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
 var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 var dateTime = date+' '+time;
+
+
+
+  // get file extension
+  const extension = file.split('.').pop();
+
+
+
   if(fs.existsSync(appDir)){
-    fs.writeFileSync( path.resolve( appDir, `${file}.md`), `Hello From **${file}** <br> Created at ${dateTime}.` );
+    fs.writeFileSync( path.resolve( appDir, `${extension == "md" ? file : file+".md"}`), `Hello From **${file}** <br> Created at ${dateTime}.` );
 
   }
 }

@@ -223,3 +223,5 @@ body::-webkit-scrollbar {display:none;}
 
  margin: 2em;
 }
+
+.fileBody::-webkit-scrollbar {display:none;}
