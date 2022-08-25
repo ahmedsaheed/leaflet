@@ -20,6 +20,7 @@ You can download [builds](https://hundredrabbits.itch.io/left) for **OSX, Window
 `;
 
 
+
 const appDir = path.resolve( os.homedir(), 'dairy' );
 
 const isProd = process.env.NODE_ENV === 'production';
@@ -55,6 +56,15 @@ if (isProd) {
     mainWindow.webContents.openDevTools();
   }
 })();
+
+export const saveNotif = (name) =>{
+  const notif = new Notification( {
+      title: 'File saved',
+      body: `${ name } has been successfully saved.`
+  } );
+
+  notif.show();
+}
 
 const filesAdded = ( size ) => {
   const notif = new Notification( {

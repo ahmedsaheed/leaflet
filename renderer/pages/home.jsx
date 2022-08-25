@@ -4,9 +4,9 @@ import { progress } from "../components/progress.ts";
 import { getMarkdown } from "../lib/mdParser.ts";
 import ButtomBar from "../components/buttomBar";
 import Fs from "../components/fs";
-import ReactMarkdown from 'react-markdown'
 const fs = require( 'fs-extra' );
 import Head from "next/head";
+
 
 export default function Next() {
   const [value, setValue] = React.useState("");
@@ -16,6 +16,8 @@ export default function Next() {
   const [name, setName] = React.useState("");
   const [index, setIndex] = React.useState(0);
   const [path, setPath] = React.useState("");
+  const [isEdited, setIsEdited] = React.useState(false);
+  const [marker, setMarker] = React.useState(false);
 
   useEffect(() => {
     ipcRenderer.invoke("getTheFile").then((files = []) => {
@@ -26,7 +28,28 @@ export default function Next() {
     });
   }, []);
 
-  // function to save the file on cms + s using fs-extra
+
+  const saveFile = () => {
+    fs.writeFile(path, value, (err) => {
+      console.log("The file has been saved!");
+      // setFiles(files);
+    })
+  }
+
+  //function to save the file when cms + s is pressed 
+  // const saveFileOnKeyPress = (e) => {
+  //   if (e.key === "s" && (e.ctrlKey || e.metaKey)) {
+  //     saveFile();
+  //   }
+  // }
+  // useEffect(() => {
+  //   document.addEventListener("keydown", saveFileOnKeyPress);
+  //   return () => {
+  //     document.removeEventListener("keydown", saveFileOnKeyPress);
+  //   }
+  // } , [])
+
+
 
   //SCROLL
   const onScroll = () => {
@@ -54,6 +77,7 @@ export default function Next() {
 
   function handleChange(e) {
     setValue(e.target.value);
+    setIsEdited(true);
   }
   const openWindow = () => {
     ipcRenderer.invoke("app:on-fs-dialog-open").then(() => {
@@ -62,6 +86,8 @@ export default function Next() {
       });
     });
   };
+
+  
 
   return (
     
@@ -102,6 +128,28 @@ export default function Next() {
                   </>
                 ))}
               </div>
+              {isEdited ? 
+               <button className={`${marker ? "tick " : ""} fixed bottom-8`}
+                onClick={() =>{
+                try{
+                  saveFile();
+                  setMarker(true);
+                  setTimeout(() => {
+                    setMarker(false);
+                    setIsEdited(false);
+                  }
+                  , 3000);
+                  
+                }catch{
+                  console.log("error");
+                }
+              }}
+               >
+               Save File
+             </button>
+              : null}
+            
+             
               <button className="fixed bottom-2" onClick={openWindow}>
                 Click to Add File
               </button>
@@ -118,15 +166,20 @@ export default function Next() {
         >
           {isVisble ? (
             <>
+            <div style={{overflow: "hidden"}}>
               <div
-                style={{ marginTop: "2em", marginBottom: "5em" }}
+                style={{ marginTop: "2em", marginBottom: "5em", overflow: "scroll" }}
                 className="third"
                 dangerouslySetInnerHTML={ getMarkdown(value)}
               />
+              </div>
             </>
           ) : (
             <div>
+              <div >
               <textarea
+                autoFocus={true}
+              // {...value === "" ? "autoFocus" : "" }
                 id="markdown-content"
                 defaultValue={value}
                 onChange={handleChange}
@@ -136,15 +189,17 @@ export default function Next() {
                   minHeight: "100vh",
                   backgroundColor: "transparent",
                   marginBottom: "2em",
+                   //make the textarea scrollable but scroll bar is not visible
                 }}
               />
+              </div>
             </div>
           )}
 
           <ButtomBar
             word={value.toString()}
             mode={isVisble ? "Preview" : "Insert"}
-            loader={progress(scroll)}
+            loader={isVisble ? progress(scroll) : ""}
           />
         </div>
       </div>

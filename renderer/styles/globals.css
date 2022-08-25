@@ -147,7 +147,7 @@ a {
 
 .third {
   animation-name: animateIn;
-  animation-duration: 2s;
+  animation-duration: 1s;
   animation-fill-mode: both;
   animation-timing-function: ease-in-out;
 }
@@ -163,4 +163,10 @@ a {
 }
 .files:hover{
   cursor: pointer;
+}
+#markdown-content::-webkit-scrollbar {display:none;}
+body::-webkit-scrollbar {display:none;}
+
+.tick::after{
+  content: " ✔";
 }
