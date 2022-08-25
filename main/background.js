@@ -90,6 +90,16 @@ func next(nums []int, i, j int) (int, int) {
 \n\`\`\`
 
 
+---
+## Media Support
+
+<audio controls>
+  <source src="https://olagist.net/wp-content/uploads/2020/09/J_Cole_-_Want_You_To_Fly_Javari_.mp3" 
+   type="audio/mpeg">
+Your browser does not support the audio element.
+</audio>
+
+
 ## Extras
 
 - This application supports the [Ecosystem Theme](https://github.com/hundredrabbits/Themes).
@@ -97,11 +107,8 @@ func next(nums []int, i, j int) (int, int) {
 - Left's source code is licensed under [MIT](https://github.com/hundredrabbits/Left/blob/master/LICENSE) and the **images, text and assets** are licensed under [BY-NC-SA 4.0](https://github.com/hundredrabbits/Left/blob/master/LICENSE.by-nc-sa-4.0.md). View individual licenses for details.
 - Pull Requests are welcome!
 
-<audio controls>
-  <source src="https://olagist.net/wp-content/uploads/2020/09/J_Cole_-_Want_You_To_Fly_Javari_.mp3" 
-   type="audio/mpeg">
-Your browser does not support the audio element.
-</audio>
+
+
 
 `;
 
