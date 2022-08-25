@@ -173,15 +173,18 @@ export default function Next() {
                         createNewFile(fileName);
                         setFileNameBox(false);
                         setFiles(files);
+                        
                       }}
                     >
                       <input
+                        //add auto focus to the input box
+                        autoFocus
+                        className="createFile"
                         type="text"
-                        style={{ color: "red" }}
+                        // style={{ color: "red" }}
                         placeholder="Enter file name"
                         onChange={(e) => setFileName(e.target.value)}
                       />
-                      <button type="submit">Create</button>
                     </form>
                   ) : null}
                 </div>
