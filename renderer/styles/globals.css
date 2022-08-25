@@ -198,3 +198,7 @@ body::-webkit-scrollbar {display:none;}
 .tick::after{
   content: " ✔";
 }
+.katex-display{
+
+ margin: 2em;
+}

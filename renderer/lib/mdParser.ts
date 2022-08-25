@@ -1,9 +1,9 @@
 import { Remarkable } from "remarkable";
+// import {MarkdownIt} from "markdown-it";
 import hljs from "highlight.js";
-import katex from "remarkable-katex";
 
 export const getMarkdown = (value: string) => {  
-    const md = new Remarkable("full", {
+    const md = require('markdown-it')({
         html: true,
         typographer: true,
         highlight: function (str, lang) {
@@ -18,7 +18,10 @@ export const getMarkdown = (value: string) => {
           } catch (err) {}
         },
       });
+      var katex = require('markdown-it-katex');
       md.use(katex);
+      md.use(require('markdown-it-footnote'));
+      md.use(require('markdown-it-task-lists'))
 
       try{
         return { __html: md.render(value) };
