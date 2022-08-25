@@ -6,6 +6,7 @@ import ButtomBar from "../components/buttomBar";
 import Fs from "../components/fs";
 const fs = require( 'fs-extra' );
 import Head from "next/head";
+import dragDrop from "drag-drop";
 
 
 export default function Next() {
@@ -27,6 +28,25 @@ export default function Next() {
       setPath(files[0] ? `${files[0].path}` : "");
     });
   }, []);
+
+  if (typeof window !== "undefined") {
+  dragDrop( '.fs', ( files ) => {
+    const _files = files.map( file => {
+        return {
+            name: file.name,
+            path: file.path,
+
+        };
+    } );
+
+    // send file(s) add event to the `main` process
+    ipcRenderer.invoke( 'app:on-file-add', _files ).then( () => {
+        ipcRenderer.invoke( 'getTheFile' ).then( ( files = [] ) => {
+           setFiles( files );
+        } );
+    } );
+} );
+  }
 
 
   const saveFile = () => {

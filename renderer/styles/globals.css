@@ -139,6 +139,9 @@ blockquote {
   padding-left: 0.7em;
   margin-inline-end: 0;
 }
+textarea{
+  -webkit-app-region: no-drag;
+}
 textarea:focus-visible {
   outline: none;
 }
@@ -164,6 +167,7 @@ a {
 .mainer {
   display: grid;
   grid-template-columns: 1fr 2fr;
+
 }
 
 .third {
@@ -184,6 +188,9 @@ a {
 }
 .files:hover{
   cursor: pointer;
+}
+#markdown-content{
+  cursor: text;
 }
 #markdown-content::-webkit-scrollbar {display:none;}
 body::-webkit-scrollbar {display:none;}
