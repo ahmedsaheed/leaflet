@@ -1,7 +1,16 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import Countable from "wordcount";
+import { setInterval } from "timers";
+
 
 export default function ButtomBar({ word, mode, loader }) {
+  const [clockState, setClockState] = useState();
+  useEffect(() => {
+    setInterval(() =>{
+      const date = new Date();
+      setClockState(date.toLocaleTimeString());
+    }, 1000) 
+  }, [])
   return (
     <div
       className="fixed inset-x-0 bottom-0 ButtomBar"
@@ -48,7 +57,7 @@ export default function ButtomBar({ word, mode, loader }) {
           </svg>
         </span>
         <div style={{ display: "inline", marginLeft: "20px" }}></div>
-        {/* <Clock style={{float: "right"}} format="HH:mm:ss" interval={1000} ticking={true} />            */}
+        {clockState}
       </container>
     </div>
   );

@@ -3,9 +3,7 @@ import { ipcRenderer } from "electron";
 import { progress } from "../components/progress.ts";
 import { getMarkdown } from "../lib/mdParser.ts";
 import ButtomBar from "../components/buttomBar";
-import Fs from "../components/fs";
 const fs = require( 'fs-extra' );
-import Head from "next/head";
 import dragDrop from "drag-drop";
 
 
