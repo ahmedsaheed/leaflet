@@ -129,7 +129,7 @@ export default function Next() {
                 ))}
               </div>
           
-          <div className = "fixed bottom-10">
+          <div className = "fixed bottom-20">
                <button className={`${marker ? "tick " : ""}`}
                 onClick={() =>{
                 try{
