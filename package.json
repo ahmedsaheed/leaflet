@@ -1,6 +1,7 @@
 {
   "private": true,
   "name": "leaflet",
+  "productName": "Leaflet",
   "description": "My application description",
   "version": "1.0.0",
   "author": "Ahmed Saheed <ahmedsaheed2@outlook.com>",
@@ -31,7 +32,7 @@
   "devDependencies": {
     "autoprefixer": "^10.4.7",
     "electron": "^18.2.0",
-    "electron-builder": "^23.0.3",
+    "electron-builder": "^23.3.3",
     "next": "^12.1.6",
     "nextron": "^8.1.0",
     "postcss": "^8.4.13",

@@ -2283,7 +2283,7 @@
   dependencies:
     "jake" "^10.8.5"
 
-"electron-builder@^23.0.3":
+"electron-builder@^23.3.3":
   "integrity" "sha512-mFYYdhoFPKevP6y5uaaF3dusmB2OtQ/HnwwpyOePeU7QDS0SEIAUokQsHUanAiJAZcBqtY7iyLBgX18QybdFFw=="
   "resolved" "https://registry.npmjs.org/electron-builder/-/electron-builder-23.3.3.tgz"
   "version" "23.3.3"

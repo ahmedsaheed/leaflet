@@ -1,6 +1,7 @@
-appId: com.example.nextron
-productName: My Nextron App
-copyright: Copyright © 2018 Yoshihide Shiono
+appId: com.example.leaflet
+name: Leaflet
+productName: Leaflet
+copyright: Copyright © 2022 Ahmed Saheed
 directories:
   output: dist
   buildResources: resources
