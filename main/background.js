@@ -44,8 +44,6 @@ Here's a simple footnote,[^1] and here's a longer one.[^bignote]
     Indent paragraphs to include them in the footnote.
     Add as many paragraphs as you like.
 
-
-
 <img src='https://raw.githubusercontent.com/hundredrabbits/Left/master/PREVIEW.jpg' width="600"/>
 
 ## Extras
@@ -55,8 +53,6 @@ Here's a simple footnote,[^1] and here's a longer one.[^bignote]
 - Left's source code is licensed under [MIT](https://github.com/hundredrabbits/Left/blob/master/LICENSE) and the **images, text and assets** are licensed under [BY-NC-SA 4.0](https://github.com/hundredrabbits/Left/blob/master/LICENSE.by-nc-sa-4.0.md). View individual licenses for details.
 - Pull Requests are welcome!
 `;
-
-
 
 const appDir = path.resolve( os.homedir(), 'dairy' );
 
@@ -102,6 +98,16 @@ export const saveNotif = (name) =>{
 
   notif.show();
 }
+
+export const created = (name) =>{
+  const notif = new Notification( {
+      title: 'File Created',
+      body: `${ name }.md has been successfully created.`
+  } );
+
+  notif.show();
+}
+
 
 
 const filesAdded = ( size ) => {
@@ -186,6 +192,23 @@ const watchFiles = ( win ) => {
       win.webContents.send( 'app:delete-file', path.parse( filepath ).base );
   } );
 }
+
+const newFile = ( file ) => {
+
+  if(fs.existsSync(appDir)){
+    fs.writeFileSync( path.resolve( appDir, `${file}.md`), "Hello **World**" );
+
+  }
+}
+
+//make the below handler async
+
+
+
+ipcMain.handle( 'createNewFile', async (event, filename ) => {
+  newFile( filename );
+  created( filename );
+})
 
 
 // return list of files
