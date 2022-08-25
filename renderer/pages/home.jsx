@@ -10,7 +10,7 @@ import Head from "next/head";
 
 export default function Next() {
   const [value, setValue] = React.useState("");
-  const [isVisble, setIsVisble] = React.useState(false);
+  const [insert, setInsert] = React.useState(false);
   const [scroll, setScroll] = React.useState(0);
   const [files, setFiles] = React.useState([]);
   const [name, setName] = React.useState("");
@@ -68,10 +68,10 @@ export default function Next() {
   }, []);
 
   const detectKeydown = (e) => {
-    if (e.key === "k" && (e.ctrlKey || e.metaKey)) {
-      setIsVisble(!isVisble);
-    } else if (e.key === "Escape") {
-      setIsVisble(false);
+    if (e.key === "i" && (e.ctrlKey || e.metaKey)) {
+      setInsert(true);
+    } else if (e.key === "p" && (e.ctrlKey || e.metaKey)) {
+      setInsert(false);
     }
   };
 
@@ -96,7 +96,7 @@ export default function Next() {
         <div>
           <div
             className="fs fixed"
-            style={{ width: "50vh", maxWidth: "50vh", minHeight: "100vh"}}
+            style={{ width: "30vw", maxWidth: "30vw", minHeight: "100vh"}}
           >
             <div style={{overflow: "hidden"}}>
             <div
@@ -128,7 +128,7 @@ export default function Next() {
                   </>
                 ))}
               </div>
-              {isEdited ? 
+          
                <button className={`${marker ? "tick " : ""} fixed bottom-8`}
                 onClick={() =>{
                 try{
@@ -147,8 +147,7 @@ export default function Next() {
                >
                Save File
              </button>
-              : null}
-            
+             
              
               <button className="fixed bottom-2" onClick={openWindow}>
                 Click to Add File
@@ -164,7 +163,26 @@ export default function Next() {
             paddingTop: "10vh",
           }}
         >
-          {isVisble ? (
+          {insert ? (
+            <div>
+            <div >
+            <textarea
+              autoFocus={value === "" ? "true" : "false" }
+              id="markdown-content"
+              value={value}
+              onChange={handleChange}
+              className=" h-full w-full"
+              style={{
+                marginTop: "2em",
+                minHeight: "100vh",
+                backgroundColor: "transparent",
+                marginBottom: "2em",
+              }}
+            />
+            </div>
+          </div>
+           
+          ) : (
             <>
             <div style={{overflow: "hidden"}}>
               <div
@@ -174,32 +192,12 @@ export default function Next() {
               />
               </div>
             </>
-          ) : (
-            <div>
-              <div >
-              <textarea
-                autoFocus={true}
-              // {...value === "" ? "autoFocus" : "" }
-                id="markdown-content"
-                defaultValue={value}
-                onChange={handleChange}
-                className=" h-full w-full"
-                style={{
-                  marginTop: "2em",
-                  minHeight: "100vh",
-                  backgroundColor: "transparent",
-                  marginBottom: "2em",
-                   //make the textarea scrollable but scroll bar is not visible
-                }}
-              />
-              </div>
-            </div>
           )}
 
           <ButtomBar
             word={value.toString()}
-            mode={isVisble ? "Preview" : "Insert"}
-            loader={isVisble ? progress(scroll) : ""}
+            mode={insert ? "Insert" : "Preview"}
+            loader={insert ? "" : progress(scroll)}
           />
         </div>
       </div>
