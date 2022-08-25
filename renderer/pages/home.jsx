@@ -1,10 +1,12 @@
 import React, { useEffect } from "react";
 import { ipcRenderer } from "electron";
 import { progress } from "../components/progress.ts";
-import { getMarkdown } from "../lib/mdParser";
+import { getMarkdown } from "../lib/mdParser.ts";
 import ButtomBar from "../components/buttomBar";
 import Fs from "../components/fs";
+import ReactMarkdown from 'react-markdown'
 const fs = require( 'fs-extra' );
+import Head from "next/head";
 
 export default function Next() {
   const [value, setValue] = React.useState("");
@@ -62,15 +64,18 @@ export default function Next() {
   };
 
   return (
+    
     <>
       <div className="mainer" style={{ minHeight: "100vh" }}>
         <div>
           <div
             className="fs fixed"
-            style={{ width: "50vh", maxWidth: "50vh", minHeight: "100vh" }}
+            style={{ width: "50vh", maxWidth: "50vh", minHeight: "100vh"}}
           >
+            <div style={{overflow: "hidden"}}>
             <div
               style={{
+                height: "100vh",
                 marginTop: "10vh",
                 paddingTop: "2em",
                 paddingLeft: "1em",
@@ -101,6 +106,7 @@ export default function Next() {
                 Click to Add File
               </button>
             </div>
+            </div>
           </div>
         </div>
         <div
@@ -115,7 +121,7 @@ export default function Next() {
               <div
                 style={{ marginTop: "2em", marginBottom: "5em" }}
                 className="third"
-                dangerouslySetInnerHTML={getMarkdown(value)}
+                dangerouslySetInnerHTML={ getMarkdown(value)}
               />
             </>
           ) : (

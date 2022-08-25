@@ -19,6 +19,7 @@ Learn more by reading the <a href="https://100r.co/site/left.html" target="_blan
 You can download [builds](https://hundredrabbits.itch.io/left) for **OSX, Windows and Linux**, or if you wish to build it yourself, follow these steps:
 `;
 
+
 const appDir = path.resolve( os.homedir(), 'dairy' );
 
 const isProd = process.env.NODE_ENV === 'production';
@@ -40,7 +41,6 @@ if (isProd) {
       resizable: false,
       fullscreen: false,
   });
-
     mainWindow.webContents.on('new-window', function(e, url) {
   e.preventDefault();
   setTimeout(() => { require('electron').shell.openExternal(url) }, 500)
@@ -72,7 +72,7 @@ const checkForDir = () => {
     fs.writeFileSync(path.resolve(appDir, 'hello.md'), markdown);
   }
   }
-  
+
 
 const getFiles = () => {
   checkForDir();
