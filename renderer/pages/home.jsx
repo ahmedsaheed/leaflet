@@ -6,6 +6,8 @@ import ButtomBar from "../components/buttomBar";
 const fs = require("fs-extra");
 import dragDrop from "drag-drop";
 import Head from "next/head";
+import Script from 'next/Script'
+
 
 export default function Next() {
   const [value, setValue] = React.useState("");
@@ -29,6 +31,14 @@ export default function Next() {
     });
   }, []);
 
+  //write a funtion to update the files
+  const Update = () => {
+    ipcRenderer.invoke("getTheFile").then((files = []) => {
+      setFiles(files);
+    });
+  }
+
+
   if (typeof window !== "undefined") {
     dragDrop(".fs", (files) => {
       const _files = files.map((file) => {
@@ -42,6 +52,7 @@ export default function Next() {
       ipcRenderer.invoke("app:on-file-add", _files).then(() => {
         ipcRenderer.invoke("getTheFile").then((files = []) => {
           setFiles(files);
+          Update();
         });
       });
     });
@@ -51,13 +62,15 @@ export default function Next() {
   const createNewFile = () => {
     ipcRenderer.invoke("createNewFile", fileName).then(() => {
       setFiles(files);
+      Update();
+
     });
   };
 
   const saveFile = () => {
     fs.writeFile(path, value, (err) => {
       console.log("The file has been saved!");
-      setFiles(files);
+      Update();
     });
   };
 
@@ -106,6 +119,7 @@ export default function Next() {
     ipcRenderer.invoke("app:on-fs-dialog-open").then(() => {
       ipcRenderer.invoke("getTheFile").then((files = []) => {
         setFiles(files);
+        Update();
       });
     });
   };
@@ -119,18 +133,20 @@ export default function Next() {
           integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X"
           crossOrigin="anonymous"
         />
-        <script
+
+
+        <Script
           defer
           src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"
           integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4"
           crossOrigin="anonymous"
-        ></script>
-        <script
+        ></Script>
+        <Script
           defer
           src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js"
           integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa"
           crossOrigin="anonymous"
-        ></script>
+        ></Script>
       </Head>
       <div className="mainer" style={{ minHeight: "100vh" }}>
         <div>
@@ -172,8 +188,6 @@ export default function Next() {
                       onSubmit={(e) => {
                         createNewFile(fileName);
                         setFileNameBox(false);
-                        setFiles(files);
-                        
                       }}
                     >
                       <input
@@ -181,7 +195,6 @@ export default function Next() {
                         autoFocus
                         className="createFile"
                         type="text"
-                        // style={{ color: "red" }}
                         placeholder="Enter file name"
                         onChange={(e) => setFileName(e.target.value)}
                       />

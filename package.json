@@ -1,9 +1,9 @@
 {
   "private": true,
-  "name": "my-nextron-app",
+  "name": "leaflet",
   "description": "My application description",
   "version": "1.0.0",
-  "author": "Yoshihide Shiono <shiono.yoshihide@gmail.com>",
+  "author": "Ahmed Saheed <ahmedsaheed2@outlook.com>",
   "main": "app/background.js",
   "scripts": {
     "dev": "nextron",
@@ -25,18 +25,7 @@
     "markdown-it-task-lists": "^2.1.1",
     "mathjax-electron": "^3.0.0",
     "open": "^8.4.0",
-    "react-markdown": "^8.0.3",
-    "rehype-highlight": "^5.0.2",
-    "rehype-katex": "^6.0.2",
-    "rehype-raw": "^6.1.1",
-    "rehype-stringify": "^9.0.3",
-    "remark-gfm": "^3.0.1",
-    "remark-math": "^5.1.1",
-    "remark-parse": "^10.0.1",
-    "remark-rehype": "^10.1.0",
     "remarkable": "^2.0.1",
-    "remarkable-katex": "^1.2.1",
-    "unified": "^10.1.2",
     "wordcount": "^1.1.1"
   },
   "devDependencies": {

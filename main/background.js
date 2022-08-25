@@ -274,7 +274,6 @@ ipcMain.handle( 'createNewFile', async (event, filename ) => {
 
 // return list of files
 ipcMain.handle( 'getTheFile', () => {
-  console.log("got here")
     return getFiles();
 } );
 
