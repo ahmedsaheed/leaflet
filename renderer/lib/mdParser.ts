@@ -20,6 +20,8 @@ export const getMarkdown = (value: string) => {
       md.use(katex);
       md.use(require('markdown-it-footnote'));
       md.use(require('markdown-it-task-lists'))
+      md.use(require("markdown-it-anchor").default); 
+      md.use(require("markdown-it-table-of-contents"));
 
       try{
         return { __html: md.render(value) };
