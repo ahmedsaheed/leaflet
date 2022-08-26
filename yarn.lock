@@ -3289,6 +3289,11 @@
   "resolved" "https://registry.npmjs.org/markdown-it-task-lists/-/markdown-it-task-lists-2.1.1.tgz"
   "version" "2.1.1"
 
+"markdown-it-texmath@^1.0.0":
+  "integrity" "sha512-4hhkiX8/gus+6e53PLCUmUrsa6ZWGgJW2XCW6O0ASvZUiezIK900ZicinTDtG3kAO2kon7oUA/ReWmpW2FByxg=="
+  "resolved" "https://registry.npmjs.org/markdown-it-texmath/-/markdown-it-texmath-1.0.0.tgz"
+  "version" "1.0.0"
+
 "markdown-it@*", "markdown-it@^13.0.1":
   "integrity" "sha512-lTlxriVoy2criHP0JKRhO2VDG9c2ypWCsT237eDiLqi09rmbKoUetyGHq2uOIRoRS//kfoJckS0eUzzkDR+k2Q=="
   "resolved" "https://registry.npmjs.org/markdown-it/-/markdown-it-13.0.1.tgz"

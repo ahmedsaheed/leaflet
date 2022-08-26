@@ -240,7 +240,7 @@ export default function Next() {
             <div>
               <div>
                 <textarea
-                  autoFocus={value === "" ? "true" : "false"}
+                  // autoFocus={value === "" ? "true" : "false"}
                   id="markdown-content"
                   value={value}
                   onChange={handleChange}

@@ -38,6 +38,8 @@ $$\\left( \\sum_{k=1}^n a_k b_k \\right)^2 \\leq \\left( \\sum_{k=1}^n a_k^2 \\r
 
 You can download [builds](https://hundredrabbits.itch.io/left) for **OSX, Windows and Linux**, or if you wish to build it yourself, follow these steps:
 
+$$\\sqrt{3x-1}+(1+x)^2$$
+
 Here's a simple footnote,[^1] and here's a longer one.[^bignote]
 
 [^1]: This is the first footnote.
