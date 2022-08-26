@@ -8,6 +8,7 @@
     background: #333;
     color: white;
     font-family: "iA Writer Duospace", sans-serif;
+    -webkit-font-smoothing: antialiased;
     font-size: 12px;
   }
   .ButtomBar {
@@ -65,8 +66,9 @@ strong{
     background: #ddd;
     color: black;
     font-family: "iA Writer Duospace", sans-serif;
-
     font-size: 12px;
+    -webkit-font-smoothing: antialiased;
+
   }
   .ButtomBar {
     background-color: rgba(255, 255, 255, 0.15);

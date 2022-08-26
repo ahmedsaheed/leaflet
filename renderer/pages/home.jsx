@@ -191,7 +191,7 @@ export default function Next() {
                         type="text"
                         placeholder="Enter file name"
                         onChange={(e) => setFileName(e.target.value)}
-                      />
+                      /> 
                     </form>
                   ) : null}
                 </div>
