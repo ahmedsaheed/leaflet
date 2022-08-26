@@ -22,6 +22,18 @@ export default function Next() {
   const [fileNameBox, setFileNameBox] = React.useState(false);
   const [fileName, setFileName] = React.useState("");
 
+
+//   if (typeof window !== "undefined") {
+//   window.addEventListener('contextmenu', (e) => {
+//     e.preventDefault()
+//     ipcRenderer.send('show-context-menu')
+//   })
+  
+//   ipcRenderer.on('context-menu-command', (e, command) => {
+//     // ...
+//   })
+// }
+  
   useEffect(() => {
     ipcRenderer.invoke("getTheFile").then((files = []) => {
       setFiles(files);
@@ -38,7 +50,7 @@ export default function Next() {
 
 
   if (typeof window !== "undefined") {
-    dragDrop(".fs", (files) => {
+    dragDrop("body", (files) => {
       const _files = files.map((file) => {
         return {
           name: file.name,
@@ -70,18 +82,18 @@ export default function Next() {
     });
   };
 
-  //CMD+S
-  // const saveFileOnKeyPress = (e) => {
-  //   if (e.key === "s" && (e.ctrlKey || e.metaKey)) {
-  //     saveFile();
-  //   }
-  // }
-  // useEffect(() => {
-  //   document.addEventListener("keydown", saveFileOnKeyPress);
-  //   return () => {
-  //     document.removeEventListener("keydown", saveFileOnKeyPress);
-  //   }
-  // } , [])
+
+  const saveFileOnKeyPress = (e) => {
+    if (e.key === "s" && (e.ctrlKey || e.metaKey)) {
+      saveFile();
+    }
+  }
+  useEffect(() => {
+    document.addEventListener("keyup", saveFileOnKeyPress);
+    return () => {
+      document.removeEventListener("keyup", saveFileOnKeyPress);
+    }
+  } , [])
 
   //SCROLL
  

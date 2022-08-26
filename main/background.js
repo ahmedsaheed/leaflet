@@ -1,14 +1,12 @@
-import { app, ipcMain, Menu , dialog } from 'electron';
-import serve from 'electron-serve';
-import { createWindow } from './helpers';
-import path from 'path';
-import open from 'open';
-const fs = require( 'fs-extra' );
-const os = require( 'os' );
-const { Notification } = require( 'electron' );
-const chokidar = require( 'chokidar' );
-
-
+import { app, ipcMain, Menu, dialog } from "electron";
+import serve from "electron-serve";
+import { createWindow } from "./helpers";
+import path from "path";
+import open from "open";
+const fs = require("fs-extra");
+const os = require("os");
+const { Notification } = require("electron");
+const chokidar = require("chokidar");
 
 const markdown = `
 # Leaflet
@@ -114,139 +112,135 @@ Your browser does not support the audio element.
 
 `;
 
-
-
-const appDir = path.resolve( os.homedir(), 'dairy' );
-const isProd = process.env.NODE_ENV === 'production';
-const isMac = process.platform === 'darwin'
-
+const appDir = path.resolve(os.homedir(), "dairy");
+const isProd = process.env.NODE_ENV === "production";
+const isMac = process.platform === "darwin";
 
 if (isProd) {
-  serve({ directory: 'app' });
+  serve({ directory: "app" });
 } else {
-  app.setPath('userData', `${app.getPath('userData')} (development)`);
+  app.setPath("userData", `${app.getPath("userData")} (development)`);
 }
 
 (async () => {
   await app.whenReady();
 
-  const mainWindow = createWindow('main', {
-     width: 800,
-     height: 462,
-     minWidth: 400,
-     minHeight: 360,
-      resizable: false,
-      fullscreen: false,
+  const mainWindow = createWindow("main", {
+    width: 800,
+    height: 462,
+    minWidth: 400,
+    minHeight: 360,
+    resizable: false,
+    fullscreen: false,
   });
   watchFiles(mainWindow);
-    mainWindow.webContents.on('new-window', function(e, url) {
-  e.preventDefault();
-  setTimeout(() => { require('electron').shell.openExternal(url) }, 500)
- });
+  mainWindow.webContents.on("new-window", function (e, url) {
+    e.preventDefault();
+    setTimeout(() => {
+      require("electron").shell.openExternal(url);
+    }, 500);
+  });
 
- const template = [
-  // { role: 'appMenu' }
-  ...(isMac ? [{
-    label: app.name,
-    submenu: [
-      { role: 'about' },
-      { type: 'separator' },
-      { role: 'services' },
-      { type: 'separator' },
-      { role: 'hide' },
-      { role: 'hideOthers' },
-      { role: 'unhide' },
-      { type: 'separator' },
-      { role: 'quit' }
-    ]
-  }] : []),
-  // { role: 'fileMenu' }
-  {
-    label: 'File',
-    submenu: [
-      isMac ? { role: 'close' } : { role: 'quit' }
-    ]
-  },
-  // { role: 'editMenu' }
-  {
-    label: 'Edit',
-    submenu: [
-      { role: 'undo' },
-      { role: 'redo' },
-      { type: 'separator' },
-      { role: 'cut' },
-      { role: 'copy' },
-      { role: 'paste' },
-      ...(isMac ? [
-        { role: 'pasteAndMatchStyle' },
-        { role: 'delete' },
-        { role: 'selectAll' },
-        { type: 'separator' },
+  //  ipcMain.on('show-context-menu', (event) => {
+  const template = [
+    // { role: 'appMenu' }
+    ...(isMac
+      ? [
+          {
+            label: app.name,
+            submenu: [
+              { role: "about" },
+              { type: "separator" },
+              { role: "services" },
+              { type: "separator" },
+              { role: "hide" },
+              { role: "hideOthers" },
+              { role: "unhide" },
+              { type: "separator" },
+              { role: "quit" },
+            ],
+          },
+        ]
+      : []),
+    // { role: 'fileMenu' }
+    {
+      label: "File",
+      submenu: [isMac ? { role: "close" } : { role: "quit" }],
+    },
+    // { role: 'editMenu' }
+    {
+      label: "Edit",
+      submenu: [
+        { role: "undo" },
+        { role: "redo" },
+        { type: "separator" },
+        { role: "cut" },
+        { role: "copy" },
+        { role: "paste" },
+        ...(isMac
+          ? [
+              { role: "pasteAndMatchStyle" },
+              { role: "delete" },
+              { role: "selectAll" },
+              { type: "separator" },
+              {
+                label: "Speech",
+                submenu: [{ role: "startSpeaking" }, { role: "stopSpeaking" }],
+              },
+            ]
+          : [{ role: "delete" }, { type: "separator" }, { role: "selectAll" }]),
+      ],
+    },
+    // { role: 'viewMenu' }
+    {
+      label: "View",
+      submenu: [
+        { role: "reload" },
+        { role: "forceReload" },
+        { role: "toggleDevTools" },
+        { type: "separator" },
+        { role: "resetZoom" },
+        { role: "zoomIn" },
+        { role: "zoomOut" },
+        { type: "separator" },
+        { role: "togglefullscreen" },
+      ],
+    },
+
+    {
+      label: "Nav",
+      submenu: [
+        { role: "minimize" },
+        { role: "zoom" },
+        ...(isMac
+          ? [
+              { type: "separator" },
+              { role: "front" },
+              { type: "separator" },
+              { role: "window" },
+            ]
+          : [{ role: "close" }]),
+      ],
+    },
+    {
+      role: "help",
+      submenu: [
         {
-          label: 'Speech',
-          submenu: [
-            { role: 'startSpeaking' },
-            { role: 'stopSpeaking' }
-          ]
-        }
-      ] : [
-        { role: 'delete' },
-        { type: 'separator' },
-        { role: 'selectAll' }
-      ])
-    ]
-  },
-  // { role: 'viewMenu' }
-  {
-    label: 'View',
-    submenu: [
-      { role: 'reload' },
-      { role: 'forceReload' },
-      { role: 'toggleDevTools' },
-      { type: 'separator' },
-      { role: 'resetZoom' },
-      { role: 'zoomIn' },
-      { role: 'zoomOut' },
-      { type: 'separator' },
-      { role: 'togglefullscreen' }
-    ]
-  },
-  // { role: 'windowMenu' }
-  {
-    label: 'Nav',
-    submenu: [
-      { role: 'minimize' },
-      { role: 'zoom' },
-      ...(isMac ? [
-        { type: 'separator' },
-        { role: 'front' },
-        { type: 'separator' },
-        { role: 'window' }
-      ] : [
-        { role: 'close' }
-      ])
-    ]
-  },
-  {
-    role: 'help',
-    submenu: [
-      {
-        label: 'Learn More',
-        click: async () => {
-          const { shell } = require('electron')
-          await shell.openExternal('https://electronjs.org')
-        }
-      }
-    ]
-  }
-]
+          label: "Learn More",
+          click: async () => {
+            const { shell } = require("electron");
+            await shell.openExternal("https://electronjs.org");
+          },
+        },
+      ],
+    },
+  ];
 
-const menu = Menu.buildFromTemplate(template)
-Menu.setApplicationMenu(menu)
-
+  const menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
 
   if (isProd) {
-    await mainWindow.loadURL('app://./home.html');
+    await mainWindow.loadURL("app://./home.html");
   } else {
     const port = process.argv[2];
     await mainWindow.loadURL(`http://localhost:${port}/home`);
@@ -254,180 +248,149 @@ Menu.setApplicationMenu(menu)
   }
 })();
 
-export const saveNotif = (name) =>{
-  const notif = new Notification( {
-      title: 'File saved',
-      body: `${ name } has been successfully saved.`
-  } );
+export const created = (name) => {
+  const extension = name.split(".").pop();
+  const realName = extension == "md" ? name : `${name}.md`;
+  const notif = new Notification({
+    title: "File Created",
+    body: `${realName} has been successfully created.`,
+  });
 
   notif.show();
-}
+};
 
-export const created = (name) =>{
-  const notif = new Notification( {
-      title: 'File Created',
-      body: `${ name }.md has been successfully created.`
-  } );
-
-  notif.show();
-}
-
-
-
-const filesAdded = ( size ) => {
-  const notif = new Notification( {
-      title: 'Files added',
-      body: `${ size } ${size > 1 ? "files" : "file" } has been successfully added.`
-  } );
+const filesAdded = (size) => {
+  const notif = new Notification({
+    title: "Files added",
+    body: `${size} ${size > 1 ? "files" : "file"} has been successfully added.`,
+  });
 
   notif.show();
 };
 const checkForDir = () => {
-  if(!fs.existsSync(appDir)){
-    //create the directory
+  if (!fs.existsSync(appDir)) {
     fs.mkdirSync(appDir);
-    //create the file hello.md
-    fs.writeFileSync(path.resolve(appDir, 'onboarding.md'), markdown);
+    fs.writeFileSync(path.resolve(appDir, "onboarding.md"), markdown);
   }
-  }
-
+};
 
 const getFiles = () => {
   checkForDir();
-  const files = fs.readdirSync( appDir ); 
-  let place = 0
-
-  //return only files that end with .md
-  return files.filter( file => file.endsWith( '.md' ) ).map( filename => {
-      const filePath = path.resolve( appDir, filename );
-      const fileStats = fs.statSync( filePath );
-      //get the body of the file
-      const content = fs.readFileSync( filePath, 'utf8' );
+  const files = fs.readdirSync(appDir);
+  let place = 0;
+  return files
+    .filter((file) => file.endsWith(".md"))
+    .map((filename) => {
+      const filePath = path.resolve(appDir, filename);
+      const fileStats = fs.statSync(filePath);
+      const content = fs.readFileSync(filePath, "utf8");
       place++;
 
       return {
-          index: place,
-          name: filename,
-          body: content,
-          path: filePath,
-          size: Number( fileStats.size / 1000 ).toFixed( 1 ), // kb
+        index: place,
+        name: filename,
+        body: content,
+        path: filePath,
+        size: Number(fileStats.size / 1000).toFixed(1), // kb
       };
-  } );
+    });
 };
 
-const addFiles = ( files = [] ) => {
-    
-  // ensure `appDir` exists
-  fs.ensureDirSync( appDir );
-  
-  // copy `files` recursively (ignore duplicate file names)
-  files.forEach( file => {
-      const filePath = path.resolve( appDir, file.name );
+const addFiles = (files = []) => {
+  fs.ensureDirSync(appDir);
+  files.forEach((file) => {
+    const filePath = path.resolve(appDir, file.name);
 
-      if( ! fs.existsSync( filePath ) ) {
-          fs.copyFileSync( file.path, filePath );
-      }
-  } );
+    if (!fs.existsSync(filePath)) {
+      fs.copyFileSync(file.path, filePath);
+    }
+  });
 
-  // display notification
-  filesAdded( files.length );
+  filesAdded(files.length);
 };
 
-const deleteFile = ( filename ) => {
-  const filePath = path.resolve( appDir, filename );
+const deleteFile = (filename) => {
+  const filePath = path.resolve(appDir, filename);
 
-  // remove file from the file system
-  if( fs.existsSync( filePath ) ) {
-      fs.removeSync( filePath );
+  if (fs.existsSync(filePath)) {
+    fs.removeSync(filePath);
   }
 };
 
-const openFile = ( filename ) => {
-  const filePath = path.resolve( appDir, filename );
+const openFile = (filename) => {
+  const filePath = path.resolve(appDir, filename);
 
-  // open a file using default application
-  if( fs.existsSync( filePath ) ) {
-      open( filePath );
+  if (fs.existsSync(filePath)) {
+    open(filePath);
   }
 };
 
-const watchFiles = ( win ) => {
-  chokidar.watch( appDir ).on( 'unlink', ( filepath ) => {
-      win.webContents.send( 'app:delete-file', path.parse( filepath ).base );
-  } );
-}
+const watchFiles = (win) => {
+  chokidar.watch(appDir).on("unlink", (filepath) => {
+    win.webContents.send("app:delete-file", path.parse(filepath).base);
+  });
+};
 
-const newFile = ( file ) => {
-const today = new Date();
-var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-var dateTime = date+' '+time;
-
-
-
-  // get file extension
-  const extension = file.split('.').pop();
-
-
-
-  if(fs.existsSync(appDir)){
-    fs.writeFileSync( path.resolve( appDir, `${extension == "md" ? file : file+".md"}`), `Hello From **${file}** <br> Created at ${dateTime}.` );
-
+const newFile = (file) => {
+  const today = new Date();
+  var date =
+    today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
+  var time =
+    today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+  var dateTime = date + " " + time;
+  const extension = file.split(".").pop();
+  if (fs.existsSync(appDir)) {
+    fs.writeFileSync(
+      path.resolve(appDir, `${extension == "md" ? file : file + ".md"}`),
+      `Hello From **${file}** <br> Created at ${dateTime}.`
+    );
   }
-}
+};
 
+ipcMain.handle("createNewFile", async (event, filename) => {
+  newFile(filename);
+  created(filename);
+});
+ipcMain.handle("getTheFile", () => {
+  return getFiles();
+});
+ipcMain.handle("app:on-file-add", (event, files = []) => {
+  addFiles(files);
+});
 
-ipcMain.handle( 'createNewFile', async (event, filename ) => {
-  newFile( filename );
-  created( filename );
-})
+ipcMain.handle("app:on-fs-dialog-open", (event) => {
+  const files = dialog.showOpenDialogSync({
+    properties: ["openFile", "multiSelections"],
+  });
 
-
-// return list of files
-ipcMain.handle( 'getTheFile', () => {
-    return getFiles();
-} );
-
-// listen to file(s) add event
-ipcMain.handle( 'app:on-file-add', ( event, files = [] ) => {
-    addFiles( files );
-} );
-
-ipcMain.handle( 'app:on-fs-dialog-open', ( event ) => {
-  const files = dialog.showOpenDialogSync( {
-      properties: [ 'openFile', 'multiSelections' ],
-  } );
-
-  if( !files) {
-      return;
+  if (!files) {
+    return;
   }
 
-  addFiles( files.map( filepath => {
+  addFiles(
+    files.map((filepath) => {
       return {
-          name: path.parse( filepath ).base,
-          path: filepath,
+        name: path.parse(filepath).base,
+        path: filepath,
       };
-  } ) );
-} );
+    })
+  );
+});
 
-// listen to file delete event
-ipcMain.on( 'app:on-file-delete', ( event, file ) => {
-  deleteFile( file.filepath );
-} );
+ipcMain.on("app:on-file-delete", (event, file) => {
+  deleteFile(file.filepath);
+});
 
-// listen to file open event
-ipcMain.on( 'app:on-file-open', ( event, file ) => {
-  openFile( file.filepath );
-} );
+ipcMain.on("app:on-file-open", (event, file) => {
+  openFile(file.filepath);
+});
+ipcMain.on("app:on-file-copy", (event, file) => {
+  event.sender.startDrag({
+    file: file.filepath,
+    icon: file.icon,
+  });
+});
 
-// listen to file copy event
-ipcMain.on( 'app:on-file-copy', ( event, file ) => {
-  event.sender.startDrag( {
-      file: file.filepath,
-      icon: file.icon,
-  } );
-} );
-
-app.on('window-all-closed', () => {
+app.on("window-all-closed", () => {
   app.quit();
 });
