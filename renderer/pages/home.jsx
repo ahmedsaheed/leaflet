@@ -23,17 +23,6 @@ export default function Next() {
   const [fileName, setFileName] = React.useState("");
 
 
-//   if (typeof window !== "undefined") {
-//   window.addEventListener('contextmenu', (e) => {
-//     e.preventDefault()
-//     ipcRenderer.send('show-context-menu')
-//   })
-  
-//   ipcRenderer.on('context-menu-command', (e, command) => {
-//     // ...
-//   })
-// }
-  
   useEffect(() => {
     ipcRenderer.invoke("getTheFile").then((files = []) => {
       setFiles(files);
@@ -82,20 +71,16 @@ export default function Next() {
     });
   };
 
-
-  const saveFileOnKeyPress = (e) => {
-    if (e.key === "s" && (e.ctrlKey || e.metaKey)) {
-      saveFile();
-    }
-  }
   useEffect(() => {
-    document.addEventListener("keyup", saveFileOnKeyPress);
-    return () => {
-      document.removeEventListener("keyup", saveFileOnKeyPress);
+    document.onkeydown = function saveLife (e) {
+      if ((e.ctrlKey || e.metaKey) && e.key === "s") {
+        e.preventDefault();
+        saveFile();
+      }
+  
     }
-  } , [])
-
-  //SCROLL
+  })
+ 
  
   const onScroll = () => {
     const Scrolled = document.documentElement.scrollTop;

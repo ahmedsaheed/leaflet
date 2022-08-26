@@ -141,6 +141,7 @@ if (isProd) {
     }, 500);
   });
 
+
   //  ipcMain.on('show-context-menu', (event) => {
   const template = [
     // { role: 'appMenu' }
@@ -149,7 +150,11 @@ if (isProd) {
           {
             label: app.name,
             submenu: [
-              { role: "about" },
+              { label: "About",
+              click: async () => {
+                const { shell } = require('electron')
+                await shell.openExternal('https://github.com/ahmedsaheed/Leaflet')
+              }},
               { type: "separator" },
               { role: "services" },
               { type: "separator" },
@@ -165,7 +170,11 @@ if (isProd) {
     // { role: 'fileMenu' }
     {
       label: "File",
-      submenu: [isMac ? { role: "close" } : { role: "quit" }],
+      submenu: [
+        {label: "New", click: () => newFile("new.md")},
+        {label: "Add", click: () => addMenu()},
+        
+      ],
     },
     // { role: 'editMenu' }
     {
@@ -183,10 +192,6 @@ if (isProd) {
               { role: "delete" },
               { role: "selectAll" },
               { type: "separator" },
-              {
-                label: "Speech",
-                submenu: [{ role: "startSpeaking" }, { role: "stopSpeaking" }],
-              },
             ]
           : [{ role: "delete" }, { type: "separator" }, { role: "selectAll" }]),
       ],
@@ -204,6 +209,14 @@ if (isProd) {
         { role: "zoomOut" },
         { type: "separator" },
         { role: "togglefullscreen" },
+      ],
+    },
+
+    {
+      label: "Mode",
+      submenu: [
+        { label: "Insert"},
+        { label: "Preview" },
       ],
     },
 
@@ -247,6 +260,16 @@ if (isProd) {
     mainWindow.webContents.openDevTools();
   }
 })();
+
+function addMenu (){
+          const {dialog} = require('electron')
+          dialog.showOpenDialog({properties: ['openFile', 'multiSelections']}, function (files) {
+            if (files) {
+              addFiles(files)
+            }
+          })
+
+        }
 
 export const created = (name) => {
   const extension = name.split(".").pop();
@@ -342,7 +365,7 @@ const newFile = (file) => {
   if (fs.existsSync(appDir)) {
     fs.writeFileSync(
       path.resolve(appDir, `${extension == "md" ? file : file + ".md"}`),
-      `Hello From **${file}** <br> Created at ${dateTime}.`
+      `File Name: **${file}** <br> Created at: ${dateTime}.`
     );
   }
 };
