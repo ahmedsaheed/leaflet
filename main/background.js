@@ -8,6 +8,8 @@ const os = require("os");
 const { Notification } = require("electron");
 const chokidar = require("chokidar");
 
+
+
 const markdown = `
 # Leaflet
 
@@ -115,7 +117,6 @@ Your browser does not support the audio element.
 const appDir = path.resolve(os.homedir(), "dairy");
 const isProd = process.env.NODE_ENV === "production";
 const isMac = process.platform === "darwin";
-
 if (isProd) {
   serve({ directory: "app" });
 } else {
@@ -141,8 +142,6 @@ if (isProd) {
     }, 500);
   });
 
-
-  //  ipcMain.on('show-context-menu', (event) => {
   const template = [
     // { role: 'appMenu' }
     ...(isMac
@@ -150,11 +149,15 @@ if (isProd) {
           {
             label: app.name,
             submenu: [
-              { label: "About",
-              click: async () => {
-                const { shell } = require('electron')
-                await shell.openExternal('https://github.com/ahmedsaheed/Leaflet')
-              }},
+              {
+                label: "About",
+                click: async () => {
+                  const { shell } = require("electron");
+                  await shell.openExternal(
+                    "https://github.com/ahmedsaheed/Leaflet"
+                  );
+                },
+              },
               { type: "separator" },
               { role: "services" },
               { type: "separator" },
@@ -167,16 +170,7 @@ if (isProd) {
           },
         ]
       : []),
-    // { role: 'fileMenu' }
-    {
-      label: "File",
-      submenu: [
-        {label: "New", click: () => newFile("new.md")},
-        {label: "Add", click: () => addMenu()},
-        
-      ],
-    },
-    // { role: 'editMenu' }
+
     {
       label: "Edit",
       submenu: [
@@ -204,49 +198,43 @@ if (isProd) {
         { role: "forceReload" },
         { role: "toggleDevTools" },
         { type: "separator" },
-        { role: "resetZoom" },
-        { role: "zoomIn" },
-        { role: "zoomOut" },
-        { type: "separator" },
-        { role: "togglefullscreen" },
+        { role: "minimize" },
       ],
     },
 
     {
       label: "Mode",
       submenu: [
-        { label: "Insert"},
-        { label: "Preview" },
-      ],
-    },
-
-    {
-      label: "Nav",
-      submenu: [
-        { role: "minimize" },
-        { role: "zoom" },
-        ...(isMac
-          ? [
-              { type: "separator" },
-              { role: "front" },
-              { type: "separator" },
-              { role: "window" },
-            ]
-          : [{ role: "close" }]),
-      ],
-    },
-    {
-      role: "help",
-      submenu: [
         {
-          label: "Learn More",
-          click: async () => {
-            const { shell } = require("electron");
-            await shell.openExternal("https://electronjs.org");
-          },
+          label: "Insert",
+          accelerator: "CmdOrCtrl+i",
+        },
+        {
+          label: "Preview",
+          accelerator: "CmdOrCtrl+p",
+          
         },
       ],
     },
+    {
+      role: 'help',
+      submenu: [
+        {
+          label: 'Open Issues',
+          click: async () => {
+            const { shell } = require('electron')
+            await shell.openExternal('https://github.com/ahmedsaheed/Leaflet/issues/new')
+          }
+        },
+        {
+          label: 'Controls',
+          click: async () => {
+            const { shell } = require('electron')
+            await shell.openExternal('https://github.com/ahmedsaheed/Leaflet/blob/master/README.md')
+          }
+        }
+      ]
+    }
   ];
 
   const menu = Menu.buildFromTemplate(template);
@@ -261,17 +249,8 @@ if (isProd) {
   }
 })();
 
-function addMenu (){
-          const {dialog} = require('electron')
-          dialog.showOpenDialog({properties: ['openFile', 'multiSelections']}, function (files) {
-            if (files) {
-              addFiles(files)
-            }
-          })
 
-        }
-
-export const created = (name) => {
+const created = (name) => {
   const extension = name.split(".").pop();
   const realName = extension == "md" ? name : `${name}.md`;
   const notif = new Notification({
@@ -369,6 +348,15 @@ const newFile = (file) => {
     );
   }
 };
+
+const saveFile = (path, file) => {
+  fs.writeFileSync(path, file);
+}
+
+ipcMain.handle("saveFile", (event, path, content) => {
+  fs.writeFileSync(path, content);
+}
+);
 
 ipcMain.handle("createNewFile", async (event, filename) => {
   newFile(filename);

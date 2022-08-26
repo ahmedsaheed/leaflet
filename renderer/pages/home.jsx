@@ -37,7 +37,6 @@ export default function Next() {
     });
   }
 
-
   if (typeof window !== "undefined") {
     dragDrop("body", (files) => {
       const _files = files.map((file) => {
@@ -66,22 +65,50 @@ export default function Next() {
   };
 
   const saveFile = () => {
-    fs.writeFile(path, value, (err) => {
-      Update();
-    });
+    try{
+      ipcRenderer.invoke("saveFile", path, value).then(() => {
+        Update();
+      }
+      );
+    }catch(e){
+      console.log(e);
+    }
+   
   };
 
   useEffect(() => {
-    document.onkeydown = function saveLife (e) {
+    document.onkeydown = function ListenToKeys (e) {
       if ((e.ctrlKey || e.metaKey) && e.key === "s") {
-        e.preventDefault();
         saveFile();
+        e.preventDefault()
+        return
       }
-  
+
+      if (e.key === "i" && (e.ctrlKey || e.metaKey)) {
+        setInsert(true);
+        e.preventDefault()
+        return
+      } else if (e.key === "p" && (e.ctrlKey || e.metaKey)) {
+        setInsert(false);
+        e.preventDefault()
+        return
+      }
+
+      if (e.key === "n" && (e.ctrlKey || e.metaKey)) {
+        openWindow()
+        e.preventDefault()
+        return
+      }  
+      if (e.keyCode === 187 && (e.ctrlKey || e.metaKey)) {
+        setFileNameBox(true)
+        e.preventDefault()
+        return
+      }
+      
     }
+
   })
- 
- 
+
   const onScroll = () => {
     const Scrolled = document.documentElement.scrollTop;
     const MaxHeight =
@@ -170,6 +197,7 @@ export default function Next() {
                             setName(file.name);
                             setIndex(file.index - 1);
                             setPath(file.path);
+                            ipcRenderer.send('incoming', file.path, value);
                           }}
                         >{`${file.name.toString()}`}</button>
                       </ol>
