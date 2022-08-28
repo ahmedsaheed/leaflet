@@ -10,6 +10,7 @@ const chokidar = require("chokidar");
 
 
 
+
 const markdown = `
 # Leaflet
 
@@ -129,9 +130,9 @@ if (isProd) {
   const mainWindow = createWindow("main", {
     width: 800,
     height: 462,
-    minWidth: 400,
-    minHeight: 360,
-    resizable: false,
+    minWidth: 800,
+    minHeight: 462,
+    // resizable: false,
     fullscreen: false,
   });
   watchFiles(mainWindow);
@@ -180,6 +181,13 @@ if (isProd) {
         { role: "cut" },
         { role: "copy" },
         { role: "paste" },
+        {
+          label: "Save",
+          accelerator: "CmdOrCtrl+s",
+          click: () => {
+            mainWindow.webContents.send("save");
+          }
+        },     
         ...(isMac
           ? [
               { role: "pasteAndMatchStyle" },
@@ -208,10 +216,16 @@ if (isProd) {
         {
           label: "Insert",
           accelerator: "CmdOrCtrl+i",
+          click: () => {
+            mainWindow.webContents.send("insertClicked");
+          }
         },
         {
           label: "Preview",
           accelerator: "CmdOrCtrl+p",
+          click: () => {
+            mainWindow.webContents.send("previewClicked");
+          }
           
         },
       ],
@@ -349,14 +363,14 @@ const newFile = (file) => {
   }
 };
 
-const saveFile = (path, file) => {
-  fs.writeFileSync(path, file);
-}
 
 ipcMain.handle("saveFile", (event, path, content) => {
-  fs.writeFileSync(path, content);
-}
-);
+  try{
+    fs.writeFileSync(path, content);
+  }catch(e){
+    console.log(e);
+  }
+} );
 
 ipcMain.handle("createNewFile", async (event, filename) => {
   newFile(filename);

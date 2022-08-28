@@ -37,6 +37,31 @@ export default function Next() {
     });
   }
 
+useEffect(() => {
+  ipcRenderer.on("save", function () {
+    saveFile();
+    Update();
+  })
+} , [value, path])
+
+useEffect(() => {
+  ipcRenderer.on("insertClicked", function () {
+
+    insert  ? "" : setInsert(true);
+  }
+  )
+} , [insert])
+
+useEffect(() => {
+  ipcRenderer.on("previewClicked", function () {
+
+    insert  ? setInsert(false) : "";
+  }
+  )
+} , [insert])
+
+
+
   if (typeof window !== "undefined") {
     dragDrop("body", (files) => {
       const _files = files.map((file) => {
@@ -46,7 +71,6 @@ export default function Next() {
         };
       });
 
-      // send file(s) add event to the `main` process
       ipcRenderer.invoke("app:on-file-add", _files).then(() => {
         ipcRenderer.invoke("getTheFile").then((files = []) => {
           setFiles(files);
@@ -186,7 +210,6 @@ export default function Next() {
                             setName(file.name);
                             setIndex(file.index - 1);
                             setPath(file.path);
-                            ipcRenderer.send('incoming', file.path, value);
                           }}
                         >{`${file.name.toString()}`}</button>
                       </ol>
