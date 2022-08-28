@@ -120,17 +120,6 @@ export default function Next() {
   if (typeof window !== "undefined") {
     window.addEventListener("scroll", onScroll);
   }
-  useEffect(() => {
-    document.addEventListener("keydown", detectKeydown, true);
-  }, []);
-
-  const detectKeydown = (e) => {
-    if (e.key === "i" && (e.ctrlKey || e.metaKey)) {
-      setInsert(true);
-    } else if (e.key === "p" && (e.ctrlKey || e.metaKey)) {
-      setInsert(false);
-    }
-  };
 
   function handleChange(e) {
     setValue(e.target.value);
@@ -262,7 +251,7 @@ export default function Next() {
           }}
         >
           {insert ? (
-            <div>
+            <div style={{ overflow: "hidden" }}>
               <div>
                 <textarea
                   // autoFocus={value === "" ? "true" : "false"}
@@ -275,6 +264,7 @@ export default function Next() {
                     minHeight: "100vh",
                     backgroundColor: "transparent",
                     marginBottom: "2em",
+                    overflow: "scroll"
                   }}
                 />
               </div>
