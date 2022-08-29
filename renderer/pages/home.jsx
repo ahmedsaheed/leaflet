@@ -245,6 +245,8 @@ export default function Next() {
                   ) : null}
                 </div>
 
+                
+
                 <div className="fixed bottom-20">
                   <button
                     className={`${marker ? "tick " : ""}`}
@@ -278,28 +280,31 @@ export default function Next() {
             </div>
           </div>
         </div>
+
         <div
           style={{
             paddingRight: "20px",
-            minWidth: "100vh",
+            maxWidth: "100vh",
             paddingTop: "10vh",
+
           }}
         >
           {insert ? (
-            <div style={{ overflow: "hidden" }}>
-              <div>
+            <div>
+              <div style={{ overflow: "hidden" }}>
                 <textarea
                   // autoFocus={value === "" ? "true" : "false"}
                   id="markdown-content"
                   value={value}
                   onChange={handleChange}
-                  className=" h-full w-full"
+                  className="h-full w-full"
                   style={{
                     marginTop: "2em",
-                    minHeight: "100vh",
+                    height: "calc(100vh - 80px)",
                     backgroundColor: "transparent",
-                    marginBottom: "2em",
-                    overflow: "scroll",
+                    marginBottom: "5em",
+                    overflow: "auto",
+                    display: "block"
                   }}
                 />
               </div>
@@ -313,7 +318,8 @@ export default function Next() {
                     marginBottom: "5em",
                     overflow: "scroll",
                   }}
-                  className="third"
+                  className="third h-full w-full"
+
                   dangerouslySetInnerHTML={getMarkdown(value)}
                 />
               </div>

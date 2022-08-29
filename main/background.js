@@ -133,7 +133,7 @@ if (isProd) {
     minWidth: 800,
     minHeight: 462,
     // resizable: false,
-    fullscreen: false,
+    // fullscreen: false,
   });
   watchFiles(mainWindow);
   mainWindow.webContents.on("new-window", function (e, url) {
@@ -201,6 +201,7 @@ if (isProd) {
 
       },
 
+      
     {
       label: "Edit",
       submenu: [
