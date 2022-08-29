@@ -78,6 +78,14 @@ func next(nums []int, i, j int) (int, int) {
   
 \n\`\`\`
 ---
+
+| Tables   |      Are      |  Cool |
+|----------|:-------------:|------:|
+| col 1 is |  left-aligned | $1600 |
+| col 2 is |    centered   |   $12 |
+| col 3 is | right-aligned |    $1 |
+
+
 ## Media Support
 <audio controls>
   <source src="https://olagist.net/wp-content/uploads/2020/09/J_Cole_-_Want_You_To_Fly_Javari_.mp3" 
