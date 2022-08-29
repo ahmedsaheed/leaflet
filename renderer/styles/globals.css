@@ -51,7 +51,6 @@ background: black;
     content: "• ";
   
   }
-
   table, th, td {
     margin-bottom: 2em;
     margin-top: 2em;
@@ -60,9 +59,6 @@ background: black;
     border: 1px solid white;
   }
 
-  th,td {
-    padding: 5px
-  }
 
 }
 .createFile{
@@ -87,6 +83,10 @@ strong{
 
   }
   table, th, td {
+    margin-bottom: 2em;
+    margin-top: 2em;
+    margin-left: auto;
+    margin-right: auto;
     border: 1px solid black;
   }
   .ButtomBar {
@@ -256,3 +256,8 @@ body::-webkit-scrollbar {display:none;}
 .fileBody::-webkit-scrollbar {display:none;}
 .third::-webkit-scrollbar {display:none;}
 
+
+
+th,td {
+  padding: 5px
+}
