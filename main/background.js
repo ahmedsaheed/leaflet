@@ -1,12 +1,13 @@
 import { app, ipcMain, Menu, dialog } from "electron";
 import serve from "electron-serve";
-import { createWindow } from "./helpers";
+import { createWindow, template } from "./helpers";
 import path from "path";
 import open from "open";
 const fs = require("fs-extra");
 const os = require("os");
 const { Notification } = require("electron");
 const chokidar = require("chokidar");
+
 
 
 
@@ -126,8 +127,7 @@ if (isProd) {
 
 (async () => {
   await app.whenReady();
-
-  const mainWindow = createWindow("main", {
+ const mainWindow = createWindow("main", {
     width: 800,
     height: 462,
     minWidth: 800,
@@ -171,7 +171,7 @@ if (isProd) {
           },
         ]
       : []),
-
+  
       {
         label: "File",
         submenu: [
@@ -197,10 +197,10 @@ if (isProd) {
             }
           }
         ]
-
-
+  
+  
       },
-
+  
       
     {
       label: "Edit",
@@ -233,7 +233,7 @@ if (isProd) {
         { role: "minimize" },
       ],
     },
-
+  
     {
       label: "Mode",
       submenu: [
