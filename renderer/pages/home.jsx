@@ -6,8 +6,7 @@ import ButtomBar from "../components/buttomBar";
 const fs = require("fs-extra");
 import dragDrop from "drag-drop";
 import Head from "next/head";
-import Script from 'next/Script'
-
+import Script from "next/Script";
 
 export default function Next() {
   const [value, setValue] = React.useState("");
@@ -22,7 +21,6 @@ export default function Next() {
   const [fileNameBox, setFileNameBox] = React.useState(false);
   const [fileName, setFileName] = React.useState("");
 
-
   useEffect(() => {
     ipcRenderer.invoke("getTheFile").then((files = []) => {
       setFiles(files);
@@ -35,32 +33,38 @@ export default function Next() {
     ipcRenderer.invoke("getTheFile").then((files = []) => {
       setFiles(files);
     });
-  }
+  };
 
-useEffect(() => {
-  ipcRenderer.on("save", function () {
-    saveFile();
-    Update();
-  })
-} , [value, path])
+  useEffect(() => {
+    ipcRenderer.on("save", function () {
+      saveFile();
+      Update();
+    });
+  }, [value, path]);
 
-useEffect(() => {
-  ipcRenderer.on("insertClicked", function () {
+  useEffect(() => {
+    ipcRenderer.on("insertClicked", function () {
+      insert ? "" : setInsert(true);
+    });
+  }, [insert]);
 
-    insert  ? "" : setInsert(true);
-  }
-  )
-} , [insert])
+  useEffect(() => {
+    ipcRenderer.on("previewClicked", function () {
+      insert ? setInsert(false) : "";
+    });
+  }, [insert]);
 
-useEffect(() => {
-  ipcRenderer.on("previewClicked", function () {
+  useEffect(() => {
+    ipcRenderer.on("open", function () {
+      openWindow();
+    });
+  }, []);
 
-    insert  ? setInsert(false) : "";
-  }
-  )
-} , [insert])
-
-
+  useEffect(() => {
+    ipcRenderer.on("new", function () {
+      setFileNameBox(true);
+    });
+  }, [fileNameBox]);
 
   if (typeof window !== "undefined") {
     dragDrop("body", (files) => {
@@ -84,54 +88,56 @@ useEffect(() => {
     ipcRenderer.invoke("createNewFile", fileName).then(() => {
       setFiles(files);
       Update();
-
     });
   };
 
   const saveFile = () => {
-    try{
+    try {
       ipcRenderer.invoke("saveFile", path, value).then(() => {
         Update();
-      }
-      );
-    }catch(e){
+      });
+    } catch (e) {
       console.log(e);
     }
-   
   };
 
   useEffect(() => {
-    document.onkeydown = function ListenToKeys (e) {
+    document.onkeydown = function ListenToKeys(e) {
       if ((e.ctrlKey || e.metaKey) && e.key === "s") {
         saveFile();
-        e.preventDefault()
-        return
+        e.preventDefault();
+        return;
       }
 
       if (e.key === "i" && (e.ctrlKey || e.metaKey)) {
         setInsert(true);
-        e.preventDefault()
-        return
+        e.preventDefault();
+        return;
       } else if (e.key === "p" && (e.ctrlKey || e.metaKey)) {
         setInsert(false);
-        e.preventDefault()
-        return
+        e.preventDefault();
+        return;
+      }
+
+      if (e.key === "o" && (e.ctrlKey || e.metaKey)) {
+        openWindow();
+        e.preventDefault();
+        return;
       }
 
       if (e.key === "n" && (e.ctrlKey || e.metaKey)) {
-        openWindow()
-        e.preventDefault()
-        return
-      }  
-      if (e.keyCode === 187 && (e.ctrlKey || e.metaKey)) {
-        setFileNameBox(true)
-        e.preventDefault()
-        return
+        setFileNameBox(true);
+        e.preventDefault();
+        return;
       }
-      
-    }
 
-  })
+      if (e.keyCode === 187 && (e.ctrlKey || e.metaKey)) {
+        setFileNameBox(true);
+        e.preventDefault();
+        return;
+      }
+    };
+  });
 
   const onScroll = () => {
     const Scrolled = document.documentElement.scrollTop;
@@ -161,7 +167,6 @@ useEffect(() => {
   return (
     <>
       <Head>
-
         <link
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"
@@ -195,11 +200,18 @@ useEffect(() => {
                   marginTop: "10vh",
                   paddingTop: "2em",
                   paddingLeft: "1em",
-              
                 }}
               >
                 <p>EXPLORER</p>
-                <div className="fileBody" style={{ marginTop: "2vh", marginBottom: "2vh", maxHeight: "40vh", overflow:"scroll" }}>
+                <div
+                  className="fileBody"
+                  style={{
+                    marginTop: "2vh",
+                    marginBottom: "2vh",
+                    maxHeight: "40vh",
+                    overflow: "scroll",
+                  }}
+                >
                   {files.map((file, index) => (
                     <>
                       <ol className="files">
@@ -228,7 +240,7 @@ useEffect(() => {
                         type="text"
                         placeholder="Enter file name"
                         onChange={(e) => setFileName(e.target.value)}
-                      /> 
+                      />
                     </form>
                   ) : null}
                 </div>
@@ -287,7 +299,7 @@ useEffect(() => {
                     minHeight: "100vh",
                     backgroundColor: "transparent",
                     marginBottom: "2em",
-                    overflow: "scroll"
+                    overflow: "scroll",
                   }}
                 />
               </div>

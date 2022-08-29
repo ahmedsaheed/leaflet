@@ -172,6 +172,35 @@ if (isProd) {
         ]
       : []),
 
+      {
+        label: "File",
+        submenu: [
+          {
+            label: "New",
+            accelerator: "CmdOrCtrl+N",
+            click: () => {
+              mainWindow.webContents.send("new");
+            }
+          },
+          {
+            label: "Open",
+            accelerator: "CmdOrCtrl+O",
+            click: () => {
+              mainWindow.webContents.send("open");
+            }
+          },
+          {
+            label: "Save",
+            accelerator: "CmdOrCtrl+s",
+            click: () => {
+              mainWindow.webContents.send("save");
+            }
+          }
+        ]
+
+
+      },
+
     {
       label: "Edit",
       submenu: [
@@ -181,13 +210,7 @@ if (isProd) {
         { role: "cut" },
         { role: "copy" },
         { role: "paste" },
-        {
-          label: "Save",
-          accelerator: "CmdOrCtrl+s",
-          click: () => {
-            mainWindow.webContents.send("save");
-          }
-        },     
+            
         ...(isMac
           ? [
               { role: "pasteAndMatchStyle" },
