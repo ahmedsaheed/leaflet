@@ -297,14 +297,17 @@ export default function Next() {
                   id="markdown-content"
                   value={value}
                   onChange={handleChange}
+                  spellcheck="false"
                   className="h-full w-full"
+                  autoComplete ="false"
+                  autoCorrect = "false"
                   style={{
                     marginTop: "2em",
                     height: "calc(100vh - 80px)",
                     backgroundColor: "transparent",
                     marginBottom: "5em",
                     overflow: "auto",
-                    display: "block"
+                    display: "block",
                   }}
                 />
               </div>
