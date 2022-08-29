@@ -23,13 +23,11 @@
     "markdown-it": "^13.0.1",
     "markdown-it-anchor": "^8.6.4",
     "markdown-it-footnote": "^3.0.3",
-    "markdown-it-katex": "^2.0.3",
     "markdown-it-table-of-contents": "^0.6.0",
     "markdown-it-task-lists": "^2.1.1",
     "markdown-it-texmath": "^1.0.0",
-    "mathjax-electron": "^3.0.0",
     "open": "^8.4.0",
-    "remarkable": "^2.0.1",
+    "react-autocomplete-hint": "^2.0.0",
     "wordcount": "^1.1.1"
   },
   "devDependencies": {

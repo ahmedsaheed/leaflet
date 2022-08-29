@@ -8,6 +8,8 @@ import dragDrop from "drag-drop";
 import Head from "next/head";
 import Script from "next/Script";
 
+
+
 export default function Next() {
   const [value, setValue] = React.useState("");
   const [insert, setInsert] = React.useState(false);
@@ -21,6 +23,7 @@ export default function Next() {
   const [fileNameBox, setFileNameBox] = React.useState(false);
   const [fileName, setFileName] = React.useState("");
 
+
   useEffect(() => {
     ipcRenderer.invoke("getTheFile").then((files = []) => {
       setFiles(files);
@@ -29,6 +32,7 @@ export default function Next() {
       setPath(files[0] ? `${files[0].path}` : "");
     });
   }, []);
+  
   const Update = () => {
     ipcRenderer.invoke("getTheFile").then((files = []) => {
       setFiles(files);
@@ -95,6 +99,12 @@ export default function Next() {
     try {
       ipcRenderer.invoke("saveFile", path, value).then(() => {
         Update();
+        setMarker(true);
+          setTimeout(() => {
+            setMarker(false);
+              setIsEdited(false);
+                }, 3000);
+        
       });
     } catch (e) {
       console.log(e);
@@ -229,7 +239,7 @@ export default function Next() {
                   ))}
                   {fileNameBox ? (
                     <form
-                      onSubmit={(e) => {
+                      onSubmit={() => {
                         createNewFile(fileName);
                         setFileNameBox(false);
                       }}
@@ -247,7 +257,7 @@ export default function Next() {
 
                 
 
-                <div className="fixed bottom-20">
+                <div className="fixed bottom-28">
                   <button
                     className={`${marker ? "tick " : ""}`}
                     onClick={() => {
@@ -292,6 +302,7 @@ export default function Next() {
           {insert ? (
             <div>
               <div style={{ overflow: "hidden" }}>
+            
                 <textarea
                   // autoFocus={value === "" ? "true" : "false"}
                   id="markdown-content"
@@ -310,6 +321,7 @@ export default function Next() {
                     display: "block",
                   }}
                 />
+         
               </div>
             </div>
           ) : (
@@ -322,6 +334,7 @@ export default function Next() {
                     overflow: "scroll",
                   }}
                   className="third h-full w-full"
+                  
 
                   dangerouslySetInnerHTML={getMarkdown(value)}
                 />
