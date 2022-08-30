@@ -222,10 +222,8 @@ var walk = function(dir) {
       file = dir + '/' + file;
       var stat = fs.statSync(file);
       if (stat && stat.isDirectory()) { 
-          /* Recurse into a subdirectory */
           results = results.concat(walk(file));
       } else { 
-          /* Is a file */
           results.push(file);
       }
   });
