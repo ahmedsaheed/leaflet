@@ -107,7 +107,7 @@ const markdown = `
 
 <a href="http://wiki.xxiivv.com/Left" target="_blank"></a>
 
-Leaflet a **minimal, distractionless markdown editor** designed to quickly navigate between multiple \`.md\` files in a directory. It features a clean mathematical typesetting, chemical equation rendering, code blocks highlighting, writing statistics and a speed-reader.
+Leaflet, a **minimal distractionless markdown editor** designed to quickly navigate between multiple \`.md\` files in a directory. It features a clean mathematical typesetting, chemical equation rendering, code blocks highlighting, writing statistics and a speed-reader.
 
 
 I created this <a href="http://github.com/ahmedsaheed/Leafler" target="_blank" rel="noreferrer" class="external ">application</a> to help me cope with note taking during lectures because most of my  lecturers spoke too fast. This application is made available as a free and <a href="https://github.com/hundredrabbits/Left" target="_blank" rel="noreferrer" class="external ">open source</a> software.
@@ -124,7 +124,7 @@ I created this <a href="http://github.com/ahmedsaheed/Leafler" target="_blank" r
 
 - **✨ Simplicity**: Leaflet focuses on simplicity and provides only necessary features needed.
 
-- **Bidirectional Text**: Automatically detect BIDI - text and displays logiaclly.
+- **🕉 Bidirectional Text**: Automatically detect BIDI - text and displays logiaclly.
 
 ## Installation
 
