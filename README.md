@@ -1,6 +1,7 @@
 # Leaflet
-
-
+<p align=center>
+<img src="https://img.icons8.com/external-flatarticons-blue-flatarticons/260/000000/external-pencil-high-school-flatarticons-blue-flatarticons.png"/>
+</p>
 Leaflet, a **minimal distractionless markdown editor** designed to quickly navigate between multiple `.md` files in a directory and its sub directories. It features a clean mathematical typesetting, chemical equation rendering, code blocks highlighting, writing statistics and a speed-reader.
 
 
@@ -55,5 +56,3 @@ $ yarn dev
 - [Leaflet] is strongly inspired by [Left](https://github.com/hundredrabbits/left) and [Opus](https://github.com/pacocoursey/Opus).
 - Leaflet source code  licensed under [BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 - Pull Requests are welcome!
-
-
