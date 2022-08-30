@@ -25,6 +25,7 @@ if (isProd) {
     minHeight: 462,
     // resizable: false,
     // fullscreen: false,
+
   });
   watchFiles(mainWindow);
 
@@ -213,16 +214,35 @@ const checkForDir = () => {
   }
 };
 
+//THIS ENABLES FILE GATHERING RECURSIVELY
+var walk = function(dir) {
+  var results = [];
+  var list = fs.readdirSync(dir);
+  list.forEach(function(file) {
+      file = dir + '/' + file;
+      var stat = fs.statSync(file);
+      if (stat && stat.isDirectory()) { 
+          /* Recurse into a subdirectory */
+          results = results.concat(walk(file));
+      } else { 
+          /* Is a file */
+          results.push(file);
+      }
+  });
+  return results;
+}
+
 const getFiles = () => {
   checkForDir();
-  const files = fs.readdirSync(appDir);
+  const files = walk(appDir);
   let place = 0;
   return files
     .filter((file) => file.endsWith(".md"))
-    .map((filename) => {
-      const filePath = path.resolve(appDir, filename);
+    .map((filePath) => {
       const fileStats = fs.statSync(filePath);
       const content = fs.readFileSync(filePath, "utf8");
+      const extension = path.extname(filePath);
+      const filename = path.basename(filePath,extension);
       place++;
 
       return {

@@ -16,7 +16,6 @@ export default function Next() {
   const [scroll, setScroll] = React.useState(0);
   const [files, setFiles] = React.useState([]);
   const [name, setName] = React.useState("");
-  const [index, setIndex] = React.useState(0);
   const [path, setPath] = React.useState("");
   const [isEdited, setIsEdited] = React.useState(false);
   const [marker, setMarker] = React.useState(false);
@@ -230,7 +229,6 @@ export default function Next() {
                           onClick={() => {
                             setValue(file.body);
                             setName(file.name);
-                            setIndex(file.index - 1);
                             setPath(file.path);
                           }}
                         >{`${file.name.toString()}`}</button>
