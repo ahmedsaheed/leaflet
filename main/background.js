@@ -186,6 +186,8 @@ if (isProd) {
     await mainWindow.loadURL(`http://localhost:${port}/home`);
     mainWindow.webContents.openDevTools();
   }
+
+  
 })();
 
 const created = (name) => {
