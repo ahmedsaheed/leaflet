@@ -9,7 +9,7 @@ I created this <a href="http://github.com/ahmedsaheed/Leaflet" target="_blank" r
 
 ## Features
 
-- **🖋 Editing**: Supports markdown editing with all the features you'd expect.
+- **🖋 Editing**: Switch between editing and preview mode seemlessly
 
 - **⚛️ Maths & Chemical Equation Typesetting**: Leaflet renders mathematical, physics and chemical equation out of the box.
 
