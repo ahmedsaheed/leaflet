@@ -227,6 +227,7 @@ export default function Next() {
                         <button
                           className={name === file.name ? "selected" : "greys"}
                           onClick={() => {
+                            saveFile();
                             setValue(file.body);
                             setName(file.name);
                             setPath(file.path);
