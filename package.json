@@ -22,7 +22,7 @@
   "name": "leaflet",
   "productName": "Leaflet",
   "description": "Leaflet is a student first minimal markdown editor",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Ahmed Saheed <ahmedsaheed2@outlook.com>",
   "copyright": "Copyright © 2012 Ahmed Saheed",
   "main": "app/background.js",
