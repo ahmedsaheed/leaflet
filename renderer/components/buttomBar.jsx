@@ -4,6 +4,7 @@ import { setInterval } from "timers";
 
 
 export default function ButtomBar({ word, mode, loader }) {
+
   const [clockState, setClockState] = useState();
   useEffect(() => {
     setInterval(() =>{
