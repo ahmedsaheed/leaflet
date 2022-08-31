@@ -3,21 +3,20 @@
     "appId": "com.leaflet",
     "productName": "Leaflet",
     "copyright": "Copyright © 2022 Ahmed Saheed",
-    "mac" : {
+    "mac": {
       "icon": "./resources/app.icns",
       "publish": "github"
-      
     },
-    "win" : {
+    "win": {
       "icon": "./resources/app.ico",
       "publish": "github"
     },
-    "linux" : {
+    "linux": {
       "icon": "./resources/icon.png",
       "publish": "github"
     },
     "directories": {
-      "buildResources": "resources" 
+      "buildResources": "resources"
     }
   },
   "name": "leaflet",
@@ -27,7 +26,7 @@
   "author": "Ahmed Saheed <ahmedsaheed2@outlook.com>",
   "copyright": "Copyright © 2012 Ahmed Saheed",
   "main": "app/background.js",
-  "license" : "CC-BY-NC-SA-4.0",
+  "license": "CC-BY-NC-SA-4.0",
   "scripts": {
     "dev": "nextron",
     "build": "nextron build",
@@ -37,10 +36,12 @@
     "build:mac": "nextron build --mac --x64",
     "build:linux": "nextron build --linux",
     "postinstall": "electron-builder install-app-deps",
-    "publish": "electron-builder --publish always",
-    "release": "electron-builder"
-
-  },
+    "release": "electron-builder --publish always",
+    "release:win32": "electron-builder --publish always --win --ia32",
+    "release:win64": "electron-builder --publish always --win --x64",
+    "release:mac": "electron-builder --publish always --mac --x64",
+    "release:linux": "electron-builder --publish always --linux"
+    },
   "repository": {
     "type": "git",
     "url": "https://github.com/ahmedsaheed/Leaflet.git"
