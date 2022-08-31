@@ -23,6 +23,7 @@ if (isProd) {
     height: 500, //462 initially
     minWidth: 800, 
     minHeight: 500, //462 initially
+    icon: path.join(__dirname, "icon.icns"),
     // resizable: false,
     // fullscreen: false,
 

@@ -1,22 +1,39 @@
 {
   "build": {
-    "appId": "com.leaflet"
+    "appId": "com.leaflet",
+    "productName": "Leaflet",
+    "copyright": "Copyright © 2022 Ahmed Saheed",
+    "mac" : {
+      "icon": "./resources/app.icns"
+    },
+    "win" : {
+      "icon": "./resources/app.ico"
+    },
+    "linux" : {
+      "icon": "./resources/icon.png"
+    },
+    "directories": {
+      "buildResources": "resources" 
+    }
   },
   "name": "leaflet",
   "productName": "Leaflet",
   "description": "Leaflet is a student first minimal markdown editor",
   "version": "1.0.0",
   "author": "Ahmed Saheed <ahmedsaheed2@outlook.com>",
+  "copyright": "Copyright © 2012 Ahmed Saheed",
   "main": "app/background.js",
+  "license" : "CC-BY-NC-SA-4.0",
   "scripts": {
     "dev": "nextron",
     "build": "nextron build",
     "build:all": "nextron build --all",
     "build:win32": "nextron build --win --ia32",
     "build:win64": "nextron build --win --x64",
-     "build:mac": "nextron build --mac --x64",
+    "build:mac": "nextron build --mac --x64",
     "build:linux": "nextron build --linux",
-    "postinstall": "electron-builder install-app-deps"
+    "postinstall": "electron-builder install-app-deps",
+    "build_osx": "npx electron-packager . Leaflet --platform=darwin --arch=x64 --out ~/dist/ --overwrite --icon=icon.icns ; echo 'Built for OSX'"
   },
   "dependencies": {
     "@fontsource/ia-writer-duospace": "^4.5.3",
