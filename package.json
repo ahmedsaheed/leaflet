@@ -4,13 +4,17 @@
     "productName": "Leaflet",
     "copyright": "Copyright © 2022 Ahmed Saheed",
     "mac" : {
-      "icon": "./resources/app.icns"
+      "icon": "./resources/app.icns",
+      "publish": "github"
+      
     },
     "win" : {
-      "icon": "./resources/app.ico"
+      "icon": "./resources/app.ico",
+      "publish": "github"
     },
     "linux" : {
-      "icon": "./resources/icon.png"
+      "icon": "./resources/icon.png",
+      "publish": "github"
     },
     "directories": {
       "buildResources": "resources" 
@@ -33,7 +37,13 @@
     "build:mac": "nextron build --mac --x64",
     "build:linux": "nextron build --linux",
     "postinstall": "electron-builder install-app-deps",
-    "build_osx": "npx electron-packager . Leaflet --platform=darwin --arch=x64 --out ~/dist/ --overwrite --icon=icon.icns ; echo 'Built for OSX'"
+    "publish": "electron-builder --publish always",
+    "release": "electron-builder"
+
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ahmedsaheed/Leaflet.git"
   },
   "dependencies": {
     "@fontsource/ia-writer-duospace": "^4.5.3",
