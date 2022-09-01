@@ -23,14 +23,44 @@ I created this <a href="http://github.com/ahmedsaheed/Leaflet" target="_blank" r
 - **🕉 Bidirectional Text**: Automatically detect BIDI - text and displays logiaclly.
 
 ## Installation
+<div align="center">
+    <table>
+    <tbody>
+      <tr>
+        <td>
+          <a href="https://github.com/ahmedsaheed/Leaflet/releases/download/v1.0.1/Leaflet-1.0.1.dmg">OS X Download</a>
+        </td>
+        <td>
+          <a href="https://github.com/ahmedsaheed/Leaflet/releases/download/v1.0.1/Leaflet-Setup-1.0.1.exe">Windows Download</a>
+        </td>
+        <td>
+          <a href="https://github.com/ahmedsaheed/Leaflet/releases/download/v1.0.1/leaflet_1.0.1_amd64.snap">Linux Downloads</a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  
+</div>
+  
 
-You can run Leaflet locally from the command line:
+
+You can also run Leaflet locally from the command line:
 
 ```bash
 $ git clone https://github.com/ahmedsaheed/Leaflet.git && cd Leaflet
 $ yarn install
 $ yarn dev
 ```
+
+Or Build 
+
+```bash
+$ git clone https://github.com/ahmedsaheed/Leaflet.git && cd Leaflet
+$ yarn install
+$ yarn build
+```
+
+
 
 ## Screenshots
 
