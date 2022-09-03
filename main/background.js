@@ -102,16 +102,16 @@ if (isProd) {
         {
           label: "Open",
           accelerator: "CmdOrCtrl+O",
-          // click: () => {
-          //   mainWindow.webContents.send("open");
-          // },
+          click: () => {
+            mainWindow.webContents.send("open");
+          },
         },
         {
           label: "Save",
           accelerator: "CmdOrCtrl+s",
-          // click: () => {
-          //   mainWindow.webContents.send("save");
-          // },
+          click: () => {
+            mainWindow.webContents.send("save");
+          },
         },
         {
           label: "Export",
@@ -121,17 +121,17 @@ if (isProd) {
             {
               label: "DOCX",
               accelerator: "CmdOrCtrl+D",
-              click: () => {
-                mainWindow.webContents.send("docx");
+              // click: () => {
+              //   mainWindow.webContents.send("docx");
 
-              }
+              // }
             },
             {
               label: "PDF",
               accelerator: "CmdOrCtrl+E",
-              click: () => {
-                mainWindow.webContents.send("pdf");
-              }
+              // click: () => {
+              //   mainWindow.webContents.send("pdf");
+              // }
             }
             
           ]
