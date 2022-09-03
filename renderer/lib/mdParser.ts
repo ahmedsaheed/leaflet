@@ -1,4 +1,7 @@
 import hljs from "highlight.js";
+import metadata_block from 'markdown-it-metadata-block'
+import yaml from 'yaml'
+
 
 export const getMarkdown = (value: string) => {  
     const md = require('markdown-it')({
@@ -25,6 +28,9 @@ export const getMarkdown = (value: string) => {
       md.use(require('markdown-it-task-lists'))
       md.use(require("markdown-it-anchor").default); 
       md.use(require("markdown-it-table-of-contents"));
+      md.use(metadata_block,{
+        parseMetadata: yaml.parse,
+      })
 
       try{
         return { __html: md.render(value) };
