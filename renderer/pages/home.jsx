@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { ipcRenderer, clipboard } from "electron";
+import { ipcRenderer } from "electron";
 import { progress } from "../components/progress.ts";
 import { getMarkdown } from "../lib/mdParser.ts";
 import ButtomBar from "../components/buttomBar";
@@ -24,6 +24,7 @@ export default function Next() {
   const [marker, setMarker] = React.useState(false);
   const [fileNameBox, setFileNameBox] = React.useState(false);
   const [fileName, setFileName] = React.useState("");
+  const [help, setHelp] = React.useState(false);
 
 
   useEffect(() => {
@@ -287,7 +288,6 @@ export default function Next() {
                 </div>
 
                 
-
                 <div className="fixed bottom-28">
                   <button
                     className={`${marker ? "tick " : ""}`}
@@ -315,7 +315,9 @@ export default function Next() {
                     Create New File
                   </button>
                   <br />
-                  <button onClick={openWindow}>Click to Add File</button>
+                  <button onClick={openWindow}>Click to Add File</button>                  <br />
+                  <button onClick={convertToPDF}>Covert to PDF</button>                  <br />
+                  <button onClick={converToDocx}>Covert to Docx</button>
                 </div>
               </div>
             </div>
