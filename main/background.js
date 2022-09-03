@@ -5,8 +5,10 @@ import path from "path";
 import open from "open";
 import fs from "fs-extra";
 import os from "os";
+
 import chokidar from "chokidar";
 const appDir = path.resolve(os.homedir(), "dairy");
+const Desktop = path.resolve(os.homedir(), "Desktop");
 const isProd = process.env.NODE_ENV === "production";
 const isMac = process.platform === "darwin";
 
@@ -28,6 +30,7 @@ if (isProd) {
     // fullscreen: false,
 
   });
+
   watchFiles(mainWindow);
 
   mainWindow.webContents.on("new-window", function (e, url) {
@@ -99,17 +102,40 @@ if (isProd) {
         {
           label: "Open",
           accelerator: "CmdOrCtrl+O",
-          click: () => {
-            mainWindow.webContents.send("open");
-          },
+          // click: () => {
+          //   mainWindow.webContents.send("open");
+          // },
         },
         {
           label: "Save",
           accelerator: "CmdOrCtrl+s",
-          click: () => {
-            mainWindow.webContents.send("save");
-          },
+          // click: () => {
+          //   mainWindow.webContents.send("save");
+          // },
         },
+        {
+          label: "Export",
+          
+      
+          submenu: [
+            {
+              label: "DOCX",
+              accelerator: "CmdOrCtrl+D",
+              click: () => {
+                mainWindow.webContents.send("docx");
+
+              }
+            },
+            {
+              label: "PDF",
+              accelerator: "CmdOrCtrl+E",
+              click: () => {
+                mainWindow.webContents.send("pdf");
+              }
+            }
+            
+          ]
+        }
       ],
     },
 
@@ -120,7 +146,9 @@ if (isProd) {
         { role: "redo" },
         { type: "separator" },
         { role: "cut" },
-        { role: "copy" },
+        { label: "copy", accelerator: "CmdOrCtrl+C", click: () => {
+          mainWindow.webContents.send("copy");
+        } },
         { role: "paste" },
 
         ...(isMac
@@ -185,7 +213,7 @@ if (isProd) {
   } else {
     const port = process.argv[2];
     await mainWindow.loadURL(`http://localhost:${port}/home`);
-    mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools();
   }
 
   
@@ -315,7 +343,8 @@ ipcMain.handle("saveFile", (event, path, content) => {
   }
 });
 
-ipcMain.handle("createNewFile", async (event, filename) => {
+
+ipcMain.handle("createNewFile", (event, filename) => {
   newFile(filename);
   created(filename);
 });
