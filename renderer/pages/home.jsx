@@ -138,12 +138,6 @@ export default function Next() {
         return;
       }
 
-      if ((e.ctrlKey || e.metaKey) && e.key === "c") {
-        clipboard.writeText(value);
-        e.preventDefault();
-        return;
-      }
-
       if ((e.ctrlKey || e.metaKey) && e.key === "e") {
         convertToPDF();
         e.preventDefault();

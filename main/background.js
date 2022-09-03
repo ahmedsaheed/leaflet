@@ -146,9 +146,7 @@ if (isProd) {
         { role: "redo" },
         { type: "separator" },
         { role: "cut" },
-        { label: "copy", accelerator: "CmdOrCtrl+C", click: () => {
-          mainWindow.webContents.send("copy");
-        } },
+        { role: "copy" },
         { role: "paste" },
 
         ...(isMac
