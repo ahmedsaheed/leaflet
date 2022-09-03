@@ -29,6 +29,7 @@
   "license": "CC-BY-NC-SA-4.0",
   "scripts": {
     "dev": "nextron",
+    "electron-trace": "electron --trace-warnings .",
     "build": "nextron build",
     "build:all": "nextron build --all",
     "build:win32": "nextron build --win --ia32",
@@ -41,7 +42,7 @@
     "release:win64": "electron-builder --publish always --win --x64",
     "release:mac": "electron-builder --publish always --mac --x64",
     "release:linux": "electron-builder --publish always --linux"
-    },
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ahmedsaheed/Leaflet.git"
@@ -58,6 +59,7 @@
     "markdown-it": "^13.0.1",
     "markdown-it-anchor": "^8.6.4",
     "markdown-it-footnote": "^3.0.3",
+    "markdown-it-metadata-block": "^1.0.2",
     "markdown-it-table-of-contents": "^0.6.0",
     "markdown-it-task-lists": "^2.1.1",
     "markdown-it-texmath": "^1.0.0",
@@ -72,6 +74,7 @@
     "electron-builder": "^23.3.3",
     "next": "^12.1.6",
     "nextron": "^8.1.0",
+    "node-pandoc": "^0.3.0",
     "postcss": "^8.4.13",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",

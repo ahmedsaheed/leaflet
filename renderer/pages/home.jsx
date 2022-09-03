@@ -3,14 +3,17 @@ import { ipcRenderer } from "electron";
 import { progress } from "../components/progress.ts";
 import { getMarkdown } from "../lib/mdParser.ts";
 import ButtomBar from "../components/buttomBar";
-const fs = require("fs-extra");
+import fs from "fs-extra";
 import dragDrop from "drag-drop";
 import Head from "next/head";
 import Script from "next/Script";
+import pandoc from "node-pandoc"
+import open from "open"
 
 
 
 export default function Next() {
+  const Desktop = require("os").homedir() + "/Desktop";
   const [value, setValue] = React.useState("");
   const [insert, setInsert] = React.useState(false);
   const [scroll, setScroll] = React.useState(0);
@@ -21,6 +24,7 @@ export default function Next() {
   const [marker, setMarker] = React.useState(false);
   const [fileNameBox, setFileNameBox] = React.useState(false);
   const [fileName, setFileName] = React.useState("");
+  const [help, setHelp] = React.useState(false);
 
 
   useEffect(() => {
@@ -37,6 +41,23 @@ export default function Next() {
       setFiles(files);
     });
   };
+  const convertToPDF = () => {
+    const path = `${Desktop}/${name}.pdf`
+        pandoc(value, `-f markdown -t pdf -o ${path}`, function (err, result) {
+          if (err) console.log(err)
+          if (fs.existsSync(path)) {
+            open(path);
+          }})
+  }
+
+  const converToDocx = () => {
+    const path = `${Desktop}/${name}.docx`
+    pandoc(value, `-f markdown -t docx -o ${path}`, function (err, result) {
+      if (err) console.log(err)
+      if (fs.existsSync(path)) {
+        open(path);
+      }})
+  }
 
   useEffect(() => {
     ipcRenderer.on("save", function () {
@@ -44,14 +65,12 @@ export default function Next() {
       Update();
     });
   }, [value, path]);
-
+  
   useEffect(() => {
     ipcRenderer.on("insertClicked", function () {
       insert ? "" : setInsert(true);
     });
-  }, [insert]);
 
-  useEffect(() => {
     ipcRenderer.on("previewClicked", function () {
       insert ? setInsert(false) : "";
     });
@@ -110,10 +129,24 @@ export default function Next() {
     }
   };
 
+
+
   useEffect(() => {
     document.onkeydown = function ListenToKeys(e) {
       if ((e.ctrlKey || e.metaKey) && e.key === "s") {
         saveFile();
+        e.preventDefault();
+        return;
+      }
+
+      if ((e.ctrlKey || e.metaKey) && e.key === "e") {
+        convertToPDF();
+        e.preventDefault();
+        return;
+      }
+
+      if ((e.ctrlKey || e.metaKey) && e.key === "d") {
+        converToDocx();
         e.preventDefault();
         return;
       }
@@ -255,7 +288,6 @@ export default function Next() {
                 </div>
 
                 
-
                 <div className="fixed bottom-28">
                   <button
                     className={`${marker ? "tick " : ""}`}
@@ -283,7 +315,9 @@ export default function Next() {
                     Create New File
                   </button>
                   <br />
-                  <button onClick={openWindow}>Click to Add File</button>
+                  <button onClick={openWindow}>Click to Add File</button>                  <br />
+                  <button onClick={convertToPDF}>Covert to PDF</button>                  <br />
+                  <button onClick={converToDocx}>Covert to Docx</button>
                 </div>
               </div>
             </div>
