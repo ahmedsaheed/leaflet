@@ -39,7 +39,7 @@ You'd have to install [pandoc](https://github.com/jgm/pandoc/blob/master/INSTALL
           OS X Download</a>
         </td>
         <td>
-          <a href="https://github.com/ahmedsaheed/Leaflet/releases/download/v0.0.1/Leaflet-Setup-0.0.1.exe.exe">
+          <a href="https://github.com/ahmedsaheed/Leaflet/releases/download/v0.0.1/Leaflet-Setup-0.0.1.exe">
           <img src="https://api.iconify.design/icomoon-free:windows.svg?color=%23888888"/>
           Windows Download</a>
         </td>
