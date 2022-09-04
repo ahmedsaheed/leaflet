@@ -1,6 +1,7 @@
+<img src="https://img.icons8.com/external-flatarticons-blue-flatarticons/260/000000/external-pencil-high-school-flatarticons-blue-flatarticons.png" align="right" width="128"/>
+
 # Leaflet
-<p align=center>
-<img src="https://img.icons8.com/external-flatarticons-blue-flatarticons/260/000000/external-pencil-high-school-flatarticons-blue-flatarticons.png"/>
+
 </p>
 Leaflet, a <b>minimal distractionless markdown editor</b> designed to quickly navigate between multiple `.md` files in a directory and its sub directories. It features a clean mathematical typesetting, chemical equation rendering, code blocks highlighting, writing statistics and a speed-reader.
 
