@@ -13,6 +13,8 @@ I created this <a href="http://github.com/ahmedsaheed/Leaflet" target="_blank" r
 
 - **⚛️ Maths & Chemical Equation Typesetting**: Leaflet renders mathematical, physics and chemical equation out of the box.
 
+- **Pandoc Support**: Easily export your `.md` files to `.pdf` and `.docx` files
+
 - **📄 Uses Files**: Leaflet works with users file system directly instead of an external database.
 
 - **🌙 Dark / Light Mode**: Supports your system specified theme.
@@ -23,6 +25,9 @@ I created this <a href="http://github.com/ahmedsaheed/Leaflet" target="_blank" r
 - **🕉 Bidirectional Text**: Automatically detect BIDI - text and displays logiaclly.
 
 ## Installation
+
+You'd have to install pandoc to export `.md` to other formats.
+
 <div align="center">
     <table>
     <tbody>
