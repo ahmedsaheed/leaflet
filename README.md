@@ -28,17 +28,17 @@ I created this <a href="http://github.com/ahmedsaheed/Leaflet" target="_blank" r
     <tbody>
       <tr>
         <td>
-          <a href="https://github.com/ahmedsaheed/Leaflet/releases/download/v1.0.1/Leaflet-1.0.1.dmg">
+          <a href="https://github.com/ahmedsaheed/Leaflet/releases/download/v0.0.1/Leaflet-0.0.1.dmg">
           <img src="https://api.iconify.design/simple-icons:apple.svg?color=%23888888"/>
           OS X Download</a>
         </td>
         <td>
-          <a href="https://github.com/ahmedsaheed/Leaflet/releases/download/v1.0.1/Leaflet-Setup-1.0.1.exe">
+          <a href="https://github.com/ahmedsaheed/Leaflet/releases/download/v0.0.1/Leaflet-Setup-0.0.1.exe.exe">
           <img src="https://api.iconify.design/icomoon-free:windows.svg?color=%23888888"/>
           Windows Download</a>
         </td>
         <td>
-          <a href="https://github.com/ahmedsaheed/Leaflet/releases/download/v1.0.1/leaflet_1.0.1_amd64.snap">
+          <a href="https://github.com/ahmedsaheed/Leaflet/releases/download/v0.0.1/leaflet_0.0.1_amd64.snap">
           <img src="https://api.iconify.design/codicon:terminal-ubuntu.svg?color=%23888888"/>
           Linux Downloads</a>
         </td>
@@ -73,9 +73,8 @@ $ yarn build
 <p align="center">
 
 
-<img src="https://user-images.githubusercontent.com/87912847/187508759-962744ad-9755-49bd-a395-038546b4391c.png"/>
-<br/><br/>
-<img src="https://user-images.githubusercontent.com/87912847/187511764-b1512480-a30d-4f73-9632-013150e3542e.png" />
+
+https://user-images.githubusercontent.com/87912847/188292656-94da4c10-7fb3-464f-8fad-270b255afaee.mov
 
 
 </p>
