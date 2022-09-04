@@ -86,6 +86,21 @@ https://user-images.githubusercontent.com/87912847/188292656-94da4c10-7fb3-464f-
 </p>
 
 
+
+## Shortcuts and Controls
+
+> Use <kbd>⌘/Ctrl + p</kbd> or <kbd>⌘/Ctrl + i</kbd>  to toggle between preview and insert mode respectively
+> 
+> Use <kbd>⌘/Ctrl + s</kbd> to save your current file, although this happens automatically.   
+> 
+> Use <kbd>⌘/Ctrl + n</kbd> to create a new `.md` file.  
+> 
+> Use <kbd>⌘/Ctrl + +</kbd> to add multiple/single file from your system.  
+> 
+> Use <kbd>⌘/Ctrl + d</kbd> to convert your current `.md` file into `.docx` file
+> 
+> Use <kbd>⌘/Ctrl + e</kbd> to convert your current `.md` file into `.pdf` file
+
 ## More Features
 
 - Support media like `mp3`, `iframe` and `video` 
