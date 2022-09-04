@@ -4,8 +4,12 @@
     "productName": "Leaflet",
     "copyright": "Copyright © 2022 Ahmed Saheed",
     "mac": {
+      "hardenedRuntime": true,
       "icon": "./resources/app.icns",
       "publish": "github"
+    },
+    "dmg": {
+      "sign": false
     },
     "win": {
       "icon": "./resources/app.ico",
@@ -72,6 +76,7 @@
     "autoprefixer": "^10.4.7",
     "electron": "^18.2.0",
     "electron-builder": "^23.3.3",
+    "electron-notarize": "^1.2.1",
     "next": "^12.1.6",
     "nextron": "^8.1.0",
     "node-pandoc": "^0.3.0",
