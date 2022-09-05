@@ -8,7 +8,10 @@ import dragDrop from "drag-drop";
 import Head from "next/head";
 import Script from "next/Script";
 import pandoc from "node-pandoc"
+import mainPath from "path";
 import open from "open"
+import os from "os";
+
 
 
 
@@ -88,13 +91,42 @@ export default function Next() {
     });
   }, [fileNameBox]);
 
+  const covertPDFtoMD = (filePath) => {
+    const appDir = mainPath.resolve(os.homedir(), "dairy");
+    const destination = `${appDir}/${filePath.name.split('.')[0]}.md`
+    try{
+      pandoc(filePath.path, `-f docx -t markdown -o ${destination}`, function (err, result) {
+        if (err) console.log(err)
+        if (fs.existsSync(destination)) {
+          Update();
+        }
+  
+      })
+    }catch (e){
+      console.log(e)
+    }
+    
+    return destination
+  } 
+
   if (typeof window !== "undefined") {
     dragDrop("body", (files) => {
       const _files = files.map((file) => {
+        let fileName = file.name;
+        let filePath = file.path;
+        const extension = (file.path).split(".").pop();
+        if(extension != "md" && extension === "docx"){
+          
+          const docx = covertPDFtoMD(file);
+            fileName =  mainPath.parse(docx).base
+            filePath =  docx
+          
+        }
         return {
-          name: file.name,
-          path: file.path,
+          name: fileName,
+          path: filePath,
         };
+      
       });
 
       ipcRenderer.invoke("app:on-file-add", _files).then(() => {

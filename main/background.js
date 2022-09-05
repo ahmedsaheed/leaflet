@@ -264,7 +264,7 @@ const getFiles = () => {
   const files = walk(appDir);
   let place = 0;
   return files
-    .filter((file) => file.endsWith(".md"))
+    .filter((file) => file.split(".").pop() === "md")
     .map((filePath) => {
       const fileStats = fs.statSync(filePath);
       const content = fs.readFileSync(filePath, "utf8");
@@ -282,14 +282,19 @@ const getFiles = () => {
     });
 };
 
+
 const addFiles = (files = []) => {
   fs.ensureDirSync(appDir);
   files.forEach((file) => {
     const filePath = path.resolve(appDir, file.name);
-
-    if (!fs.existsSync(filePath)) {
+    try{
+      if (!fs.existsSync(filePath)) {
       fs.copyFileSync(file.path, filePath);
     }
+    }catch (e){
+      console.log(e)
+    }
+    
   });
 
   filesAdded(files.length);
