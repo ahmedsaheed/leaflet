@@ -15,7 +15,6 @@ import os from "os";
 
 
 export default function Next() {
-  const Desktop = require("os").homedir() + "/Desktop";
   const [value, setValue] = React.useState("");
   const [insert, setInsert] = React.useState(false);
   const [scroll, setScroll] = React.useState(0);
@@ -27,8 +26,21 @@ export default function Next() {
   const [fileNameBox, setFileNameBox] = React.useState(false);
   const [fileName, setFileName] = React.useState("");
   const [pandocAvailable, setPandocAvailable] = React.useState(false);
+  const appDir = mainPath.resolve(os.homedir(), "dairy");
+  const Desktop = require("os").homedir() + "/Desktop";
 
   useEffect(() => {
+    commandExists('pandoc')
+    .then(exists => {
+      if (exists) {
+        setPandocAvailable(true)
+      } else {
+        setPandocAvailable(false)
+      }
+    })
+    .catch(err => {
+      console.log(err)
+    })
     ipcRenderer.invoke("getTheFile").then((files = []) => {
       setFiles(files);
       setValue(files[0] ? `${files[0].body}` : "");
@@ -37,20 +49,6 @@ export default function Next() {
     });
   }, []);
 
-  useEffect(() => {
-    commandExists('pandoc')
-  .then(exists => {
-    if (exists) {
-      setPandocAvailable(true)
-    } else {
-      setPandocAvailable(false)
-    }
-  })
-  .catch(err => {
-    console.log(err)
-  })
-  })
-  
   const Update = () => {
     ipcRenderer.invoke("getTheFile").then((files = []) => {
       setFiles(files);
@@ -104,7 +102,6 @@ export default function Next() {
   }, [fileNameBox]);
 
   const docxToMd = (filePath) => {
-    const appDir = mainPath.resolve(os.homedir(), "dairy");
     const destination = `${appDir}/${filePath.name.split('.')[0]}.md`
     try{
       pandoc(filePath.path, `-f docx -t markdown -o ${destination}`, function (err, result) {
@@ -120,6 +117,7 @@ export default function Next() {
     
     return destination
   } 
+
 
   if (typeof window !== "undefined") {
     dragDrop("body", (files) => {
