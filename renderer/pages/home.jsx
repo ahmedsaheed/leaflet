@@ -3,6 +3,7 @@ import { ipcRenderer } from "electron";
 import { progress } from "../components/progress.ts";
 import { getMarkdown } from "../lib/mdParser.ts";
 import ButtomBar from "../components/buttomBar";
+import commandExists from 'command-exists-promise'
 import fs from "fs-extra";
 import dragDrop from "drag-drop";
 import Head from "next/head";
@@ -11,8 +12,6 @@ import pandoc from "node-pandoc"
 import mainPath from "path";
 import open from "open"
 import os from "os";
-
-
 
 
 export default function Next() {
@@ -27,8 +26,7 @@ export default function Next() {
   const [marker, setMarker] = React.useState(false);
   const [fileNameBox, setFileNameBox] = React.useState(false);
   const [fileName, setFileName] = React.useState("");
-  const [help, setHelp] = React.useState(false);
-
+  const [pandocAvailable, setPandocAvailable] = React.useState(false);
 
   useEffect(() => {
     ipcRenderer.invoke("getTheFile").then((files = []) => {
@@ -38,6 +36,20 @@ export default function Next() {
       setPath(files[0] ? `${files[0].path}` : "");
     });
   }, []);
+
+  useEffect(() => {
+    commandExists('pandoc')
+  .then(exists => {
+    if (exists) {
+      setPandocAvailable(true)
+    } else {
+      setPandocAvailable(false)
+    }
+  })
+  .catch(err => {
+    console.log(err)
+  })
+  })
   
   const Update = () => {
     ipcRenderer.invoke("getTheFile").then((files = []) => {
@@ -91,7 +103,7 @@ export default function Next() {
     });
   }, [fileNameBox]);
 
-  const covertPDFtoMD = (filePath) => {
+  const docxToMd = (filePath) => {
     const appDir = mainPath.resolve(os.homedir(), "dairy");
     const destination = `${appDir}/${filePath.name.split('.')[0]}.md`
     try{
@@ -117,7 +129,7 @@ export default function Next() {
         const extension = (file.path).split(".").pop();
         if(extension != "md" && extension === "docx"){
           
-          const docx = covertPDFtoMD(file);
+          const docx = docxToMd(file);
             fileName =  mainPath.parse(docx).base
             filePath =  docx
           
@@ -321,7 +333,8 @@ export default function Next() {
 
                 
                 <div className="fixed bottom-28">
-                  <button
+                  {isEdited ?  (       
+                    <button
                     className={`${marker ? "tick " : ""}`}
                     onClick={() => {
                       try {
@@ -338,6 +351,7 @@ export default function Next() {
                   >
                     Save File
                   </button>
+                  ) : null }
                   <br />
                   <button
                     onClick={() => {
@@ -347,9 +361,10 @@ export default function Next() {
                     Create New File
                   </button>
                   <br />
-                  <button onClick={openWindow}>Click to Add File</button>                  <br />
-                  <button onClick={convertToPDF}>Covert to PDF</button>                  <br />
-                  <button onClick={converToDocx}>Covert to Docx</button>
+                  <button onClick={openWindow}>Click to Add File</button> 
+                  {pandocAvailable ? (
+                     <><br /><button onClick={convertToPDF}>Covert to PDF</button><br /><button onClick={converToDocx}>Covert to Docx</button></>
+                  ) : null  }
                 </div>
               </div>
             </div>

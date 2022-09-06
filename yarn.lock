@@ -1988,6 +1988,11 @@
   dependencies:
     "delayed-stream" "~1.0.0"
 
+"command-exists-promise@^2.0.2":
+  "integrity" "sha512-T6PB6vdFrwnHXg/I0kivM3DqaCGZLjjYSOe0a5WgFKcz1sOnmOeIjnhQPXVXX3QjVbLyTJ85lJkX6lUpukTzaA=="
+  "resolved" "https://registry.npmjs.org/command-exists-promise/-/command-exists-promise-2.0.2.tgz"
+  "version" "2.0.2"
+
 "commander@^2.20.0":
   "integrity" "sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ=="
   "resolved" "https://registry.npmjs.org/commander/-/commander-2.20.3.tgz"
