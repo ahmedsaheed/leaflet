@@ -7,7 +7,7 @@ import fs from "fs-extra";
 import os from "os";
 
 import chokidar from "chokidar";
-const appDir = path.resolve(os.homedir(), "dairy");
+const appDir = path.resolve(os.homedir(), "leaflet");
 const Desktop = path.resolve(os.homedir(), "Desktop");
 const isProd = process.env.NODE_ENV === "production";
 const isMac = process.platform === "darwin";
@@ -36,7 +36,7 @@ if (isProd) {
   mainWindow.webContents.on("new-window", function (e, url) {
     e.preventDefault();
     setTimeout(() => {
-      require("electron").shell.openExternal(url);
+      open(url);
     }, 500);
   });
 

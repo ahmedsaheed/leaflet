@@ -26,7 +26,7 @@ export default function Next() {
   const [fileNameBox, setFileNameBox] = React.useState(false);
   const [fileName, setFileName] = React.useState("");
   const [pandocAvailable, setPandocAvailable] = React.useState(false);
-  const appDir = mainPath.resolve(os.homedir(), "dairy");
+  const appDir = mainPath.resolve(os.homedir(), "leaflet");
   const Desktop = require("os").homedir() + "/Desktop";
 
   useEffect(() => {
