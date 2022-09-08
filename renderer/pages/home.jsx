@@ -28,6 +28,7 @@ export default function Next() {
   const [pandocAvailable, setPandocAvailable] = React.useState(false);
   const appDir = mainPath.resolve(os.homedir(), "leaflet");
   const Desktop = require("os").homedir() + "/Desktop";
+  const [cursor, setCursor] = React.useState("1L:1C");
 
   useEffect(() => {
     commandExists('pandoc')
@@ -171,8 +172,6 @@ export default function Next() {
     }
   };
 
-
-
   useEffect(() => {
     document.onkeydown = function ListenToKeys(e) {
       if ((e.ctrlKey || e.metaKey) && e.key === "s") {
@@ -222,7 +221,6 @@ export default function Next() {
       }
     };
   });
-
   const onScroll = () => {
     const Scrolled = document.documentElement.scrollTop;
     const MaxHeight =
@@ -248,6 +246,11 @@ export default function Next() {
     });
   };
 
+  const cursorUpdate = (e) => {
+    var textLines = e.target.value.substr(0, e.target.selectionStart).split("\n");
+    var lineNo = textLines.length;
+    setCursor(`${lineNo}:${e.target.selectionStart}` );
+  }
   return (
     <>
       <Head>
@@ -382,10 +385,15 @@ export default function Next() {
               <div style={{ overflow: "hidden" }}>
             
                 <textarea
-                  // autoFocus={value === "" ? "true" : "false"}
                   id="markdown-content"
                   value={value}
                   onChange={handleChange}
+                  onKeyDown={(e) => {
+                    cursorUpdate(e);
+                  }}
+                  onMouseDown={(e) => {
+                    cursorUpdate(e);
+                  }}
                   spellcheck="false"
                   className="h-full w-full"
                   autoComplete ="false"
@@ -423,7 +431,7 @@ export default function Next() {
           <ButtomBar
             word={value.toString()}
             mode={insert ? "Insert" : "Preview"}
-            loader={insert ? "" : progress(scroll)}
+            loader={insert ? cursor : progress(scroll)}
           />
         </div>
       </div>
