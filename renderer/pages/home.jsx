@@ -104,6 +104,7 @@ export default function Next() {
 
   const docxToMd = (filePath) => {
     const destination = `${appDir}/${filePath.name.split('.')[0]}.md`
+    destination = destination.replace(/\s/g, '')
     try{
       pandoc(filePath.path, `-f docx -t markdown -o ${destination}`, function (err, result) {
         if (err) console.log(err)
