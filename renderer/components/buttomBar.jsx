@@ -31,7 +31,7 @@ export default function ButtomBar({ word, mode, loader }) {
         <span>{`${Countable(word)} words`}</span>
         <div style={{ display: "inline", marginRight: "30px" }}></div>
         <div
-          style={{ display: "inline", color: "grey" }}
+          style={{ display: "inline", color: "grey", overflow: "hidden" }}
           dangerouslySetInnerHTML={{ __html: loader }}
         />
       </container>

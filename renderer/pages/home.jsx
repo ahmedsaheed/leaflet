@@ -249,7 +249,7 @@ export default function Next() {
   const cursorUpdate = (e) => {
     var textLines = e.target.value.substr(0, e.target.selectionStart).split("\n");
     var lineNo = textLines.length;
-    setCursor(`${lineNo}:${e.target.selectionStart}` );
+    setCursor(`${lineNo}L ${e.target.selectionStart}C` );
   }
   return (
     <>
