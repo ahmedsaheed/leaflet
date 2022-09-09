@@ -153,10 +153,12 @@ export default function Next() {
   }
 
   const createNewFile = () => {
+    fileName != "" ?
     ipcRenderer.invoke("createNewFile", fileName).then(() => {
       setFiles(files);
       Update();
-    });
+    })
+    : null
   };
 
   const saveFile = () => {
@@ -345,8 +347,16 @@ export default function Next() {
                   {fileNameBox ? (
                     <form
                       onSubmit={() => {
+                        if( fileName.length < 1) {
+                          setFileNameBox(false);
+                          return;
+                        }
                         createNewFile(fileName);
                         setFileNameBox(false);
+                        setTimeout(() => {
+                          setFileName("");
+                        }
+                        , 100);
                       }}
                     >
                       <input
