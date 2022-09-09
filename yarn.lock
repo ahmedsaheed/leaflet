@@ -3345,13 +3345,6 @@
     "mdurl" "^1.0.1"
     "uc.micro" "^1.0.5"
 
-"match-words@^0.1.0":
-  "integrity" "sha512-cywKmeeoNFi//GGLHZ+Zb/M3ZX0VTwJjotLMWhDZoBRtSbw3kraIuIxw7P/xy+t5NSAMHNVeljM63WRBYQ563w=="
-  "resolved" "https://registry.npmjs.org/match-words/-/match-words-0.1.1.tgz"
-  "version" "0.1.1"
-  dependencies:
-    "word-regex" "^0.1.0"
-
 "matcher@^3.0.0":
   "integrity" "sha512-OkeDaAZ/bQCxeFAozM55PKcKU0yJMPGifLwV4Qgjitu+5MoAfSQN4lsLJeXZ1b8w0x+/Emda6MZgXS1jvsapng=="
   "resolved" "https://registry.npmjs.org/matcher/-/matcher-3.0.0.tgz"
@@ -4625,18 +4618,6 @@
   "integrity" "sha512-JcKqAHLPxcdb9KM49dufGXn2x3ssnfjbcaQdLlfZsL9rH9wgDQjUtDxbo8NE0F6SFvydeu1VhZe7hZuHsB2/pw=="
   "resolved" "https://registry.npmjs.org/wildcard/-/wildcard-2.0.0.tgz"
   "version" "2.0.0"
-
-"word-regex@^0.1.0":
-  "integrity" "sha512-4jK/OibPeindR9o/sryObhVWNgD2LJCMJFWEME69p48sEYpE9axfyjHK+RqYcOeoEoqcqJEPE9iMdiiFpXHo0Q=="
-  "resolved" "https://registry.npmjs.org/word-regex/-/word-regex-0.1.2.tgz"
-  "version" "0.1.2"
-
-"wordcount@^1.1.1":
-  "integrity" "sha512-3PzTv5i9Zq+DYjYFs9mybWjz3uxd19pzZEhroS0C/424IxrxWeqd+0Qt/R+UjydSWutYjaQSTklO9EBZ6YsiWg=="
-  "resolved" "https://registry.npmjs.org/wordcount/-/wordcount-1.1.1.tgz"
-  "version" "1.1.1"
-  dependencies:
-    "match-words" "^0.1.0"
 
 "wrap-ansi@^7.0.0":
   "integrity" "sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q=="

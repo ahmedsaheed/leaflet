@@ -71,8 +71,7 @@
     "markdown-it-task-lists": "^2.1.1",
     "markdown-it-texmath": "^1.0.0",
     "open": "^8.4.0",
-    "react-autocomplete-hint": "^2.0.0",
-    "wordcount": "^1.1.1"
+    "react-autocomplete-hint": "^2.0.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.17",

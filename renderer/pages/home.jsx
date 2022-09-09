@@ -264,7 +264,7 @@ export default function Next() {
 
 
   function handleChange(e) {
-    setValue(e.target.value);
+    setValue(FullDate(Month((Now(e.target.value)))));
     setIsEdited(true);
   }
   const openWindow = () => {
@@ -279,7 +279,7 @@ export default function Next() {
   const cursorUpdate = (e) => {
     var textLines = e.target.value.substr(0, e.target.selectionStart).split("\n");
     var lineNo = textLines.length;
-    setCursor(`${lineNo}L ${e.target.selectionStart}C` );
+    setCursor(`${lineNo}L ${e.target.selectionStart}P` );
   }
   return (
     <>
@@ -460,7 +460,7 @@ export default function Next() {
                   className="third h-full w-full"
                   
 
-                  dangerouslySetInnerHTML={getMarkdown(FullDate(Month((Now(value)))))}
+                  dangerouslySetInnerHTML={getMarkdown(value)}
                 />
               </div>
             </>
