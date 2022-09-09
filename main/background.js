@@ -8,7 +8,6 @@ import os from "os";
 
 import chokidar from "chokidar";
 const appDir = path.resolve(os.homedir(), "leaflet");
-const Desktop = path.resolve(os.homedir(), "Desktop");
 const isProd = process.env.NODE_ENV === "production";
 const isMac = process.platform === "darwin";
 
@@ -338,7 +337,7 @@ const newFile = (file) => {
   }
 };
 
-ipcMain.handle("saveFile", (event, path, content) => {
+ipcMain.handle("saveFile", (path, content) => {
   try {
     fs.writeFileSync(path, content);
   } catch (e) {
@@ -347,18 +346,18 @@ ipcMain.handle("saveFile", (event, path, content) => {
 });
 
 
-ipcMain.handle("createNewFile", (event, filename) => {
+ipcMain.handle("createNewFile", (filename) => {
   newFile(filename);
   created(filename);
 });
 ipcMain.handle("getTheFile", () => {
   return getFiles();
 });
-ipcMain.handle("app:on-file-add", (event, files = []) => {
+ipcMain.handle("app:on-file-add", (files = []) => {
   addFiles(files);
 });
 
-ipcMain.handle("app:on-fs-dialog-open", (event) => {
+ipcMain.handle("app:on-fs-dialog-open", () => {
   const files = dialog.showOpenDialogSync({
     properties: ["openFile", "multiSelections"],
   });
@@ -377,14 +376,14 @@ ipcMain.handle("app:on-fs-dialog-open", (event) => {
   );
 });
 
-ipcMain.on("app:on-file-delete", (event, file) => {
+ipcMain.on("app:on-file-delete", (file) => {
   deleteFile(file.filepath);
 });
 
-ipcMain.on("app:on-file-open", (event, file) => {
+ipcMain.on("app:on-file-open", (file) => {
   openFile(file.filepath);
 });
-ipcMain.on("app:on-file-copy", (event, file) => {
+ipcMain.on("app:on-file-copy", (file) => {
   event.sender.startDrag({
     file: file.filepath,
     icon: file.icon,

@@ -29,6 +29,8 @@ export default function Next() {
   const appDir = mainPath.resolve(os.homedir(), "leaflet");
   const Desktop = require("os").homedir() + "/Desktop";
   const [cursor, setCursor] = React.useState("1L:1C");
+  const today = new Date();
+
 
   useEffect(() => {
     commandExists('pandoc')
@@ -234,6 +236,31 @@ export default function Next() {
     window.addEventListener("scroll", onScroll);
   }
 
+    const FullDate = (whatValue) =>{
+        var date = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
+
+        const resultingValue = whatValue.replace("DATE.TODAY", `${date}`);
+        return resultingValue
+    }
+
+    const Month = (whatValue) =>{
+               var month = today.toLocaleString('default', { month: 'long' }) +" "+ today.getFullYear()
+        const resultingValue = whatValue.replace("DATE.MONTH", `${month}`);
+        return resultingValue
+
+    }
+
+        const Now = (whatValue) =>{
+           var currTime =
+    today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();  
+            const resultingValue = whatValue.replace("CURRENT.TIME", `${currTime}`);
+        return resultingValue
+
+    }
+
+
+
+
   function handleChange(e) {
     setValue(e.target.value);
     setIsEdited(true);
@@ -423,7 +450,7 @@ export default function Next() {
                   className="third h-full w-full"
                   
 
-                  dangerouslySetInnerHTML={getMarkdown(value)}
+                  dangerouslySetInnerHTML={getMarkdown(FullDate(Month((Now(value)))))}
                 />
               </div>
             </>

@@ -5,6 +5,10 @@
 body{
 background: black;
 }
+hr{
+margin-left: 6em;
+margin-right:6em; 
+}
 
 @media (prefers-color-scheme: dark) {
   body {
@@ -27,6 +31,12 @@ background: black;
   code{
     background-color: #232223;
   }
+
+    hr{
+    border: 1px solid #252525;
+  
+  }
+
 
  
 
@@ -127,7 +137,7 @@ strong{
   
   }
   hr{
-    border: 1px solid grey;
+    border: 1px solid #7c7c7c;
   
   }
 }

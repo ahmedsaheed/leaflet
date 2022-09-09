@@ -41,7 +41,7 @@
     "build:mac": "nextron build --mac --x64",
     "build:linux": "nextron build --linux",
     "postinstall": "electron-builder install-app-deps",
-    "release":  "GH_TOKEN=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 electron-builder -m -l -w --publish always",
+    "release": "GH_TOKEN=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 electron-builder -m -l -w --publish always",
     "release:win32": "electron-builder --publish always --win --ia32",
     "release:win64": "electron-builder --publish always --win --x64",
     "release:mac": "electron-builder --publish always --mac --x64",
@@ -52,6 +52,7 @@
     "url": "https://github.com/ahmedsaheed/Leaflet.git"
   },
   "dependencies": {
+    "@babel/core": "^7.19.0",
     "@fontsource/ia-writer-duospace": "^4.5.3",
     "chokidar": "^3.5.3",
     "command-exists-promise": "^2.0.2",
@@ -63,6 +64,7 @@
     "katex": "^0.16.0",
     "markdown-it": "^13.0.1",
     "markdown-it-anchor": "^8.6.4",
+    "markdown-it-calendar": "^1.5.0",
     "markdown-it-footnote": "^3.0.3",
     "markdown-it-metadata-block": "^1.0.2",
     "markdown-it-table-of-contents": "^0.6.0",
