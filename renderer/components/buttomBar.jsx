@@ -16,8 +16,9 @@ export default function ButtomBar({ word, mode, loader, thesaurus, displayThesau
 
   useEffect(() => {
     document.onkeydown = function PayAttention(e) {
-      if ( displayThesaurus && e.shiftKey) {
+      if ( displayThesaurus && e.shiftKey && e.key === 'ArrowRight') {
         thesaurus.shift();
+        setThesaurusIndex(thesaurusIndex + 1);
         e.preventDefault();
         return;
       }
@@ -39,7 +40,8 @@ export default function ButtomBar({ word, mode, loader, thesaurus, displayThesau
 
             }}
           >
-          {thesaurus.map((item, index) => {
+          {
+          thesaurus.map((item, index) => {
             return <ul style={{
               display: "inline", 
               overflowY:"scroll",
@@ -47,7 +49,7 @@ export default function ButtomBar({ word, mode, loader, thesaurus, displayThesau
               marginButtom: "5px ",
             }} 
               key={index}>
-                {index === 0 ?  <u>item</u>: item} 
+                {item === thesaurus[0] ?  <u>{item}</u>: item} 
                </ul>
            })}
            </container> 
