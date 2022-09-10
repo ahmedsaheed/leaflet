@@ -35,6 +35,7 @@ export default function Next() {
   const ref = useRef(null);
   let synonyms = {};
 
+  //_-_-_-_-_-_-_-_-_-_-_-_-_-_-_CHECK FOR PANDOC-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
   useEffect(() => {
     commandExists("pandoc")
       .then((exists) => {
@@ -57,12 +58,11 @@ export default function Next() {
 
 
 
-//_-_-_-_-_-_-_-_-_-_-_-_-_-_-_SYNONYMS-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+//_-_-_-_-_-_-_-_-_-_-_-_-_-_-_SYNONYMS GENERATOR-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 
 const getSynonyms = () => {
   const l = activeWordLocation()
     let response = find_synonym(l.word);
-    // DO SOMETHING WITH THE RESPONSE
     if (!response) {
       setDisplayThesaurus(false);
       setThesaurus([]);
@@ -135,26 +135,26 @@ const getSynonyms = () => {
     return { from: from, to: to, word: area.value.substring(from, to) };
   };
 
-  // const replaceActiveWord = (word) => {
-  //    const area = ref.current;
+  const replaceActiveWord = (word) => {
+     const area = ref.current;
 
-  //   const l = activeWordLocation();
-  //   const w = area.value.substr(l.from, l.to - l.from);
+    const l = activeWordLocation();
+    const w = area.value.substr(l.from, l.to - l.from);
 
-  //   if (w.substr(0, 1) === w.substr(0, 1).toUpperCase()) {
-  //     word = word.substr(0, 1).toUpperCase() + word.substr(1, word.length);
-  //   }
+    if (w.substr(0, 1) === w.substr(0, 1).toUpperCase()) {
+      word = word.substr(0, 1).toUpperCase() + word.substr(1, word.length);
+    }
 
-  //   //area.value = area.value.substr(0, l.from) + word + area.value.substr(l.to)
-  //   area.setSelectionRange(l.from, l.to);
-  //   document.execCommand("insertText", false, characters);
-  //   area.focus();
-  // };
+    //area.value = area.value.substr(0, l.from) + word + area.value.substr(l.to)
+    area.setSelectionRange(l.from, l.to);
+    document.execCommand("insertText", false, word);
+    area.focus();
+  };
 
 
 
   
-  //_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+  //_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-UTILITIES_-_-_-_-_-_-_-_-_-_-_-_-_-
 
   const Update = () => {
     ipcRenderer.invoke("getTheFile").then((files = []) => {
@@ -540,6 +540,7 @@ const getSynonyms = () => {
               <div style={{ overflow: "hidden" }}>
                 <textarea
                   ref={ref}
+                  autoFocus
                   id="markdown-content"
                   value={value}
                   onChange={handleChange}

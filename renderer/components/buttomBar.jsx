@@ -5,7 +5,7 @@ import { setInterval } from "timers";
 export default function ButtomBar({ word, mode, loader, thesaurus, displayThesaurus }) {
 
   const [clockState, setClockState] = useState();
-  const [thesaurusIndex, setThesaurusIndex] = useState(0);
+  const [whichIsActive, setWhichIsActive] = useState(0);
   useEffect(() => {
     setInterval(() =>{
       const date = new Date();
@@ -16,46 +16,64 @@ export default function ButtomBar({ word, mode, loader, thesaurus, displayThesau
 
   useEffect(() => {
     document.onkeydown = function PayAttention(e) {
-      if ( displayThesaurus && e.shiftKey && e.key === 'ArrowRight') {
-        thesaurus.shift();
-        setThesaurusIndex(thesaurusIndex + 1);
-        e.preventDefault();
-        return;
+      if(displayThesaurus){
+        if(e.keyCode === 9){
+          if(e.shiftKey){
+            setWhichIsActive(whichIsActive + 1);
+
+          // thesaurus.shift();
+          // setChoices(thesaurus[0])
+         
+        }else{
+         setChoices(thesaurus[0])
+
+        }
+        e.preventDefault()
+        return
       }
-    }})
+    }
+    }
+
+  })
+
   return (
     <div
       className="fixed inset-x-0 bottom-0 ButtomBar"
       style={{ marginLeft: "30%", maxHeight: "10vh", marginTop: "20px" }}
     >
-      {
+      {/* {
         displayThesaurus && mode!="Preview" ? 
         <container
-            className="Left"
             style={{
-              paddingLeft: "40px",
               paddingTop: "5px",
+              paddingRight: "40px",
               paddingBottom: "5px",
-              float: "left",
+              float: "center",
+              overflow: "hidden",
 
             }}
           >
+            <li style={{
+               marginButtom: "5px ",
+               listStyleType: "none",
+               marginRight: "10px",
+            }}>
           {
+
           thesaurus.map((item, index) => {
             return <ul style={{
-              display: "inline", 
-              overflowY:"scroll",
-              marginTop: "5px",
-              marginButtom: "5px ",
+              display: "inline",
+              overflowInline: "hidden",
+              color: "grey"
             }} 
               key={index}>
-                {item === thesaurus[0] ?  <u>{item}</u>: item} 
+                {index < whichIsActive ?  <span style={{color: "red", display: "none"}}>{item}</span>: <span><u>{item}</u></span>} 
                </ul>
            })}
-           </container> 
+           </li></container> 
         
 
-        :
+        : */}
         <><container
             className="Left"
             style={{
@@ -96,7 +114,7 @@ export default function ButtomBar({ word, mode, loader, thesaurus, displayThesau
               <div style={{ display: "inline", marginLeft: "20px" }}></div>
               {clockState}
             </container></>
-      }
+      
       
     </div>
   );
