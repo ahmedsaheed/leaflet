@@ -4,7 +4,7 @@ import { progress } from "../components/progress.ts";
 import { getMarkdown } from "../lib/mdParser.ts";
 import ButtomBar from "../components/buttomBar";
 import commandExists from "command-exists-promise";
-import SYNONYMS from "../lib/synonyms.js";
+import {SYNONYMS} from "../lib/synonyms.js";
 import fs from "fs-extra";
 import dragDrop from "drag-drop";
 import Head from "next/head";
@@ -31,6 +31,7 @@ export default function Next() {
   const [cursor, setCursor] = React.useState("1L:1C");
   const today = new Date();
   const ref = useRef(null);
+  let synonyms = {};
 
   useEffect(() => {
     commandExists("pandoc")
@@ -52,51 +53,78 @@ export default function Next() {
     });
   }, []);
 
-  // const getSynonyms = () => {
-  //   const area = ref.current;
-  //   const l = activeWordLocation();
-  //   // let word = "";
-  //   // word = area.value.substring(l.from, l.to);
-  //   alert(l.word);
 
-    // const synonyms = SYNONYMS[word];
-    // if (synonyms) {
-    //   alert(synonyms.join(", ")) ;
-    // } else {
-    //   return null;
-    // }
-  // };
 
-  // const activeWordLocation = () => {
-  //   const area = ref.current;
-  //   let position = area.selectionEnd;
-  //   let from = position - 1;
+//_-_-_-_-_-_-_-_-_-_-_-_-_-_-_SYNONYMS-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 
-  //   // Find beginning of word
-  //   while (from > -1) {
-  //     const char = area.value[from];
-  //     if (!char || !char.match(/[a-z]/i)) {
-  //       break;
-  //     }
-  //     from -= 1;
-  //   }
+const getSynonyms = () => {
+  const l = activeWordLocation()
+    let response = find_synonym(l.word);
+    // DO SOMETHING WITH THE RESPONSE
+};
 
-  //   // Find end of word
-  //   let to = from + 1;
-  //   while (to < from + 30) {
-  //     const char = area.value[to];
-  //     if (!char || !char.match(/[a-z]/i)) {
-  //       break;
-  //     }
-  //     to += 1;
-  //   }
+  const find_synonym = (str) => {
+    if (str.trim().length < 4) {
+      return;
+    }
 
-  //   from += 1;
-  //   return { from: from, to: to, word: area.value.substring(from, to) };
-  // };
+    const target = str.toLowerCase();
+    synonyms = SYNONYMS;
+
+    if (synonyms[target]) {
+      return uniq(synonyms[target]);
+    }
+
+    if (target[target.length - 1] === "s") {
+      const singular = synonyms[target.substr(0, target.length - 1)];
+      if (synonyms[singular]) {
+        return uniq(synonyms[singular]);
+      }
+    }
+
+    return null;
+  };
+
+  function uniq(a1) {
+    const a2 = [];
+    for (const id in a1) {
+      if (a2.indexOf(a1[id]) === -1) {
+        a2[a2.length] = a1[id];
+      }
+    }
+    return a2;
+  }
+
+  const activeWordLocation = () => {
+    const area = ref.current;
+    let position = area.selectionEnd;
+    let from = position - 1;
+
+    // Find beginning of word
+    while (from > -1) {
+      const char = area.value[from];
+      if (!char || !char.match(/[a-z]/i)) {
+        break;
+      }
+      from -= 1;
+    }
+
+    // Find end of word
+    let to = from + 1;
+    while (to < from + 30) {
+      const char = area.value[to];
+      if (!char || !char.match(/[a-z]/i)) {
+        break;
+      }
+      to += 1;
+    }
+
+    from += 1;
+    return { from: from, to: to, word: area.value.substring(from, to) };
+  };
 
   // const replaceActiveWord = (word) => {
-//    const area = ref.current;
+  //    const area = ref.current;
 
   //   const l = activeWordLocation();
   //   const w = area.value.substr(l.from, l.to - l.from);
@@ -110,6 +138,11 @@ export default function Next() {
   //   document.execCommand("insertText", false, characters);
   //   area.focus();
   // };
+
+
+
+  
+  //_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 
   const Update = () => {
     ipcRenderer.invoke("getTheFile").then((files = []) => {
@@ -345,7 +378,7 @@ export default function Next() {
       var textLines = e.target.value
         .substr(0, e.target.selectionEnd)
         .split("\n");
-      var lineNo = textLines.length-1;
+      var lineNo = textLines.length - 1;
       setCursor(`${lineNo}L ${e.target.selectionStart}P`);
     }
   };
@@ -502,7 +535,7 @@ export default function Next() {
                   }}
                   onMouseDown={(e) => {
                     cursorUpdate(e);
-                    // getSynonyms();
+                    getSynonyms();
                   }}
                   spellcheck="false"
                   className="h-full w-full"
