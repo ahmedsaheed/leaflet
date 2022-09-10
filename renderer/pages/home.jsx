@@ -31,7 +31,6 @@ export default function Next() {
   const [cursor, setCursor] = React.useState("1L:1C");
   const today = new Date();
   const ref = useRef(null);
-  const area = ref.current;
 
   useEffect(() => {
     commandExists("pandoc")
@@ -54,16 +53,18 @@ export default function Next() {
   }, []);
 
   // const getSynonyms = () => {
+  //   const area = ref.current;
   //   const l = activeWordLocation();
-  //   const word = area.value.substring(l.from, l.to);
-  //   alert(word);
+  //   // let word = "";
+  //   // word = area.value.substring(l.from, l.to);
+  //   alert(l.word);
 
-  //   // const synonyms = SYNONYMS[word];
-  //   // if (synonyms) {
-  //   //   alert(synonyms.join(", ")) ;
-  //   // } else {
-  //   //   return null;
-  //   // }
+    // const synonyms = SYNONYMS[word];
+    // if (synonyms) {
+    //   alert(synonyms.join(", ")) ;
+    // } else {
+    //   return null;
+    // }
   // };
 
   // const activeWordLocation = () => {
@@ -91,12 +92,12 @@ export default function Next() {
   //   }
 
   //   from += 1;
-  //   // const word = area.value.substring(from, to - from)
-
-  //   return { from: from, to: to };
+  //   return { from: from, to: to, word: area.value.substring(from, to) };
   // };
 
   // const replaceActiveWord = (word) => {
+//    const area = ref.current;
+
   //   const l = activeWordLocation();
   //   const w = area.value.substr(l.from, l.to - l.from);
 
@@ -497,6 +498,7 @@ export default function Next() {
                   onChange={handleChange}
                   onKeyDown={(e) => {
                     cursorUpdate(e);
+                    // getSynonyms()
                   }}
                   onMouseDown={(e) => {
                     cursorUpdate(e);
