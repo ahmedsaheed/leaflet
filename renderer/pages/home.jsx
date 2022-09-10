@@ -1,18 +1,18 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { ipcRenderer } from "electron";
 import { progress } from "../components/progress.ts";
 import { getMarkdown } from "../lib/mdParser.ts";
 import ButtomBar from "../components/buttomBar";
-import commandExists from 'command-exists-promise'
+import commandExists from "command-exists-promise";
+import SYNONYMS from "../lib/synonyms.js";
 import fs from "fs-extra";
 import dragDrop from "drag-drop";
 import Head from "next/head";
 import Script from "next/Script";
-import pandoc from "node-pandoc"
+import pandoc from "node-pandoc";
 import mainPath from "path";
-import open from "open"
+import open from "open";
 import os from "os";
-
 
 export default function Next() {
   const [value, setValue] = React.useState("");
@@ -30,20 +30,21 @@ export default function Next() {
   const Desktop = require("os").homedir() + "/Desktop";
   const [cursor, setCursor] = React.useState("1L:1C");
   const today = new Date();
-
+  const ref = useRef(null);
+  const area = ref.current;
 
   useEffect(() => {
-    commandExists('pandoc')
-    .then(exists => {
-      if (exists) {
-        setPandocAvailable(true)
-      } else {
-        setPandocAvailable(false)
-      }
-    })
-    .catch(err => {
-      console.log(err)
-    })
+    commandExists("pandoc")
+      .then((exists) => {
+        if (exists) {
+          setPandocAvailable(true);
+        } else {
+          setPandocAvailable(false);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     ipcRenderer.invoke("getTheFile").then((files = []) => {
       setFiles(files);
       setValue(files[0] ? `${files[0].body}` : "");
@@ -52,28 +53,87 @@ export default function Next() {
     });
   }, []);
 
+  // const getSynonyms = () => {
+  //   const l = activeWordLocation();
+  //   const word = area.value.substring(l.from, l.to);
+  //   alert(word);
+
+  //   // const synonyms = SYNONYMS[word];
+  //   // if (synonyms) {
+  //   //   alert(synonyms.join(", ")) ;
+  //   // } else {
+  //   //   return null;
+  //   // }
+  // };
+
+  // const activeWordLocation = () => {
+  //   const area = ref.current;
+  //   let position = area.selectionEnd;
+  //   let from = position - 1;
+
+  //   // Find beginning of word
+  //   while (from > -1) {
+  //     const char = area.value[from];
+  //     if (!char || !char.match(/[a-z]/i)) {
+  //       break;
+  //     }
+  //     from -= 1;
+  //   }
+
+  //   // Find end of word
+  //   let to = from + 1;
+  //   while (to < from + 30) {
+  //     const char = area.value[to];
+  //     if (!char || !char.match(/[a-z]/i)) {
+  //       break;
+  //     }
+  //     to += 1;
+  //   }
+
+  //   from += 1;
+  //   // const word = area.value.substring(from, to - from)
+
+  //   return { from: from, to: to };
+  // };
+
+  // const replaceActiveWord = (word) => {
+  //   const l = activeWordLocation();
+  //   const w = area.value.substr(l.from, l.to - l.from);
+
+  //   if (w.substr(0, 1) === w.substr(0, 1).toUpperCase()) {
+  //     word = word.substr(0, 1).toUpperCase() + word.substr(1, word.length);
+  //   }
+
+  //   //area.value = area.value.substr(0, l.from) + word + area.value.substr(l.to)
+  //   area.setSelectionRange(l.from, l.to);
+  //   document.execCommand("insertText", false, characters);
+  //   area.focus();
+  // };
+
   const Update = () => {
     ipcRenderer.invoke("getTheFile").then((files = []) => {
       setFiles(files);
     });
   };
   const convertToPDF = () => {
-    const path = `${Desktop}/${name}.pdf`
-        pandoc(value, `-f markdown -t pdf -o ${path}`, function (err, result) {
-          if (err) console.log(err)
-          if (fs.existsSync(path)) {
-            open(path);
-          }})
-  }
-
-  const converToDocx = () => {
-    const path = `${Desktop}/${name}.docx`
-    pandoc(value, `-f markdown -t docx -o ${path}`, function (err, result) {
-      if (err) console.log(err)
+    const path = `${Desktop}/${name}.pdf`;
+    pandoc(value, `-f markdown -t pdf -o ${path}`, function (err, result) {
+      if (err) console.log(err);
       if (fs.existsSync(path)) {
         open(path);
-      }})
-  }
+      }
+    });
+  };
+
+  const converToDocx = () => {
+    const path = `${Desktop}/${name}.docx`;
+    pandoc(value, `-f markdown -t docx -o ${path}`, function (err, result) {
+      if (err) console.log(err);
+      if (fs.existsSync(path)) {
+        open(path);
+      }
+    });
+  };
 
   useEffect(() => {
     ipcRenderer.on("save", function () {
@@ -81,7 +141,7 @@ export default function Next() {
       Update();
     });
   }, [value, path]);
-  
+
   useEffect(() => {
     ipcRenderer.on("insertClicked", function () {
       insert ? "" : setInsert(true);
@@ -105,42 +165,41 @@ export default function Next() {
   }, [fileNameBox]);
 
   const docxToMd = (filePath) => {
-    const destination = `${appDir}/${filePath.name.split('.')[0]}.md`
-    destination = destination.replace(/\s/g, '')
-    try{
-      pandoc(filePath.path, `-f docx -t markdown -o ${destination}`, function (err, result) {
-        if (err) console.log(err)
-        if (fs.existsSync(destination)) {
-          Update();
+    const destination = `${appDir}/${filePath.name.split(".")[0]}.md`;
+    destination = destination.replace(/\s/g, "");
+    try {
+      pandoc(
+        filePath.path,
+        `-f docx -t markdown -o ${destination}`,
+        function (err, result) {
+          if (err) console.log(err);
+          if (fs.existsSync(destination)) {
+            Update();
+          }
         }
-  
-      })
-    }catch (e){
-      console.log(e)
+      );
+    } catch (e) {
+      console.log(e);
     }
-    
-    return destination
-  } 
 
+    return destination;
+  };
 
   if (typeof window !== "undefined") {
     dragDrop("body", (files) => {
       const _files = files.map((file) => {
         let fileName = file.name;
         let filePath = file.path;
-        const extension = (file.path).split(".").pop();
-        if(extension != "md" && extension === "docx"){
-          
+        const extension = file.path.split(".").pop();
+        if (extension != "md" && extension === "docx") {
           const docx = docxToMd(file);
-            fileName =  mainPath.parse(docx).base
-            filePath =  docx
-          
+          fileName = mainPath.parse(docx).base;
+          filePath = docx;
         }
         return {
           name: fileName,
           path: filePath,
         };
-      
       });
 
       ipcRenderer.invoke("app:on-file-add", _files).then(() => {
@@ -153,12 +212,12 @@ export default function Next() {
   }
 
   const createNewFile = () => {
-    fileName != "" ?
-    ipcRenderer.invoke("createNewFile", fileName).then(() => {
-      setFiles(files);
-      Update();
-    })
-    : null
+    fileName != ""
+      ? ipcRenderer.invoke("createNewFile", fileName).then(() => {
+          setFiles(files);
+          Update();
+        })
+      : null;
   };
 
   const saveFile = () => {
@@ -166,11 +225,10 @@ export default function Next() {
       ipcRenderer.invoke("saveFile", path, value).then(() => {
         Update();
         setMarker(true);
-          setTimeout(() => {
-            setMarker(false);
-              setIsEdited(false);
-                }, 3000);
-        
+        setTimeout(() => {
+          setMarker(false);
+          setIsEdited(false);
+        }, 3000);
       });
     } catch (e) {
       console.log(e);
@@ -238,33 +296,36 @@ export default function Next() {
     window.addEventListener("scroll", onScroll);
   }
 
-    const FullDate = (whatValue) =>{
-        var date = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
+  const FullDate = (whatValue) => {
+    var date =
+      today.getFullYear() +
+      "-" +
+      (today.getMonth() + 1) +
+      "-" +
+      today.getDate();
 
-        const resultingValue = whatValue.replace("DATE.TODAY", `${date}`);
-        return resultingValue
-    }
+    const resultingValue = whatValue.replace("DATE.TODAY", `${date}`);
+    return resultingValue;
+  };
 
-    const Month = (whatValue) =>{
-               var month = today.toLocaleString('default', { month: 'long' }) +" "+ today.getFullYear()
-        const resultingValue = whatValue.replace("DATE.MONTH", `${month}`);
-        return resultingValue
+  const Month = (whatValue) => {
+    var month =
+      today.toLocaleString("default", { month: "long" }) +
+      " " +
+      today.getFullYear();
+    const resultingValue = whatValue.replace("DATE.MONTH", `${month}`);
+    return resultingValue;
+  };
 
-    }
-
-        const Now = (whatValue) =>{
-           var currTime =
-    today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();  
-            const resultingValue = whatValue.replace("CURRENT.TIME", `${currTime}`);
-        return resultingValue
-
-    }
-
-
-
+  const Now = (whatValue) => {
+    var currTime =
+      today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    const resultingValue = whatValue.replace("CURRENT.TIME", `${currTime}`);
+    return resultingValue;
+  };
 
   function handleChange(e) {
-    setValue(FullDate(Month((Now(e.target.value)))));
+    setValue(FullDate(Month(Now(e.target.value))));
     setIsEdited(true);
   }
   const openWindow = () => {
@@ -277,10 +338,16 @@ export default function Next() {
   };
 
   const cursorUpdate = (e) => {
-    var textLines = e.target.value.substr(0, e.target.selectionStart).split("\n");
-    var lineNo = textLines.length;
-    setCursor(`${lineNo}L ${e.target.selectionStart}P` );
-  }
+    if (e.target.selectionStart !== e.target.selectionEnd) {
+      setCursor(`[${e.target.selectionStart}, ${e.target.selectionEnd}]`);
+    } else {
+      var textLines = e.target.value
+        .substr(0, e.target.selectionEnd)
+        .split("\n");
+      var lineNo = textLines.length-1;
+      setCursor(`${lineNo}L ${e.target.selectionStart}P`);
+    }
+  };
   return (
     <>
       <Head>
@@ -347,7 +414,7 @@ export default function Next() {
                   {fileNameBox ? (
                     <form
                       onSubmit={() => {
-                        if( fileName.length < 1) {
+                        if (fileName.length < 1) {
                           setFileNameBox(false);
                           return;
                         }
@@ -355,8 +422,7 @@ export default function Next() {
                         setFileNameBox(false);
                         setTimeout(() => {
                           setFileName("");
-                        }
-                        , 100);
+                        }, 100);
                       }}
                     >
                       <input
@@ -370,27 +436,26 @@ export default function Next() {
                   ) : null}
                 </div>
 
-                
                 <div className="fixed bottom-28">
-                  {isEdited ?  (       
+                  {isEdited ? (
                     <button
-                    className={`${marker ? "tick " : ""}`}
-                    onClick={() => {
-                      try {
-                        saveFile();
-                        setMarker(true);
-                        setTimeout(() => {
-                          setMarker(false);
-                          setIsEdited(false);
-                        }, 3000);
-                      } catch {
-                        console.log("error");
-                      }
-                    }}
-                  >
-                    Save File
-                  </button>
-                  ) : null }
+                      className={`${marker ? "tick " : ""}`}
+                      onClick={() => {
+                        try {
+                          saveFile();
+                          setMarker(true);
+                          setTimeout(() => {
+                            setMarker(false);
+                            setIsEdited(false);
+                          }, 3000);
+                        } catch {
+                          console.log("error");
+                        }
+                      }}
+                    >
+                      Save File
+                    </button>
+                  ) : null}
                   <br />
                   <button
                     onClick={() => {
@@ -400,10 +465,15 @@ export default function Next() {
                     Create New File
                   </button>
                   <br />
-                  <button onClick={openWindow}>Click to Add File</button> 
+                  <button onClick={openWindow}>Click to Add File</button>
                   {pandocAvailable ? (
-                     <><br /><button onClick={convertToPDF}>Covert to PDF</button><br /><button onClick={converToDocx}>Covert to Docx</button></>
-                  ) : null  }
+                    <>
+                      <br />
+                      <button onClick={convertToPDF}>Covert to PDF</button>
+                      <br />
+                      <button onClick={converToDocx}>Covert to Docx</button>
+                    </>
+                  ) : null}
                 </div>
               </div>
             </div>
@@ -415,14 +485,13 @@ export default function Next() {
             paddingRight: "20px",
             maxWidth: "100vh",
             paddingTop: "10vh",
-
           }}
         >
           {insert ? (
             <div>
               <div style={{ overflow: "hidden" }}>
-            
                 <textarea
+                  ref={ref}
                   id="markdown-content"
                   value={value}
                   onChange={handleChange}
@@ -431,11 +500,12 @@ export default function Next() {
                   }}
                   onMouseDown={(e) => {
                     cursorUpdate(e);
+                    // getSynonyms();
                   }}
                   spellcheck="false"
                   className="h-full w-full"
-                  autoComplete ="false"
-                  autoCorrect = "false"
+                  autoComplete="false"
+                  autoCorrect="false"
                   style={{
                     marginTop: "2em",
                     height: "calc(100vh - 80px)",
@@ -445,7 +515,6 @@ export default function Next() {
                     display: "block",
                   }}
                 />
-         
               </div>
             </div>
           ) : (
@@ -458,8 +527,6 @@ export default function Next() {
                     overflow: "scroll",
                   }}
                   className="third h-full w-full"
-                  
-
                   dangerouslySetInnerHTML={getMarkdown(value)}
                 />
               </div>

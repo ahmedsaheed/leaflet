@@ -274,7 +274,7 @@ const getFiles = () => {
 
       return {
         index: place,
-        name: filename,
+        name: filename.charAt(0).toUpperCase() + filename.slice(1),
         body: content,
         path: filePath,
         size: Number(fileStats.size / 1000).toFixed(1), // kb
