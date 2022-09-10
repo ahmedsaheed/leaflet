@@ -29,6 +29,8 @@ export default function Next() {
   const appDir = mainPath.resolve(os.homedir(), "leaflet");
   const Desktop = require("os").homedir() + "/Desktop";
   const [cursor, setCursor] = React.useState("1L:1C");
+  const [thesaurus, setThesaurus] = React.useState([]);
+  const [displayThesaurus, setDisplayThesaurus] = React.useState(false);
   const today = new Date();
   const ref = useRef(null);
   let synonyms = {};
@@ -61,6 +63,16 @@ const getSynonyms = () => {
   const l = activeWordLocation()
     let response = find_synonym(l.word);
     // DO SOMETHING WITH THE RESPONSE
+    if (!response) {
+      setDisplayThesaurus(false);
+      setThesaurus([]);
+      return;
+    }
+    for (let i = 0; i < response.length; i++) {
+      thesaurus.push(response[i]);
+    }
+    setThesaurus(thesaurus);
+    setDisplayThesaurus(true);
 };
 
   const find_synonym = (str) => {
@@ -82,7 +94,7 @@ const getSynonyms = () => {
       }
     }
 
-    return null;
+    return;
   };
 
   function uniq(a1) {
@@ -268,6 +280,8 @@ const getSynonyms = () => {
       console.log(e);
     }
   };
+
+//_-_-_-_-_-_-_-_-_-_-_-_-_-_-_KEYS-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 
   useEffect(() => {
     document.onkeydown = function ListenToKeys(e) {
@@ -572,6 +586,8 @@ const getSynonyms = () => {
             word={value.toString()}
             mode={insert ? "Insert" : "Preview"}
             loader={insert ? cursor : progress(scroll)}
+            thesaurus = {thesaurus}
+            displayThesaurus = {displayThesaurus}
           />
         </div>
       </div>
