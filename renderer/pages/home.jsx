@@ -166,7 +166,27 @@ export default function Next() {
     
   };
 
-  //_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-UTILITIES_-_-_-_-_-_-_-_-_-_-_-_-_-
+  const nextSynonym =  () => {
+    setWhichIsActive(0);
+    const element = document.getElementById("thesaurusWords");
+    let previousWord = element.children[whichIsActive]
+    setWhichIsActive((whichIsActive + 1) % thesaurus.length)
+    setCount(count + 1)
+    const currentWord = element.children[whichIsActive]
+    if(previousWord){
+      previousWord.style.display = "none"
+    }
+    if(currentWord){
+      currentWord.classList.add('active')
+      currentWord.scrollIntoView({
+        behavior: 'smooth'
+      })
+    }
+   
+
+   
+  }
+  //_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-UTILITIES & ELECTRON RELATED_-_-_-_-_-_-_-_-_-_-_-_-_-
 
   const Update = () => {
     ipcRenderer.invoke("getTheFile").then((files = []) => {
@@ -293,7 +313,7 @@ export default function Next() {
     }
   };
 
-  //_-_-_-_-_-_-_-_-_-_-_-_-_-_-_KEYS-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+  //_-_-_-_-_-_-_-_-_-_-_-_-_-_-_KEYS & EVENTS-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 
   useEffect(() => {
     document.onkeydown = function ListenToKeys(e) {
@@ -346,10 +366,8 @@ export default function Next() {
       if (displayThesaurus) {
         if (e.keyCode === 9) {
           if (e.shiftKey) {
-            nextSynonym();
-            
+            nextSynonym(); 
             replaceActiveWord(thesaurus[whichIsActive]);
-            //TODO: FIX PREVENT DEFAULT
              e.preventDefault();
              return
             
@@ -357,9 +375,9 @@ export default function Next() {
           
           else {
             replaceActiveWord(thesaurus[0]);
-            // setTimeout(() => {
-            //   setDisplayThesaurus(false);
-            // }, 100);
+            setTimeout(() => {
+              setDisplayThesaurus(false);
+            }, 100);
             saveFile();
             e.preventDefault();
              return;
@@ -406,30 +424,7 @@ export default function Next() {
   };
 
 
-  const nextSynonym =  () => {
-    setWhichIsActive(0);
-    const element = document.getElementById("thesaurusWords");
-    //alert(element.childElementCount)
-    //alert(list.childElementCount);
-        let previousWord = element.children[whichIsActive]
-
-
-    setWhichIsActive((whichIsActive + 1) % thesaurus.length)
-    setCount(count + 1)
-    const currentWord = element.children[whichIsActive]
-    if(previousWord){
-      previousWord.style.display = "none"
-    }
-    if(currentWord){
-      currentWord.classList.add('active')
-      currentWord.scrollIntoView({
-        behavior: 'smooth'
-      })
-    }
-   
-
-   
-  }
+ 
 
   return (
     <>
@@ -584,7 +579,7 @@ export default function Next() {
                   onChange={handleChange}
                   onKeyDown={(e) => {
                     cursorUpdate(e);
-                    setDisplayThesaurus(false);
+                    // setDisplayThesaurus(false);
                   }}
                   onKeyUp={(e) => {
                     cursorUpdate(e);
