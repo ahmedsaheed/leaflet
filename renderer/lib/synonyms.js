@@ -1,3 +1,9 @@
+var clock = new Date();
+
+let today = clock.toISOString().slice(0, 10)
+var month = clock.toLocaleString("default", { month: "long" }) +
+" " +
+clock.getFullYear();
 
 export const SYNONYMS = {
   abandon: [
@@ -7999,6 +8005,7 @@ export const SYNONYMS = {
     'unsophisticated',
     'fair'
   ],
+
   candidate: [
     'aspirant',
     'solicitant',
@@ -12147,11 +12154,13 @@ export const SYNONYMS = {
     'premises'
   ],
   date: [
+    today,
+    month,
     'time',
     'era',
     'epoch',
     'period',
-    'age'
+    'age',
   ],
   daub: [
     'smear',

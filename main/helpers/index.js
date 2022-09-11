@@ -11,7 +11,6 @@ export {
 const markdown = `
 # Leaflet
 
-[[toc]]
 
 Leaflet, a **minimal distractionless markdown editor** designed to quickly navigate between multiple \`.md\` files in a directory and its sub directories. It features a clean mathematical typesetting, chemical equation rendering, code blocks highlighting, writing statistics and a speed-reader.
 
@@ -45,17 +44,17 @@ You'd have to install [pandoc](https://github.com/jgm/pandoc/blob/master/INSTALL
       <tr>
         <td>
           <a href="https://github.com/ahmedsaheed/Leaflet/releases/download/v0.0.1/Leaflet-0.0.1.dmg">
-          <img src="https://api.iconify.design/simple-icons:apple.svg?color=%23888888"/>
+          <img style="display: inline"  src="https://api.iconify.design/simple-icons:apple.svg?color=%23888888"/>
           OS X Download</a>
         </td>
         <td>
           <a href="https://github.com/ahmedsaheed/Leaflet/releases/download/v0.0.1/Leaflet-Setup-0.0.1.exe">
-          <img src="https://api.iconify.design/icomoon-free:windows.svg?color=%23888888"/>
+          <img style="display: inline"  src="https://api.iconify.design/icomoon-free:windows.svg?color=%23888888"/>
           Windows Download</a>
         </td>
         <td>
           <a href="https://github.com/ahmedsaheed/Leaflet/releases/download/v0.0.1/leaflet_0.0.1_amd64.snap">
-          <img src="https://api.iconify.design/codicon:terminal-ubuntu.svg?color=%23888888"/>
+          <img style="display: inline"  src="https://api.iconify.design/codicon:terminal-ubuntu.svg?color=%23888888"/>
           Linux Downloads</a>
         </td>
       </tr>

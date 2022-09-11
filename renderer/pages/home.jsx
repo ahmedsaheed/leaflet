@@ -12,6 +12,7 @@ import pandoc from "node-pandoc";
 import mainPath from "path";
 import open from "open";
 import os from "os";
+export const today = new Date();
 
 export default function Next() {
   const [value, setValue] = React.useState("");
@@ -32,7 +33,6 @@ export default function Next() {
   const [displayThesaurus, setDisplayThesaurus] = React.useState(false);
   const [clockState, setClockState] = React.useState();
   const [whichIsActive, setWhichIsActive] = React.useState(0);
-  const today = new Date();
   const ref = useRef(null);
   const list = useRef(null);
   let synonyms = {};
@@ -65,17 +65,18 @@ export default function Next() {
 
   const getSynonyms = () => {
     const l = activeWordLocation();
+    const answer = [];
     let response = find_synonym(l.word);
-    setThesaurus([]);
+ //   setThesaurus([]);
     if (!response) {
       return;
     }
-   
+  
     for (let i = 0; i < response.length; i++) {
-      thesaurus.push(response[i]);
+     answer.push(response[i]);
     }
-    setThesaurus(thesaurus);
-    setDisplayThesaurus(true);
+    setThesaurus(answer);
+     setDisplayThesaurus(true);
   };
 
   const find_synonym = (str) => {
@@ -337,28 +338,27 @@ export default function Next() {
         return;
       }
 
-      // if (displayThesaurus) {
-      //   // setWhichIsActive(0);
-      //   if (e.keyCode === 9) {
-      //     if (e.shiftKey) {
-      //       nextSynonym();
-      //       // setWhichIsActive(whichIsActive +1);
-      //       // whichIsActive > thesaurus.length ? setDisplayThesaurus(false) : null;
-      //       replaceActiveWord(thesaurus[whichIsActive]);
-      //       //TODO: FIX PREVENT DEFAULT
-      //        e.preventDefault();
-      //        return
-      //     } else {
-      //       replaceActiveWord(thesaurus[0]);
-      //       setTimeout(() => {
-      //         setDisplayThesaurus(false);
-      //       }, 100);
-      //       saveFile();
-      //       e.preventDefault();
-      //        return;
-      //     }
-      //   }
-      // }
+      if (displayThesaurus) {
+         setWhichIsActive(0);
+        if (e.keyCode === 9) {
+          if (e.shiftKey) {
+            nextSynonym();
+            replaceActiveWord(thesaurus[whichIsActive]);
+            //TODO: FIX PREVENT DEFAULT
+             e.preventDefault();
+            //  setThesaurus([])
+             return
+          } else {
+            replaceActiveWord(thesaurus[0]);
+            setTimeout(() => {
+              setDisplayThesaurus(false);
+            }, 100);
+            saveFile();
+            e.preventDefault();
+             return;
+          }
+        }
+      }
     };
   });
   const onScroll = () => {
@@ -373,36 +373,8 @@ export default function Next() {
     window.addEventListener("scroll", onScroll);
   }
 
-  const FullDate = (whatValue) => {
-    var date =
-      today.getFullYear() +
-      "-" +
-      (today.getMonth() + 1) +
-      "-" +
-      today.getDate();
-
-    const resultingValue = whatValue.replace("DATE.TODAY", `${date}`);
-    return resultingValue;
-  };
-
-  const Month = (whatValue) => {
-    var month =
-      today.toLocaleString("default", { month: "long" }) +
-      " " +
-      today.getFullYear();
-    const resultingValue = whatValue.replace("DATE.MONTH", `${month}`);
-    return resultingValue;
-  };
-
-  const Now = (whatValue) => {
-    var currTime =
-      today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-    const resultingValue = whatValue.replace("CURRENT.TIME", `${currTime}`);
-    return resultingValue;
-  };
-
   function handleChange(e) {
-    setValue(FullDate(Month(Now(e.target.value))));
+    setValue(e.target.value);
     setIsEdited(true);
   }
   const openWindow = () => {
@@ -427,22 +399,23 @@ export default function Next() {
   };
 
 
-  // const nextSynonym =  () => {
-  //   setWhichIsActive(0);
-  //   const element = document.getElementById("thesaurusWords");
-  //   //alert(list.childElementCount);
-  //   let previousWord = element.children[whichIsActive]
+  const nextSynonym =  () => {
+    setWhichIsActive(0);
+    const element = document.getElementById("thesaurusWords");
+    //alert(element.childElementCount)
+    //alert(list.childElementCount);
+        let previousWord = element.children[whichIsActive]
 
 
-  //   setWhichIsActive((whichIsActive + 1) % thesaurus.length)
-  //   const currentWord = element.children[whichIsActive]
-  //   previousWord.style.display = "none"
-  //   currentWord.classList.add('active')
+    setWhichIsActive((whichIsActive + 1) % thesaurus.length)
+    const currentWord = element.children[whichIsActive]
+    previousWord.style.display = "none"
+    currentWord.classList.add('active')
 
-  //   currentWord.scrollIntoView({
-  //     behavior: 'smooth'
-  //   })
-  // }
+    currentWord.scrollIntoView({
+      behavior: 'smooth'
+    })
+  }
 
   return (
     <>
@@ -659,6 +632,7 @@ export default function Next() {
                     marginButtom: "5px ",
                     listStyleType: "none",
                     marginRight: "10px",
+                    display: "inline",
                   }}
                 >
                   {thesaurus.map((item, index) => {
