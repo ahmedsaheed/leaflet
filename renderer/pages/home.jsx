@@ -32,9 +32,9 @@ export default function Next() {
   const [displayThesaurus, setDisplayThesaurus] = React.useState(false);
   const [clockState, setClockState] = React.useState();
   const [whichIsActive, setWhichIsActive] = React.useState(0);
-
   const today = new Date();
   const ref = useRef(null);
+  const list = useRef(null);
   let synonyms = {};
 
   //_-_-_-_-_-_-_-_-_-_-_-_-_-_-_ INIT, CHECK FOR PANDOC & CLOCK-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
@@ -140,6 +140,8 @@ export default function Next() {
 
   const replaceActiveWord = (word) => {
     try{
+      if(!word){return}
+
       const area = ref.current;
 
     const l = activeWordLocation();
@@ -335,34 +337,28 @@ export default function Next() {
         return;
       }
 
-      if (displayThesaurus) {
-        setWhichIsActive(0);
-        if (e.keyCode === 9) {
-          if (e.shiftKey) {
-            
-            setWhichIsActive(whichIsActive +1);
-            if(whichIsActive <= thesaurus.length){
-              setDisplayThesaurus(false);
-            }
-
-            replaceActiveWord(thesaurus[whichIsActive]);
-            //TODO: FIX PREVENT DEFAULT
-            //TODO: FIX PREVENT DEFAULT
-            //TODO: FIX PREVENT DEFAULT
-            e.preventDefault();
-           return
-            
-          } else {
-            replaceActiveWord(thesaurus[0]);
-            setTimeout(() => {
-              setDisplayThesaurus(false);
-            }, 100);
-            saveFile();
-            e.preventDefault();
-             return;
-          }
-        }
-      }
+      // if (displayThesaurus) {
+      //   // setWhichIsActive(0);
+      //   if (e.keyCode === 9) {
+      //     if (e.shiftKey) {
+      //       nextSynonym();
+      //       // setWhichIsActive(whichIsActive +1);
+      //       // whichIsActive > thesaurus.length ? setDisplayThesaurus(false) : null;
+      //       replaceActiveWord(thesaurus[whichIsActive]);
+      //       //TODO: FIX PREVENT DEFAULT
+      //        e.preventDefault();
+      //        return
+      //     } else {
+      //       replaceActiveWord(thesaurus[0]);
+      //       setTimeout(() => {
+      //         setDisplayThesaurus(false);
+      //       }, 100);
+      //       saveFile();
+      //       e.preventDefault();
+      //        return;
+      //     }
+      //   }
+      // }
     };
   });
   const onScroll = () => {
@@ -429,6 +425,25 @@ export default function Next() {
       setCursor(`${lineNo}L ${e.target.selectionStart}P`);
     }
   };
+
+
+  // const nextSynonym =  () => {
+  //   setWhichIsActive(0);
+  //   const element = document.getElementById("thesaurusWords");
+  //   //alert(list.childElementCount);
+  //   let previousWord = element.children[whichIsActive]
+
+
+  //   setWhichIsActive((whichIsActive + 1) % thesaurus.length)
+  //   const currentWord = element.children[whichIsActive]
+  //   previousWord.style.display = "none"
+  //   currentWord.classList.add('active')
+
+  //   currentWord.scrollIntoView({
+  //     behavior: 'smooth'
+  //   })
+  // }
+
   return (
     <>
       <Head>
@@ -633,6 +648,7 @@ export default function Next() {
                 }}
               >
                 <li
+                  id="thesaurusWords"
                   style={{
                     marginButtom: "5px ",
                     listStyleType: "none",
@@ -645,22 +661,18 @@ export default function Next() {
                         style={{
                           // display: `${index < whichIsActive ? "none" : "inline"}`,
                           display: "inline",
-                          overflowInline: "hidden",
+                          overflowX: "scroll",
                           color: "grey",
-                        }}
-                        key={index}
-                      >
-                        <span
-                          style={{
-                            textDecoration: `${
-                              item === thesaurus[whichIsActive-1]
-                                ? "underline"
-                                : "none"
-                            }`,
+                            
                           }}
                         >
-                          {item}
-                        </span>
+                         <span style={{
+                          textDecoration: `${
+                            index === whichIsActive
+                              ? "underline"
+                              : "none"
+                          }`,
+                         }}>{item}</span>
                       </ul>
                     );
                   })}
