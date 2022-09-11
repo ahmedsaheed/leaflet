@@ -341,14 +341,17 @@ export default function Next() {
           if (e.shiftKey) {
             
             setWhichIsActive(whichIsActive +1);
-            if(whichIsActive >= thesaurus.length){
+            if(whichIsActive <= thesaurus.length){
               setDisplayThesaurus(false);
             }
-              e.preventDefault(5);
+
             replaceActiveWord(thesaurus[whichIsActive]);
-            // // TODO: fix prevent default
-            // e.preventDefault();
-            // return;
+            //TODO: FIX PREVENT DEFAULT
+            //TODO: FIX PREVENT DEFAULT
+            //TODO: FIX PREVENT DEFAULT
+            e.preventDefault();
+           return
+            
           } else {
             replaceActiveWord(thesaurus[0]);
             setTimeout(() => {
