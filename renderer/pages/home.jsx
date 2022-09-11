@@ -33,6 +33,7 @@ export default function Next() {
   const [displayThesaurus, setDisplayThesaurus] = React.useState(false);
   const [clockState, setClockState] = React.useState();
   const [whichIsActive, setWhichIsActive] = React.useState(0);
+  const [count, setCount] = React.useState(0);
   const ref = useRef(null);
   const list = useRef(null);
   let synonyms = {};
@@ -64,10 +65,9 @@ export default function Next() {
   //_-_-_-_-_-_-_-_-_-_-_-_-_-_-_SYNONYMS GENERATOR-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 
   const getSynonyms = () => {
-    const l = activeWordLocation();
+    // const l = activeWordLocation();
     const answer = [];
-    let response = find_synonym(l.word);
- //   setThesaurus([]);
+    let response = find_synonym(activeWord());
     if (!response) {
       return;
     }
@@ -100,6 +100,12 @@ export default function Next() {
 
     return;
   };
+
+  const activeWord = () =>  {
+    const area = ref.current;
+    const l = activeWordLocation();
+    return area.value.substr(l.from, l.to - l.from);
+  }
 
   function uniq(a1) {
     const a2 = [];
@@ -152,7 +158,6 @@ export default function Next() {
       word = word.substr(0, 1).toUpperCase() + word.substr(1, word.length);
     }
     area.setSelectionRange(l.from, l.to);
-    // if (word.length() < 1) {return}
     document.execCommand("insertText", false, word);
     area.focus();
     }catch(e){
@@ -339,20 +344,22 @@ export default function Next() {
       }
 
       if (displayThesaurus) {
-         setWhichIsActive(0);
         if (e.keyCode === 9) {
           if (e.shiftKey) {
             nextSynonym();
+            
             replaceActiveWord(thesaurus[whichIsActive]);
             //TODO: FIX PREVENT DEFAULT
              e.preventDefault();
-            //  setThesaurus([])
              return
-          } else {
+            
+          } 
+          
+          else {
             replaceActiveWord(thesaurus[0]);
-            setTimeout(() => {
-              setDisplayThesaurus(false);
-            }, 100);
+            // setTimeout(() => {
+            //   setDisplayThesaurus(false);
+            // }, 100);
             saveFile();
             e.preventDefault();
              return;
@@ -408,13 +415,20 @@ export default function Next() {
 
 
     setWhichIsActive((whichIsActive + 1) % thesaurus.length)
+    setCount(count + 1)
     const currentWord = element.children[whichIsActive]
-    previousWord.style.display = "none"
-    currentWord.classList.add('active')
+    if(previousWord){
+      previousWord.style.display = "none"
+    }
+    if(currentWord){
+      currentWord.classList.add('active')
+      currentWord.scrollIntoView({
+        behavior: 'smooth'
+      })
+    }
+   
 
-    currentWord.scrollIntoView({
-      behavior: 'smooth'
-    })
+   
   }
 
   return (
@@ -570,6 +584,7 @@ export default function Next() {
                   onChange={handleChange}
                   onKeyDown={(e) => {
                     cursorUpdate(e);
+                    setDisplayThesaurus(false);
                   }}
                   onKeyUp={(e) => {
                     cursorUpdate(e);
@@ -581,6 +596,7 @@ export default function Next() {
                   }}
                   onMouseDown={(e) => {
                     cursorUpdate(e);
+                    setDisplayThesaurus(false);
                   }}
                   spellcheck="false"
                   className="h-full w-full"
@@ -616,7 +632,7 @@ export default function Next() {
             className="fixed inset-x-0 bottom-0 ButtomBar"
             style={{ marginLeft: "30%", maxHeight: "10vh", marginTop: "20px" }}
           >
-            {displayThesaurus && insert && thesaurus.length > 1 ? (
+            {displayThesaurus && insert   ? (
               <container
                 style={{
                   paddingTop: "5px",

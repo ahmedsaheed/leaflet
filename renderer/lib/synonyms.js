@@ -12154,8 +12154,8 @@ export const SYNONYMS = {
     'premises'
   ],
   date: [
-    today,
-    month,
+    // `${today.toString()}.`,
+    // `${month.toString()}.`,
     'time',
     'era',
     'epoch',
