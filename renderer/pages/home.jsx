@@ -341,10 +341,14 @@ export default function Next() {
           if (e.shiftKey) {
             
             setWhichIsActive(whichIsActive +1);
+            if(whichIsActive >= thesaurus.length){
+              setDisplayThesaurus(false);
+            }
+              e.preventDefault(5);
             replaceActiveWord(thesaurus[whichIsActive]);
-            // TODO: fix prevent default
-            e.preventDefault();
-            return;
+            // // TODO: fix prevent default
+            // e.preventDefault();
+            // return;
           } else {
             replaceActiveWord(thesaurus[0]);
             setTimeout(() => {
@@ -474,6 +478,7 @@ export default function Next() {
                     <>
                       <ol className="files">
                         <button
+                          tabindex="-1"
                           className={name === file.name ? "selected" : "greys"}
                           onClick={() => {
                             saveFile();
@@ -513,6 +518,7 @@ export default function Next() {
                 <div className="fixed bottom-28">
                   {isEdited ? (
                     <button
+                    tabindex="-1"
                       className={`${marker ? "tick " : ""}`}
                       onClick={() => {
                         try {
@@ -532,6 +538,7 @@ export default function Next() {
                   ) : null}
                   <br />
                   <button
+                  tabindex="-1"
                     onClick={() => {
                       setFileNameBox(true);
                     }}
@@ -539,13 +546,13 @@ export default function Next() {
                     Create New File
                   </button>
                   <br />
-                  <button onClick={openWindow}>Click to Add File</button>
+                  <button tabindex="-1" onClick={openWindow}>Click to Add File</button>
                   {pandocAvailable ? (
                     <>
                       <br />
-                      <button onClick={convertToPDF}>Covert to PDF</button>
+                      <button tabindex="-1" onClick={convertToPDF}>Covert to PDF</button>
                       <br />
-                      <button onClick={converToDocx}>Covert to Docx</button>
+                      <button tabindex="-1" onClick={converToDocx}>Covert to Docx</button>
                     </>
                   ) : null}
                 </div>
