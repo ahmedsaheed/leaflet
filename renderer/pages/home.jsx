@@ -597,11 +597,17 @@ export default function Next() {
                   onChange={handleChange}
                   onKeyDown={(e) => {
                     cursorUpdate(e);
+                  }}
+                  onKeyUp={(e) => {
+                    cursorUpdate(e);
+                    getSynonyms();
+                  }}
+                  onMouseUp={(e) => {
+                    cursorUpdate(e);
                     getSynonyms();
                   }}
                   onMouseDown={(e) => {
                     cursorUpdate(e);
-                    getSynonyms();
                   }}
                   spellcheck="false"
                   className="h-full w-full"

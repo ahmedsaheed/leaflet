@@ -168,10 +168,13 @@ hr {
   margin-top: 2em;
 }
 
-img {
+img, video, iframe {
   margin-top: 1em;
   margin-bottom: 1em;
   animation: cool-fadein 1s;
+  box-shadow: 0 0 16px 2px #33333328, 0 0 16px -16px #33333328;
+    object-fit: cover;
+    border-radius:4px;
 }
 @keyframes cool-fadein {
   0% {
