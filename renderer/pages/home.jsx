@@ -592,6 +592,7 @@ export default function Next() {
                   onMouseDown={(e) => {
                     cursorUpdate(e);
                     setDisplayThesaurus(false);
+                    setWhichIsActive(0)
                   }}
                   spellcheck="false"
                   className="h-full w-full"
