@@ -276,21 +276,19 @@ th,td {
 }
 
 kbd {
-  font-family: Consolas, "Lucida Console", monospace;
+  font-family: "iA Writer Duospace", sans-serif;
   display: inline-block;
   border-radius: 3px;
   padding: 0px 4px;
   box-shadow: 1px 1px 1px #777;
-  margin: 2px;
+  margin: 1px;
   font-size: small;
   vertical-align: text-bottom;
-  background: #eee;
-  font-weight: 500;
+  background: rgb(144, 139, 139);
+  backdrop-filter: blur(20px);
   color: #555;
   cursor: pointer;
   font-variant: small-caps;
-  font-weight: 600;
-
   /* This two work */
   letter-spacing: 0.5px;
 

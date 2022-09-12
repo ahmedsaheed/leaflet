@@ -41,7 +41,7 @@
     "build:mac": "nextron build --mac --x64",
     "build:linux": "nextron build --linux",
     "postinstall": "electron-builder install-app-deps",
-    "release": "GH_TOKEN=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 electron-builder -m -l -w --publish always",
+    "release": "electron-builder -m -l -w --publish always",
     "release:win32": "electron-builder --publish always --win --ia32",
     "release:win64": "electron-builder --publish always --win --x64",
     "release:mac": "electron-builder --publish always --mac --x64",

@@ -11,80 +11,6 @@ export {
 const markdown = `
 # Leaflet
 
-
-Leaflet, a **minimal distractionless markdown editor** designed to quickly navigate between multiple \`.md\` files in a directory and its sub directories. It features a clean mathematical typesetting, chemical equation rendering, code blocks highlighting, writing statistics and a speed-reader.
-
-
-I created this <a href="http://github.com/ahmedsaheed/Leaflet" target="_blank" rel="noreferrer" class="external ">application</a> to help me cope with note taking during school lectures as most of my lecturers spoke too fast. This application is made available as a free and <a href="https://github.com/ahmedsaheed/Leaflet" target="_blank" rel="noreferrer" class="external ">open source</a> software.
-
-## Features
-
-- **🖋 Editing**: Switch between editing and preview mode seemlessly
-
-- **⚛️ Maths & Chemical Equation Typesetting**: Leaflet renders mathematical, physics and chemical equation out of the box.
-
-- **Pandoc Support**: Easily export your \`.md\` files to \`.pdf\` and \`.docx\` files
-
-- **📄 Uses Files**: Leaflet works with users file system directly instead of an external database.
-
-- **🌙 Dark / Light Mode**: Supports your system specified theme.
-
-- **✨ Simplicity**: Leaflet focuses on simplicity and provides only necessary features needed.
-
-
-- **🕉 Bidirectional Text**: Automatically detect BIDI - text and displays logiaclly.
-
-## Installation
-
-You'd have to install [pandoc](https://github.com/jgm/pandoc/blob/master/INSTALL.md) to export \`.md\` to other formats.
-
-<div align="center">
-    <table>
-    <tbody>
-      <tr>
-        <td>
-          <a href="https://github.com/ahmedsaheed/Leaflet/releases/download/v0.0.1/Leaflet-0.0.1.dmg">
-          <img style="display: inline"  src="https://api.iconify.design/simple-icons:apple.svg?color=%23888888"/>
-          OS X Download</a>
-        </td>
-        <td>
-          <a href="https://github.com/ahmedsaheed/Leaflet/releases/download/v0.0.1/Leaflet-Setup-0.0.1.exe">
-          <img style="display: inline"  src="https://api.iconify.design/icomoon-free:windows.svg?color=%23888888"/>
-          Windows Download</a>
-        </td>
-        <td>
-          <a href="https://github.com/ahmedsaheed/Leaflet/releases/download/v0.0.1/leaflet_0.0.1_amd64.snap">
-          <img style="display: inline"  src="https://api.iconify.design/codicon:terminal-ubuntu.svg?color=%23888888"/>
-          Linux Downloads</a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  
-</div>
-  
-
-
-You can also run Leaflet locally from the command line:
-
-\`\`\`bash\n
-$ git clone https://github.com/ahmedsaheed/Leaflet.git && cd Leaflet
-$ yarn install
-$ yarn dev
-\n\`\`\`
-
-Or Build 
-
-\`\`\`bash\n
-$ git clone https://github.com/ahmedsaheed/Leaflet.git && cd Leaflet
-$ yarn install
-$ yarn build
-\n\`\`\`
-
-
-
-## Screenshots
-
 <p align="center">
 
 
@@ -95,13 +21,41 @@ $ yarn build
 
 </p>
 
+Leaflet, a **minimal distractionless markdown editor** designed to quickly navigate between multiple \`.md\` files in a directory and its sub directories. It features a clean mathematical typesetting, chemical equation rendering, code blocks highlighting, writing statistics and a speed-reader.
+
+
+I created this <a href="http://github.com/ahmedsaheed/Leaflet" target="_blank" rel="noreferrer" class="external">application</a> to help me cope with note taking during school lectures as most of my lecturers spoke too fast. This application is made available as a free and <a href="https://github.com/ahmedsaheed/Leaflet" target="_blank" rel="noreferrer" class="external ">open source</a> software.
+
+>You'd have to install <a href="https://github.com/jgm/pandoc/blob/master/INSTALL.md" target="_blank" rel="noreferrer" class="external">pandoc</a> to export \`.md\` to other formats.
+
+## Features
+
+- **Editing**: Switch between editing and preview mode seemlessly
+
+- **Maths & Chemical Equation Typesetting**: Leaflet renders mathematical, physics and chemical equation out of the box.
+
+- **Pandoc Support**: Easily export your \`.md\` files to \`.pdf\` and \`.docx\` files
+
+- **Suggested Words**: Leaflet has a dictionary of about 5000 words and recommends synonyms.
+
+- **Uses Files**: Leaflet works with users file system directly instead of an external database.
+
+- **Dark / Light Mode**: Supports your system specified theme.
+
+- **Simplicity**: Leaflet focuses on simplicity and provides only necessary features needed.
+
+
+- **Bidirectional Text**: Automatically detect BIDI - text and displays logiaclly.
+
 
 
 ## Shortcuts and Controls
 
-> Use <kbd>⌘/Ctrl + p</kbd> or <kbd>⌘/Ctrl + i</kbd>  to toggle between preview and insert mode respectively
+> Use <kbd>⌘/Ctrl + p</kbd> or <kbd>⌘/Ctrl + i</kbd>  to toggle between preview and insert mode respectively\.
 > 
-> Use <kbd>⌘/Ctrl + s</kbd> to save your current file, although this happens automatically.   
+> While synonms are being suggested, use <kbd>Shift + tab</kbd> to insert the suggested word\.
+>
+> Use <kbd>⌘/Ctrl + s</kbd> to save your current file, although this happens automatically\.  
 > 
 > Use <kbd>⌘/Ctrl + n</kbd> to create a new \`.md\` file.  
 > 
@@ -110,6 +64,7 @@ $ yarn build
 > Use <kbd>⌘/Ctrl + d</kbd> to convert your current \`.md\` file into \`.docx\` file
 > 
 > Use <kbd>⌘/Ctrl + e</kbd> to convert your current \`.md\` file into \`.pdf\` file
+>
 
 
 ## Examples
