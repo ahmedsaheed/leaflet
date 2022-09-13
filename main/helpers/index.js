@@ -1,5 +1,4 @@
 import createWindow from './create-window';
-import {Notification} from 'electron'
 
 
 export {
