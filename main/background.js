@@ -201,9 +201,6 @@ if (isProd) {
     },
   ];
 
-  const menu = Menu.buildFromTemplate(menuBar);
-  Menu.setApplicationMenu(menu);
-
   if (isProd) {
     await mainWindow.loadURL("app://./home.html");
   } else {
@@ -211,6 +208,11 @@ if (isProd) {
     await mainWindow.loadURL(`http://localhost:${port}/home`);
     // mainWindow.webContents.openDevTools();
   }
+
+  const menu = Menu.buildFromTemplate(menuBar);
+  Menu.setApplicationMenu(menu);
+
+ 
 
   
 })();
