@@ -28,7 +28,7 @@ I created this <a href="http://github.com/ahmedsaheed/Leaflet" target="_blank" r
 ## Installation
 
 You'd have to install [pandoc](https://github.com/jgm/pandoc/blob/master/INSTALL.md) to export `.md` to other formats.
-
+<!-- 
 <div align="center">
     <table>
     <tbody>
@@ -52,7 +52,7 @@ You'd have to install [pandoc](https://github.com/jgm/pandoc/blob/master/INSTALL
     </tbody>
   </table>
   
-</div>
+</div> -->
   
 
 
