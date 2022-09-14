@@ -10,11 +10,14 @@ import chokidar from "chokidar";
 const appDir = path.resolve(os.homedir(), "leaflet");
 const isProd = process.env.NODE_ENV === 'production';
 const isMac = process.platform === "darwin";
+const isDev = require('electron-is-dev');
 
-if (isProd) {
-  serve({ directory: "app" });
-} else {
+
+if (isDev) {
   app.setPath("userData", `${app.getPath("userData")} (development)`);
+} else {
+  serve({ directory: "app" });
+
 }
 
 (async () => {
@@ -201,11 +204,13 @@ if (isProd) {
     },
   ];
 
-  if (isProd) {
-    await mainWindow.loadURL('app://./home.html');
-  } else {
+  if (isDev) {
     const port = process.argv[2];
     await mainWindow.loadURL(`http://localhost:${port}/home`);
+   
+  } else {
+    await mainWindow.loadURL('app://./home.html');
+   
     // mainWindow.webContents.openDevTools();
   }
 
