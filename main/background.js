@@ -22,6 +22,7 @@ if (isDev) {
 
 (async () => {
   await app.whenReady();
+
   const mainWindow = createWindow("main", {
     width: 800,
     height: 500, //462 initially
@@ -32,14 +33,14 @@ if (isDev) {
 
   });
 
-  watchFiles(mainWindow);
+  //watchFiles(mainWindow);
 
-  mainWindow.webContents.on("new-window", function (e, url) {
-    e.preventDefault();
-    setTimeout(() => {
-      open(url);
-    }, 500);
-  });
+  // mainWindow.webContents.on("new-window", function (e, url) {
+  //   e.preventDefault();
+  //   setTimeout(() => {
+  //     open(url);
+  //   }, 500);
+  // });
 
   const menuBar = [
     // { role: 'appMenu' }
@@ -207,11 +208,14 @@ if (isDev) {
   if (isDev) {
     const port = process.argv[2];
     await mainWindow.loadURL(`http://localhost:${port}/home`);
-   
+   // mainWindow.webContents.openDevTools();
   } else {
-    await mainWindow.loadURL('app://./home.html');
-   
-    // mainWindow.webContents.openDevTools();
+    try{
+      await mainWindow.loadURL('app://./home.html');
+    }catch(err){
+      console.log(err);
+    }
+    
   }
 
   const menu = Menu.buildFromTemplate(menuBar);
