@@ -8,7 +8,7 @@ import os from "os";
 
 import chokidar from "chokidar";
 const appDir = path.resolve(os.homedir(), "leaflet");
-const isProd = process.env.NODE_ENV === "production";
+const isProd = process.env.NODE_ENV === 'production';
 const isMac = process.platform === "darwin";
 
 if (isProd) {
@@ -202,7 +202,7 @@ if (isProd) {
   ];
 
   if (isProd) {
-    await mainWindow.loadURL("app://./home.html");
+    await mainWindow.loadURL('app://./home.html');
   } else {
     const port = process.argv[2];
     await mainWindow.loadURL(`http://localhost:${port}/home`);
