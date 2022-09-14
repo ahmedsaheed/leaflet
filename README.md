@@ -28,23 +28,23 @@ I created this <a href="http://github.com/ahmedsaheed/Leaflet" target="_blank" r
 ## Installation
 
 You'd have to install [pandoc](https://github.com/jgm/pandoc/blob/master/INSTALL.md) to export `.md` to other formats.
-<!-- 
+
 <div align="center">
-    <table>
+     <table>
     <tbody>
       <tr>
         <td>
-          <a href="https://github.com/ahmedsaheed/Leaflet/releases/download/v0.0.2/Leaflet-0.0.2.dmg">
+          <a href="https://github.com/ahmedsaheed/Leaflet/releases/download/v0.0.1/Leaflet-0.0.1.dmg">
           <img src="https://api.iconify.design/simple-icons:apple.svg?color=%23888888"/>
           OS X Download</a>
         </td>
         <td>
-          <a href="https://github.com/ahmedsaheed/Leaflet/releases/download/v0.0.2/Leaflet-Setup-0.0.2.exe">
+          <a href="https://github.com/ahmedsaheed/Leaflet/releases/download/v0.0.1/Leaflet-Setup-0.0.1.exe">
           <img src="https://api.iconify.design/icomoon-free:windows.svg?color=%23888888"/>
           Windows Download</a>
         </td>
         <td>
-          <a href="https://github.com/ahmedsaheed/Leaflet/releases/download/v0.0.2/leaflet_0.0.2_amd64.snap">
+          <a href="https://github.com/ahmedsaheed/Leaflet/releases/download/v0.0.1/leaflet_0.0.1_amd64.snap">
           <img src="https://api.iconify.design/codicon:terminal-ubuntu.svg?color=%23888888"/>
           Linux Downloads</a>
         </td>
@@ -52,7 +52,8 @@ You'd have to install [pandoc](https://github.com/jgm/pandoc/blob/master/INSTALL
     </tbody>
   </table>
   
-</div> -->
+</div>
+
   
 
 
