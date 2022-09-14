@@ -22,6 +22,7 @@ I created this <a href="http://github.com/ahmedsaheed/Leaflet" target="_blank" r
 
 - **✨ Simplicity**: Leaflet focuses on simplicity and provides only necessary features needed.
 
+- **Dictionary**: Contains an indexed dictionary of almost 5K words suggestions.
 
 - **🕉 Bidirectional Text**: Automatically detect BIDI - text and displays logiaclly.
 
@@ -92,6 +93,8 @@ https://user-images.githubusercontent.com/87912847/188292656-94da4c10-7fb3-464f-
 
 > Use <kbd>⌘/Ctrl + p</kbd> or <kbd>⌘/Ctrl + i</kbd>  to toggle between preview and insert mode respectively
 > 
+>Use <kbd>Shift + Tab</kbd> to toggle between suggested phrases.  
+>
 > Use <kbd>⌘/Ctrl + s</kbd> to save your current file, although this happens automatically.   
 > 
 > Use <kbd>⌘/Ctrl + n</kbd> to create a new `.md` file.  
