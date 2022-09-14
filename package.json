@@ -16,6 +16,7 @@
       "publish": "github"
     },
     "directories": {
+      "output": "dist",
       "buildResources": "resources"
     }
   },
