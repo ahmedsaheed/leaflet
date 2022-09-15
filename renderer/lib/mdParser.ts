@@ -19,15 +19,7 @@ export const getMarkdown = (value: string) => {
           } catch (err) {}
         },
       });
-      var katex = require('markdown-it-texmath');
-      md.use(katex, { engine: require('katex'),
-      require: ['katex/contrib/mhchem', 'katex/contrib/auto-render'],
-      delimiters: 'dollars',
-      katexOptions: { macros: {"\\RR": "\\mathbb{R}"} } });
-      md.use(require('markdown-it-footnote'));
-      md.use(require('markdown-it-task-lists'))
-      md.use(require("markdown-it-anchor").default); 
-      md.use(require("markdown-it-table-of-contents"));
+      require('markdown-it-pandoc')(md);
       md.use(metadata_block,{
         parseMetadata: yaml.parse,
       })

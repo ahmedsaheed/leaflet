@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { ipcRenderer } from "electron";
+var shell = require('electron').shell;
 import { progress } from "../components/progress.ts";
 import { getMarkdown } from "../lib/mdParser.ts";
 import commandExists from "command-exists-promise";
@@ -40,6 +41,7 @@ export default function Next() {
 
   //_-_-_-_-_-_-_-_-_-_-_-_-_-_-_ INIT, CHECK FOR PANDOC & CLOCK-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
   useEffect(() => {
+    openExternalInDefaultBrowser();
     commandExists("pandoc")
       .then((exists) => {
         if (exists) {
@@ -62,6 +64,7 @@ export default function Next() {
       setClockState(date.toLocaleTimeString());
     }, 1000);
   }, []);
+  
   //_-_-_-_-_-_-_-_-_-_-_-_-_-_-_SYNONYMS GENERATOR-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 
   const getSynonyms = () => {
@@ -187,6 +190,16 @@ export default function Next() {
    
   }
   //_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-UTILITIES & ELECTRON RELATED_-_-_-_-_-_-_-_-_-_-_-_-_-
+
+
+  const openExternalInDefaultBrowser = () => {
+    document.addEventListener("click", (event) => {
+      if (event.target.matches("a[href^='http']")) {
+        event.preventDefault();
+        shell.openExternal(event.target.href);
+      }
+    });
+  };
 
   const Update = () => {
     ipcRenderer.invoke("getTheFile").then((files = []) => {
@@ -613,6 +626,7 @@ export default function Next() {
             <>
               <div style={{ overflow: "hidden" }}>
                 <div
+                id="previewArea"
                   style={{
                     marginTop: "2em",
                     marginBottom: "5em",
@@ -681,7 +695,7 @@ export default function Next() {
                     paddingBottom: "5px",
                   }}
                 >
-                  <span>{`${insert ? "Insert" : "Preview"} Mode`}</span>
+                  <span>{`${insert ? "Insert" : "Preview"}`}</span>
                   <div style={{ display: "inline", marginRight: "30px" }}></div>
                   <span>{`${value.toString().split(" ").length}W ${
                     value.toString().length
