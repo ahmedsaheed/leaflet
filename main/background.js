@@ -35,13 +35,6 @@ if (isDev) {
 
   //watchFiles(mainWindow);
 
-  // mainWindow.webContents.on("new-window", function (e, url) {
-  //   e.preventDefault();
-  //   setTimeout(() => {
-  //     open(url);
-  //   }, 500);
-  // });
-
   const menuBar = [
     // { role: 'appMenu' }
     ...(isMac
@@ -61,7 +54,7 @@ if (isDev) {
               { type: "separator" },
               { role: "reload" },
               { role: "forceReload" },
-              { role: "toggleDevTools" },
+              isDev ? { role: "toggleDevTools" } : null,
               { type: "separator" },
               { role: "quit" },
             ],
@@ -82,7 +75,8 @@ if (isDev) {
               },
               { role: "reload" },
               { role: "forceReload" },
-              { role: "toggleDevTools" },
+              isDev ? { role: "toggleDevTools" } : null,
+              // { role: "toggleDevTools" },
               { type: "separator" },
               { role: "minimize" },
               { type: "separator" },
@@ -184,6 +178,15 @@ if (isDev) {
       role: "help",
       submenu: [
         {
+          label: "Controls",
+          click: async () => {
+            const { shell } = require("electron");
+            await shell.openExternal(
+              "https://github.com/ahmedsaheed/Leaflet/blob/master/README.md#shortcuts-and-controls"
+            );
+          },
+        },
+        {
           label: "Open Issues",
           click: async () => {
             const { shell } = require("electron");
@@ -192,15 +195,7 @@ if (isDev) {
             );
           },
         },
-        {
-          label: "Controls",
-          click: async () => {
-            const { shell } = require("electron");
-            await shell.openExternal(
-              "https://github.com/ahmedsaheed/Leaflet/blob/master/README.md"
-            );
-          },
-        },
+        
       ],
     },
   ];
