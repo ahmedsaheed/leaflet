@@ -41,18 +41,8 @@ export default function Next() {
 
   //_-_-_-_-_-_-_-_-_-_-_-_-_-_-_ INIT, CHECK FOR PANDOC & CLOCK-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
   useEffect(() => {
+    checkForPandoc();
     openExternalInDefaultBrowser();
-    commandExists("pandoc")
-      .then((exists) => {
-        if (exists) {
-          setPandocAvailable(true);
-        } else {
-          setPandocAvailable(false);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
     ipcRenderer.invoke("getTheFile").then((files = []) => {
       setFiles(files);
       setValue(files[0] ? `${files[0].body}` : "");
@@ -64,6 +54,21 @@ export default function Next() {
       setClockState(date.toLocaleTimeString());
     }, 1000);
   }, []);
+
+  const checkForPandoc = () => {
+    commandExists("pandoc")
+    .then((exists) => {
+      if (exists) {
+        setPandocAvailable(true);
+      } else {
+        setPandocAvailable(false);
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
+
   
   //_-_-_-_-_-_-_-_-_-_-_-_-_-_-_SYNONYMS GENERATOR-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 
@@ -466,7 +471,7 @@ export default function Next() {
         <div>
           <div
             className="fs fixed"
-            style={{ width: "30vw", maxWidth: "30vw", minHeight: "100vh" }}
+            style={{ width: "27vw", maxWidth: "30vw", minHeight: "100vh" }}
           >
             <div>
               <div
@@ -474,10 +479,16 @@ export default function Next() {
                   height: "100vh",
                   marginTop: "10vh",
                   paddingTop: "2em",
-                  paddingLeft: "1em",
+                  paddingLeft: "10px",
                 }}
               >
-                <p>EXPLORER</p>
+                <p
+                style={{
+                  fontSize: "16px",
+                  fontWeight: "bold",
+                  fontFamily: "--apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
+                }}
+                > {" "} Explorer</p>
                 <div
                   className="fileBody"
                   style={{
@@ -492,17 +503,18 @@ export default function Next() {
                       <ol className="files">
                         <button
                           tabindex="-1"
-                          className={name === file.name ? "selected" : "greys"}
+                          className={path === file.path ? "selected" : "greys"}
                           onClick={() => {
                             saveFile();
                             setValue(file.body);
                             setName(file.name);
                             setPath(file.path);
                           }}
-                        >{`${file.name.toString()}`}</button>
+                        >{`${file.name.toString()} `}</button>
+                        {/* ${file.parentDir.toString()} */}
                       </ol>
                     </>
-                  ))}
+                  )).sort()}
                   {fileNameBox ? (
                     <form
                       onSubmit={() => {
@@ -528,7 +540,7 @@ export default function Next() {
                   ) : null}
                 </div>
 
-                <div className="fixed bottom-28">
+                <div className="fixed bottom-10">
                   {isEdited ? (
                     <button
                     tabindex="-1"
@@ -546,9 +558,10 @@ export default function Next() {
                         }
                       }}
                     >
-                      Save File
+                      Save
                     </button>
                   ) : null}
+                 
                   <br />
                   <button
                   tabindex="-1"
@@ -556,10 +569,10 @@ export default function Next() {
                       setFileNameBox(true);
                     }}
                   >
-                    Create New File
+                    New File
                   </button>
                   <br />
-                  <button tabindex="-1" onClick={openWindow}>Click to Add File</button>
+                  <button tabindex="-1" onClick={openWindow}>Add File</button>
                   {pandocAvailable ? (
                     <>
                       <br />
@@ -640,7 +653,7 @@ export default function Next() {
           )}
           <div
             className="fixed inset-x-0 bottom-0 ButtomBar"
-            style={{ marginLeft: "30%", maxHeight: "10vh", marginTop: "20px" }}
+            style={{ marginLeft: "27%", maxHeight: "10vh", marginTop: "20px" }}
           >
             {displayThesaurus && insert   ? (
               <container

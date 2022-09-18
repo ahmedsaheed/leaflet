@@ -24,8 +24,8 @@ if (isDev) {
   await app.whenReady();
 
   const mainWindow = createWindow("main", {
-    width: 800,
-    height: 500, //462 initially
+    width: 960,
+    height: 544, //462 initially
     minWidth: 800, 
     minHeight: 500, //462 initially
     // resizable: false,
@@ -281,7 +281,9 @@ const getFiles = () => {
         name: filename.charAt(0).toUpperCase() + filename.slice(1),
         body: content,
         path: filePath,
-        size: Number(fileStats.size / 1000).toFixed(1), // kb
+        size: Number(fileStats.size / 1000).toFixed(1), 
+        dirDept: filePath.substring(filePath.indexOf(appDir) + appDir.length + 1).split(path.sep).length - 1,
+        parentDir: filePath.substring(filePath.indexOf(appDir) + appDir.length + 1).split(path.sep).slice(0, -1).join(path.sep),
       };
     });
 };
