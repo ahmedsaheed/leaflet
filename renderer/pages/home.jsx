@@ -482,13 +482,6 @@ export default function Next() {
                   paddingLeft: "10px",
                 }}
               >
-                <p
-                style={{
-                  fontSize: "16px",
-                  fontWeight: "bold",
-                  fontFamily: "--apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
-                }}
-                > {" "} Explorer</p>
                 <div
                   className="fileBody"
                   style={{
@@ -498,9 +491,54 @@ export default function Next() {
                     overflow: "scroll",
                   }}
                 >
+                
+                
+                    <details>
+                    <summary
+                style={{
+                  fontSize: "16px",
+                  fontWeight: "bold",
+                  fontFamily: "--apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
+                }}
+                > {" "} Leaflet</summary>
+                   
                   {files.map((file, index) => (
                     <>
+                      {file.parentDir === "" ? 
                       <ol className="files">
+                      <button
+                        tabindex="-1"
+                        className={path === file.path ? "selected" : "greys"}
+                        onClick={() => {
+                          saveFile();
+                          setValue(file.body);
+                          setName(file.name);
+                          setPath(file.path);
+                        }}
+                      >{`${file.name.toString()} `}</button>
+                      
+                    </ol>
+                      : 
+                      
+                      <details>
+                      <summary>{file.parentDir}</summary>
+                      <ol className="files">
+                      <button
+
+                        tabindex="-1"
+                        className={path === file.path ? "selected" : "greys"}
+                        onClick={() => {
+                          saveFile();
+                          setValue(file.body);
+                          setName(file.name);
+                          setPath(file.path);
+                        }}
+                      >{`${file.name.toString()} `}</button>
+                        </ol>
+                      </details>
+                      
+                      }
+                      {/* <ol className="files">
                         <button
                           tabindex="-1"
                           className={path === file.path ? "selected" : "greys"}
@@ -510,11 +548,12 @@ export default function Next() {
                             setName(file.name);
                             setPath(file.path);
                           }}
-                        >{`${file.name.toString()} `}</button>
-                        {/* ${file.parentDir.toString()} */}
-                      </ol>
+                        >{`${file.name.toString()} ${file.parentDir.toString()} `}</button>
+                        
+                      </ol> */}
                     </>
-                  )).sort()}
+                  ))}
+                  
                   {fileNameBox ? (
                     <form
                       onSubmit={() => {
@@ -538,7 +577,10 @@ export default function Next() {
                       />
                     </form>
                   ) : null}
+                    </details>
                 </div>
+              
+                
 
                 <div className="fixed bottom-10">
                   {isEdited ? (
