@@ -5,7 +5,6 @@ import path from "path";
 import open from "open";
 import fs from "fs-extra";
 import os from "os";
-
 import chokidar from "chokidar";
 const appDir = path.resolve(os.homedir(), "leaflet");
 const isMac = process.platform === "darwin";
@@ -32,7 +31,7 @@ if (isDev) {
 
   });
 
-  watchFiles(mainWindow);
+  //watchFiles(mainWindow);
 
   const menuBar = [
     // { role: 'appMenu' }
