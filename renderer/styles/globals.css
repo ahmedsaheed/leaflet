@@ -150,7 +150,7 @@ strong{
   }
 
   ::selection {
-    background: #f0f0f0;
+    background: grey;
     color: black;
   }
 }

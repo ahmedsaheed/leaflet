@@ -8,7 +8,7 @@ import os from "os";
 
 import chokidar from "chokidar";
 const appDir = path.resolve(os.homedir(), "leaflet");
-const isProd = process.env.NODE_ENV === 'production';
+//const isProd = process.env.NODE_ENV === 'production';
 const isMac = process.platform === "darwin";
 const isDev = require('electron-is-dev');
 
@@ -25,9 +25,9 @@ if (isDev) {
 
   const mainWindow = createWindow("main", {
     width: 960,
-    height: 544, //462 initially
+    height: 544, 
     minWidth: 800, 
-    minHeight: 500, //462 initially
+    minHeight: 500, 
     // resizable: false,
     // fullscreen: false,
 
