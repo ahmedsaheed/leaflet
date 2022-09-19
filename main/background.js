@@ -6,6 +6,7 @@ import open from "open";
 import fs from "fs-extra";
 import os from "os";
 import chokidar from "chokidar";
+const isProd = process.env.NODE_ENV === 'production';
 const appDir = path.resolve(os.homedir(), "leaflet");
 const isMac = process.platform === "darwin";
 const isDev = require('electron-is-dev');
@@ -204,7 +205,7 @@ if (isDev) {
    // mainWindow.webContents.openDevTools();
   } else {
     try{
-      await mainWindow.loadURL('app://dist/home.html');
+      await mainWindow.loadURL('app://./home.html');
     }catch(err){
       console.log(err);
     }
