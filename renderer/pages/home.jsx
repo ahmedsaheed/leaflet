@@ -454,18 +454,18 @@ export default function Next() {
           crossOrigin="anonymous"
         />
 
-        <Script
+        <script
           defer
           src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"
           integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4"
           crossOrigin="anonymous"
-        ></Script>
-        <Script
+        ></script>
+        <script
           defer
           src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js"
           integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa"
           crossOrigin="anonymous"
-        ></Script>
+        ></script>
       </Head>
       <div className="mainer" style={{ minHeight: "100vh" }}>
         <div>
@@ -504,7 +504,7 @@ export default function Next() {
                    
                   {files.map((file, index) => (
                     <>
-                      {file.parentDir === "" ? 
+                      {/* {file.parentDir === "" ?  */}
                       <ol className="files">
                       <button
                         tabindex="-1"
@@ -518,7 +518,7 @@ export default function Next() {
                       >{`${file.name.toString()} `}</button>
                       
                     </ol>
-                      : 
+                      {/* : 
                       
                       <details>
                       <summary>{file.parentDir}</summary>
@@ -535,9 +535,9 @@ export default function Next() {
                         }}
                       >{`${file.name.toString()} `}</button>
                         </ol>
-                      </details>
+                      </details> */}
                       
-                      }
+                      
                       {/* <ol className="files">
                         <button
                           tabindex="-1"

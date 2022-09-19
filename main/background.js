@@ -8,7 +8,6 @@ import os from "os";
 
 import chokidar from "chokidar";
 const appDir = path.resolve(os.homedir(), "leaflet");
-//const isProd = process.env.NODE_ENV === 'production';
 const isMac = process.platform === "darwin";
 const isDev = require('electron-is-dev');
 
@@ -33,7 +32,7 @@ if (isDev) {
 
   });
 
-  //watchFiles(mainWindow);
+  watchFiles(mainWindow);
 
   const menuBar = [
     // { role: 'appMenu' }
