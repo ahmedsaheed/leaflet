@@ -3,7 +3,7 @@ import { ipcRenderer } from "electron";
 var shell = require('electron').shell;
 import { progress } from "../components/progress.ts";
 import { getMarkdown } from "../lib/mdParser.ts";
-import commandExists from "command-exists-promise";
+import commandExists from "command-exists";
 import { SYNONYMS } from "../lib/synonyms.js";
 import fs from "fs-extra";
 import dragDrop from "drag-drop";
@@ -56,17 +56,11 @@ export default function Next() {
   }, []);
 
   const checkForPandoc = () => {
-    commandExists("pandoc")
-    .then((exists) => {
+    commandExists("pandoc", (err, exists) => {
       if (exists) {
         setPandocAvailable(true);
-      } else {
-        setPandocAvailable(false);
       }
     })
-    .catch((err) => {
-      console.log(err);
-    });
   }
 
   
@@ -493,7 +487,7 @@ export default function Next() {
                 >
                 
                 
-                    <details>
+                    <details style={{cursor: "pointer"}}>
                     <summary
                 style={{
                   fontSize: "16px",

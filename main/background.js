@@ -32,7 +32,7 @@ if (isDev) {
 
   });
 
-  //watchFiles(mainWindow);
+  watchFiles(mainWindow);
 
   const menuBar = [
     // { role: 'appMenu' }
@@ -199,6 +199,10 @@ if (isDev) {
     },
   ];
 
+
+  const menu = Menu.buildFromTemplate(menuBar);
+  Menu.setApplicationMenu(menu);
+
   if (isDev) {
     const port = process.argv[2];
     await mainWindow.loadURL(`http://localhost:${port}/home`);
@@ -211,12 +215,6 @@ if (isDev) {
     }
     
   }
-
-  const menu = Menu.buildFromTemplate(menuBar);
-  Menu.setApplicationMenu(menu);
-
- 
-
   
 })();
 
