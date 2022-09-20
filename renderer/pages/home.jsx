@@ -487,9 +487,11 @@ export default function Next() {
                 >
                 
                 
-                    <details style={{cursor: "pointer"}}>
-                    <summary
+                    <details open >
+                    <summary 
                 style={{
+                  
+                  cursor: "pointer",
                   fontSize: "16px",
                   fontWeight: "bold",
                   fontFamily: "--apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
