@@ -45,9 +45,9 @@ You'd have to install [pandoc](https://github.com/jgm/pandoc/blob/master/INSTALL
           Windows Download</a>
         </td>
         <td>
-          <a href="https://github.com/ahmedsaheed/Leaflet/releases/download/v0.0.2/leaflet_0.0.2_amd64.snap">
+          <a href="https://github.com/ahmedsaheed/Leaflet/releases/download/v0.0.2/leaflet_0.0.2_amd64.deb">
           <img src="https://api.iconify.design/codicon:terminal-ubuntu.svg?color=%23888888"/>
-          Linux Downloads</a>
+          Ubuntu Downloads</a>
         </td>
       </tr>
     </tbody>
