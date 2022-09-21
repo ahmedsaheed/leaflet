@@ -41,8 +41,9 @@ export default function Next() {
 
   //_-_-_-_-_-_-_-_-_-_-_-_-_-_-_ INIT, CHECK FOR PANDOC & CLOCK-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
   useEffect(() => {
-    checkForPandoc();
     openExternalInDefaultBrowser();
+    checkForPandoc();
+    //removeTabIndex()
     ipcRenderer.invoke("getTheFile").then((files = []) => {
       setFiles(files);
       setValue(files[0] ? `${files[0].body}` : "");
@@ -61,6 +62,14 @@ export default function Next() {
         setPandocAvailable(true);
       }
     })
+  }
+
+  //function to remove disable tabIndex all links
+  const removeTabIndex = () => {
+    const links = document.querySelectorAll("a");
+    links.forEach((link) => {
+      link.setAttribute("tabIndex", "-1");
+    });
   }
 
   
@@ -193,10 +202,12 @@ export default function Next() {
 
   const openExternalInDefaultBrowser = () => {
     document.addEventListener("click", (event) => {
-      if (event.target.matches("a[href^='http']")) {
+      if (event.target.href && event.target.href.match(/^https?:\/\//)){
+      //if (event.target.tagName.(`a[href^='http']`)) {
         event.preventDefault();
         shell.openExternal(event.target.href);
       }
+      
     });
   };
 
@@ -375,8 +386,35 @@ export default function Next() {
         return;
       }
 
+      // I need new key for this
+      if (e.key === "y" && (e.ctrlKey || e.metaKey)){
+        if(!insert){return}
+        const date = new Date()
+        const strArray = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        const s = '' + (date.getDate() <= 9 ? '0' + date.getDate() : date.getDate()) + '-' + strArray[date.getMonth()] + '-' + date.getFullYear() + ' '
+        insertInTextArea(s)
+        e.preventDefault();
+        return
+      }
+
+      if (e.key === "t" && (e.ctrlKey || e.metaKey)){
+        if(!insert){return}
+        insertInTextArea(clockState)
+        e.preventDefault();
+        return
+      }
+      if(e.key === "Tab"){
+        if(!insert){return}
+        if(!displayThesaurus){
+          insertInTextArea('    ')
+          e.preventDefault();
+          return
+        }
+       
+      }
+
       if (displayThesaurus) {
-        if (e.keyCode === 9) {
+        if (e.key === "Tab") {
           if (e.shiftKey) {
             nextSynonym(); 
             replaceActiveWord(thesaurus[whichIsActive]);
@@ -398,6 +436,13 @@ export default function Next() {
       }
     };
   });
+
+
+  const insertInTextArea = (s) => {
+    const pos = ref.current.selectionStart;
+    ref.current.setSelectionRange(pos, pos)
+    document.execCommand('insertText', false, s)
+  }
   const onScroll = () => {
     const Scrolled = document.documentElement.scrollTop;
     const MaxHeight =
@@ -487,7 +532,7 @@ export default function Next() {
                 >
                 
                 
-                    <details open >
+                    <details tabindex="-1" open >
                     <summary 
                 style={{
                   
@@ -640,10 +685,12 @@ export default function Next() {
                   autoFocus
                   id="markdown-content"
                   value={value}
+                  onScroll={(e) => {
+                    displayThesaurus ? setDisplayThesaurus(false) : null;
+                  }}
                   onChange={handleChange}
                   onKeyDown={(e) => {
                     cursorUpdate(e);
-                    // setDisplayThesaurus(false);
                   }}
                   onKeyUp={(e) => {
                     cursorUpdate(e);
