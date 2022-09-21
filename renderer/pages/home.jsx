@@ -36,7 +36,6 @@ export default function Next() {
   const [whichIsActive, setWhichIsActive] = React.useState(0);
   const [count, setCount] = React.useState(0);
   const ref = useRef(null);
-  const list = useRef(null);
   let synonyms = {};
 
   //_-_-_-_-_-_-_-_-_-_-_-_-_-_-_ INIT, CHECK FOR PANDOC & CLOCK-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
@@ -352,6 +351,7 @@ export default function Next() {
         return;
       }
 
+
       if ((e.ctrlKey || e.metaKey) && e.key === "d") {
         converToDocx();
         e.preventDefault();
@@ -412,7 +412,6 @@ export default function Next() {
         }
        
       }
-
       if (displayThesaurus) {
         if (e.key === "Tab") {
           if (e.shiftKey) {
@@ -443,6 +442,70 @@ export default function Next() {
     ref.current.setSelectionRange(pos, pos)
     document.execCommand('insertText', false, s)
   }
+
+  // const find = (word) =>{
+
+  //     const text = value.toLowerCase()
+  //     const parts = text.split(word.toLowerCase())
+  //     const a = []
+  //     let sum = 0
+  
+  //     for (const id in parts) {
+  //       const p = parts[id].length
+  //       a.push(sum + p)
+  //       sum += p + word.length
+  //     }
+  
+  //     a.splice(-1, 1)
+  
+  //     return a
+    
+  // }
+  // const findWord = (q, bang=false) => {
+
+  //   if (q.length < 3) { return }
+
+  //   const results = find(q)
+
+  //   if (results.length < 1) { return }
+
+  //   const from = ref.current.selectionStart
+  //   let result = 0
+  //   for (const id in results) {
+  //     result = results[id]
+  //     if (result > from) { break }
+  //   }
+
+  //   // Found final occurence, start from the top
+  //   if (result === ref.current.selectionStart) {
+  //     ref.current.setSelectionRange(0, 0)
+  //     findWord(q, true)
+  //     return
+  //   }
+
+  //   if (bang && result) {
+  //     goTo(result, result + q.length)
+  //     //setTimeout(() => { left.operator.stop() }, 250)
+  //   }
+  // }
+  // const goTo =  (from, to, scroll = true) => {
+  //   if (ref.current.setSelectionRange) {
+  //     ref.current.setSelectionRange(from, to)
+  //   } else if (ref.current.createTextRange) {
+  //     const range = ref.current.createTextRange()
+  //     range.collapse(true)
+  //     range.moveEnd('character', to)
+  //     range.moveStart('character', from)
+  //     range.select()
+  //   }
+  //   ref.current.focus()
+
+  //   // if (scroll) {
+  //   //   this.scroll_to(from, to)
+  //   // }
+
+  //   return from === -1 ? null : from
+  // }
   const onScroll = () => {
     const Scrolled = document.documentElement.scrollTop;
     const MaxHeight =
