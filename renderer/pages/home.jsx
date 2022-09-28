@@ -420,12 +420,14 @@ export default function Next() {
         e.preventDefault();
         return;
       }
-      if ((e.ctrlKey || e.metaKey) && e.key === "f") {
-        if(!insert){return}
-        find(ref.current, "Bidirectional")
-        e.preventDefault();
-        return;
-      }
+
+      //Need to create find box
+      // if ((e.ctrlKey || e.metaKey) && e.key === "f") {
+      //   if(!insert){return}
+      //   find(ref.current, "Shortcuts")
+      //   e.preventDefault();
+      //   return;
+      // }
 
       if (e.key === "i" && (e.ctrlKey || e.metaKey)) {
         console.log(clockState, tree);
