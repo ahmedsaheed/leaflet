@@ -35,6 +35,7 @@ export default function Next() {
   const [clockState, setClockState] = React.useState();
   const [whichIsActive, setWhichIsActive] = React.useState(0);
   const [count, setCount] = React.useState(0);
+  const [tree, setTree] = React.useState({});
   const ref = useRef(null);
   let synonyms = {};
 
@@ -42,18 +43,22 @@ export default function Next() {
   useEffect(() => {
     openExternalInDefaultBrowser();
     checkForPandoc();
-    //removeTabIndex()
+    //removetabIndex()
     ipcRenderer.invoke("getTheFile").then((files = []) => {
       setFiles(files);
       setValue(files[0] ? `${files[0].body}` : "");
       setName(files[0] ? `${files[0].name}` : "");
       setPath(files[0] ? `${files[0].path}` : "");
+       console.log(typeof files[0].tree.children)
+      setTree(files[0] ? files[0].tree.children : {});
+
     });
     setInterval(() => {
       const date = new Date();
       setClockState(date.toLocaleTimeString());
     }, 1000);
   }, []);
+
 
   const checkForPandoc = () => {
     commandExists("pandoc", (err, exists) => {
@@ -64,7 +69,7 @@ export default function Next() {
   }
 
   //function to remove disable tabIndex all links
-  const removeTabIndex = () => {
+  const removetabIndex = () => {
     const links = document.querySelectorAll("a");
     links.forEach((link) => {
       link.setAttribute("tabIndex", "-1");
@@ -359,6 +364,7 @@ export default function Next() {
       }
 
       if (e.key === "i" && (e.ctrlKey || e.metaKey)) {
+        console.log(clockState,tree)
         setInsert(true);
         e.preventDefault();
         return;
@@ -393,6 +399,19 @@ export default function Next() {
         const strArray = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
         const s = '' + (date.getDate() <= 9 ? '0' + date.getDate() : date.getDate()) + '-' + strArray[date.getMonth()] + '-' + date.getFullYear() + ' '
         insertInTextArea(s)
+        e.preventDefault();
+        return
+      }
+      if(e.key === "/" && (e.ctrlKey || e.metaKey)){
+        if(!insert){return}
+        const area = ref.current;
+        if( area.selectionEnd === area.selectionStart ){return}
+        const firstInsertion = area.selectionStart;
+        const secondInsertion = area.selectionEnd;
+        ref.current.setSelectionRange(firstInsertion,firstInsertion)
+        document.execCommand("insertText", false, "<!-- ");
+        ref.current.setSelectionRange(secondInsertion,secondInsertion)
+        document.execCommand("insertText", false, " -->");
         e.preventDefault();
         return
       }
@@ -595,7 +614,7 @@ export default function Next() {
                 >
                 
                 
-                    <details tabindex="-1" open >
+                    <details tabIndex="-1" open >
                     <summary 
                 style={{
                   
@@ -605,13 +624,11 @@ export default function Next() {
                   fontFamily: "--apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
                 }}
                 > {" "} Leaflet</summary>
-                   
                   {files.map((file, index) => (
                     <>
-                      {/* {file.parentDir === "" ?  */}
                       <ol className="files">
                       <button
-                        tabindex="-1"
+                        tabIndex="-1"
                         className={path === file.path ? "selected" : "greys"}
                         onClick={() => {
                           saveFile();
@@ -620,43 +637,9 @@ export default function Next() {
                           setPath(file.path);
                         }}
                       >{`${file.name.toString()} `}</button>
-                      
                     </ol>
-                      {/* : 
-                      
-                      <details>
-                      <summary>{file.parentDir}</summary>
-                      <ol className="files">
-                      <button
-
-                        tabindex="-1"
-                        className={path === file.path ? "selected" : "greys"}
-                        onClick={() => {
-                          saveFile();
-                          setValue(file.body);
-                          setName(file.name);
-                          setPath(file.path);
-                        }}
-                      >{`${file.name.toString()} `}</button>
-                        </ol>
-                      </details> */}
-                      
-                      
-                      {/* <ol className="files">
-                        <button
-                          tabindex="-1"
-                          className={path === file.path ? "selected" : "greys"}
-                          onClick={() => {
-                            saveFile();
-                            setValue(file.body);
-                            setName(file.name);
-                            setPath(file.path);
-                          }}
-                        >{`${file.name.toString()} ${file.parentDir.toString()} `}</button>
-                        
-                      </ol> */}
                     </>
-                  ))}
+                   ))}
                   
                   {fileNameBox ? (
                     <form
@@ -689,7 +672,7 @@ export default function Next() {
                 <div className="fixed bottom-10">
                   {isEdited ? (
                     <button
-                    tabindex="-1"
+                    tabIndex="-1"
                       className={`${marker ? "tick " : ""}`}
                       onClick={() => {
                         try {
@@ -710,7 +693,7 @@ export default function Next() {
                  
                   <br />
                   <button
-                  tabindex="-1"
+                  tabIndex="-1"
                     onClick={() => {
                       setFileNameBox(true);
                     }}
@@ -718,13 +701,13 @@ export default function Next() {
                     New File
                   </button>
                   <br />
-                  <button tabindex="-1" onClick={openWindow}>Add File</button>
+                  <button tabIndex="-1" onClick={openWindow}>Add File</button>
                   {pandocAvailable ? (
                     <>
                       <br />
-                      <button tabindex="-1" onClick={convertToPDF}>Covert to PDF</button>
+                      <button tabIndex="-1" onClick={convertToPDF}>Covert to PDF</button>
                       <br />
-                      <button tabindex="-1" onClick={converToDocx}>Covert to Docx</button>
+                      <button tabIndex="-1" onClick={converToDocx}>Covert to Docx</button>
                     </>
                   ) : null}
                 </div>

@@ -5,6 +5,7 @@ import path from "path";
 import open from "open";
 import fs from "fs-extra";
 import os from "os";
+const dirTree = require("directory-tree");
 import chokidar from "chokidar";
 const isProd = process.env.NODE_ENV === 'production';
 const appDir = path.resolve(os.homedir(), "leaflet");
@@ -260,9 +261,11 @@ var walk = function(dir) {
   return results;
 }
 
+
 const getFiles = () => {
   checkForDir();
   const files = walk(appDir);
+  const structure = dirTree(appDir, { extensions: /\.md/ });
   let place = 0;
   return files
     .filter((file) => file.split(".").pop() === "md")
@@ -275,6 +278,7 @@ const getFiles = () => {
 
       return {
         index: place,
+        tree: structure,
         name: filename.charAt(0).toUpperCase() + filename.slice(1),
         body: content,
         path: filePath,
