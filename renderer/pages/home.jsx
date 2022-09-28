@@ -415,6 +415,20 @@ export default function Next() {
         return
       }
 
+      if((e.key === "Backspace" || e.key === "Delete") && (e.ctrlKey || e.metaKey)){
+        try{ 
+          fs.removeSync(path);
+          Update();
+          setValue(files[0].body);
+          setName(files[0].name);
+          setPath(files[0].path);
+
+        
+        }catch(e){console.log(e)}
+        e.preventDefault();
+        return
+      }
+
       if (e.key === "t" && (e.ctrlKey || e.metaKey)){
         if(!insert){return}
         insertInTextArea(clockState)
@@ -538,7 +552,12 @@ export default function Next() {
 
   function handleChange(e) {
     setValue(e.target.value);
-    setIsEdited(true);
+    if(e.target.value === fs.readFileSync(path, "utf8")){
+      setIsEdited(false)
+    }else{
+      setIsEdited(true)
+    }
+
   }
   const openWindow = () => {
     ipcRenderer.invoke("app:on-fs-dialog-open").then(() => {
@@ -560,6 +579,15 @@ export default function Next() {
       setCursor(`${lineNo}L ${e.target.selectionStart}P`);
     }
   };
+
+  const handleClick = (e) => {
+    if (e.nativeEvent.button === 0) {
+      console.log('Left click');
+    } else if (e.nativeEvent.button === 2) {
+      console.log('Right click');
+    }
+  };
+  
 
 
  
@@ -629,7 +657,9 @@ export default function Next() {
                       <button
                         tabIndex="-1"
                         className={path === file.path ? "selected" : "greys"}
-                        onClick={() => {
+                        onContextMenu={(e)=>{handleClick(e)}}
+                        onClick={(e) => {
+                          handleClick(e)
                           saveFile();
                           setValue(file.body);
                           setName(file.name);
