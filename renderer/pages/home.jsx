@@ -40,12 +40,12 @@ export default function Next() {
   const [tree, setTree] = React.useState({});
   const ref = useRef(null);
   let synonyms = {};
+  
 
   //_-_-_-_-_-_-_-_-_-_-_-_-_-_-_ INIT, CHECK FOR PANDOC & CLOCK-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
   useEffect(() => {
     openExternalInDefaultBrowser();
     checkForPandoc();
-    //removetabIndex()
     ipcRenderer.invoke("getTheFile").then((files = []) => {
       setFiles(files);
       setValue(files[0] ? `${files[0].body}` : "");
@@ -69,15 +69,6 @@ export default function Next() {
       }
     })
   }
-
-  //function to remove disable tabIndex all links
-  const removetabIndex = () => {
-    const links = document.querySelectorAll("a");
-    links.forEach((link) => {
-      link.setAttribute("tabIndex", "-1");
-    });
-  }
-
   
   //_-_-_-_-_-_-_-_-_-_-_-_-_-_-_SYNONYMS GENERATOR-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 
@@ -205,6 +196,13 @@ export default function Next() {
   }
   //_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-UTILITIES & ELECTRON RELATED_-_-_-_-_-_-_-_-_-_-_-_-_-
 
+
+  const generateDate = () => {
+    const date = new Date()
+        const strArray = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        const s = '' + (date.getDate() <= 9 ? '0' + date.getDate() : date.getDate()) + '-' + strArray[date.getMonth()] + '-' + date.getFullYear() + ' '
+        return s
+  } 
 
   const openExternalInDefaultBrowser = () => {
     document.addEventListener("click", (event) => {
@@ -397,10 +395,7 @@ export default function Next() {
       // I need new key for this
       if (e.key === "y" && (e.ctrlKey || e.metaKey)){
         if(!insert){return}
-        const date = new Date()
-        const strArray = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-        const s = '' + (date.getDate() <= 9 ? '0' + date.getDate() : date.getDate()) + '-' + strArray[date.getMonth()] + '-' + date.getFullYear() + ' '
-        insertInTextArea(s)
+        insertInTextArea(generateDate())
         e.preventDefault();
         return
       }
