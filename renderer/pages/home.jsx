@@ -192,7 +192,7 @@ export default function Next() {
   function find(word) {
     const area = ref.current
     const words = area.value.split(" ");
-      const startPos = area.value.indexOf(word),
+      const startPos = area.value.toLowerCase().indexOf(word),
       endPos = startPos + word.length
   
     if (typeof(area.selectionStart) != "undefined") {
@@ -897,7 +897,7 @@ export default function Next() {
                           className="createFile"
                           type="text"
                           placeholder="Search a word"
-                          onChange={(e) => setWordToFind(e.target.value)}
+                          onChange={(e) => setWordToFind((e.target.value).toLowerCase())}
                         />
                       </form>
                   </span>
