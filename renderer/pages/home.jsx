@@ -428,7 +428,7 @@ export default function Next() {
         if (!insert) {
           return;
         }
-        insertInTextArea(generateDate());
+        insertInTexarea(generateDate());
         e.preventDefault();
         return;
       }
@@ -462,7 +462,7 @@ export default function Next() {
         if (!insert) {
           return;
         }
-        insertInTextArea(clockState);
+        insertInTexarea(clockState);
         e.preventDefault();
         return;
       }
@@ -471,7 +471,7 @@ export default function Next() {
           return;
         }
         if (!displayThesaurus) {
-          insertInTextArea("    ");
+          insertInTexarea("    ");
           e.preventDefault();
           return;
         }
@@ -497,7 +497,7 @@ export default function Next() {
     };
   });
 
-  const insertInTextArea = (s) => {
+  const insertInTexarea = (s) => {
     const pos = ref.current.selectionStart;
     ref.current.setSelectionRange(pos, pos);
     document.execCommand("insertText", false, s);
