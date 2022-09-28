@@ -187,6 +187,36 @@ export default function Next() {
   };
   //_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-UTILITIES & ELECTRON RELATED_-_-_-_-_-_-_-_-_-_-_-_-_-
 
+  function find(area, word) {
+    const words = area.value.split(" ");
+  
+    // calculate start/end
+    const startPos = area.value.indexOf(word),
+      endPos = startPos + word.length
+  
+    if (typeof(area.selectionStart) != "undefined") {
+      area.focus();
+      area.selectionStart = startPos;
+      area.selectionEnd = endPos;
+      return true;
+    }
+  
+    // IE
+    if (document.selection && document.selection.createRange) {
+      area.focus();
+      area.select();
+      var range = document.selection.createRange();
+      range.collapse(true);
+      range.moveEnd("character", endPos);
+      range.moveStart("character", startPos);
+      range.select();
+      return true;
+    }
+  
+    return false;
+  }
+  
+
   const generateDate = () => {
     const date = new Date();
     const strArray = [
@@ -393,6 +423,12 @@ export default function Next() {
         e.preventDefault();
         return;
       }
+      // if ((e.ctrlKey || e.metaKey) && e.key === "f") {
+      //   if(!insert){return}
+      //   find(ref.current, "Bidirectional")
+      //   e.preventDefault();
+      //   return;
+      // }
 
       if (e.key === "i" && (e.ctrlKey || e.metaKey)) {
         console.log(clockState, tree);
