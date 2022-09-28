@@ -324,6 +324,30 @@ export default function Next() {
     });
   }
 
+  const commentOut = () =>{
+    const area = ref.current;
+    if (area.selectionEnd === area.selectionStart) {
+      return;
+    }
+    let first = area.selectionStart;
+    let second = area.selectionEnd;
+    let length = second - first;
+    let selectedText = area.value.substr(first, length);
+    if (selectedText.startsWith("<!--") && selectedText.endsWith("-->")) {
+      area.value = area.value.substr(0, first) + area.value.substr(second);
+      ref.current.setSelectionRange(first, first);
+      document.execCommand(
+        "insertText",
+        false,
+        `${selectedText.replace(/[<>!-]/g, "")}`
+      );
+    } else {
+      area.value = area.value.substr(0, first) + area.value.substr(second);
+      ref.current.setSelectionRange(first, first);
+      document.execCommand("insertText", false, `<!-- ${selectedText} -->`);
+    }
+  }
+
   const createNewFile = () => {
     fileName != ""
       ? ipcRenderer.invoke("createNewFile", fileName).then(() => {
@@ -412,27 +436,7 @@ export default function Next() {
         if (!insert) {
           return;
         }
-        const area = ref.current;
-        if (area.selectionEnd === area.selectionStart) {
-          return;
-        }
-        let first = area.selectionStart;
-        let second = area.selectionEnd;
-        let length = second - first;
-        let selectedText = area.value.substr(first, length);
-        if (selectedText.startsWith("<!--") && selectedText.endsWith("-->")) {
-          area.value = area.value.substr(0, first) + area.value.substr(second);
-          ref.current.setSelectionRange(first, first);
-          document.execCommand(
-            "insertText",
-            false,
-            `${selectedText.replace(/[<>!-]/g, "")}`
-          );
-        } else {
-          area.value = area.value.substr(0, first) + area.value.substr(second);
-          ref.current.setSelectionRange(first, first);
-          document.execCommand("insertText", false, `<!-- ${selectedText} -->`);
-        }
+        commentOut()
         e.preventDefault();
         return;
       }
