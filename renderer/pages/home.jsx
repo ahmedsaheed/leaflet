@@ -189,32 +189,29 @@ export default function Next() {
 
   function find(area, word) {
     const words = area.value.split(" ");
-  
-    // calculate start/end
-    const startPos = area.value.indexOf(word),
+      const startPos = area.value.indexOf(word),
       endPos = startPos + word.length
   
     if (typeof(area.selectionStart) != "undefined") {
-      area.focus();
-      area.selectionStart = startPos;
-      area.selectionEnd = endPos;
+       area.focus();
+       scrollTo(area, endPos)
+        area.setSelectionRange(startPos, endPos);
       return true;
     }
-  
-    // IE
-    if (document.selection && document.selection.createRange) {
-      area.focus();
-      area.select();
-      var range = document.selection.createRange();
-      range.collapse(true);
-      range.moveEnd("character", endPos);
-      range.moveStart("character", startPos);
-      range.select();
-      return true;
-    }
-  
     return false;
   }
+  function scrollTo(textarea, selectionEnd) {
+    const txt = textarea.value;
+    if (selectionEnd >= txt.length || selectionEnd < 0)
+      return;
+    textarea.scrollTop = 0;
+
+    textarea.value = txt.substring(0, selectionEnd);
+    const height = textarea.scrollHeight;
+    textarea.value = txt;
+    textarea.scrollTop = height - 40;
+}
+
   
 
   const generateDate = () => {
@@ -423,12 +420,12 @@ export default function Next() {
         e.preventDefault();
         return;
       }
-      // if ((e.ctrlKey || e.metaKey) && e.key === "f") {
-      //   if(!insert){return}
-      //   find(ref.current, "Bidirectional")
-      //   e.preventDefault();
-      //   return;
-      // }
+      if ((e.ctrlKey || e.metaKey) && e.key === "f") {
+        if(!insert){return}
+        find(ref.current, "Bidirectional")
+        e.preventDefault();
+        return;
+      }
 
       if (e.key === "i" && (e.ctrlKey || e.metaKey)) {
         console.log(clockState, tree);
@@ -571,6 +568,7 @@ export default function Next() {
   const cursorUpdate = (e) => {
     if (e.target.selectionStart !== e.target.selectionEnd) {
       setCursor(`[${e.target.selectionStart}, ${e.target.selectionEnd}]`);
+
     } else {
       var textLines = e.target.value
         .substr(0, e.target.selectionEnd)
