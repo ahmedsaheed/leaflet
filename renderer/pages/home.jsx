@@ -12,7 +12,6 @@ import pandoc from "node-pandoc";
 import mainPath from "path";
 import open from "open";
 import os from "os";
-export const today = new Date();
 
 export default function Next() {
   const [value, setValue] = React.useState("");
@@ -499,7 +498,7 @@ export default function Next() {
     ref.current.setSelectionRange(pos, pos);
     document.execCommand("insertText", false, s);
   };
-  
+
   const onScroll = () => {
     const Scrolled = document.documentElement.scrollTop;
     const MaxHeight =
