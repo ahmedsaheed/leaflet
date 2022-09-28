@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { ipcRenderer } from "electron";
-var shell = require('electron').shell;
+var shell = require("electron").shell;
 import { progress } from "../components/progress.ts";
 import { getMarkdown } from "../lib/mdParser.ts";
 import commandExists from "command-exists";
@@ -37,7 +37,6 @@ export default function Next() {
   const [tree, setTree] = React.useState({});
   const ref = useRef(null);
   let synonyms = {};
-  
 
   //_-_-_-_-_-_-_-_-_-_-_-_-_-_-_ INIT, CHECK FOR PANDOC & CLOCK-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
   useEffect(() => {
@@ -48,9 +47,8 @@ export default function Next() {
       setValue(files[0] ? `${files[0].body}` : "");
       setName(files[0] ? `${files[0].name}` : "");
       setPath(files[0] ? `${files[0].path}` : "");
-       console.log(typeof files[0].tree.children)
+      console.log(typeof files[0].tree.children);
       setTree(files[0] ? files[0].tree.children : {});
-
     });
     setInterval(() => {
       const date = new Date();
@@ -58,15 +56,14 @@ export default function Next() {
     }, 1000);
   }, []);
 
-
   const checkForPandoc = () => {
     commandExists("pandoc", (err, exists) => {
       if (exists) {
         setPandocAvailable(true);
       }
-    })
-  }
-  
+    });
+  };
+
   //_-_-_-_-_-_-_-_-_-_-_-_-_-_-_SYNONYMS GENERATOR-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 
   const getSynonyms = () => {
@@ -76,12 +73,12 @@ export default function Next() {
     if (!response) {
       return;
     }
-  
+
     for (let i = 0; i < response.length; i++) {
-     answer.push(response[i]);
+      answer.push(response[i]);
     }
     setThesaurus(answer);
-     setDisplayThesaurus(true);
+    setDisplayThesaurus(true);
   };
 
   const find_synonym = (str) => {
@@ -106,11 +103,11 @@ export default function Next() {
     return;
   };
 
-  const activeWord = () =>  {
+  const activeWord = () => {
     const area = ref.current;
     const l = activeWordLocation();
     return area.value.substr(l.from, l.to - l.from);
-  }
+  };
 
   function uniq(a1) {
     const a2 = [];
@@ -151,64 +148,79 @@ export default function Next() {
   };
 
   const replaceActiveWord = (word) => {
-    try{
-      if(!word){return}
+    try {
+      if (!word) {
+        return;
+      }
 
       const area = ref.current;
 
-    const l = activeWordLocation();
-    const w = area.value.substr(l.from, l.to - l.from);
+      const l = activeWordLocation();
+      const w = area.value.substr(l.from, l.to - l.from);
 
-    if (w.substr(0, 1) === w.substr(0, 1).toUpperCase()) {
-      word = word.substr(0, 1).toUpperCase() + word.substr(1, word.length);
-    }
-    area.setSelectionRange(l.from, l.to);
-    document.execCommand("insertText", false, word);
-    area.focus();
-    }catch(e){
+      if (w.substr(0, 1) === w.substr(0, 1).toUpperCase()) {
+        word = word.substr(0, 1).toUpperCase() + word.substr(1, word.length);
+      }
+      area.setSelectionRange(l.from, l.to);
+      document.execCommand("insertText", false, word);
+      area.focus();
+    } catch (e) {
       console.log(e);
     }
-    
   };
 
-  const nextSynonym =  () => {
+  const nextSynonym = () => {
     setWhichIsActive(0);
     const element = document.getElementById("thesaurusWords");
-    let previousWord = element.children[whichIsActive]
-    setWhichIsActive((whichIsActive + 1) % thesaurus.length)
-    setCount(count + 1)
-    const currentWord = element.children[whichIsActive]
-    if(previousWord){
-      previousWord.style.display = "none"
+    let previousWord = element.children[whichIsActive];
+    setWhichIsActive((whichIsActive + 1) % thesaurus.length);
+    setCount(count + 1);
+    const currentWord = element.children[whichIsActive];
+    if (previousWord) {
+      previousWord.style.display = "none";
     }
-    if(currentWord){
-      currentWord.classList.add('active')
+    if (currentWord) {
+      currentWord.classList.add("active");
       currentWord.scrollIntoView({
-        behavior: 'smooth'
-      })
+        behavior: "smooth",
+      });
     }
-   
-
-   
-  }
+  };
   //_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-UTILITIES & ELECTRON RELATED_-_-_-_-_-_-_-_-_-_-_-_-_-
 
-
   const generateDate = () => {
-    const date = new Date()
-        const strArray = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-        const s = '' + (date.getDate() <= 9 ? '0' + date.getDate() : date.getDate()) + '-' + strArray[date.getMonth()] + '-' + date.getFullYear() + ' '
-        return s
-  } 
+    const date = new Date();
+    const strArray = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    const s =
+      "" +
+      (date.getDate() <= 9 ? "0" + date.getDate() : date.getDate()) +
+      "-" +
+      strArray[date.getMonth()] +
+      "-" +
+      date.getFullYear() +
+      " ";
+    return s;
+  };
 
   const openExternalInDefaultBrowser = () => {
     document.addEventListener("click", (event) => {
-      if (event.target.href && event.target.href.match(/^https?:\/\//)){
-      //if (event.target.tagName.(`a[href^='http']`)) {
+      if (event.target.href && event.target.href.match(/^https?:\/\//)) {
         event.preventDefault();
         shell.openExternal(event.target.href);
       }
-      
     });
   };
 
@@ -353,7 +365,6 @@ export default function Next() {
         return;
       }
 
-
       if ((e.ctrlKey || e.metaKey) && e.key === "d") {
         converToDocx();
         e.preventDefault();
@@ -361,7 +372,7 @@ export default function Next() {
       }
 
       if (e.key === "i" && (e.ctrlKey || e.metaKey)) {
-        console.log(clockState,tree)
+        console.log(clockState, tree);
         setInsert(true);
         e.preventDefault();
         return;
@@ -390,157 +401,105 @@ export default function Next() {
       }
 
       // I need new key for this
-      if (e.key === "y" && (e.ctrlKey || e.metaKey)){
-        if(!insert){return}
-        insertInTextArea(generateDate())
+      if (e.key === "y" && (e.ctrlKey || e.metaKey)) {
+        if (!insert) {
+          return;
+        }
+        insertInTextArea(generateDate());
         e.preventDefault();
-        return
+        return;
       }
-      if(e.key === "/" && (e.ctrlKey || e.metaKey)){
-        if(!insert){return}
+      if (e.key === "/" && (e.ctrlKey || e.metaKey)) {
+        if (!insert) {
+          return;
+        }
         const area = ref.current;
-        if( area.selectionEnd === area.selectionStart ){return}
-        let first =  area.selectionStart;
+        if (area.selectionEnd === area.selectionStart) {
+          return;
+        }
+        let first = area.selectionStart;
         let second = area.selectionEnd;
         let length = second - first;
         let selectedText = area.value.substr(first, length);
-        if(selectedText.startsWith("<!--") && selectedText.endsWith("-->")){
+        if (selectedText.startsWith("<!--") && selectedText.endsWith("-->")) {
           area.value = area.value.substr(0, first) + area.value.substr(second);
-          ref.current.setSelectionRange(first,first)
-          document.execCommand("insertText", false, `${selectedText.replace(/[<>!-]/g, "")}`);
-        }else{
+          ref.current.setSelectionRange(first, first);
+          document.execCommand(
+            "insertText",
+            false,
+            `${selectedText.replace(/[<>!-]/g, "")}`
+          );
+        } else {
           area.value = area.value.substr(0, first) + area.value.substr(second);
-          ref.current.setSelectionRange(first,first)
-         document.execCommand("insertText", false, `<!-- ${selectedText} -->`);
-        
+          ref.current.setSelectionRange(first, first);
+          document.execCommand("insertText", false, `<!-- ${selectedText} -->`);
         }
         e.preventDefault();
-        return
+        return;
       }
 
-      if((e.key === "Backspace" || e.key === "Delete") && (e.ctrlKey || e.metaKey)){
-        try{ 
+      if (
+        (e.key === "Backspace" || e.key === "Delete") &&
+        (e.ctrlKey || e.metaKey)
+      ) {
+        try {
           fs.removeSync(path);
           Update();
           setValue(files[0].body);
           setName(files[0].name);
           setPath(files[0].path);
-
-        
-        }catch(e){console.log(e)}
-        e.preventDefault();
-        return
-      }
-
-      if (e.key === "t" && (e.ctrlKey || e.metaKey)){
-        if(!insert){return}
-        insertInTextArea(clockState)
-        e.preventDefault();
-        return
-      }
-      if(e.key === "Tab"){
-        if(!insert){return}
-        if(!displayThesaurus){
-          insertInTextArea('    ')
-          e.preventDefault();
-          return
+        } catch (e) {
+          console.log(e);
         }
-       
+        e.preventDefault();
+        return;
+      }
+
+      if (e.key === "t" && (e.ctrlKey || e.metaKey)) {
+        if (!insert) {
+          return;
+        }
+        insertInTextArea(clockState);
+        e.preventDefault();
+        return;
+      }
+      if (e.key === "Tab") {
+        if (!insert) {
+          return;
+        }
+        if (!displayThesaurus) {
+          insertInTextArea("    ");
+          e.preventDefault();
+          return;
+        }
       }
       if (displayThesaurus) {
         if (e.key === "Tab") {
           if (e.shiftKey) {
-            nextSynonym(); 
+            nextSynonym();
             replaceActiveWord(thesaurus[whichIsActive]);
-             e.preventDefault();
-             return
-            
-          } 
-          
-          else {
+            e.preventDefault();
+            return;
+          } else {
             replaceActiveWord(thesaurus[0]);
             setTimeout(() => {
               setDisplayThesaurus(false);
             }, 100);
             saveFile();
             e.preventDefault();
-             return;
+            return;
           }
         }
       }
     };
   });
 
-
   const insertInTextArea = (s) => {
     const pos = ref.current.selectionStart;
-    ref.current.setSelectionRange(pos, pos)
-    document.execCommand('insertText', false, s)
-  }
-
-  // const find = (word) =>{
-
-  //     const text = value.toLowerCase()
-  //     const parts = text.split(word.toLowerCase())
-  //     const a = []
-  //     let sum = 0
+    ref.current.setSelectionRange(pos, pos);
+    document.execCommand("insertText", false, s);
+  };
   
-  //     for (const id in parts) {
-  //       const p = parts[id].length
-  //       a.push(sum + p)
-  //       sum += p + word.length
-  //     }
-  
-  //     a.splice(-1, 1)
-  
-  //     return a
-    
-  // }
-  // const findWord = (q, bang=false) => {
-
-  //   if (q.length < 3) { return }
-
-  //   const results = find(q)
-
-  //   if (results.length < 1) { return }
-
-  //   const from = ref.current.selectionStart
-  //   let result = 0
-  //   for (const id in results) {
-  //     result = results[id]
-  //     if (result > from) { break }
-  //   }
-
-  //   // Found final occurence, start from the top
-  //   if (result === ref.current.selectionStart) {
-  //     ref.current.setSelectionRange(0, 0)
-  //     findWord(q, true)
-  //     return
-  //   }
-
-  //   if (bang && result) {
-  //     goTo(result, result + q.length)
-  //     //setTimeout(() => { left.operator.stop() }, 250)
-  //   }
-  // }
-  // const goTo =  (from, to, scroll = true) => {
-  //   if (ref.current.setSelectionRange) {
-  //     ref.current.setSelectionRange(from, to)
-  //   } else if (ref.current.createTextRange) {
-  //     const range = ref.current.createTextRange()
-  //     range.collapse(true)
-  //     range.moveEnd('character', to)
-  //     range.moveStart('character', from)
-  //     range.select()
-  //   }
-  //   ref.current.focus()
-
-  //   // if (scroll) {
-  //   //   this.scroll_to(from, to)
-  //   // }
-
-  //   return from === -1 ? null : from
-  // }
   const onScroll = () => {
     const Scrolled = document.documentElement.scrollTop;
     const MaxHeight =
@@ -555,12 +514,11 @@ export default function Next() {
 
   function handleChange(e) {
     setValue(e.target.value);
-    if(e.target.value === fs.readFileSync(path, "utf8")){
-      setIsEdited(false)
-    }else{
-      setIsEdited(true)
+    if (e.target.value === fs.readFileSync(path, "utf8")) {
+      setIsEdited(false);
+    } else {
+      setIsEdited(true);
     }
-
   }
   const openWindow = () => {
     ipcRenderer.invoke("app:on-fs-dialog-open").then(() => {
@@ -585,15 +543,11 @@ export default function Next() {
 
   const handleClick = (e) => {
     if (e.nativeEvent.button === 0) {
-      console.log('Left click');
+      console.log("Left click");
     } else if (e.nativeEvent.button === 2) {
-      console.log('Right click');
+      console.log("Right click");
     }
   };
-  
-
-
- 
 
   return (
     <>
@@ -642,69 +596,72 @@ export default function Next() {
                     overflow: "scroll",
                   }}
                 >
-                
-                
-                    <details tabIndex="-1" open >
-                    <summary 
-                style={{
-                  
-                  cursor: "pointer",
-                  fontSize: "16px",
-                  fontWeight: "bold",
-                  fontFamily: "--apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
-                }}
-                > {" "} Leaflet</summary>
-                  {files.map((file, index) => (
-                    <>
-                      <ol className="files">
-                      <button
-                        tabIndex="-1"
-                        className={path === file.path ? "selected" : "greys"}
-                        onContextMenu={(e)=>{handleClick(e)}}
-                        onClick={(e) => {
-                          handleClick(e)
-                          saveFile();
-                          setValue(file.body);
-                          setName(file.name);
-                          setPath(file.path);
-                        }}
-                      >{`${file.name.toString()} `}</button>
-                    </ol>
-                    </>
-                   ))}
-                  
-                  {fileNameBox ? (
-                    <form
-                      onSubmit={() => {
-                        if (fileName.length < 1) {
-                          setFileNameBox(false);
-                          return;
-                        }
-                        createNewFile(fileName);
-                        setFileNameBox(false);
-                        setTimeout(() => {
-                          setFileName("");
-                        }, 100);
+                  <details tabIndex="-1" open>
+                    <summary
+                      style={{
+                        cursor: "pointer",
+                        fontSize: "16px",
+                        fontWeight: "bold",
+                        fontFamily:
+                          "--apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
                       }}
                     >
-                      <input
-                        autoFocus
-                        className="createFile"
-                        type="text"
-                        placeholder="Enter file name"
-                        onChange={(e) => setFileName(e.target.value)}
-                      />
-                    </form>
-                  ) : null}
-                    </details>
+                      {" "}
+                      Leaflet
+                    </summary>
+                    {files.map((file, index) => (
+                      <>
+                        <ol className="files">
+                          <button
+                            tabIndex="-1"
+                            className={
+                              path === file.path ? "selected" : "greys"
+                            }
+                            onContextMenu={(e) => {
+                              handleClick(e);
+                            }}
+                            onClick={(e) => {
+                              handleClick(e);
+                              saveFile();
+                              setValue(file.body);
+                              setName(file.name);
+                              setPath(file.path);
+                            }}
+                          >{`${file.name.toString()} `}</button>
+                        </ol>
+                      </>
+                    ))}
+
+                    {fileNameBox ? (
+                      <form
+                        onSubmit={() => {
+                          if (fileName.length < 1) {
+                            setFileNameBox(false);
+                            return;
+                          }
+                          createNewFile(fileName);
+                          setFileNameBox(false);
+                          setTimeout(() => {
+                            setFileName("");
+                          }, 100);
+                        }}
+                      >
+                        <input
+                          autoFocus
+                          className="createFile"
+                          type="text"
+                          placeholder="Enter file name"
+                          onChange={(e) => setFileName(e.target.value)}
+                        />
+                      </form>
+                    ) : null}
+                  </details>
                 </div>
-              
-                
 
                 <div className="fixed bottom-10">
                   {isEdited ? (
                     <button
-                    tabIndex="-1"
+                      tabIndex="-1"
                       className={`${marker ? "tick " : ""}`}
                       onClick={() => {
                         try {
@@ -722,10 +679,10 @@ export default function Next() {
                       Save
                     </button>
                   ) : null}
-                 
+
                   <br />
                   <button
-                  tabIndex="-1"
+                    tabIndex="-1"
                     onClick={() => {
                       setFileNameBox(true);
                     }}
@@ -733,13 +690,19 @@ export default function Next() {
                     New File
                   </button>
                   <br />
-                  <button tabIndex="-1" onClick={openWindow}>Add File</button>
+                  <button tabIndex="-1" onClick={openWindow}>
+                    Add File
+                  </button>
                   {pandocAvailable ? (
                     <>
                       <br />
-                      <button tabIndex="-1" onClick={convertToPDF}>Covert to PDF</button>
+                      <button tabIndex="-1" onClick={convertToPDF}>
+                        Covert to PDF
+                      </button>
                       <br />
-                      <button tabIndex="-1" onClick={converToDocx}>Covert to Docx</button>
+                      <button tabIndex="-1" onClick={converToDocx}>
+                        Covert to Docx
+                      </button>
                     </>
                   ) : null}
                 </div>
@@ -781,7 +744,7 @@ export default function Next() {
                   onMouseDown={(e) => {
                     cursorUpdate(e);
                     setDisplayThesaurus(false);
-                    setWhichIsActive(0)
+                    setWhichIsActive(0);
                   }}
                   spellcheck="false"
                   className="h-full w-full"
@@ -802,7 +765,7 @@ export default function Next() {
             <>
               <div style={{ overflow: "hidden" }}>
                 <div
-                id="previewArea"
+                  id="previewArea"
                   style={{
                     marginTop: "2em",
                     marginBottom: "5em",
@@ -818,7 +781,7 @@ export default function Next() {
             className="fixed inset-x-0 bottom-0 ButtomBar"
             style={{ marginLeft: "27%", maxHeight: "10vh", marginTop: "20px" }}
           >
-            {displayThesaurus && insert   ? (
+            {displayThesaurus && insert ? (
               <container
                 style={{
                   paddingTop: "5px",
@@ -844,16 +807,17 @@ export default function Next() {
                           display: "inline",
                           overflowX: "scroll",
                           color: "grey",
-                            
+                        }}
+                      >
+                        <span
+                          style={{
+                            textDecoration: `${
+                              index === whichIsActive ? "underline" : "none"
+                            }`,
                           }}
                         >
-                         <span style={{
-                          textDecoration: `${
-                            index === whichIsActive
-                              ? "underline"
-                              : "none"
-                          }`,
-                         }}>{item}</span>
+                          {item}
+                        </span>
                       </ul>
                     );
                   })}
