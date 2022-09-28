@@ -34,6 +34,8 @@ export default function Next() {
   const [displayThesaurus, setDisplayThesaurus] = React.useState(false);
   const [clockState, setClockState] = React.useState();
   const [whichIsActive, setWhichIsActive] = React.useState(0);
+  const [firstInsertion, setFirstInsertion] = React.useState(0);
+  const [secondInsertion, setSecondInsertion] = React.useState(0);
   const [count, setCount] = React.useState(0);
   const [tree, setTree] = React.useState({});
   const ref = useRef(null);
@@ -406,12 +408,14 @@ export default function Next() {
         if(!insert){return}
         const area = ref.current;
         if( area.selectionEnd === area.selectionStart ){return}
-        const firstInsertion = area.selectionStart;
-        const secondInsertion = area.selectionEnd;
-        ref.current.setSelectionRange(firstInsertion,firstInsertion)
-        document.execCommand("insertText", false, "<!-- ");
-        ref.current.setSelectionRange(secondInsertion,secondInsertion)
-        document.execCommand("insertText", false, " -->");
+        let first =  area.selectionStart;
+        let second = area.selectionEnd;
+        let length = second - first;
+        let selectedText = area.value.substr(first, length);
+        area.value = area.value.substr(0, first) + area.value.substr(second);
+        setSecondInsertion(area.selectionEnd);
+        ref.current.setSelectionRange(first,first)
+        document.execCommand("insertText", false, `<!-- ${selectedText} -->`);
         e.preventDefault();
         return
       }
