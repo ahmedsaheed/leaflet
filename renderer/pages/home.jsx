@@ -209,7 +209,6 @@ export default function Next() {
     if (selectionEnd >= txt.length || selectionEnd < 0)
       return;
     textarea.scrollTop = 0;
-
     textarea.value = txt.substring(0, selectionEnd);
     const height = textarea.scrollHeight;
     textarea.value = txt;
