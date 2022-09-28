@@ -8,7 +8,6 @@ import { SYNONYMS } from "../lib/synonyms.js";
 import fs from "fs-extra";
 import dragDrop from "drag-drop";
 import Head from "next/head";
-import Script from "next/Script";
 import pandoc from "node-pandoc";
 import mainPath from "path";
 import open from "open";
@@ -34,8 +33,6 @@ export default function Next() {
   const [displayThesaurus, setDisplayThesaurus] = React.useState(false);
   const [clockState, setClockState] = React.useState();
   const [whichIsActive, setWhichIsActive] = React.useState(0);
-  const [firstInsertion, setFirstInsertion] = React.useState(0);
-  const [secondInsertion, setSecondInsertion] = React.useState(0);
   const [count, setCount] = React.useState(0);
   const [tree, setTree] = React.useState({});
   const ref = useRef(null);
@@ -407,10 +404,16 @@ export default function Next() {
         let second = area.selectionEnd;
         let length = second - first;
         let selectedText = area.value.substr(first, length);
-        area.value = area.value.substr(0, first) + area.value.substr(second);
-        setSecondInsertion(area.selectionEnd);
-        ref.current.setSelectionRange(first,first)
-        document.execCommand("insertText", false, `<!-- ${selectedText} -->`);
+        if(selectedText.startsWith("<!--") && selectedText.endsWith("-->")){
+          area.value = area.value.substr(0, first) + area.value.substr(second);
+          ref.current.setSelectionRange(first,first)
+          document.execCommand("insertText", false, `${selectedText.replace(/[<>!-]/g, "")}`);
+        }else{
+          area.value = area.value.substr(0, first) + area.value.substr(second);
+          ref.current.setSelectionRange(first,first)
+         document.execCommand("insertText", false, `<!-- ${selectedText} -->`);
+        
+        }
         e.preventDefault();
         return
       }
@@ -838,7 +841,6 @@ export default function Next() {
                     return (
                       <ul
                         style={{
-                          // display: `${index < whichIsActive ? "none" : "inline"}`,
                           display: "inline",
                           overflowX: "scroll",
                           color: "grey",
