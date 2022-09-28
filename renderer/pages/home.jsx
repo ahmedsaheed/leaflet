@@ -33,7 +33,9 @@ export default function Next() {
   const [clockState, setClockState] = React.useState();
   const [whichIsActive, setWhichIsActive] = React.useState(0);
   const [count, setCount] = React.useState(0);
+  const [finder, toogleFinder] = React.useState(false);
   const [tree, setTree] = React.useState({});
+  const [wordToFind, setWordToFind] =  React.useState("")
   const ref = useRef(null);
   let synonyms = {};
 
@@ -187,7 +189,8 @@ export default function Next() {
   };
   //_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-UTILITIES & ELECTRON RELATED_-_-_-_-_-_-_-_-_-_-_-_-_-
 
-  function find(area, word) {
+  function find(word) {
+    const area = ref.current
     const words = area.value.split(" ");
       const startPos = area.value.indexOf(word),
       endPos = startPos + word.length
@@ -196,6 +199,7 @@ export default function Next() {
        area.focus();
        scrollTo(area, endPos)
         area.setSelectionRange(startPos, endPos);
+        toogleFinder(false)
       return true;
     }
     return false;
@@ -209,7 +213,7 @@ export default function Next() {
     textarea.value = txt.substring(0, selectionEnd);
     const height = textarea.scrollHeight;
     textarea.value = txt;
-    textarea.scrollTop = height - 40;
+    textarea.scrollTop = height;
 }
 
   
@@ -422,12 +426,12 @@ export default function Next() {
       }
 
       //Need to create find box
-      // if ((e.ctrlKey || e.metaKey) && e.key === "f") {
-      //   if(!insert){return}
-      //   find(ref.current, "Shortcuts")
-      //   e.preventDefault();
-      //   return;
-      // }
+      if ((e.ctrlKey || e.metaKey) && e.key === "f") {
+        if(!insert){return}
+        toogleFinder(true);
+        e.preventDefault();
+        return;
+      }
 
       if (e.key === "i" && (e.ctrlKey || e.metaKey)) {
         console.log(clockState, tree);
@@ -767,6 +771,7 @@ export default function Next() {
                   value={value}
                   onScroll={(e) => {
                     displayThesaurus ? setDisplayThesaurus(false) : null;
+                    finder ? toogleFinder(false) : null;
                   }}
                   onChange={handleChange}
                   onKeyDown={(e) => {
@@ -863,7 +868,87 @@ export default function Next() {
                 </li>
               </container>
             ) : (
-              <>
+              finder ? (
+                <>
+              
+
+                <container
+                  className="Left"
+                  style={{
+                    float: "left",
+                    paddingLeft: "40px",
+                    paddingTop: "5px",
+                    paddingBottom: "5px",
+                  }}
+                >
+                  <span>Find: 
+                  <form
+                  style={{display: "inline"}}
+                        onSubmit={() => {
+                          if (wordToFind.length < 1) {
+                            toogleFinder(false);
+                            return;
+                          
+                          }
+                          find(wordToFind);
+                        }}
+                      >
+                        <input
+                          autoFocus
+                          className="createFile"
+                          type="text"
+                          placeholder="Search a word"
+                          onChange={(e) => setWordToFind(e.target.value)}
+                        />
+                      </form>
+                  </span>
+                  {/* <div style={{ display: "inline", marginRight: "30px" }}></div>
+                  <span>{`${value.toString().split(" ").length}W ${
+                    value.toString().length
+                  }C `}</span> */}
+                  {/* <div style={{ display: "inline", marginRight: "30px" }}></div> */}
+                  {/* <div
+                    style={{
+                      display: "inline",
+                      color: "grey",
+                      overflow: "hidden",
+                    }}
+                    dangerouslySetInnerHTML={{
+                      __html: insert ? cursor : progress(scroll),
+                    }}
+                  /> */}
+                </container>
+                {/* <container
+                  className="Right"
+                  style={{
+                    float: "right",
+                    paddingRight: "40px",
+                    paddingTop: "5px",
+                    paddingBottom: "5px",
+                  }}
+                >
+                  <span style={{ float: "left" }}>
+                    <svg
+                      style={{ display: "inline" }}
+                      width="32"
+                      height="22"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        fill="#888888"
+                        d="M20.56 18H3.44C2.65 18 2 17.37 2 16.59V7.41C2 6.63 2.65 6 3.44 6h17.12c.79 0 1.44.63 1.44 1.41v9.18c0 .78-.65 1.41-1.44 1.41M6.81 15.19v-3.66l1.92 2.35l1.92-2.35v3.66h1.93V8.81h-1.93l-1.92 2.35l-1.92-2.35H4.89v6.38h1.92M19.69 12h-1.92V8.81h-1.92V12h-1.93l2.89 3.28L19.69 12Z"
+                      />
+                    </svg>
+                  </span>
+                  <div style={{ display: "inline", marginLeft: "20px" }}></div>
+                  {clockState}
+                </container> */}
+              </>
+
+              ) : (
+                <>
+              
+
                 <container
                   className="Left"
                   style={{
@@ -916,6 +1001,8 @@ export default function Next() {
                   {clockState}
                 </container>
               </>
+
+              )
             )}
           </div>
         </div>
