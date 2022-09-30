@@ -35,6 +35,8 @@ export default function Next() {
   const [count, setCount] = React.useState(0);
   const [finder, toogleFinder] = React.useState(false);
   const [tree, setTree] = React.useState({});
+  const [buttomMenuState, setButtomMenuState] = React.useState(false);
+  const [saver, setSaver] = React.useState("");
   const [wordToFind, setWordToFind] =  React.useState("")
   const ref = useRef(null);
   let synonyms = {};
@@ -48,7 +50,7 @@ export default function Next() {
       setValue(files[0] ? `${files[0].body}` : "");
       setName(files[0] ? `${files[0].name}` : "");
       setPath(files[0] ? `${files[0].path}` : "");
-      console.log(typeof files[0].tree.children);
+      //console.log(typeof files[0].tree.children);
       setTree(files[0] ? files[0].tree.children : {});
     });
     setInterval(() => {
@@ -390,12 +392,15 @@ export default function Next() {
 
   const saveFile = () => {
     try {
+      setSaver("SAVING...")
       ipcRenderer.invoke("saveFile", path, value).then(() => {
         Update();
-        setMarker(true);
+        setSaver("SAVED")
         setTimeout(() => {
           setMarker(false);
           setIsEdited(false);
+          setSaver("EDITED")
+
         }, 3000);
       });
     } catch (e) {
@@ -425,7 +430,6 @@ export default function Next() {
         return;
       }
 
-      //Need to create find box
       if ((e.ctrlKey || e.metaKey) && e.key === "f") {
         if(!insert){return}
         toogleFinder(true);
@@ -434,7 +438,6 @@ export default function Next() {
       }
 
       if (e.key === "i" && (e.ctrlKey || e.metaKey)) {
-        console.log(clockState, tree);
         setInsert(true);
         e.preventDefault();
         return;
@@ -487,9 +490,10 @@ export default function Next() {
         try {
           fs.removeSync(path);
           Update();
-          setValue(files[0].body);
-          setName(files[0].name);
-          setPath(files[0].path);
+          const index = Math.floor(Math.random()*files.length)
+          setValue(files[index].body);
+          setName(files[index].name);
+          setPath(files[index].path);
         } catch (e) {
           console.log(e);
         }
@@ -559,6 +563,7 @@ export default function Next() {
     if (e.target.value === fs.readFileSync(path, "utf8")) {
       setIsEdited(false);
     } else {
+      setSaver("EDITED");
       setIsEdited(true);
     }
   }
@@ -580,7 +585,7 @@ export default function Next() {
         .substr(0, e.target.selectionEnd)
         .split("\n");
       var lineNo = textLines.length - 1;
-      setCursor(`${lineNo}L ${e.target.selectionStart}P`);
+      setCursor(`${lineNo}L ${e.target.selectionStart}C`);
     }
   };
 
@@ -591,6 +596,17 @@ export default function Next() {
       console.log("Right click");
     }
   };
+
+  const toggleButtomMenu = () => {
+    const menu = document.getElementById("buttomMenu");
+    if (menu.getAttribute("aria-expanded") === "false") {
+      menu.setAttribute("aria-expanded", "true");
+      setButtomMenuState(true);
+    }else{
+      menu.setAttribute("aria-expanded", "false");
+      setButtomMenuState(false);
+    }
+  }
 
   return (
     <>
@@ -673,7 +689,7 @@ export default function Next() {
                           >{`${file.name.toString()} `}</button>
                         </ol>
                       </>
-                    ))}
+                    )).sort()}
 
                     {fileNameBox ? (
                       <form
@@ -701,29 +717,23 @@ export default function Next() {
                   </details>
                 </div>
 
-                <div className="fixed bottom-10">
-                  {isEdited ? (
-                    <button
-                      tabIndex="-1"
-                      className={`${marker ? "tick " : ""}`}
-                      onClick={() => {
-                        try {
-                          saveFile();
-                          setMarker(true);
-                          setTimeout(() => {
-                            setMarker(false);
-                            setIsEdited(false);
-                          }, 3000);
-                        } catch {
-                          console.log("error");
-                        }
-                      }}
+                <div
+                className="fixed bottom-10"
+                >
+                  <h3
+                   tabIndex="0"
+                   id = "buttomMenu"
+                   aria-lebel= "buttomMenu"
+                   role="button"  aria-expanded="false"
+                   onClick={toggleButtomMenu }
+                    style={{cursor: "pointer"}}
                     >
-                      Save
-                    </button>
-                  ) : null}
+                      <p style={{display:"inline"}} className={buttomMenuState ? "Opened" : "Closed" }></p>
+                      <p style={{display:"inline"}}>UTILITIES</p>
+                      </h3>
+                  <div style={buttomMenuState ? {display: "block", paddingLeft: "2vw"} : {display: "none"}}>
+                  
 
-                  <br />
                   <button
                     tabIndex="-1"
                     onClick={() => {
@@ -748,6 +758,7 @@ export default function Next() {
                       </button>
                     </>
                   ) : null}
+                </div>
                 </div>
               </div>
             </div>
@@ -919,7 +930,7 @@ export default function Next() {
                     paddingBottom: "5px",
                   }}
                 >
-                  <span>{`${insert ? "Insert" : "Preview"}`}</span>
+                  <span>{`${insert ? "INSERT" : "PREVIEW"}`}</span>
                   <div style={{ display: "inline", marginRight: "30px" }}></div>
                   <span>{`${value.toString().split(" ").length}W ${
                     value.toString().length
@@ -935,6 +946,29 @@ export default function Next() {
                       __html: insert ? cursor : progress(scroll),
                     }}
                   />
+                  {isEdited && insert ? (
+                    <>
+                    <div style={{ display: "inline", marginRight: "30px" }}></div>
+                    <button
+                    style={{
+                      display: "inline",
+                      color: "grey",
+                      overflow: "hidden",
+                    }}
+                      id="save"
+                      tabIndex="-1"
+                      onClick={() => {
+                        try {
+                          saveFile();
+                        } catch {
+                          console.log("error");
+                        }
+                      }}
+                    >
+                      {saver}
+                    </button>
+                    </>
+                  ) : null}
                 </container>
                 <container
                   className="Right"
