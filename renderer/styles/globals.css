@@ -288,7 +288,6 @@ a {
 @keyframes animateIn {
   0% {
     opacity: 0;
-    /* transform: scale(0.6) translateY(-8px); */
   }
 
   100% {
@@ -301,11 +300,8 @@ a {
 }
 
 
-.tick::after{
-  content: " ✔";
-}
-.katex-display{
 
+.katex-display{
  margin: 2em;
 }
 
@@ -314,8 +310,8 @@ th,td {
 }
 
 
-*::-webkit-scrollbar {display:none;
-  outline: none;
+*::-webkit-scrollbar {
+  display:none;
 }
 
 hr{
@@ -352,4 +348,15 @@ details[open] summary::before {
   transform: rotate(90deg);
 }
 
+
+.slideIn{
+  -webkit-animation: slide-up 900ms  forwards;
+  animation: slide-up 900ms forwards;
+
+}
+
+@keyframes slide-up {
+  0% { -webkit-transform: translateY(100%); opacity: 1 }
+  100% { -webkit-transform: translateY(0); opacity: 1  }
+}
 

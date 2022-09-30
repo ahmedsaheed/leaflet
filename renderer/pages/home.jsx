@@ -21,12 +21,9 @@ export default function Next() {
   const [name, setName] = React.useState("");
   const [path, setPath] = React.useState("");
   const [isEdited, setIsEdited] = React.useState(false);
-  const [marker, setMarker] = React.useState(false);
   const [fileNameBox, setFileNameBox] = React.useState(false);
   const [fileName, setFileName] = React.useState("");
   const [pandocAvailable, setPandocAvailable] = React.useState(false);
-  const appDir = mainPath.resolve(os.homedir(), "leaflet");
-  const Desktop = require("os").homedir() + "/Desktop";
   const [cursor, setCursor] = React.useState("1L:1C");
   const [thesaurus, setThesaurus] = React.useState([]);
   const [displayThesaurus, setDisplayThesaurus] = React.useState(false);
@@ -34,10 +31,11 @@ export default function Next() {
   const [whichIsActive, setWhichIsActive] = React.useState(0);
   const [count, setCount] = React.useState(0);
   const [finder, toogleFinder] = React.useState(false);
-  const [tree, setTree] = React.useState({});
   const [buttomMenuState, setButtomMenuState] = React.useState(false);
   const [saver, setSaver] = React.useState("");
   const [wordToFind, setWordToFind] =  React.useState("")
+  const appDir = mainPath.resolve(os.homedir(), "leaflet");
+  const Desktop = require("os").homedir() + "/Desktop";
   const ref = useRef(null);
   let synonyms = {};
 
@@ -50,8 +48,7 @@ export default function Next() {
       setValue(files[0] ? `${files[0].body}` : "");
       setName(files[0] ? `${files[0].name}` : "");
       setPath(files[0] ? `${files[0].path}` : "");
-      //console.log(typeof files[0].tree.children);
-      setTree(files[0] ? files[0].tree.children : {});
+      //console.log(typeof files[0].tree.children)
     });
     setInterval(() => {
       const date = new Date();
@@ -397,7 +394,6 @@ export default function Next() {
         Update();
         setSaver("SAVED")
         setTimeout(() => {
-          setMarker(false);
           setIsEdited(false);
           setSaver("EDITED")
 
@@ -511,6 +507,7 @@ export default function Next() {
       }
       if (e.key === "Tab") {
         if (!insert) {
+          e.preventDefault();
           return;
         }
         if (!displayThesaurus) {
@@ -723,7 +720,6 @@ export default function Next() {
                   <h3
                    tabIndex="0"
                    id = "buttomMenu"
-                   aria-lebel= "buttomMenu"
                    role="button"  aria-expanded="false"
                    onClick={toggleButtomMenu }
                     style={{cursor: "pointer"}}
@@ -731,7 +727,7 @@ export default function Next() {
                       <p style={{display:"inline"}} className={buttomMenuState ? "Opened" : "Closed" }></p>
                       <p style={{display:"inline"}}>UTILITIES</p>
                       </h3>
-                  <div style={buttomMenuState ? {display: "block", paddingLeft: "2vw"} : {display: "none"}}>
+                  <div className={buttomMenuState ? "slideIn" : ""} style={buttomMenuState ? {display: "block", opacity: "0", paddingLeft: "2vw"} : {display: "none"}}>
                   
 
                   <button
