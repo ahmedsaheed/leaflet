@@ -258,8 +258,8 @@ export default function Next() {
   const openExternalInDefaultBrowser = () => {
     document.addEventListener("click", (event) => {
       if (event.target.href && event.target.href.match(/^https?:\/\//)) {
-        shell.openExternal(event.target.href);
         event.preventDefault();
+        shell.openExternal(event.target.href);
         return
       }
     });
