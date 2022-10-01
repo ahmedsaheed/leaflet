@@ -381,7 +381,7 @@ export default function Next() {
       document.execCommand(
         "insertText",
         false,
-        `${selectedText.replace(/[<>!-]/g, "")}`
+        `${selectedText.substr(4, selectedText.length - 8)}`
       );
     } else {
       area.value = area.value.substr(0, first) + area.value.substr(second);
