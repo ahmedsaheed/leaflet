@@ -241,10 +241,14 @@ const checkForDir = () => {
   if (!fs.existsSync(appDir)) {
     fs.mkdirSync(appDir);
     fs.writeFileSync(path.resolve(appDir, "onboarding.md"), markdown);
-  }
+  }    
+    if(fs.readdirSync(appDir).length === 0){
+      console.log(fs.readdirSync(appDir));
+      fs.writeFileSync(path.resolve(appDir, "onboarding.md"), markdown);
+    }
+  
 };
 
-//THIS ENABLES FILE GATHERING RECURSIVELY
 var walk = function(dir) {
   var results = [];
   var list = fs.readdirSync(dir);
