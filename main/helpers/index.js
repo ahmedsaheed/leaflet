@@ -8,6 +8,7 @@ export {
 
 
 const markdown = `
+
 <img src="https://raw.githubusercontent.com/ahmedsaheed/Leaflet/master/renderer/public/images/test.png" align="left" width="220"/>
 
 <br>
@@ -20,6 +21,7 @@ A minimal distractionless markdown editor designed to quickly navigate between m
 ---
 <br>
 I created this <a href="http://github.com/ahmedsaheed/Leaflet" target="_blank" rel="noreferrer" class="external">application</a> to help me cope with note taking during school lectures as most of my lecturers spoke too fast. This application is made available as a free and <a href="https://github.com/ahmedsaheed/Leaflet" target="_blank" rel="noreferrer" class="external ">open source</a> software.
+
 
 >You'd have to install <a href="https://github.com/jgm/pandoc/blob/master/INSTALL.md" target="_blank" rel="noreferrer" class="external">pandoc</a> to export \`.md\` to other formats.
 
