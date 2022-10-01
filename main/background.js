@@ -22,7 +22,6 @@ if (isDev) {
 
 (async () => {
   await app.whenReady();
-
   const mainWindow = createWindow("main", {
     width: 960,
     height: 544, 

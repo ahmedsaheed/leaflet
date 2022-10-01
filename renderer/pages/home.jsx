@@ -31,6 +31,7 @@ export default function Next() {
   const [whichIsActive, setWhichIsActive] = React.useState(0);
   const [count, setCount] = React.useState(0);
   const [finder, toogleFinder] = React.useState(false);
+  const [found, setFound] = React.useState(true);
   const [buttomMenuState, setButtomMenuState] = React.useState(false);
   const [saver, setSaver] = React.useState("");
   const [wordToFind, setWordToFind] =  React.useState("")
@@ -190,18 +191,29 @@ export default function Next() {
 
   function find(word) {
     const area = ref.current
-    const words = area.value.split(" ");
-      const startPos = area.value.toLowerCase().indexOf(word),
-      endPos = startPos + word.length
+      const startPos = area.value.toLowerCase().indexOf(word)
+      const endPos = startPos + word.length
   
     if (typeof(area.selectionStart) != "undefined") {
        area.focus();
-       scrollTo(area, endPos)
+       if(startPos !== -1){
+        scrollTo(area, endPos)
         area.setSelectionRange(startPos, endPos);
         toogleFinder(false)
-      return true;
+        }else{
+          area.setSelectionRange(area.selectionStart, area.selectionStart);
+          setFound(false)
+          setTimeout(() => {
+            toogleFinder(false)
+            setFound(true)
+            setWordToFind("")
+
+          }
+          , 2000)
+        }
+      return startPos;
     }
-    return false;
+    return startPos;
   }
   function scrollTo(textarea, selectionEnd) {
     const txt = textarea.value;
@@ -889,25 +901,30 @@ export default function Next() {
                   }}
                 >
                   <span>Find: 
-                  <form
-                  style={{display: "inline"}}
-                        onSubmit={() => {
-                          if (wordToFind.length < 1) {
-                            toogleFinder(false);
-                            return;
-                          
-                          }
-                          find(wordToFind);
-                        }}
-                      >
-                        <input
-                          autoFocus
-                          className="createFile"
-                          type="text"
-                          placeholder="Search a word"
-                          onChange={(e) => setWordToFind((e.target.value).toLowerCase())}
-                        />
-                      </form>
+                    {found ?
+                    <form
+                    style={{display: "inline"}}
+                          onSubmit={() => {
+                            if (wordToFind.length < 1) {
+                              toogleFinder(false);
+                              return;
+                            
+                            }
+                            find(wordToFind);
+                          }}
+                        >
+                          <input
+                            autoFocus
+                            className="createFile"
+                            type="text"
+                            placeholder="Search a word"
+                            onChange={(e) => setWordToFind((e.target.value).toLowerCase())}
+                          />
+                        </form>
+                    : 
+                    <span style={{display: "inline"}}> Not Found</span>
+                        }
+                  
                   </span>
                 </container>
             
