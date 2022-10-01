@@ -13,7 +13,7 @@ const markdown = `
 
 <br>
 
-# LEAFLET
+## LEAFLET
 A minimal distractionless markdown editor designed to quickly navigate between multiple \`.md\` files in a directory and its sub directories. It features a clean mathematical typesetting, chemical equation rendering, code blocks highlighting, writing statistics and a speed-reader.
 
 <br>
@@ -25,6 +25,7 @@ I created this <a href="http://github.com/ahmedsaheed/Leaflet" target="_blank" r
 
 >You'd have to install <a href="https://github.com/jgm/pandoc/blob/master/INSTALL.md" target="_blank" rel="noreferrer" class="external">pandoc</a> to export \`.md\` to other formats.
 
+---
 ## Features
 
 - **Editing**: Switch between editing and preview mode seemlessly
@@ -43,27 +44,28 @@ I created this <a href="http://github.com/ahmedsaheed/Leaflet" target="_blank" r
 
 
 - **Bidirectional Text**: Automatically detect BIDI - text and displays logiaclly.
-
-
-
+---
 ## Shortcuts and Controls
 
-> Use <kbd>⌘/Ctrl + p</kbd> or <kbd>⌘/Ctrl + i</kbd>  to toggle between preview and insert mode respectively\.
-> 
-> While synonms are being suggested, use <kbd>Shift + tab</kbd> to insert the suggested word\.
->
-> Use <kbd>⌘/Ctrl + s</kbd> to save your current file, although this happens automatically\.  
-> 
-> Use <kbd>⌘/Ctrl + n</kbd> to create a new \`.md\` file.  
-> 
-> Use <kbd>⌘/Ctrl + +</kbd> to add multiple/single file from your system.  
-> 
-> Use <kbd>⌘/Ctrl + d</kbd> to convert your current \`.md\` file into \`.docx\` file
-> 
-> Use <kbd>⌘/Ctrl + e</kbd> to convert your current \`.md\` file into \`.pdf\` file
->
+### General
+- <kbd>⌘ | Ctrl</kbd> + <kbd>n</kbd> : New
+- <kbd>⌘ | Ctrl</kbd> + <kbd>s</kbd> : Save
+- <kbd>⌘ | Ctrl</kbd> + <kbd>o</kbd> : Open
+- <kbd>⌘ | Ctrl</kbd> + <kbd>i</kbd> : Insert
+- <kbd>⌘ | Ctrl</kbd> + <kbd>p</kbd> : Preview
+- <kbd>⌘ | Ctrl</kbd> + <kbd>d</kbd> : Convert to Docx
+- <kbd>⌘ | Ctrl</kbd> + <kbd>e</kbd> : Convert to PDF
+- <kbd>Shift</kbd> + <kbd>Tab</kbd> : Toggle Suggested Word
 
 
+
+### Quick Insert
+- <kbd>⌘ | Ctrl</kbd> + <kbd>y</kbd> : Date
+- <kbd>⌘ | Ctrl</kbd> + <kbd>t</kbd> : Time
+- <kbd>⌘ | Ctrl</kbd> + <kbd>f</kbd> : Finder
+- <kbd>⌘ | Ctrl</kbd> + <kbd>/</kbd> : Comment
+
+---
 ## Examples
 
 - Maths:
@@ -122,26 +124,6 @@ func next(nums []int, i, j int) (int, int) {
 | col 2 is |    centered   |   $12 |
 | col 3 is | right-aligned |    $1 |
 
-- Footnotes:
-
-Here's a simple footnote,[^1] and here's a longer one.[^bignote]
-[^1]: This is the first footnote.
-[^bignote]: Here's one with multiple paragraphs and code.
-    Indent paragraphs to include them in the footnote.
-    Add as many paragraphs as you like.
-
-- Media Support
-
-This is an iframe
-
-<iframe width="500" height="315" src="https://www.youtube.com/embed/6cRctjPRv6M" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
-
-- BIDI Support
-
-الحب بدلاً من المال ، أعطني الحقيقة. هذا كل ما سأطلبه .
-
- お金より愛より真実をください。それが私が求めるすべてです。
-
 
 ## More Features
 
@@ -151,6 +133,7 @@ This is an iframe
 - File statistics displayed in the footer (speed-reader, word count, date).
 
 ## Extras
+
 - Leaflet is strongly inspired by [Left](https://github.com/hundredrabbits/left) and [Opus](https://github.com/pacocoursey/Opus).
 - Leaflet source code  licensed under [BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 - Pull Requests are welcome!

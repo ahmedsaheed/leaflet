@@ -467,13 +467,7 @@ export default function Next() {
         return;
       }
 
-      if (e.keyCode === 187 && (e.ctrlKey || e.metaKey)) {
-        setFileNameBox(true);
-        e.preventDefault();
-        return;
-      }
-
-      // I need new key for this
+           // I need new key for this
       if (e.key === "y" && (e.ctrlKey || e.metaKey)) {
         if (!insert) {
           return;
@@ -727,9 +721,9 @@ export default function Next() {
                 </div>
 
                 <div
-                className="fixed bottom-10"
+                className="fixed bottom-1"
                 >
-                  <h3
+                  <p
                    tabIndex="0"
                    id = "buttomMenu"
                    role="button"  aria-expanded="false"
@@ -738,7 +732,7 @@ export default function Next() {
                     >
                       <p style={{display:"inline"}} className={buttomMenuState ? "Opened" : "Closed" }></p>
                       <p style={{display:"inline"}}>UTILITIES</p>
-                      </h3>
+                      </p>
                   <div className={buttomMenuState ? "slideIn" : ""} style={buttomMenuState ? {display: "block", opacity: "0", paddingLeft: "2vw"} : {display: "none"}}>
                   
 
@@ -776,7 +770,7 @@ export default function Next() {
         <div
           style={{
             paddingRight: "20px",
-            maxWidth: "100vh",
+            maxWidth: "100vw",
             paddingTop: "10vh",
           }}
         >
