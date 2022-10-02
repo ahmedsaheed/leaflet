@@ -35,17 +35,17 @@ You'd have to install [pandoc](https://github.com/jgm/pandoc/blob/master/INSTALL
     <tbody>
       <tr>
         <td>
-          <a href="https://github.com/ahmedsaheed/Leaflet/releases/download/v0.0.2/Leaflet-0.0.2.dmg">
+          <a href="https://github.com/ahmedsaheed/Leaflet/releases/download/v0.0.3/Leaflet-0.0.3.dmg">
           <img src="https://api.iconify.design/simple-icons:apple.svg?color=%23888888"/>
           OS X Download</a>
         </td>
         <td>
-          <a href="https://github.com/ahmedsaheed/Leaflet/releases/download/v0.0.2/Leaflet-Setup-0.0.2.exe">
+          <a href="https://github.com/ahmedsaheed/Leaflet/releases/download/v0.0.3/Leaflet-Setup-0.0.3.exe">
           <img src="https://api.iconify.design/icomoon-free:windows.svg?color=%23888888"/>
           Windows Download</a>
         </td>
         <td>
-          <a href="https://github.com/ahmedsaheed/Leaflet/releases/download/v0.0.2/leaflet_0.0.2_amd64.deb">
+          <a href="https://github.com/ahmedsaheed/Leaflet/releases/download/v0.0.3/leaflet_0.0.3_amd64.deb">
           <img src="https://api.iconify.design/codicon:terminal-ubuntu.svg?color=%23888888"/>
           Ubuntu Downloads</a>
         </td>

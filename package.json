@@ -29,7 +29,7 @@
   "name": "leaflet",
   "productName": "Leaflet",
   "description": "Leaflet is a simple minimal markdown editor",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "Ahmed Saheed <ahmedsaheed2@outlook.com>",
   "copyright": "Copyright © 2022 Ahmed Saheed",
   "main": "app/background.js",
