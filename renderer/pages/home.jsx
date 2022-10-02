@@ -723,7 +723,7 @@ export default function Next() {
                 <div
                 className="fixed bottom-1"
                 >
-                  <p
+                  <div
                    tabIndex="0"
                    id = "buttomMenu"
                    role="button"  aria-expanded="false"
@@ -732,7 +732,7 @@ export default function Next() {
                     >
                       <p style={{display:"inline"}} className={buttomMenuState ? "Opened" : "Closed" }></p>
                       <p style={{display:"inline"}}>UTILITIES</p>
-                      </p>
+                      </div>
                   <div className={buttomMenuState ? "slideIn" : ""} style={buttomMenuState ? {display: "block", opacity: "0", paddingLeft: "2vw"} : {display: "none"}}>
                   
 

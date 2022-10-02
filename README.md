@@ -76,35 +76,39 @@ $ yarn build
 
 
 
-## Screenshots
+## Demo
 
 <p align="center">
 
 
-
-https://user-images.githubusercontent.com/87912847/188292656-94da4c10-7fb3-464f-8fad-270b255afaee.mov
+<video muted width="320" height="240" src="https://user-images.githubusercontent.com/87912847/193433133-49c8d27c-beb3-4d8d-8fb7-4096bd5dfe45.mov"></video>
 
 
 </p>
 
 
-
+---
 ## Shortcuts and Controls
 
-> Use <kbd>⌘/Ctrl + p</kbd> or <kbd>⌘/Ctrl + i</kbd>  to toggle between preview and insert mode respectively
-> 
->Use <kbd>Shift + Tab</kbd> to toggle between suggested phrases.  
->
-> Use <kbd>⌘/Ctrl + s</kbd> to save your current file, although this happens automatically.   
-> 
-> Use <kbd>⌘/Ctrl + n</kbd> to create a new `.md` file.  
-> 
-> Use <kbd>⌘/Ctrl + +</kbd> to add multiple/single file from your system.  
-> 
-> Use <kbd>⌘/Ctrl + d</kbd> to convert your current `.md` file into `.docx` file
-> 
-> Use <kbd>⌘/Ctrl + e</kbd> to convert your current `.md` file into `.pdf` file
+### General
+- <kbd>⌘ | Ctrl</kbd> + <kbd>n</kbd> : New
+- <kbd>⌘ | Ctrl</kbd> + <kbd>s</kbd> : Save
+- <kbd>⌘ | Ctrl</kbd> + <kbd>o</kbd> : Open
+- <kbd>⌘ | Ctrl</kbd> + <kbd>i</kbd> : Insert
+- <kbd>⌘ | Ctrl</kbd> + <kbd>p</kbd> : Preview
+- <kbd>⌘ | Ctrl</kbd> + <kbd>d</kbd> : Convert to Docx
+- <kbd>⌘ | Ctrl</kbd> + <kbd>e</kbd> : Convert to PDF
+- <kbd>Shift</kbd> + <kbd>Tab</kbd> : Toggle Suggested Word
 
+
+
+### Quick Insert
+- <kbd>⌘ | Ctrl</kbd> + <kbd>y</kbd> : Date
+- <kbd>⌘ | Ctrl</kbd> + <kbd>t</kbd> : Time
+- <kbd>⌘ | Ctrl</kbd> + <kbd>f</kbd> : Finder
+- <kbd>⌘ | Ctrl</kbd> + <kbd>/</kbd> : Comment
+
+---
 ## More Features
 
 - Support media like `mp3`, `iframe` and `video` 
@@ -116,3 +120,4 @@ https://user-images.githubusercontent.com/87912847/188292656-94da4c10-7fb3-464f-
 - Leaflet is strongly inspired by [Left](https://github.com/hundredrabbits/left) and [Opus](https://github.com/pacocoursey/Opus).
 - Leaflet source code  licensed under [BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 - Pull Requests are welcome!
+
