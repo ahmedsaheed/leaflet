@@ -397,11 +397,15 @@ export default function Next() {
         let second = area.selectionEnd;
         let length = second - first;
         let selectedText = area.value.substr(first, length);
+        if (selectedText.match("\[(.*?)\]\((.*?)\)")){return}
         area.value = area.value.substr(0, first) + area.value.substr(second);
         ref.current.setSelectionRange(first, first);
         document.execCommand("insertText", false, `[${selectedText}](url)`);
-        ref.current.setSelectionRange(first + 1 + selectedText.length + 2, first + 1 + selectedText.length + 5);
-    }
+        selectedText.length === 0 ? ref.current.setSelectionRange(first + 1, first + 1)
+        : ref.current.setSelectionRange(first + 1 + selectedText.length + 2, first + 1 + selectedText.length + 5);
+        }
+
+
   const createNewFile = () => {
     fileName != ""
       ? ipcRenderer.invoke("createNewFile", fileName).then(() => {
