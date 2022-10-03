@@ -390,6 +390,18 @@ export default function Next() {
     }
   }
 
+
+    const createLink = () => {
+        const area = ref.current; 
+        let first = area.selectionStart;
+        let second = area.selectionEnd;
+        let length = second - first;
+        let selectedText = area.value.substr(first, length);
+        area.value = area.value.substr(0, first) + area.value.substr(second);
+        ref.current.setSelectionRange(first, first);
+        document.execCommand("insertText", false, `[${selectedText}](url)`);
+        ref.current.setSelectionRange(first + 1 + selectedText.length + 2, first + 1 + selectedText.length + 5);
+    }
   const createNewFile = () => {
     fileName != ""
       ? ipcRenderer.invoke("createNewFile", fileName).then(() => {
@@ -460,6 +472,11 @@ export default function Next() {
         e.preventDefault();
         return;
       }
+
+        if((e.key === "[" || e.key === "]") && (e.ctrlKey || e.metaKey)){
+            if(!insert){return}
+            createLink();
+        }
 
       if (e.key === "n" && (e.ctrlKey || e.metaKey)) {
         setFileNameBox(true);
