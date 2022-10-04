@@ -68,7 +68,6 @@ export default function Next() {
   //_-_-_-_-_-_-_-_-_-_-_-_-_-_-_SYNONYMS GENERATOR-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 
   const getSynonyms = () => {
-    // const l = activeWordLocation();
     const answer = [];
     let response = find_synonym(activeWord());
     if (!response) {
@@ -257,9 +256,11 @@ export default function Next() {
 
   const openExternalInDefaultBrowser = () => {
     document.addEventListener("click", (event) => {
+        // if(event.target.href && event.target.href.match("(http?://)?(www\.)?(\w+)(\.\w+)")){
       if (event.target.href && event.target.href.match(/^https?:\/\//)) {
         event.preventDefault();
-        shell.openExternal(event.target.href);
+          //electron shell open external, causes multiple windows to open
+          open(event.target.href);
         return
       }
     });
@@ -391,6 +392,21 @@ export default function Next() {
   }
 
 
+const bold = () =>{
+    const area = ref.current;
+    let first = area.selectionStart;
+    let second = area.selectionEnd;
+    let length = second - first;
+    let selectedText = area.value.substr(first, length);
+    selectedText.startsWith("**") && selectedText.endsWith("**") ?
+    document.execCommand("insertText", false, `${selectedText.substr(2, selectedText.length - 4)}`) :
+    document.execCommand("insertText", false, `**${selectedText}** `)
+    ref.current.setSelectionRange(first+2, first+2);
+    
+
+}
+
+
     const createLink = () => {
         const area = ref.current; 
         let first = area.selectionStart;
@@ -438,6 +454,13 @@ export default function Next() {
     document.onkeydown = function ListenToKeys(e) {
       if ((e.ctrlKey || e.metaKey) && e.key === "s") {
         saveFile();
+        e.preventDefault();
+        return;
+      }
+
+      if ((e.ctrlKey || e.metaKey) && e.key === "b") {
+          if(!insert){return}
+        bold();
         e.preventDefault();
         return;
       }
@@ -803,7 +826,7 @@ export default function Next() {
                   autoFocus
                   id="markdown-content"
                   value={value}
-                  onScroll={(e) => {
+                  onScroll={() => {
                     displayThesaurus ? setDisplayThesaurus(false) : null;
                     finder ? toogleFinder(false) : null;
                   }}
