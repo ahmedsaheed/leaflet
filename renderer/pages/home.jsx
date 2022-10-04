@@ -632,7 +632,8 @@ const bold = () =>{
         .substr(0, e.target.selectionEnd)
         .split("\n");
       var lineNo = textLines.length - 1;
-      setCursor(`${lineNo}L ${e.target.selectionStart}C`);
+      var colNo = textLines[lineNo].length;
+      setCursor(`${lineNo}L ${colNo}C`);
     }
   };
 
