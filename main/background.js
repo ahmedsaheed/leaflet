@@ -414,7 +414,6 @@ ipcMain.handle("deleteFile", (event, name, file) => {
   dialog.showMessageBox(null, options).then((result) => {
       if (result.response === 0) {
         deleteFile(file);
-        console.log("Default button clicked.");
       } else if (result.response === 1) {
         return
       }
