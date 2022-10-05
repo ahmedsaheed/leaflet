@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from "react";
 import { ipcRenderer } from "electron";
-var shell = require("electron").shell;
 import { progress } from "../components/progress.ts";
 import { getMarkdown } from "../lib/mdParser.ts";
 import commandExists from "command-exists";
@@ -34,7 +33,7 @@ export default function Next() {
   const [found, setFound] = React.useState(true);
   const [buttomMenuState, setButtomMenuState] = React.useState(false);
   const [saver, setSaver] = React.useState("");
-  const [wordToFind, setWordToFind] =  React.useState("")
+  const [wordToFind, setWordToFind] = React.useState("");
   const appDir = mainPath.resolve(os.homedir(), "leaflet");
   const Desktop = require("os").homedir() + "/Desktop";
   const ref = useRef(null);
@@ -44,13 +43,12 @@ export default function Next() {
   useEffect(() => {
     openExternalInDefaultBrowser();
     checkForPandoc();
+    window.addEventListener("scroll", onScroll);
     ipcRenderer.invoke("getTheFile").then((files = []) => {
       setFiles(files);
       setValue(files[0] ? `${files[0].body}` : "");
       setName(files[0] ? `${files[0].name}` : "");
-      setPath(files[0] ? `${files[0].path}` : "");
-      //console.log(typeof files[0].tree.children)
-    });
+      setPath(files[0] ? `${files[0].path}` : "");    });
     setInterval(() => {
       const date = new Date();
       setClockState(date.toLocaleTimeString());
@@ -64,8 +62,6 @@ export default function Next() {
       }
     });
   };
-
-  //_-_-_-_-_-_-_-_-_-_-_-_-_-_-_SYNONYMS GENERATOR-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 
   const getSynonyms = () => {
     const answer = [];
@@ -186,46 +182,40 @@ export default function Next() {
       });
     }
   };
-  //_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-UTILITIES & ELECTRON RELATED_-_-_-_-_-_-_-_-_-_-_-_-_-
 
   function find(word) {
-    const area = ref.current
-      const startPos = area.value.toLowerCase().indexOf(word)
-      const endPos = startPos + word.length
-  
-    if (typeof(area.selectionStart) != "undefined") {
-       area.focus();
-       if(startPos !== -1){
-        scrollTo(area, endPos)
-        area.setSelectionRange(startPos, endPos);
-        toogleFinder(false)
-        }else{
-          area.setSelectionRange(area.selectionStart, area.selectionStart);
-          setFound(false)
-          setTimeout(() => {
-            toogleFinder(false)
-            setFound(true)
-            setWordToFind("")
+    const area = ref.current;
+    const startPos = area.value.toLowerCase().indexOf(word);
+    const endPos = startPos + word.length;
 
-          }
-          , 2000)
-        }
+    if (typeof area.selectionStart != "undefined") {
+      area.focus();
+      if (startPos !== -1) {
+        scrollTo(area, endPos);
+        area.setSelectionRange(startPos, endPos);
+        toogleFinder(false);
+      } else {
+        area.setSelectionRange(area.selectionStart, area.selectionStart);
+        setFound(false);
+        setTimeout(() => {
+          toogleFinder(false);
+          setFound(true);
+          setWordToFind("");
+        }, 2000);
+      }
       return startPos;
     }
     return startPos;
   }
   function scrollTo(textarea, selectionEnd) {
     const txt = textarea.value;
-    if (selectionEnd >= txt.length || selectionEnd < 0)
-      return;
+    if (selectionEnd >= txt.length || selectionEnd < 0) return;
     textarea.scrollTop = 0;
     textarea.value = txt.substring(0, selectionEnd);
     const height = textarea.scrollHeight;
     textarea.value = txt;
     textarea.scrollTop = height;
-}
-
-  
+  }
 
   const generateDate = () => {
     const date = new Date();
@@ -256,12 +246,10 @@ export default function Next() {
 
   const openExternalInDefaultBrowser = () => {
     document.addEventListener("click", (event) => {
-        // if(event.target.href && event.target.href.match("(http?://)?(www\.)?(\w+)(\.\w+)")){
       if (event.target.href && event.target.href.match(/^https?:\/\//)) {
         event.preventDefault();
-          //electron shell open external, causes multiple windows to open
-          open(event.target.href);
-        return
+        open(event.target.href);
+        return;
       }
     });
   };
@@ -341,7 +329,7 @@ export default function Next() {
     return destination;
   };
 
-  if (typeof window !== "undefined") {
+  useEffect(() => {
     dragDrop("body", (files) => {
       const _files = files.map((file) => {
         let fileName = file.name;
@@ -365,9 +353,9 @@ export default function Next() {
         });
       });
     });
-  }
+  }, []);
 
-  const commentOut = () =>{
+  const commentOut = () => {
     const area = ref.current;
     if (area.selectionEnd === area.selectionStart) {
       return;
@@ -389,38 +377,43 @@ export default function Next() {
       ref.current.setSelectionRange(first, first);
       document.execCommand("insertText", false, `<!-- ${selectedText} -->`);
     }
-  }
+  };
 
-
-const bold = () =>{
+  const bold = () => {
     const area = ref.current;
     let first = area.selectionStart;
     let second = area.selectionEnd;
     let length = second - first;
     let selectedText = area.value.substr(first, length);
-    selectedText.startsWith("**") && selectedText.endsWith("**") ?
-    document.execCommand("insertText", false, `${selectedText.substr(2, selectedText.length - 4)}`) :
-    document.execCommand("insertText", false, `**${selectedText}** `)
-    ref.current.setSelectionRange(first+2, first+2);
-    
+    selectedText.startsWith("**") && selectedText.endsWith("**")
+      ? document.execCommand(
+          "insertText",
+          false,
+          `${selectedText.substr(2, selectedText.length - 4)}`
+        )
+      : document.execCommand("insertText", false, `**${selectedText}** `);
+    ref.current.setSelectionRange(first + 2, first + 2);
+  };
 
-}
-
-
-    const createLink = () => {
-        const area = ref.current; 
-        let first = area.selectionStart;
-        let second = area.selectionEnd;
-        let length = second - first;
-        let selectedText = area.value.substr(first, length);
-        if (selectedText.match("\[(.*?)\]\((.*?)\)")){return}
-        area.value = area.value.substr(0, first) + area.value.substr(second);
-        ref.current.setSelectionRange(first, first);
-        document.execCommand("insertText", false, `[${selectedText}](url)`);
-        selectedText.length === 0 ? ref.current.setSelectionRange(first + 1, first + 1)
-        : ref.current.setSelectionRange(first + 1 + selectedText.length + 2, first + 1 + selectedText.length + 5);
-        }
-
+  const createLink = () => {
+    const area = ref.current;
+    let first = area.selectionStart;
+    let second = area.selectionEnd;
+    let length = second - first;
+    let selectedText = area.value.substr(first, length);
+    if (selectedText.match("[(.*?)]((.*?))")) {
+      return;
+    }
+    area.value = area.value.substr(0, first) + area.value.substr(second);
+    ref.current.setSelectionRange(first, first);
+    document.execCommand("insertText", false, `[${selectedText}](url)`);
+    selectedText.length === 0
+      ? ref.current.setSelectionRange(first + 1, first + 1)
+      : ref.current.setSelectionRange(
+          first + 1 + selectedText.length + 2,
+          first + 1 + selectedText.length + 5
+        );
+  };
 
   const createNewFile = () => {
     fileName != ""
@@ -433,22 +426,19 @@ const bold = () =>{
 
   const saveFile = () => {
     try {
-      setSaver("SAVING...")
+      setSaver("SAVING...");
       ipcRenderer.invoke("saveFile", path, value).then(() => {
         Update();
-        setSaver("SAVED")
+        setSaver("SAVED");
         setTimeout(() => {
           setIsEdited(false);
-          setSaver("EDITED")
-
+          setSaver("EDITED");
         }, 3000);
       });
     } catch (e) {
       console.log(e);
     }
   };
-
-  //_-_-_-_-_-_-_-_-_-_-_-_-_-_-_KEYS & EVENTS-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 
   useEffect(() => {
     document.onkeydown = function ListenToKeys(e) {
@@ -459,7 +449,9 @@ const bold = () =>{
       }
 
       if ((e.ctrlKey || e.metaKey) && e.key === "b") {
-          if(!insert){return}
+        if (!insert) {
+          return;
+        }
         bold();
         e.preventDefault();
         return;
@@ -478,7 +470,9 @@ const bold = () =>{
       }
 
       if ((e.ctrlKey || e.metaKey) && e.key === "f") {
-        if(!insert){return}
+        if (!insert) {
+          return;
+        }
         toogleFinder(true);
         e.preventDefault();
         return;
@@ -500,10 +494,12 @@ const bold = () =>{
         return;
       }
 
-        if((e.key === "[" || e.key === "]") && (e.ctrlKey || e.metaKey)){
-            if(!insert){return}
-            createLink();
+      if ((e.key === "[" || e.key === "]") && (e.ctrlKey || e.metaKey)) {
+        if (!insert) {
+          return;
         }
+        createLink();
+      }
 
       if (e.key === "n" && (e.ctrlKey || e.metaKey)) {
         setFileNameBox(true);
@@ -511,7 +507,7 @@ const bold = () =>{
         return;
       }
 
-           // I need new key for this
+      // I need new key for this
       if (e.key === "y" && (e.ctrlKey || e.metaKey)) {
         if (!insert) {
           return;
@@ -524,7 +520,7 @@ const bold = () =>{
         if (!insert) {
           return;
         }
-        commentOut()
+        commentOut();
         e.preventDefault();
         return;
       }
@@ -533,15 +529,17 @@ const bold = () =>{
         (e.key === "Backspace" || e.key === "Delete") &&
         (e.ctrlKey || e.metaKey)
       ) {
-        try {
-          fs.removeSync(path);
-          Update();
-          const index = Math.floor(Math.random()*files.length)
-          setValue(files[index].body);
-          setName(files[index].name);
-          setPath(files[index].path);
-        } catch (e) {
-          console.log(e);
+        try{
+          if(!fs.existsSync(path)){return}
+          ipcRenderer.invoke("deleteFile", name, path).then(() => {
+            Update();
+            const index = Math.floor(Math.random() * files.length);
+            setValue(files[index].body);
+            setName(files[index].name);
+            setPath(files[index].path);
+          });
+        }catch(e){
+          console.log(e)
         }
         e.preventDefault();
         return;
@@ -594,16 +592,14 @@ const bold = () =>{
   };
 
   const onScroll = () => {
+    let ScrollPercent = 0;
     const Scrolled = document.documentElement.scrollTop;
     const MaxHeight =
       document.documentElement.scrollHeight -
       document.documentElement.clientHeight;
-    const ScrollPercent = (Scrolled / MaxHeight) * 100;
+    ScrollPercent = (Scrolled / MaxHeight) * 100;
     setScroll(ScrollPercent);
   };
-  if (typeof window !== "undefined") {
-    window.addEventListener("scroll", onScroll);
-  }
 
   function handleChange(e) {
     setValue(e.target.value);
@@ -626,7 +622,6 @@ const bold = () =>{
   const cursorUpdate = (e) => {
     if (e.target.selectionStart !== e.target.selectionEnd) {
       setCursor(`[${e.target.selectionStart}, ${e.target.selectionEnd}]`);
-
     } else {
       var textLines = e.target.value
         .substr(0, e.target.selectionEnd)
@@ -650,11 +645,11 @@ const bold = () =>{
     if (menu.getAttribute("aria-expanded") === "false") {
       menu.setAttribute("aria-expanded", "true");
       setButtomMenuState(true);
-    }else{
+    } else {
       menu.setAttribute("aria-expanded", "false");
       setButtomMenuState(false);
     }
-  }
+  };
 
   return (
     <>
@@ -716,28 +711,30 @@ const bold = () =>{
                       {" "}
                       Leaflet
                     </summary>
-                    {files.map((file, index) => (
-                      <>
-                        <ol className="files">
-                          <button
-                            tabIndex="-1"
-                            className={
-                              path === file.path ? "selected" : "greys"
-                            }
-                            onContextMenu={(e) => {
-                              handleClick(e);
-                            }}
-                            onClick={(e) => {
-                              handleClick(e);
-                              saveFile();
-                              setValue(file.body);
-                              setName(file.name);
-                              setPath(file.path);
-                            }}
-                          >{`${file.name.toString()} `}</button>
-                        </ol>
-                      </>
-                    )).sort()}
+                    {files
+                      .map((file, index) => (
+                        <>
+                          <ol className="files">
+                            <button
+                              tabIndex="-1"
+                              className={
+                                path === file.path ? "selected" : "greys"
+                              }
+                              onContextMenu={(e) => {
+                                handleClick(e);
+                              }}
+                              onClick={(e) => {
+                                handleClick(e);
+                                saveFile();
+                                setValue(file.body);
+                                setName(file.name);
+                                setPath(file.path);
+                              }}
+                            >{`${file.name.toString()} `}</button>
+                          </ol>
+                        </>
+                      ))
+                      .sort()}
 
                     {fileNameBox ? (
                       <form
@@ -765,47 +762,54 @@ const bold = () =>{
                   </details>
                 </div>
 
-                <div
-                className="fixed bottom-1"
-                >
+                <div className="fixed bottom-1">
                   <div
-                   tabIndex="0"
-                   id = "buttomMenu"
-                   role="button"  aria-expanded="false"
-                   onClick={toggleButtomMenu }
-                    style={{cursor: "pointer"}}
-                    >
-                      <p style={{display:"inline"}} className={buttomMenuState ? "Opened" : "Closed" }></p>
-                      <p style={{display:"inline"}}>UTILITIES</p>
-                      </div>
-                  <div className={buttomMenuState ? "slideIn" : ""} style={buttomMenuState ? {display: "block", opacity: "0", paddingLeft: "2vw"} : {display: "none"}}>
-                  
-
-                  <button
-                    tabIndex="-1"
-                    onClick={() => {
-                      setFileNameBox(true);
-                    }}
+                    tabIndex="0"
+                    id="buttomMenu"
+                    role="button"
+                    aria-expanded="false"
+                    onClick={toggleButtomMenu}
+                    style={{ cursor: "pointer" }}
                   >
-                    New File
-                  </button>
-                  <br />
-                  <button tabIndex="-1" onClick={openWindow}>
-                    Add File
-                  </button>
-                  {pandocAvailable ? (
-                    <>
-                      <br />
-                      <button tabIndex="-1" onClick={convertToPDF}>
-                        Covert to PDF
-                      </button>
-                      <br />
-                      <button tabIndex="-1" onClick={converToDocx}>
-                        Covert to Docx
-                      </button>
-                    </>
-                  ) : null}
-                </div>
+                    <p
+                      style={{ display: "inline" }}
+                      className={buttomMenuState ? "Opened" : "Closed"}
+                    ></p>
+                    <p style={{ display: "inline" }}>UTILITIES</p>
+                  </div>
+                  <div
+                    className={buttomMenuState ? "slideIn" : ""}
+                    style={
+                      buttomMenuState
+                        ? { display: "block", opacity: "0", paddingLeft: "2vw" }
+                        : { display: "none" }
+                    }
+                  >
+                    <button
+                      tabIndex="-1"
+                      onClick={() => {
+                        setFileNameBox(true);
+                      }}
+                    >
+                      New File
+                    </button>
+                    <br />
+                    <button tabIndex="-1" onClick={openWindow}>
+                      Add File
+                    </button>
+                    {pandocAvailable ? (
+                      <>
+                        <br />
+                        <button tabIndex="-1" onClick={convertToPDF}>
+                          Covert to PDF
+                        </button>
+                        <br />
+                        <button tabIndex="-1" onClick={converToDocx}>
+                          Covert to Docx
+                        </button>
+                      </>
+                    ) : null}
+                  </div>
                 </div>
               </div>
             </div>
@@ -881,7 +885,7 @@ const bold = () =>{
           )}
           <div
             className="fixed inset-x-0 bottom-0 ButtomBar"
-            style={{ marginLeft: "27%", maxHeight: "10vh", marginTop: "20px" }}
+            style={{userSelect:"none", marginLeft: "27%", maxHeight: "10vh", marginTop: "20px" }}
           >
             {displayThesaurus && insert ? (
               <container
@@ -925,11 +929,8 @@ const bold = () =>{
                   })}
                 </li>
               </container>
-            ) : (
-              finder ? (
-                <>
-              
-
+            ) : finder ? (
+              <>
                 <container
                   className="Left"
                   style={{
@@ -939,40 +940,37 @@ const bold = () =>{
                     paddingBottom: "5px",
                   }}
                 >
-                  <span>Find: 
-                    {found ?
-                    <form
-                    style={{display: "inline"}}
-                          onSubmit={() => {
-                            if (wordToFind.length < 1) {
-                              toogleFinder(false);
-                              return;
-                            
-                            }
-                            find(wordToFind);
-                          }}
-                        >
-                          <input
-                            autoFocus
-                            className="createFile"
-                            type="text"
-                            placeholder="Search a word"
-                            onChange={(e) => setWordToFind((e.target.value).toLowerCase())}
-                          />
-                        </form>
-                    : 
-                    <span style={{display: "inline"}}> Not Found</span>
-                        }
-                  
+                  <span>
+                    Find:
+                    {found ? (
+                      <form
+                        style={{ display: "inline" }}
+                        onSubmit={() => {
+                          if (wordToFind.length < 1) {
+                            toogleFinder(false);
+                            return;
+                          }
+                          find(wordToFind);
+                        }}
+                      >
+                        <input
+                          autoFocus
+                          className="createFile"
+                          type="text"
+                          placeholder="Search a word"
+                          onChange={(e) =>
+                            setWordToFind(e.target.value.toLowerCase())
+                          }
+                        />
+                      </form>
+                    ) : (
+                      <span style={{ display: "inline" }}> Not Found</span>
+                    )}
                   </span>
                 </container>
-            
               </>
-
-              ) : (
-                <>
-              
-
+            ) : (
+              <>
                 <container
                   className="Left"
                   style={{
@@ -1000,25 +998,27 @@ const bold = () =>{
                   />
                   {isEdited && insert ? (
                     <>
-                    <div style={{ display: "inline", marginRight: "30px" }}></div>
-                    <button
-                    style={{
-                      display: "inline",
-                      color: "grey",
-                      overflow: "hidden",
-                    }}
-                      id="save"
-                      tabIndex="-1"
-                      onClick={() => {
-                        try {
-                          saveFile();
-                        } catch {
-                          console.log("error");
-                        }
-                      }}
-                    >
-                      {saver}
-                    </button>
+                      <div
+                        style={{ display: "inline", marginRight: "30px" }}
+                      ></div>
+                      <button
+                        style={{
+                          display: "inline",
+                          color: "grey",
+                          overflow: "hidden",
+                        }}
+                        id="save"
+                        tabIndex="-1"
+                        onClick={() => {
+                          try {
+                            saveFile();
+                          } catch {
+                            console.log("error");
+                          }
+                        }}
+                      >
+                        {saver}
+                      </button>
                     </>
                   ) : null}
                 </container>
@@ -1048,8 +1048,6 @@ const bold = () =>{
                   {clockState}
                 </container>
               </>
-
-              )
             )}
           </div>
         </div>

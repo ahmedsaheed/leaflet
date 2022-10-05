@@ -305,12 +305,15 @@ const addFiles = (files = []) => {
   filesAdded(files.length);
 };
 
-const deleteFile = (filename) => {
-  const filePath = path.resolve(appDir, filename);
-
-  if (fs.existsSync(filePath)) {
-    fs.removeSync(filePath);
+const deleteFile = (filePath) => {
+  try{
+    if (fs.existsSync(filePath)) {
+      fs.removeSync(filePath);
+    }
+  }catch(e){
+    console.log(e);
   }
+  
 };
 
 const openFile = (filename) => {
@@ -394,6 +397,29 @@ ipcMain.on("app:on-file-copy", (event, file) => {
     file: file.filepath,
     icon: file.icon,
   });
+});
+
+
+
+ipcMain.handle("deleteFile", (event, name, file) => {
+  const options = {
+    type: "question",
+    buttons: ["Delete", "Cancel"],
+    defaultId: 2,
+    icon: "warning",
+    title: "Confirm",
+    message: `Are you sure you want to delete ${name}.md?`,
+    detail: "This action cannot be undone.",
+  };
+  dialog.showMessageBox(null, options).then((result) => {
+      if (result.response === 0) {
+        deleteFile(file);
+        console.log("Default button clicked.");
+      } else if (result.response === 1) {
+        return
+      }
+    })
+
 });
 
 app.on("window-all-closed", () => {
