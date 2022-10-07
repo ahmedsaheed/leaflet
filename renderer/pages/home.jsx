@@ -819,7 +819,7 @@ export default function Next() {
         <div
           style={{
             paddingRight: "20px",
-            maxWidth: "100vw",
+            maxWidth: "70vw",
             paddingTop: "10vh",
           }}
         >
