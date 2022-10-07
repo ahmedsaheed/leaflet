@@ -6,7 +6,6 @@ export const progress = (scroll: number) => {
     .join("");
   const scroller = `${progress} ${scroll.toFixed(1)}%`;
 
-    // const scroller = `${progressBar} ${scroll.toFixed(1)}%`;
     return (
       scroller
         )
