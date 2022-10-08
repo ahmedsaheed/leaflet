@@ -10,6 +10,7 @@ const isProd = process.env.NODE_ENV === 'production';
 const appDir = path.resolve(os.homedir(), "leaflet");
 const isMac = process.platform === "darwin";
 const isDev = require('electron-is-dev');
+const dirTree = require('directory-tree');
 
 
 if (isDev) {
@@ -265,7 +266,7 @@ var walk = function(dir) {
 const getFiles = () => {
   checkForDir();
   const files = walk(appDir);
-  let place = 0;
+  const structure = dirTree(appDir, {extensions:/\.md/}); 
   return files
     .filter((file) => file.split(".").pop() === "md")
     .map((filePath) => {
@@ -273,16 +274,13 @@ const getFiles = () => {
       const content = fs.readFileSync(filePath, "utf8");
       const extension = path.extname(filePath);
       const filename = path.basename(filePath,extension);
-      place++;
 
       return {
-        index: place,
         name: filename.charAt(0).toUpperCase() + filename.slice(1),
+        structure: structure,
         body: content,
         path: filePath,
-        size: Number(fileStats.size / 1000).toFixed(1), 
-        dirDept: filePath.substring(filePath.indexOf(appDir) + appDir.length + 1).split(path.sep).length - 1,
-        parentDir: filePath.substring(filePath.indexOf(appDir) + appDir.length + 1).split(path.sep).slice(0, -1).join(path.sep),
+      
       };
     });
 };

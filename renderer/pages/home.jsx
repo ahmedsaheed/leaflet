@@ -35,6 +35,7 @@ export default function Next() {
   const [saver, setSaver] = React.useState("");
   const [wordToFind, setWordToFind] = React.useState("");
   const appDir = mainPath.resolve(os.homedir(), "leaflet");
+  const [struct, setStruct] = React.useState([]);
   const Desktop = require("os").homedir() + "/Desktop";
   const ref = useRef(null);
   let synonyms = {};
@@ -48,12 +49,19 @@ export default function Next() {
       setFiles(files);
       setValue(files[0] ? `${files[0].body}` : "");
       setName(files[0] ? `${files[0].name}` : "");
-      setPath(files[0] ? `${files[0].path}` : "");    });
+      setPath(files[0] ? `${files[0].path}` : "");
+    });
     setInterval(() => {
       const date = new Date();
       setClockState(date.toLocaleTimeString());
     }, 1000);
   }, []);
+
+  useEffect(() => {
+    if (files.length > 0) {
+      setStruct(files[0].structure.children);
+    }
+  }, [files]);
 
   const checkForPandoc = () => {
     commandExists("pandoc", (err, exists) => {
@@ -529,8 +537,10 @@ export default function Next() {
         (e.key === "Backspace" || e.key === "Delete") &&
         (e.ctrlKey || e.metaKey)
       ) {
-        try{
-          if(!fs.existsSync(path)){return}
+        try {
+          if (!fs.existsSync(path)) {
+            return;
+          }
           ipcRenderer.invoke("deleteFile", name, path).then(() => {
             Update();
             const index = Math.floor(Math.random() * files.length);
@@ -538,8 +548,8 @@ export default function Next() {
             setName(files[index].name);
             setPath(files[index].path);
           });
-        }catch(e){
-          console.log(e)
+        } catch (e) {
+          console.log(e);
         }
         e.preventDefault();
         return;
@@ -711,31 +721,112 @@ export default function Next() {
                       {" "}
                       Leaflet
                     </summary>
-                    {files
-                      .map((file, index) => (
-                        <>
-                          <ol className="files">
-                            <button
-                              tabIndex="-1"
-                              className={
-                                path === file.path ? "selected" : "greys"
-                              }
-                              onContextMenu={(e) => {
-                                handleClick(e);
+                    {struct
+                      .map((file, index) =>
+                        file.children ? (
+                          <details key={index} tabIndex="-1">
+                            <summary
+                              style={{
+                                cursor: "pointer",
+                                fontSize: "12px",
+                                fontWeight: "bold",
+                                fontFamily: "--apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
+                                marginLeft: "1em"
                               }}
-                              onClick={(e) => {
-                                handleClick(e);
-                                saveFile();
-                                setValue(file.body);
-                                setName(file.name);
-                                setPath(file.path);
-                              }}
-                            >{`${file.name.toString()} `}</button>
-                          </ol>
-                        </>
-                      ))
-                      .sort()}
-
+                            >
+                              {" "}
+                              {file.name.charAt(0).toUpperCase() + file.name.slice(1)}
+                            </summary>
+                            {file.children.map((child, index) =>
+                              fs.statSync(child.path).isDirectory() ? (
+                                fs.readdirSync(child.path).length < 1 ? null : (
+                                  <details key={index} tabIndex="-1">
+                                    <summary
+                                      style={{
+                                        cursor: "pointer",
+                                        marginLeft: "1em"
+                                      }}
+                                    >
+                                      {" "}
+                                      {child.name.charAt(0).toUpperCase() + child.name.slice(1)}
+                                    </summary>
+                                    {child.children.map((child, index) => (
+                                      <ol className="files">
+                                        <button
+                                          tabIndex="-1"
+                                          className={
+                                            path === child.path
+                                              ? "selected"
+                                              : "greys"
+                                          }
+                                          onClick={(e) => {
+                                            handleClick(e);
+                                            saveFile();
+                                            setValue(
+                                              fs.readFileSync(
+                                                child.path,
+                                                "utf8"
+                                              )
+                                            );
+                                            setName(child.name);
+                                            setPath(child.path);
+                                          }}
+                                        >
+                                          {" "}
+                                          {child.name}
+                                        </button>
+                                      </ol>
+                                    ))}
+                                  </details>
+                                )
+                              ) : (
+                                <ol className="files">
+                                  <button
+                                    tabIndex="-1"
+                                    className={
+                                      path === child.path ? "selected" : "greys"
+                                    }
+                                    onClick={(e) => {
+                                      handleClick(e);
+                                      saveFile();
+                                      setValue(
+                                        fs.readFileSync(child.path, "utf8")
+                                      );
+                                      setName(child.name);
+                                      setPath(child.path);
+                                    }}
+                                  >
+                                    {child.name}
+                                  </button>
+                                </ol>
+                              )
+                            )}
+                          </details>
+                        ) : (
+                          <>
+                            <ol className="files">
+                              <button
+                                tabIndex="-1"
+                                className={
+                                  path === file.path ? "selected" : "greys"
+                                }
+                                onContextMenu={(e) => {
+                                  handleClick(e);
+                                }}
+                                onClick={(e) => {
+                                  handleClick(e);
+                                  saveFile();
+                                  setValue(fs.readFileSync(file.path, "utf8"));
+                                  setName(file.name);
+                                  setPath(file.path);
+                                }}
+                              >{`${file.name} `}</button>
+                            </ol>
+                          </>
+                        )
+                      )
+                      .flat()
+                      .filter((file) => file !== undefined)}
                     {fileNameBox ? (
                       <form
                         onSubmit={() => {
@@ -761,7 +852,6 @@ export default function Next() {
                     ) : null}
                   </details>
                 </div>
-
                 <div className="fixed bottom-1">
                   <div
                     tabIndex="0"
@@ -885,7 +975,12 @@ export default function Next() {
           )}
           <div
             className="fixed inset-x-0 bottom-0 ButtomBar"
-            style={{userSelect:"none", marginLeft: "27%", maxHeight: "10vh", marginTop: "20px" }}
+            style={{
+              userSelect: "none",
+              marginLeft: "27%",
+              maxHeight: "10vh",
+              marginTop: "20px",
+            }}
           >
             {displayThesaurus && insert ? (
               <container
