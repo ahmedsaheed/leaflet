@@ -328,7 +328,7 @@ const watchFiles = (win) => {
   });
 };
 
-const newFile = (file) => {
+const newFile = (dir,file) => {
   const today = new Date();
   var date =
     today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
@@ -336,9 +336,9 @@ const newFile = (file) => {
     today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
   var dateTime = date + " " + time;
   const extension = file.split(".").pop();
-  if (fs.existsSync(appDir)) {
+  if (fs.existsSync(dir)) {
     fs.writeFileSync(
-      path.resolve(appDir, `${extension == "md" ? file : file + ".md"}`),
+      path.resolve(dir, `${extension == "md" ? file : file + ".md"}`),
       `File Name: **${file}** <br> Created at: ${dateTime}.`
     );
   }
@@ -353,8 +353,8 @@ ipcMain.handle("saveFile", (event, path, content) => {
 });
 
 
-ipcMain.handle("createNewFile", (event, filename) => {
-  newFile(filename);
+ipcMain.handle("createNewFile", (event, dir,filename) => {
+  newFile(dir,filename);
   created(filename);
 });
 ipcMain.handle("getTheFile", () => {

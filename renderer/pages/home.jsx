@@ -36,9 +36,13 @@ export default function Next() {
   const [wordToFind, setWordToFind] = React.useState("");
   const appDir = mainPath.resolve(os.homedir(), "leaflet");
   const [struct, setStruct] = React.useState([]);
+  const [parentDir, setParentDir] = React.useState("");
   const Desktop = require("os").homedir() + "/Desktop";
   const ref = useRef(null);
   let synonyms = {};
+
+  //get directory of given path
+ 
 
   //_-_-_-_-_-_-_-_-_-_-_-_-_-_-_ INIT, CHECK FOR PANDOC & CLOCK-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
   useEffect(() => {
@@ -62,6 +66,11 @@ export default function Next() {
       setStruct(files[0].structure.children);
     }
   }, [files]);
+  useEffect(() => {
+    setParentDir(mainPath.dirname(path));
+  }, [path]);
+
+ 
 
   const checkForPandoc = () => {
     commandExists("pandoc", (err, exists) => {
@@ -425,7 +434,7 @@ export default function Next() {
 
   const createNewFile = () => {
     fileName != ""
-      ? ipcRenderer.invoke("createNewFile", fileName).then(() => {
+      ? ipcRenderer.invoke("createNewFile",parentDir, fileName).then(() => {
           setFiles(files);
           Update();
         })
@@ -688,7 +697,7 @@ export default function Next() {
         <div>
           <div
             className="fs fixed"
-            style={{ width: "27vw", maxWidth: "30vw", minHeight: "100vh" }}
+            style={{ width: "30vw", maxWidth: "30vw", minHeight: "100vh" }}
           >
             <div>
               <div
@@ -696,7 +705,7 @@ export default function Next() {
                   height: "100vh",
                   marginTop: "10vh",
                   paddingTop: "2em",
-                  paddingLeft: "10px",
+                  // paddingLeft: "2px",
                 }}
               >
                 <div
@@ -704,8 +713,9 @@ export default function Next() {
                   style={{
                     marginTop: "2vh",
                     marginBottom: "2vh",
-                    maxHeight: "40vh",
-                    overflow: "scroll",
+                    maxHeight: "70vh",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
                   }}
                 >
                   <details tabIndex="-1" open>
@@ -730,77 +740,141 @@ export default function Next() {
                                 cursor: "pointer",
                                 fontSize: "12px",
                                 fontWeight: "bold",
-                                fontFamily: "--apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
-                                marginLeft: "1em"
+                                fontFamily:
+                                  "--apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
+                                marginLeft: "1em",
                               }}
                             >
                               {" "}
-                              {file.name.charAt(0).toUpperCase() + file.name.slice(1)}
+                              {file.name.charAt(0).toUpperCase() +
+                                file.name.slice(1)}
                             </summary>
-                            {file.children.map((child, index) =>
-                              fs.statSync(child.path).isDirectory() ? (
-                                fs.readdirSync(child.path).length < 1 ? null : (
-                                  <details key={index} tabIndex="-1">
-                                    <summary
+                            {file.children
+                              .map((child, index) =>
+                                fs.statSync(child.path).isDirectory() ? (
+                                  fs.readdirSync(child.path).length <
+                                  1 ? null : (
+                                    <div
                                       style={{
-                                        cursor: "pointer",
-                                        marginLeft: "1em"
+                                        borderLeft: "1px solid #2d2d2d",
+                                        marginLeft: "1.8em",
                                       }}
                                     >
-                                      {" "}
-                                      {child.name.charAt(0).toUpperCase() + child.name.slice(1)}
-                                    </summary>
-                                    {child.children.map((child, index) => (
-                                      <ol className="files">
-                                        <button
-                                          tabIndex="-1"
-                                          className={
-                                            path === child.path
-                                              ? "selected"
-                                              : "greys"
-                                          }
-                                          onClick={(e) => {
-                                            handleClick(e);
-                                            saveFile();
-                                            setValue(
-                                              fs.readFileSync(
-                                                child.path,
-                                                "utf8"
-                                              )
-                                            );
-                                            setName(child.name);
-                                            setPath(child.path);
+                                      <details key={index} tabIndex="-1">
+                                        <summary
+                                          style={{
+                                            cursor: "pointer",
                                           }}
                                         >
                                           {" "}
-                                          {child.name}
-                                        </button>
-                                      </ol>
-                                    ))}
-                                  </details>
+                                          {child.name.charAt(0).toUpperCase() +
+                                            child.name.slice(1)}
+                                        </summary>
+                                        {child.children
+                                          .map((child, index) => (
+                                            <ol className="files">
+                                              <button
+                                                style={{
+                                                  whiteSpace: "nowrap",
+                                                  overflow: "hidden",
+                                                  maxWidth: "100%",
+                                                  textOverflow: "ellipsis",
+                                                }}
+                                                tabIndex="-1"
+                                                className={
+                                                  path === child.path
+                                                    ? "selected"
+                                                    : "greys"
+                                                }
+                                                onClick={(e) => {
+                                                  try {
+                                                    handleClick(e);
+                                                    saveFile();
+                                                    setValue(
+                                                      fs.readFileSync(
+                                                        child.path,
+                                                        "utf8"
+                                                      )
+                                                    );
+                                                    setName(child.name);
+                                                    setPath(child.path);
+                                                  } catch (err) {
+                                                    console.log(err);
+                                                  }
+                                                }}
+                                              >
+                                                <p
+                                                  style={{
+                                                    display: "inline",
+                                                    width: "100%",
+                                                    whiteSpace: "nowrap",
+                                                    overflow: "hidden",
+                                                    textOverflow: "ellipsis",
+                                                  }}
+                                                >
+                                                  <svg
+                                                    style={{
+                                                      display: "inline",
+                                                    }}
+                                                    height="22"
+                                                    viewBox="0 0 24 24"
+                                                  >
+                                                    <path
+                                                      fill="#888888"
+                                                      d="M20.56 18H3.44C2.65 18 2 17.37 2 16.59V7.41C2 6.63 2.65 6 3.44 6h17.12c.79 0 1.44.63 1.44 1.41v9.18c0 .78-.65 1.41-1.44 1.41M6.81 15.19v-3.66l1.92 2.35l1.92-2.35v3.66h1.93V8.81h-1.93l-1.92 2.35l-1.92-2.35H4.89v6.38h1.92M19.69 12h-1.92V8.81h-1.92V12h-1.93l2.89 3.28L19.69 12Z"
+                                                    />
+                                                  </svg>{" "}
+                                                  {child.name}
+                                                </p>
+                                              </button>
+                                            </ol>
+                                          ))
+                                          .sort((a, b) => {
+                                            if (
+                                              a.props.children[0]?.props
+                                                .children[1]
+                                            ) {
+                                              return -1;
+                                            } else {
+                                              return 1;
+                                            }
+                                          })}
+                                      </details>
+                                    </div>
+                                  )
+                                ) : (
+                                  <ol className="files">
+                                    <button
+                                      style={{
+                                        whiteSpace: "nowrap",
+                                        overflow: "hidden",
+                                        maxWidth: "100%",
+                                      }}
+                                      tabIndex="-1"
+                                      className={
+                                        path === child.path
+                                          ? "selected"
+                                          : "greys"
+                                      }
+                                      onClick={(e) => {
+                                        try {
+                                          handleClick(e);
+                                          saveFile();
+                                          setValue(
+                                            fs.readFileSync(child.path, "utf8")
+                                          );
+                                          setName(child.name);
+                                          setPath(child.path);
+                                        } catch (err) {
+                                          console.log(err);
+                                        }
+                                      }}
+                                    >
+                                      {child.name}
+                                    </button>
+                                  </ol>
                                 )
-                              ) : (
-                                <ol className="files">
-                                  <button
-                                    tabIndex="-1"
-                                    className={
-                                      path === child.path ? "selected" : "greys"
-                                    }
-                                    onClick={(e) => {
-                                      handleClick(e);
-                                      saveFile();
-                                      setValue(
-                                        fs.readFileSync(child.path, "utf8")
-                                      );
-                                      setName(child.name);
-                                      setPath(child.path);
-                                    }}
-                                  >
-                                    {child.name}
-                                  </button>
-                                </ol>
-                              )
-                            )}
+                              )}
                           </details>
                         ) : (
                           <>
@@ -814,19 +888,26 @@ export default function Next() {
                                   handleClick(e);
                                 }}
                                 onClick={(e) => {
-                                  handleClick(e);
+                                  try{
+                                    handleClick(e);
                                   saveFile();
                                   setValue(fs.readFileSync(file.path, "utf8"));
                                   setName(file.name);
                                   setPath(file.path);
+                                  }catch(err){
+                                    console.log(err)
+                                  }
                                 }}
-                              >{`${file.name} `}</button>
+                              >
+                                <p
+                                  style={{ display: "inline" }}
+                                >{`${file.name} `}</p>
+                              </button>
                             </ol>
                           </>
                         )
-                      )
-                      .sort((a, b) => {
-                        if (a.props.children[0].props.children[1]) {
+                      ).sort((a, b) => {
+                        if (a.props.children[0]?.props.children[1]) {
                           return -1;
                         } else {
                           return 1;
