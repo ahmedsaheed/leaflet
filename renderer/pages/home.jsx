@@ -825,8 +825,13 @@ export default function Next() {
                           </>
                         )
                       )
-                      .flat()
-                      .filter((file) => file !== undefined)}
+                      .sort((a, b) => {
+                        if (a.props.children[0].props.children[1]) {
+                          return -1;
+                        } else {
+                          return 1;
+                        }
+                      })}
                     {fileNameBox ? (
                       <form
                         onSubmit={() => {
