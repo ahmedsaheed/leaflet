@@ -303,7 +303,7 @@ export default function Next() {
     });
   };
   const convertToPDF = () => {
-    const path = `${Desktop}/${name}.pdf`;
+    const path = `${Desktop}/${name.replace(/\.md$/, "")}.pdf`;
     pandoc(value, `-f markdown -t pdf -o ${path}`, function (err, result) {
       if (err) console.log(err);
       if (fs.existsSync(path)) {
@@ -313,7 +313,7 @@ export default function Next() {
   };
 
   const converToDocx = () => {
-    const path = `${Desktop}/${name}.docx`;
+    const path = `${Desktop}/${name.replace(/\.md$/, "")}.docx`;
     pandoc(value, `-f markdown -t docx -o ${path}`, function (err, result) {
       if (err) console.log(err);
       if (fs.existsSync(path)) {
