@@ -263,12 +263,15 @@ textarea:focus-visible {
 code {
   font-family: "iA Writer Duospace", sans-serif;
   padding: 0.2em 0.4em;
-  border-radius: 5px;
+    white-space: pre-wrap;
+
+
 }
 pre code {
   display: block;
-  overflow-x: auto;
+  border-radius: 5px;
   padding: 1em; 
+
  }
 
 p {
