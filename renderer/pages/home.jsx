@@ -460,7 +460,7 @@ export default function Next() {
 
   const createNewFile = () => {
     fileName != ""
-      ? ipcRenderer.invoke("createNewFile",parentDir, fileName).then(() => {
+      ? ipcRenderer.invoke("createNewFile",parentDir, fileName.replace(/\.md$/, "")).then(() => {
           setFiles(files);
           Update();
         })

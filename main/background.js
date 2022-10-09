@@ -400,13 +400,14 @@ ipcMain.on("app:on-file-copy", (event, file) => {
 
 
 ipcMain.handle("deleteFile", (event, name, file) => {
+  const extension = name.split(".").pop();
   const options = {
     type: "question",
     buttons: ["Delete", "Cancel"],
     defaultId: 2,
     icon: "warning",
     title: "Confirm",
-    message: `Are you sure you want to delete ${name}.md?`,
+    message: `Are you sure you want to delete ${extension == "md" ? name : name + ".md"}?`,
     detail: "This action cannot be undone.",
   };
   dialog.showMessageBox(null, options).then((result) => {
