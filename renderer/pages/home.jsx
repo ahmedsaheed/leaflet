@@ -208,8 +208,8 @@ export default function Next() {
     if (typeof area.selectionStart != "undefined") {
       area.focus();
       if (startPos !== -1) {
+        scrollAnimate(ref.current, endPos -100, 200)
         area.setSelectionRange(startPos, endPos);
-        scroll_to(endPos);
         toogleFinder(false);
       } else {
         area.setSelectionRange(area.selectionStart, area.selectionStart);
@@ -225,18 +225,7 @@ export default function Next() {
     return startPos;
   }
 
-
- function  scroll_to (to) {
-    const textVal = ref.current.value;
-    const div = document.createElement('div')
-    div.innerHTML = textVal.slice(0, to)
-    document.body.appendChild(div)
-    animateScrollTo(ref.current, to -100, 200)
-    div.remove()
-  }
-
-
-  function animateScrollTo (element, to, duration) {
+  function scrollAnimate (element, to, duration) {
     const start = element.scrollTop
     const change = to - start
     let currentTime = 0
