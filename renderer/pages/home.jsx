@@ -208,8 +208,8 @@ export default function Next() {
     if (typeof area.selectionStart != "undefined") {
       area.focus();
       if (startPos !== -1) {
-        scrollTo(area, endPos);
         area.setSelectionRange(startPos, endPos);
+        scroll_to(endPos);
         toogleFinder(false);
       } else {
         area.setSelectionRange(area.selectionStart, area.selectionStart);
@@ -224,15 +224,41 @@ export default function Next() {
     }
     return startPos;
   }
-  function scrollTo(textarea, selectionEnd) {
-    const txt = textarea.value;
-    if (selectionEnd >= txt.length || selectionEnd < 0) return;
-    textarea.scrollTop = 0;
-    textarea.value = txt.substring(0, selectionEnd);
-    const height = textarea.scrollHeight;
-    textarea.value = txt;
-    textarea.scrollTop = height;
+
+
+ function  scroll_to (to) {
+    const textVal = ref.current.value;
+    const div = document.createElement('div')
+    div.innerHTML = textVal.slice(0, to)
+    document.body.appendChild(div)
+    animateScrollTo(ref.current, to -100, 200)
+    div.remove()
   }
+
+
+  function animateScrollTo (element, to, duration) {
+    const start = element.scrollTop
+    const change = to - start
+    let currentTime = 0
+    const increment = 20 
+    const animate = function () {
+      currentTime += increment
+      const val = easeInOutQuad(currentTime, start, change, duration)
+      element.scrollTop = val
+      if (currentTime < duration) {
+        requestAnimationFrame(animate, increment)
+      }
+    }
+    requestAnimationFrame(animate)
+  }
+ 
+  function easeInOutQuad (t, b, c, d) {
+    t /= d / 2
+    if (t < 1) return c / 2 * t * t + b
+    t--
+    return -c / 2 * (t * (t - 2) - 1) + b
+  }
+
 
   const generateDate = () => {
     const date = new Date();
@@ -1130,8 +1156,7 @@ export default function Next() {
                           if (wordToFind.length < 1) {
                             toogleFinder(false);
                             return;
-                          }
-                          find(wordToFind);
+                          } find(wordToFind) 
                         }}
                       >
                         <input
