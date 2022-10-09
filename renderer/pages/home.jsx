@@ -36,12 +36,11 @@ export default function Next() {
   const [wordToFind, setWordToFind] = React.useState("");
   const appDir = mainPath.resolve(os.homedir(), "leaflet");
   const [struct, setStruct] = React.useState([]);
-  const [parentDir, setParentDir] = React.useState("");
+  const [isCreatingFolder, setIsCreatingFolder] = React.useState(false);
+  const [parentDir, setParentDir] = React.useState(appDir);
   const Desktop = require("os").homedir() + "/Desktop";
   const ref = useRef(null);
   let synonyms = {};
-
-  //get directory of given path
  
 
   //_-_-_-_-_-_-_-_-_-_-_-_-_-_-_ INIT, CHECK FOR PANDOC & CLOCK-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
@@ -66,11 +65,21 @@ export default function Next() {
       setStruct(files[0].structure.children);
     }
   }, [files]);
-  useEffect(() => {
-    setParentDir(mainPath.dirname(path));
-  }, [path]);
 
- 
+
+  const createNewDir =(name) =>{
+    if(fs.existsSync(mainPath.join(parentDir, name)) || name === "" ){return}
+    if (fs.existsSync(parentDir)){
+      fs.mkdirSync(`${parentDir}/${name}`);
+      //create new file
+      fs.writeFileSync(`${parentDir}/${name}/new.md`, 
+      `${name} created on ${generateDate()} at ${clockState}`);
+      Update();
+    }
+    setIsCreatingFolder(false);
+
+
+  }
 
   const checkForPandoc = () => {
     commandExists("pandoc", (err, exists) => {
@@ -289,6 +298,8 @@ export default function Next() {
   const Update = () => {
     ipcRenderer.invoke("getTheFile").then((files = []) => {
       setFiles(files);
+      setStruct(files[0].structure.children)
+
     });
   };
   const convertToPDF = () => {
@@ -568,6 +579,7 @@ export default function Next() {
           }
           ipcRenderer.invoke("deleteFile", name, path).then(() => {
             Update();
+            setStruct(files[0].structure.children)
             const index = Math.floor(Math.random() * files.length);
             setValue(files[index].body);
             setName(files[index].name);
@@ -721,7 +733,6 @@ export default function Next() {
                   height: "100vh",
                   marginTop: "10vh",
                   paddingTop: "2em",
-                  // paddingLeft: "2px",
                 }}
               >
                 <div
@@ -750,6 +761,9 @@ export default function Next() {
                     {struct
                       .map((file, index) =>
                         file.children ? (
+                          !fs.existsSync(file.path) ? null :
+                          !fs.readdirSync(file.path).length ? null :
+                          
                           <details key={index} tabIndex="-1">
                             <summary
                               style={{
@@ -760,16 +774,20 @@ export default function Next() {
                                   "--apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
                                 marginLeft: "1em",
                               }}
+                              onClick={() => {
+                                setParentDir(file.path);
+                              }}
                             >
                               {" "}
                               {file.name.charAt(0).toUpperCase() +
                                 file.name.slice(1)}
                             </summary>
-                            {file.children
+                           {file.children
                               .map((child, index) =>
+                               !fs.existsSync(child.path) ? null :
                                 fs.statSync(child.path).isDirectory() ? (
-                                  fs.readdirSync(child.path).length <
-                                  1 ? null : (
+                                  !fs.readdirSync(child.path).length 
+                                  ? null : (
                                     <div
                                       style={{
                                         borderLeft: "1px solid #2d2d2d",
@@ -780,6 +798,9 @@ export default function Next() {
                                         <summary
                                           style={{
                                             cursor: "pointer",
+                                          }}
+                                          onClick={() => {
+                                            setParentDir(file.path);
                                           }}
                                         >
                                           {" "}
@@ -804,6 +825,7 @@ export default function Next() {
                                                 }
                                                 onClick={(e) => {
                                                   try {
+                                                    setParentDir(mainPath.dirname(child.path));
                                                     handleClick(e);
                                                     saveFile();
                                                     setValue(
@@ -889,7 +911,7 @@ export default function Next() {
                                       {child.name}
                                     </button>
                                   </ol>
-                                )
+                                ) 
                               )}
                           </details>
                         ) : (
@@ -905,13 +927,14 @@ export default function Next() {
                                 }}
                                 onClick={(e) => {
                                   try{
-                                    handleClick(e);
+                                  setParentDir(mainPath.dirname(file.path));
+                                  handleClick(e);
                                   saveFile();
                                   setValue(fs.readFileSync(file.path, "utf8"));
                                   setName(file.name);
                                   setPath(file.path);
                                   }catch(err){
-                                    console.log(err)
+                                    console(err)
                                   }
                                 }}
                               >
@@ -922,13 +945,16 @@ export default function Next() {
                             </ol>
                           </>
                         )
-                      ).sort((a, b) => {
-                        if (a.props.children[0]?.props.children[1]) {
+                      )
+                      .sort((a, b) => {
+                        if (a?.props?.children[0]?.props?.children[1]) {
                           return -1;
                         } else {
                           return 1;
                         }
                       })}
+                      
+                      
                     {fileNameBox ? (
                       <form
                         onSubmit={() => {
@@ -936,7 +962,7 @@ export default function Next() {
                             setFileNameBox(false);
                             return;
                           }
-                          createNewFile(fileName);
+                           isCreatingFolder ? createNewDir(fileName) : createNewFile(fileName);
                           setFileNameBox(false);
                           setTimeout(() => {
                             setFileName("");
@@ -947,7 +973,7 @@ export default function Next() {
                           autoFocus
                           className="createFile"
                           type="text"
-                          placeholder="Enter file name"
+                          placeholder= {isCreatingFolder ? "Folder Name" : "File Name"}
                           onChange={(e) => setFileName(e.target.value)}
                         />
                       </form>
@@ -977,6 +1003,10 @@ export default function Next() {
                         : { display: "none" }
                     }
                   >
+                    <button tabIndex="-1" onClick={openWindow}>
+                      Add File
+                    </button>
+                    <br />
                     <button
                       tabIndex="-1"
                       onClick={() => {
@@ -986,8 +1016,11 @@ export default function Next() {
                       New File
                     </button>
                     <br />
-                    <button tabIndex="-1" onClick={openWindow}>
-                      Add File
+                    <button tabIndex="-1" onClick={() => {
+                      setFileNameBox(true);
+                      setIsCreatingFolder(true);
+                    }}>
+                      New Folder
                     </button>
                     {pandocAvailable ? (
                       <>
@@ -1080,7 +1113,7 @@ export default function Next() {
             className="fixed inset-x-0 bottom-0 ButtomBar"
             style={{
               userSelect: "none",
-              marginLeft: "27%",
+              marginLeft: "30%",
               maxHeight: "10vh",
               marginTop: "20px",
             }}
