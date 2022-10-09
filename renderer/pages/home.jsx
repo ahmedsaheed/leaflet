@@ -506,6 +506,7 @@ export default function Next() {
           return;
         }
         toogleFinder(true);
+        document.getElementById("finderInput")?.focus();
         e.preventDefault();
         return;
       }
@@ -1040,6 +1041,7 @@ export default function Next() {
                   }}
                   onMouseDown={(e) => {
                     cursorUpdate(e);
+                    toogleFinder(false);
                     setDisplayThesaurus(false);
                     setWhichIsActive(0);
                   }}
@@ -1137,7 +1139,7 @@ export default function Next() {
                   }}
                 >
                   <span>
-                    Find:
+                    <b>Find:</b>
                     {found ? (
                       <form
                         style={{ display: "inline" }}
@@ -1149,6 +1151,7 @@ export default function Next() {
                         }}
                       >
                         <input
+                        id="finderInput"
                           autoFocus
                           className="createFile"
                           type="text"
