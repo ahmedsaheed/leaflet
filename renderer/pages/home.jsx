@@ -845,6 +845,7 @@ export default function Next() {
                                                     );
                                                     setName(child.name);
                                                     setPath(child.path);
+                                                    setInsert(false);
                                                   } catch (err) {
                                                     console.log(err);
                                                   }
@@ -912,6 +913,7 @@ export default function Next() {
                                           );
                                           setName(child.name);
                                           setPath(child.path);
+                                          setInsert(false);
                                         } catch (err) {
                                           console.log(err);
                                         }
@@ -942,6 +944,7 @@ export default function Next() {
                                   setValue(fs.readFileSync(file.path, "utf8"));
                                   setName(file.name);
                                   setPath(file.path);
+                                  setInsert(false)
                                   }catch(err){
                                     console(err)
                                   }
