@@ -1,10 +1,3 @@
-var clock = new Date();
-
-let today = clock.toISOString().slice(0, 10)
-var month = clock.toLocaleString("default", { month: "long" }) +
-" " +
-clock.getFullYear();
-
 export const SYNONYMS = {
   abandon: [
     'desert',
