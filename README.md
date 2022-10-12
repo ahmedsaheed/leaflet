@@ -78,13 +78,7 @@ $ yarn build
 
 ## Demo
 
-<p align="center">
-
-
-<video muted width="320" height="240" src="https://user-images.githubusercontent.com/87912847/193433133-49c8d27c-beb3-4d8d-8fb7-4096bd5dfe45.mov"></video>
-
-
-</p>
+![leaflet](https://user-images.githubusercontent.com/87912847/195345060-a966ecf4-f2ed-47df-8beb-0058db38fe4f.png)
 
 
 ---

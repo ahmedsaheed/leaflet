@@ -209,8 +209,15 @@ export default function Next() {
     }
   };
 
-  function find(word) {
-    const area = ref.current;
+    function find(word) {
+    if (word.trim().length < 4) {
+      toogleFinder(false)
+      setFound(true)
+      setWordToFind("")
+      return;
+    }
+
+    const area = ref.current; 
     const startPos = area.value.toLowerCase().indexOf(word);
     const endPos = startPos + word.length;
 
