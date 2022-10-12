@@ -1,7 +1,7 @@
 <img src="https://raw.githubusercontent.com/ahmedsaheed/Leaflet/master/renderer/public/images/test.png" align="left" width="220"/>
 
 # LEAFLET
-A minimal distractionless markdown editor designed to quickly navigate between multiple \`.md\` files in a directory and its sub directories. It features a clean mathematical typesetting, chemical equation rendering, code blocks highlighting, writing statistics and a speed-reader.
+A minimal distractionless markdown editor designed to quickly navigate between multiple \`.md\` files in a directory and its sub directories. It features a clean mathematical typesetting, chemical equation rendering, code blocks highlighting and writing statistics and
 
 
 ---
@@ -108,7 +108,6 @@ $ yarn build
 - Support media like `mp3`, `iframe` and `video` 
 - Displays a table of content on demand
 - Renders task list, tables and footnotes  quite nicely 
-- File statistics displayed in the footer (speed-reader, word count, date).
 
 ## Extras
 - Leaflet is strongly inspired by [Left](https://github.com/hundredrabbits/left) and [Opus](https://github.com/pacocoursey/Opus).
