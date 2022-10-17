@@ -121,8 +121,6 @@ export default function Next() {
         return uniq(synonyms[singular]);
       }
     }
-
-    return;
   };
 
   const activeWord = () => {
@@ -368,7 +366,7 @@ export default function Next() {
   }, [fileNameBox]);
 
   const docxToMd = (filePath) => {
-    const destination = `${appDir}/${filePath.name.split(".")[0]}.md`;
+    let destination = `${appDir}/${filePath.name.split(".")[0]}.md`;
     destination = destination.replace(/\s/g, "");
     try {
       pandoc(
