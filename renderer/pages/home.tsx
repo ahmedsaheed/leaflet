@@ -3,7 +3,7 @@ import { ipcRenderer } from "electron";
 import { progress } from "../components/progress";
 import { getMarkdown } from "../lib/mdParser";
 import commandExists from "command-exists";
-import { SYNONYMS } from "../lib/synonyms.js";
+import { SYNONYMS } from "../lib/synonyms";
 import fs from "fs-extra";
 import dragDrop from "drag-drop";
 import Head from "next/head";
