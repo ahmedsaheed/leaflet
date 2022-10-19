@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { ipcRenderer } from "electron";
-import { progress } from "../components/progress.ts";
-import { getMarkdown } from "../lib/mdParser.ts";
+import { progress } from "../components/progress";
+import { getMarkdown } from "../lib/mdParser";
 import commandExists from "command-exists";
 import { SYNONYMS } from "../lib/synonyms.js";
 import fs from "fs-extra";
@@ -13,37 +13,42 @@ import open from "open";
 import os from "os";
 
 export default function Next() {
-  const [value, setValue] = React.useState("");
-  const [insert, setInsert] = React.useState(false);
-  const [scroll, setScroll] = React.useState(0);
-  const [files, setFiles] = React.useState([]);
-  const [name, setName] = React.useState("");
-  const [path, setPath] = React.useState("");
-  const [isEdited, setIsEdited] = React.useState(false);
-  const [fileNameBox, setFileNameBox] = React.useState(false);
-  const [fileName, setFileName] = React.useState("");
-  const [pandocAvailable, setPandocAvailable] = React.useState(false);
-  const [cursor, setCursor] = React.useState("1L:1C");
-  const [thesaurus, setThesaurus] = React.useState([]);
-  const [displayThesaurus, setDisplayThesaurus] = React.useState(false);
-  const [clockState, setClockState] = React.useState();
-  const [whichIsActive, setWhichIsActive] = React.useState(0);
-  const [count, setCount] = React.useState(0);
-  const [finder, toogleFinder] = React.useState(false);
-  const [found, setFound] = React.useState(true);
-  const [buttomMenuState, setButtomMenuState] = React.useState(false);
-  const [saver, setSaver] = React.useState("");
-  const [wordToFind, setWordToFind] = React.useState("");
+  type file = {
+    path: string;
+    name: string;
+    body: string;
+    structure: {[key: string]: any}
+  };
+  const [value, setValue] = React.useState<string>("");
+  const [insert, setInsert] = React.useState<boolean>(false);
+  const [scroll, setScroll] = React.useState<number>(0);
+  const [files, setFiles] = React.useState<file[]>([]);
+  const [name, setName] = React.useState<string>("");
+  const [path, setPath] = React.useState<string>("");
+  const [isEdited, setIsEdited] = React.useState<boolean>(false);
+  const [fileNameBox, setFileNameBox] = React.useState<boolean>(false);
+  const [fileName, setFileName] = React.useState<string>("");
+  const [pandocAvailable, setPandocAvailable] = React.useState<boolean>(false);
+  const [cursor, setCursor] = React.useState<string>("1L:1C");
+  const [thesaurus, setThesaurus] = React.useState<string[]>([]);
+  const [displayThesaurus, setDisplayThesaurus] = React.useState<boolean>(false);
+  const [clockState, setClockState] = React.useState<string>();
+  const [whichIsActive, setWhichIsActive] = React.useState<number>(0);
+  const [count, setCount] = React.useState<number>(0);
+  const [finder, toogleFinder] = React.useState<boolean>(false);
+  const [found, setFound] = React.useState<boolean>(true);
+  const [buttomMenuState, setButtomMenuState] = React.useState<boolean>(false);
+  const [saver, setSaver] = React.useState<string>("");
+  const [wordToFind, setWordToFind] = React.useState<string>("");
   const appDir = mainPath.resolve(os.homedir(), "leaflet");
-  const [struct, setStruct] = React.useState([]);
-  const [isCreatingFolder, setIsCreatingFolder] = React.useState(false);
-  const [parentDir, setParentDir] = React.useState(appDir);
+  const [struct, setStruct] = React.useState<{[key: string]: any}>([]);
+  const [isCreatingFolder, setIsCreatingFolder] = React.useState<boolean>(false);
+  const [parentDir, setParentDir] = React.useState<string>(appDir);
   const Desktop = require("os").homedir() + "/Desktop";
-  const ref = useRef(null);
+  const ref = useRef<HTMLTextAreaElement>(null);
   let synonyms = {};
  
 
-  //_-_-_-_-_-_-_-_-_-_-_-_-_-_-_ INIT, CHECK FOR PANDOC & CLOCK-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
   useEffect(() => {
     openExternalInDefaultBrowser();
     checkForPandoc();
@@ -90,8 +95,9 @@ export default function Next() {
   };
 
   const getSynonyms = () => {
-    const answer = [];
-    let response = find_synonym(activeWord());
+    const answer:string[] = new Array() 
+
+    let response =  find_synonym(activeWord())
     if (!response) {
       return;
     }
@@ -126,11 +132,11 @@ export default function Next() {
   const activeWord = () => {
     const area = ref.current;
     const l = activeWordLocation();
-    return area.value.substr(l.from, l.to - l.from);
+    return area?.value.substr(l.from, l.to - l.from);
   };
 
   function uniq(a1) {
-    const a2 = [];
+    var a2:string[] = new Array() 
     for (const id in a1) {
       if (a2.indexOf(a1[id]) === -1) {
         a2[a2.length] = a1[id];
@@ -141,12 +147,13 @@ export default function Next() {
 
   const activeWordLocation = () => {
     const area = ref.current;
-    let position = area.selectionEnd;
-    let from = position - 1;
+    const position = area!.selectionStart
+    //let position:number = area?.selectionEnd;
+    var from = position  - 1;
 
     // Find beginning of word
     while (from > -1) {
-      const char = area.value[from];
+      const char = area?.value[from];
       if (!char || !char.match(/[a-z]/i)) {
         break;
       }
@@ -156,7 +163,7 @@ export default function Next() {
     // Find end of word
     let to = from + 1;
     while (to < from + 30) {
-      const char = area.value[to];
+      const char = area?.value[to];
       if (!char || !char.match(/[a-z]/i)) {
         break;
       }
@@ -164,7 +171,7 @@ export default function Next() {
     }
 
     from += 1;
-    return { from: from, to: to, word: area.value.substring(from, to) };
+    return { from: from, to: to, word: area?.value.substring(from, to) };
   };
 
   const replaceActiveWord = (word) => {
@@ -176,14 +183,14 @@ export default function Next() {
       const area = ref.current;
 
       const l = activeWordLocation();
-      const w = area.value.substr(l.from, l.to - l.from);
+      const w = area?.value.substr(l.from, l.to - l.from);
 
-      if (w.substr(0, 1) === w.substr(0, 1).toUpperCase()) {
+      if (w?.substr(0, 1) === w?.substr(0, 1)?.toUpperCase()) {
         word = word.substr(0, 1).toUpperCase() + word.substr(1, word.length);
       }
-      area.setSelectionRange(l.from, l.to);
+      area?.setSelectionRange(l.from, l.to);
       document.execCommand("insertText", false, word);
-      area.focus();
+      area?.focus();
     } catch (e) {
       console.log(e);
     }
@@ -192,10 +199,10 @@ export default function Next() {
   const nextSynonym = () => {
     setWhichIsActive(0);
     const element = document.getElementById("thesaurusWords");
-    let previousWord = element.children[whichIsActive];
+    var previousWord = element!.children[whichIsActive] as HTMLElement;
     setWhichIsActive((whichIsActive + 1) % thesaurus.length);
     setCount(count + 1);
-    const currentWord = element.children[whichIsActive];
+    const currentWord = element?.children[whichIsActive];
     if (previousWord) {
       previousWord.style.display = "none";
     }
@@ -216,11 +223,11 @@ export default function Next() {
     }
 
     const area = ref.current; 
-    const startPos = area.value.toLowerCase().indexOf(word);
+    const startPos = area?.value.toLowerCase().indexOf(word) as number | null;
     const endPos = startPos + word.length;
 
-    if (typeof area.selectionStart != "undefined") {
-      area.focus();
+    if (typeof area?.selectionStart != "undefined") {
+      area?.focus();
       if (startPos !== -1) {
         scrollAnimate(ref.current, endPos -100, 200)
         area.setSelectionRange(startPos, endPos);
@@ -249,7 +256,7 @@ export default function Next() {
       const val = easeInOutQuad(currentTime, start, change, duration)
       element.scrollTop = val
       if (currentTime < duration) {
-        requestAnimationFrame(animate, increment)
+        requestAnimationFrame(animate)
       }
     }
     requestAnimationFrame(animate)
@@ -292,12 +299,13 @@ export default function Next() {
 
   const openExternalInDefaultBrowser = () => {
     document.addEventListener("click", (event) => {
-      if (event.target.href && event.target.href.match(/^https?:\/\//)) {
+      const element = event.target  as HTMLAnchorElement | null;;
+      if (element?.tagName === "A") {
         event.preventDefault();
-        open(event.target.href);
-        return;
+        open(element?.href);
       }
     });
+
   };
 
   const Update = () => {
@@ -388,8 +396,11 @@ export default function Next() {
 
   useEffect(() => {
     dragDrop("body", (files) => {
+      const checkIndexNameValue = files[files.length - 1].name 
+      console.log(checkIndexNameValue)
       const _files = files.map((file) => {
         let fileName = file.name;
+        console.log("maddddd",fileName)
         let filePath = file.path;
         const extension = file.path.split(".").pop();
         if (extension != "md" && extension === "docx") {
@@ -406,6 +417,19 @@ export default function Next() {
       ipcRenderer.invoke("app:on-file-add", _files).then(() => {
         ipcRenderer.invoke("getTheFile").then((files = []) => {
           setFiles(files);
+          setInsert(false);
+          // set the value to currently added file
+          const index = files.findIndex((file) => file.name === checkIndexNameValue.split(".")[0]);
+        index !== -1 ?
+        () => {
+          setValue(files[index].body);
+          setName(files[index].name);
+          setPath(files[index].path);
+        } : () => {
+          setValue(files[0].body);
+          setName(files[0].name);
+          setPath(files[0].path);
+        }
           Update();
         });
       });
@@ -414,34 +438,34 @@ export default function Next() {
 
   const commentOut = () => {
     const area = ref.current;
-    if (area.selectionEnd === area.selectionStart) {
+    if (area?.selectionEnd === area?.selectionStart) {
       return;
     }
-    let first = area.selectionStart;
-    let second = area.selectionEnd;
+    let first = area!.selectionStart;
+    let second = area!.selectionEnd;
     let length = second - first;
-    let selectedText = area.value.substr(first, length);
+    let selectedText = area!.value.substr(first, length);
     if (selectedText.startsWith("<!--") && selectedText.endsWith("-->")) {
-      area.value = area.value.substr(0, first) + area.value.substr(second);
-      ref.current.setSelectionRange(first, first);
+      area!.value = area!.value.substr(0, first) + area?.value.substr(second);
+      area?.setSelectionRange(first, first);
       document.execCommand(
         "insertText",
         false,
         `${selectedText.substr(4, selectedText.length - 8)}`
       );
     } else {
-      area.value = area.value.substr(0, first) + area.value.substr(second);
-      ref.current.setSelectionRange(first, first);
+      area!.value = area?.value.substr(0, first) + area!.value.substr(second);
+      area?.setSelectionRange(first, first);
       document.execCommand("insertText", false, `<!-- ${selectedText} -->`);
     }
   };
 
   const bold = () => {
     const area = ref.current;
-    let first = area.selectionStart;
-    let second = area.selectionEnd;
+    let first = area!.selectionStart;
+    let second = area!.selectionEnd;
     let length = second - first;
-    let selectedText = area.value.substr(first, length);
+    let selectedText = area!.value.substr(first, length);
     selectedText.startsWith("**") && selectedText.endsWith("**")
       ? document.execCommand(
           "insertText",
@@ -449,26 +473,26 @@ export default function Next() {
           `${selectedText.substr(2, selectedText.length - 4)}`
         )
       : document.execCommand("insertText", false, `**${selectedText}** `);
-    ref.current.setSelectionRange(first + 2, first + 2);
+    area?.setSelectionRange(first + 2, first + 2);
   };
 
   const createLink = () => {
     const area = ref.current;
-    let first = area.selectionStart;
-    let second = area.selectionEnd;
+    let first = area!.selectionStart;
+    let second = area!.selectionEnd;
     let length = second - first;
-    let selectedText = area.value.substr(first, length);
-    if (selectedText.match("[(.*?)]((.*?))")) {
+    let selectedText = area?.value.substr(first, length);
+    if (selectedText?.match("[(.*?)]((.*?))")) {
       return;
     }
-    area.value = area.value.substr(0, first) + area.value.substr(second);
-    ref.current.setSelectionRange(first, first);
+    area!.value = area!.value.substr(0, first) + area?.value.substr(second);
+    area?.setSelectionRange(first, first);
     document.execCommand("insertText", false, `[${selectedText}](url)`);
-    selectedText.length === 0
-      ? ref.current.setSelectionRange(first + 1, first + 1)
-      : ref.current.setSelectionRange(
-          first + 1 + selectedText.length + 2,
-          first + 1 + selectedText.length + 5
+    selectedText?.length === 0
+      ? area?.setSelectionRange(first + 1, first + 1)
+      : area?.setSelectionRange(
+          first + 1 + selectedText!.length + 2,
+          first + 1 + selectedText!.length + 5
         );
   };
 
@@ -595,6 +619,7 @@ export default function Next() {
             Update();
             setStruct(files[0].structure.children)
             const index = Math.floor(Math.random() * files.length);
+            setInsert(false);
             setValue(files[index].body);
             setName(files[index].name);
             setPath(files[index].path);
@@ -647,8 +672,8 @@ export default function Next() {
   });
 
   const insertInTexarea = (s) => {
-    const pos = ref.current.selectionStart;
-    ref.current.setSelectionRange(pos, pos);
+    const pos = ref.current!.selectionStart;
+    ref.current?.setSelectionRange(pos, pos);
     document.execCommand("insertText", false, s);
   };
 
@@ -703,11 +728,11 @@ export default function Next() {
 
   const toggleButtomMenu = () => {
     const menu = document.getElementById("buttomMenu");
-    if (menu.getAttribute("aria-expanded") === "false") {
+    if (menu?.getAttribute("aria-expanded") === "false") {
       menu.setAttribute("aria-expanded", "true");
       setButtomMenuState(true);
     } else {
-      menu.setAttribute("aria-expanded", "false");
+      menu?.setAttribute("aria-expanded", "false");
       setButtomMenuState(false);
     }
   };
@@ -759,7 +784,7 @@ export default function Next() {
                     textOverflow: "ellipsis",
                   }}
                 >
-                  <details tabIndex="-1" open>
+                  <details tabIndex={1} open>
                     <summary
                       style={{
                         cursor: "pointer",
@@ -778,7 +803,7 @@ export default function Next() {
                           !fs.existsSync(file.path) ? null :
                           !fs.readdirSync(file.path).length ? null :
                           
-                          <details key={index} tabIndex="-1">
+                          <details key={index} tabIndex={-1}>
                             <summary
                               style={{
                                 cursor: "pointer",
@@ -808,7 +833,7 @@ export default function Next() {
                                         marginLeft: "1.8em",
                                       }}
                                     >
-                                      <details key={index} tabIndex="-1">
+                                      <details key={index} tabIndex={-1}>
                                         <summary
                                           style={{
                                             cursor: "pointer",
@@ -831,7 +856,7 @@ export default function Next() {
                                                   maxWidth: "100%",
                                                   textOverflow: "ellipsis",
                                                 }}
-                                                tabIndex="-1"
+                                                tabIndex={-1}
                                                 className={
                                                   path === child.path
                                                     ? "selected"
@@ -903,7 +928,7 @@ export default function Next() {
                                         overflow: "hidden",
                                         maxWidth: "100%",
                                       }}
-                                      tabIndex="-1"
+                                      tabIndex={-1}
                                       className={
                                         path === child.path
                                           ? "selected"
@@ -934,7 +959,7 @@ export default function Next() {
                           <>
                             <ol className="files">
                               <button
-                                tabIndex="-1"
+                                tabIndex={-1}
                                 className={
                                   path === file.path ? "selected" : "greys"
                                 }
@@ -951,7 +976,7 @@ export default function Next() {
                                   setPath(file.path);
                                   setInsert(false)
                                   }catch(err){
-                                    console(err)
+                                    console.log(err)
                                   }
                                 }}
                               >
@@ -979,7 +1004,7 @@ export default function Next() {
                             setFileNameBox(false);
                             return;
                           }
-                           isCreatingFolder ? createNewDir(fileName) : createNewFile(fileName);
+                           isCreatingFolder ? createNewDir(fileName) : createNewFile();
                           setFileNameBox(false);
                           setTimeout(() => {
                             setFileName("");
@@ -999,7 +1024,7 @@ export default function Next() {
                 </div>
                 <div className="fixed bottom-1">
                   <div
-                    tabIndex="0"
+                    tabIndex={-1}
                     id="buttomMenu"
                     role="button"
                     aria-expanded="false"
@@ -1020,12 +1045,12 @@ export default function Next() {
                         : { display: "none" }
                     }
                   >
-                    <button tabIndex="-1" onClick={openWindow}>
+                    <button tabIndex={-1} onClick={openWindow}>
                       Add File
                     </button>
                     <br />
                     <button
-                      tabIndex="-1"
+                      tabIndex={-1}
                       onClick={() => {
                         setFileNameBox(true);
                       }}
@@ -1033,7 +1058,7 @@ export default function Next() {
                       New File
                     </button>
                     <br />
-                    <button tabIndex="-1" onClick={() => {
+                    <button tabIndex={-1} onClick={() => {
                       setFileNameBox(true);
                       setIsCreatingFolder(true);
                     }}>
@@ -1042,11 +1067,11 @@ export default function Next() {
                     {pandocAvailable ? (
                       <>
                         <br />
-                        <button tabIndex="-1" onClick={convertToPDF}>
+                        <button tabIndex={-1} onClick={convertToPDF}>
                           Covert to PDF
                         </button>
                         <br />
-                        <button tabIndex="-1" onClick={converToDocx}>
+                        <button tabIndex={-1} onClick={converToDocx}>
                           Covert to Docx
                         </button>
                       </>
@@ -1095,7 +1120,7 @@ export default function Next() {
                     setDisplayThesaurus(false);
                     setWhichIsActive(0);
                   }}
-                  spellcheck="false"
+                  spellCheck="false"
                   className="h-full w-full"
                   autoComplete="false"
                   autoCorrect="false"
@@ -1136,19 +1161,19 @@ export default function Next() {
             }}
           >
             {displayThesaurus && insert ? (
-              <container
+              <div
                 style={{
                   paddingTop: "5px",
                   paddingRight: "40px",
                   paddingBottom: "5px",
-                  float: "center",
+                  alignContent: "center",
                   overflow: "hidden",
                 }}
               >
                 <li
                   id="thesaurusWords"
                   style={{
-                    marginButtom: "5px ",
+                    marginBottom: "5px",
                     listStyleType: "none",
                     marginRight: "10px",
                     display: "inline",
@@ -1176,10 +1201,10 @@ export default function Next() {
                     );
                   })}
                 </li>
-              </container>
+              </div>
             ) : finder ? (
               <>
-                <container
+                <div
                   className="Left"
                   style={{
                     float: "left",
@@ -1215,11 +1240,11 @@ export default function Next() {
                       <span style={{ display: "inline" }}> Not Found</span>
                     )}
                   </span>
-                </container>
+                </div>
               </>
             ) : (
               <>
-                <container
+                <div
                   className="Left"
                   style={{
                     float: "left",
@@ -1256,7 +1281,7 @@ export default function Next() {
                           overflow: "hidden",
                         }}
                         id="save"
-                        tabIndex="-1"
+                        tabIndex={-1}
                         onClick={() => {
                           try {
                             saveFile();
@@ -1269,8 +1294,8 @@ export default function Next() {
                       </button>
                     </>
                   ) : null}
-                </container>
-                <container
+                </div>
+                <div
                   className="Right"
                   style={{
                     float: "right",
@@ -1294,7 +1319,7 @@ export default function Next() {
                   </span>
                   <div style={{ display: "inline", marginLeft: "20px" }}></div>
                   {clockState}
-                </container>
+                </div>
               </>
             )}
           </div>

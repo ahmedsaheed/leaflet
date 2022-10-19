@@ -37,6 +37,9 @@ h3{
   .ButtomBar {
     background-color: #100f11;
   }
+  mark {
+    background-color: #ff9a9e;
+}
 
   kbd {
     display: inline-block;
@@ -123,6 +126,10 @@ strong{
     font-size: 12px;
     -webkit-font-smoothing: antialiased;
 
+  }
+
+  mark{
+    background-color: #b3d4fc;
   }
 
   kbd {
