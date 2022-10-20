@@ -1,4 +1,4 @@
-import { app, ipcMain, Menu, dialog, Notification } from "electron";
+import { app, ipcMain, Menu, dialog, Notification, shell } from "electron";
 import serve from "electron-serve";
 import { createWindow, markdown } from "./helpers";
 import path from "path";
@@ -306,7 +306,8 @@ const addFiles = (files = []) => {
 const deleteFile = (filePath) => {
   try{
     if (fs.existsSync(filePath)) {
-      fs.removeSync(filePath);
+      // move file to trash instead of fs.removeSync
+      shell.trashItem(filePath);
     }
   }catch(e){
     console.log(e);

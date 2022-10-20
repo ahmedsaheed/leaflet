@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ipcRenderer } from "electron";
 import { progress } from "../components/progress";
 import { getMarkdown } from "../lib/mdParser";
@@ -19,31 +19,31 @@ export default function Next() {
     body: string;
     structure: {[key: string]: any}
   };
-  const [value, setValue] = React.useState<string>("");
-  const [insert, setInsert] = React.useState<boolean>(false);
-  const [scroll, setScroll] = React.useState<number>(0);
-  const [files, setFiles] = React.useState<file[]>([]);
-  const [name, setName] = React.useState<string>("");
-  const [path, setPath] = React.useState<string>("");
-  const [isEdited, setIsEdited] = React.useState<boolean>(false);
-  const [fileNameBox, setFileNameBox] = React.useState<boolean>(false);
-  const [fileName, setFileName] = React.useState<string>("");
-  const [pandocAvailable, setPandocAvailable] = React.useState<boolean>(false);
-  const [cursor, setCursor] = React.useState<string>("1L:1C");
-  const [thesaurus, setThesaurus] = React.useState<string[]>([]);
-  const [displayThesaurus, setDisplayThesaurus] = React.useState<boolean>(false);
-  const [clockState, setClockState] = React.useState<string>();
-  const [whichIsActive, setWhichIsActive] = React.useState<number>(0);
-  const [count, setCount] = React.useState<number>(0);
-  const [finder, toogleFinder] = React.useState<boolean>(false);
-  const [found, setFound] = React.useState<boolean>(true);
-  const [buttomMenuState, setButtomMenuState] = React.useState<boolean>(false);
-  const [saver, setSaver] = React.useState<string>("");
-  const [wordToFind, setWordToFind] = React.useState<string>("");
+  const [value, setValue] = useState<string>("");
+  const [insert, setInsert] = useState<boolean>(false);
+  const [scroll, setScroll] = useState<number>(0);
+  const [files, setFiles] = useState<file[]>([]);
+  const [name, setName] = useState<string>("");
+  const [path, setPath] = useState<string>("");
+  const [isEdited, setIsEdited] = useState<boolean>(false);
+  const [fileNameBox, setFileNameBox] = useState<boolean>(false);
+  const [fileName, setFileName] = useState<string>("");
+  const [pandocAvailable, setPandocAvailable] = useState<boolean>(false);
+  const [cursor, setCursor] = useState<string>("1L:1C");
+  const [thesaurus, setThesaurus] = useState<string[]>([]);
+  const [displayThesaurus, setDisplayThesaurus] = useState<boolean>(false);
+  const [clockState, setClockState] = useState<string>();
+  const [whichIsActive, setWhichIsActive] = useState<number>(0);
+  const [count, setCount] = useState<number>(0);
+  const [finder, toogleFinder] = useState<boolean>(false);
+  const [found, setFound] = useState<boolean>(true);
+  const [buttomMenuState, setButtomMenuState] = useState<boolean>(false);
+  const [saver, setSaver] = useState<string>("");
+  const [wordToFind, setWordToFind] = useState<string>("");
   const appDir = mainPath.resolve(os.homedir(), "leaflet");
-  const [struct, setStruct] = React.useState<{[key: string]: any}>([]);
-  const [isCreatingFolder, setIsCreatingFolder] = React.useState<boolean>(false);
-  const [parentDir, setParentDir] = React.useState<string>(appDir);
+  const [struct, setStruct] = useState<{[key: string]: any}>([]);
+  const [isCreatingFolder, setIsCreatingFolder] = useState<boolean>(false);
+  const [parentDir, setParentDir] = useState<string>(appDir);
   const Desktop = require("os").homedir() + "/Desktop";
   const ref = useRef<HTMLTextAreaElement>(null);
   let synonyms = {};
@@ -72,7 +72,7 @@ export default function Next() {
   }, [files]);
 
 
-  const createNewDir =(name) =>{
+  const createNewDir =(name:string) =>{
     if(fs.existsSync(mainPath.join(parentDir, name)) || name === "" ){return}
     if (fs.existsSync(parentDir)){
       fs.mkdirSync(`${parentDir}/${name}`);
@@ -87,7 +87,10 @@ export default function Next() {
   }
 
   const checkForPandoc = () => {
-    commandExists("pandoc", (err, exists) => {
+    commandExists("pandoc", (err, exists ) => {
+      if (err) {
+        console.log(err);
+      }
       if (exists) {
         setPandocAvailable(true);
       }
@@ -96,11 +99,8 @@ export default function Next() {
 
   const getSynonyms = () => {
     const answer:string[] = new Array() 
-
     let response =  find_synonym(activeWord())
-    if (!response) {
-      return;
-    }
+    if (!response) {return;}
 
     for (let i = 0; i < response.length; i++) {
       answer.push(response[i]);
@@ -109,7 +109,7 @@ export default function Next() {
     setDisplayThesaurus(true);
   };
 
-  const find_synonym = (str) => {
+  const find_synonym = (str:string) => {
     if (str.trim().length < 4) {
       return;
     }
@@ -118,6 +118,7 @@ export default function Next() {
     synonyms = SYNONYMS;
 
     if (synonyms[target]) {
+      console.log(typeof synonyms[target]);
       return uniq(synonyms[target]);
     }
 
@@ -135,7 +136,7 @@ export default function Next() {
     return area?.value.substr(l.from, l.to - l.from);
   };
 
-  function uniq(a1) {
+  function uniq(a1: string[]) {
     var a2:string[] = new Array() 
     for (const id in a1) {
       if (a2.indexOf(a1[id]) === -1) {
@@ -148,7 +149,6 @@ export default function Next() {
   const activeWordLocation = () => {
     const area = ref.current;
     const position = area!.selectionStart
-    //let position:number = area?.selectionEnd;
     var from = position  - 1;
 
     // Find beginning of word
@@ -214,7 +214,7 @@ export default function Next() {
     }
   };
 
-    function find(word) {
+    function find(word: string) {
     if (word.trim().length < 4) {
       toogleFinder(false)
       setFound(true)
@@ -229,7 +229,7 @@ export default function Next() {
     if (typeof area?.selectionStart != "undefined") {
       area?.focus();
       if (startPos !== -1) {
-        scrollAnimate(ref.current, endPos -100, 200)
+        scrollAnimate(area, endPos -100, 200)
         area.setSelectionRange(startPos, endPos);
         toogleFinder(false);
       } else {
@@ -246,7 +246,7 @@ export default function Next() {
     return startPos;
   }
 
-  function scrollAnimate (element, to, duration) {
+  function scrollAnimate (element:HTMLElement, to:number, duration:number) {
     const start = element.scrollTop
     const change = to - start
     let currentTime = 0
@@ -262,7 +262,7 @@ export default function Next() {
     requestAnimationFrame(animate)
   }
  
-  function easeInOutQuad (t, b, c, d) {
+  function easeInOutQuad (t:number, b:number, c:number, d:number) {
     t /= d / 2
     if (t < 1) return c / 2 * t * t + b
     t--
@@ -312,7 +312,6 @@ export default function Next() {
     ipcRenderer.invoke("getTheFile").then((files = []) => {
       setFiles(files);
       setStruct(files[0].structure.children)
-
     });
   };
   const convertToPDF = () => {
@@ -671,9 +670,10 @@ export default function Next() {
     };
   });
 
-  const insertInTexarea = (s) => {
-    const pos = ref.current!.selectionStart;
-    ref.current?.setSelectionRange(pos, pos);
+  const insertInTexarea = (s:string) => {
+    const area = ref.current;
+    const pos = area.selectionStart;
+    area.setSelectionRange(pos, pos);
     document.execCommand("insertText", false, s);
   };
 
@@ -718,13 +718,6 @@ export default function Next() {
     }
   };
 
-  const handleClick = (e) => {
-    if (e.nativeEvent.button === 0) {
-      console.log("Left click");
-    } else if (e.nativeEvent.button === 2) {
-      console.log("Right click");
-    }
-  };
 
   const toggleButtomMenu = () => {
     const menu = document.getElementById("buttomMenu");
@@ -865,7 +858,6 @@ export default function Next() {
                                                 onClick={(e) => {
                                                   try {
                                                     setParentDir(mainPath.dirname(child.path));
-                                                    handleClick(e);
                                                     saveFile();
                                                     setValue(
                                                       fs.readFileSync(
@@ -936,7 +928,6 @@ export default function Next() {
                                       }
                                       onClick={(e) => {
                                         try {
-                                          handleClick(e);
                                           saveFile();
                                           setValue(
                                             fs.readFileSync(child.path, "utf8")
@@ -963,13 +954,9 @@ export default function Next() {
                                 className={
                                   path === file.path ? "selected" : "greys"
                                 }
-                                onContextMenu={(e) => {
-                                  handleClick(e);
-                                }}
                                 onClick={(e) => {
                                   try{
                                   setParentDir(mainPath.dirname(file.path));
-                                  handleClick(e);
                                   saveFile();
                                   setValue(fs.readFileSync(file.path, "utf8"));
                                   setName(file.name);
