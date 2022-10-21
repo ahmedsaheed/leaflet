@@ -42,6 +42,18 @@ h3{
   mark {
     background-color: #ff9a9e;
 }
+.util{
+    border-top: 1px solid #2d2d2d;
+    min-width: 30vw;
+    max-width: 30vw;
+    width: 30vw;
+    height: 28px;
+    /* display: flex; */
+    justify-content: space-between;
+    align-items: center;
+   
+
+}
 
   kbd {
     display: inline-block;
@@ -75,8 +87,12 @@ h3{
     background-color: #100f11;
     border-right: 1px solid #2d2d2d;
     user-select: none;
-    padding: 0 10px 10px 10px;
   }
+  .fileBody{
+     padding: 0 10px 10px 10px; 
+
+  }
+ 
 
   b {
     font-weight: bold;
@@ -135,6 +151,17 @@ strong{
 
   }
 
+  .util{
+    border-top: 1px solid #ddd;
+    min-width: 30vw;
+    max-width: 30vw;
+    width: 30vw;
+    height: 28px;
+    justify-content: space-between;
+    align-items: center
+
+}
+
   mark{
     background-color: #b3d4fc;
   }
@@ -183,10 +210,13 @@ strong{
     border-right: 1px solid #ddd;
     color: rgb(73, 80, 87) ;
     user-select: none;
-    padding: 0 10px 10px 10px;
   }
   .fs p{
     color: rbg(73, 80, 87)  !important;
+  }
+  .fileBody{
+     padding: 0 10px 10px 10px; 
+
   }
 
   b {

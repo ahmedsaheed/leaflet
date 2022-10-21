@@ -822,7 +822,6 @@ export default function Next() {
                                   ? null : (
                                     <div
                                       style={{
-                                        borderLeft: "1px solid #2d2d2d",
                                         marginLeft: "1.8em",
                                       }}
                                     >
@@ -830,6 +829,10 @@ export default function Next() {
                                         <summary
                                           style={{
                                             cursor: "pointer",
+                                            whiteSpace: "nowrap",
+                                            overflow: "hidden",
+                                            maxWidth: "100%",
+                                            textOverflow: "ellipsis", 
                                           }}
                                           onClick={() => {
                                             setParentDir(file.path);
@@ -894,7 +897,7 @@ export default function Next() {
                                                       d="M20.56 18H3.44C2.65 18 2 17.37 2 16.59V7.41C2 6.63 2.65 6 3.44 6h17.12c.79 0 1.44.63 1.44 1.41v9.18c0 .78-.65 1.41-1.44 1.41M6.81 15.19v-3.66l1.92 2.35l1.92-2.35v3.66h1.93V8.81h-1.93l-1.92 2.35l-1.92-2.35H4.89v6.38h1.92M19.69 12h-1.92V8.81h-1.92V12h-1.93l2.89 3.28L19.69 12Z"
                                                     />
                                                   </svg>{" "}
-                                                  {child.name}
+                                                  {child.name.slice(0, -3)}
                                                 </p>
                                               </button>
                                             </ol>
@@ -940,7 +943,7 @@ export default function Next() {
                                         }
                                       }}
                                     >
-                                      {child.name}
+                                      {child.name.slice(0, -3)}
                                     </button>
                                   </ol>
                                 ) 
@@ -969,7 +972,7 @@ export default function Next() {
                               >
                                 <p
                                   style={{ display: "inline" }}
-                                >{`${file.name} `}</p>
+                                >{`${file.name.slice(0,-3)} `}</p>
                               </button>
                             </ol>
                           </>
@@ -1009,7 +1012,9 @@ export default function Next() {
                     ) : null}
                   </details>
                 </div>
-                <div className="fixed bottom-1">
+                <div className={"fixed util"}
+                style={buttomMenuState ? {bottom: "5rem"} : {bottom: "0.25rem"}}
+                >
                   <div
                     tabIndex={-1}
                     id="buttomMenu"
@@ -1017,12 +1022,14 @@ export default function Next() {
                     aria-expanded="false"
                     onClick={toggleButtomMenu}
                     style={{ cursor: "pointer" }}
+                
+
                   >
                     <p
                       style={{ display: "inline" }}
                       className={buttomMenuState ? "Opened" : "Closed"}
                     ></p>
-                    <p style={{ display: "inline" }}>UTILITIES</p>
+                    <p style={{ display: "inline"}}>Utilities</p>
                   </div>
                   <div
                     className={buttomMenuState ? "slideIn" : ""}
