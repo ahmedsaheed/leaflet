@@ -877,9 +877,8 @@ export default function Next() {
                                                     setName(child.name);
                                                     setPath(child.path);
                                                     setInsert(false);
-                                                    document.getElementById(
-                                                      "previewArea"
-                                                    ).scrollTop = 0;
+
+                                    document.documentElement.scrollTop = 0;
                                                   } catch (err) {
                                                     console.log(err);
                                                   }
@@ -948,9 +947,7 @@ export default function Next() {
                                           setName(child.name);
                                           setPath(child.path);
                                           setInsert(false);
-                                          document.getElementById(
-                                            "previewArea"
-                                          ).scrollTop = 0;
+                                    document.documentElement.scrollTop = 0;
                                         } catch (err) {
                                           console.log(err);
                                         }
@@ -1003,9 +1000,7 @@ export default function Next() {
                                     setName(file.name);
                                     setPath(file.path);
                                     setInsert(false);
-                                    document.getElementById(
-                                      "previewArea"
-                                    ).scrollTop = 0;
+                                    document.documentElement.scrollTop = 0;
                                   } catch (err) {
                                     console.log(err);
                                   }
