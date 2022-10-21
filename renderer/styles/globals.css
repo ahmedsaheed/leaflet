@@ -3,36 +3,38 @@
 @tailwind utilities;
 
 
-h1,h2,h3,h4,h5,h6 {
-  font-weight: 400 !important;
-}
-
-
 h2 {
-  font-size: 18px;
-  margin-bottom: 0.5em;
+  font-weight: 600;
+  font-size: 20px;
   line-height: 1.2 !important;
+  padding: 3px, 2px;
 
 }
 h1{
+  font-weight: 600;
   line-height: 1.2 !important;
-  font-size: 22px;
-  margin-bottom: 0.5em;
+  font-size: 24px;
+  padding: 3px, 2px;
 }
 h3{
+  font-weight: 600;
   line-height: 1.2 !important;  
-  font-size: 15px;
-  margin-bottom: 0.5em;
+  font-size: 18px;
+  padding: 3px, 2px;
 }
 
 @media (prefers-color-scheme: dark) {
   body {
+    font-weight: 600;
     -webkit-app-region: drag;
     background: #1e1e1e;
     color: white;
-    font-family: "iA Writer Duospace", sans-serif;
+    font-family: "iA Writer Mono", monospace;
     -webkit-font-smoothing: antialiased;
-    font-size: 12px;
+    font-size: 13px;
+    letter-spacing: 0.055em;
+    line-height: 1.6;
+
   }
   .ButtomBar {
     background-color: #100f11;
@@ -56,7 +58,7 @@ h3{
   }
 
   pre {
-    font-family: "iA Writer Duospace", sans-serif;
+    font-family: "iA Writer Mono", monospace;
     background-color: #232223;
     border-radius: 5px;
     margin: 10px;
@@ -119,12 +121,17 @@ strong{
 
 @media (prefers-color-scheme: light) {
   body {
+    font-weight: 600;
     -webkit-app-region: drag;
     background: #fff;
-    color: black;
-    font-family: "iA Writer Duospace", sans-serif;
-    font-size: 12px;
+    color: #37352F;
+    font-family: "iA Writer Mono", monospace;
+    font-size: 13px;
     -webkit-font-smoothing: antialiased;
+    letter-spacing: 0.055em;
+    line-height: 1.6;
+
+
 
   }
 
@@ -135,7 +142,7 @@ strong{
   kbd {
     display: inline-block;
     padding: 3px 5px;
-    font: 11px "iA Writer Duospace",monospace;
+    font: 11px "iA Writer Mono",monospace;
     line-height: 10px;
     color: black;
     vertical-align: middle;
@@ -161,7 +168,7 @@ strong{
   }
 
   pre {
-    font-family: "iA Writer Duospace", sans-serif;
+    font-family: "iA Writer Mono", monospace;
     background-color: rgb(222, 226, 230);
     border-radius: 5px;
     margin: 10px;
@@ -206,15 +213,16 @@ strong{
   }
 
   ::selection {
-    background: grey;
-    color: black;
+    background: #b3d4fc;
   }
 }
 
-li {
-  list-style: disc;
-  margin-bottom: 10px;
-}
+li { 
+   list-style: disc; 
+   margin-bottom: 10px; 
+  padding: 3px, 2px;
+
+ } 
 ul,
 ol {
   margin-left: 2em;
@@ -268,8 +276,8 @@ textarea:focus-visible {
 }
 
 code {
-  font-family: "iA Writer Duospace", sans-serif;
-  padding: 0.2em 0.4em;
+    font-family: "iA Writer Mono", monospace;
+    padding: 0.2em 0.4em;
     white-space: pre-wrap;
 
 
@@ -285,7 +293,7 @@ p {
   margin: 0.8em 0;
 }
 a {
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #7c7c7c;;
 }
 
 .mainer {

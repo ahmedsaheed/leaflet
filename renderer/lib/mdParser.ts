@@ -3,7 +3,16 @@ import metadata_block from 'markdown-it-metadata-block'
 import yaml from 'yaml'
 
 
-export const getMarkdown = (value: string) => {  
+export const getMarkdown = (value: string) => { 
+    //create object to store metadata with attributes of name and date
+    type metadata = {
+        name?: string,
+        date?: string,
+        noteType?: string
+    }
+ 
+    const data: metadata = {}
+
     const md = require('markdown-it')({
         html: true,
         typographer: true,
@@ -22,9 +31,11 @@ export const getMarkdown = (value: string) => {
       require('markdown-it-pandoc')(md);
       md.use(metadata_block,{
         parseMetadata: yaml.parse,
+        data
       })
 
       try{
+
         return { __html: md.render(value) };
       }catch(err){
         return { __html: "Couldn't render, Something not right!" };
