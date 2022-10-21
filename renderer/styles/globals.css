@@ -48,7 +48,7 @@ h3{
     max-width: 30vw;
     width: 30vw;
     height: 28px;
-    /* display: flex; */
+    padding-top: 5px;
     justify-content: space-between;
     align-items: center;
    
@@ -157,6 +157,7 @@ strong{
     max-width: 30vw;
     width: 30vw;
     height: 28px;
+    paddint-top: 5px;
     justify-content: space-between;
     align-items: center
 

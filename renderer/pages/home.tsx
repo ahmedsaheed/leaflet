@@ -17,7 +17,7 @@ export default function Next() {
     path: string;
     name: string;
     body: string;
-    structure: {[key: string]: any}
+    structure: { [key: string]: any };
   };
   const [value, setValue] = useState<string>("");
   const [insert, setInsert] = useState<boolean>(false);
@@ -41,13 +41,12 @@ export default function Next() {
   const [saver, setSaver] = useState<string>("");
   const [wordToFind, setWordToFind] = useState<string>("");
   const appDir = mainPath.resolve(os.homedir(), "leaflet");
-  const [struct, setStruct] = useState<{[key: string]: any}>([]);
+  const [struct, setStruct] = useState<{ [key: string]: any }>([]);
   const [isCreatingFolder, setIsCreatingFolder] = useState<boolean>(false);
   const [parentDir, setParentDir] = useState<string>(appDir);
   const Desktop = require("os").homedir() + "/Desktop";
   const ref = useRef<HTMLTextAreaElement>(null);
   let synonyms = {};
- 
 
   useEffect(() => {
     openExternalInDefaultBrowser();
@@ -71,23 +70,24 @@ export default function Next() {
     }
   }, [files]);
 
-
-  const createNewDir =(name:string) =>{
-    if(fs.existsSync(mainPath.join(parentDir, name)) || name === "" ){return}
-    if (fs.existsSync(parentDir)){
+  const createNewDir = (name: string) => {
+    if (fs.existsSync(mainPath.join(parentDir, name)) || name === "") {
+      return;
+    }
+    if (fs.existsSync(parentDir)) {
       fs.mkdirSync(`${parentDir}/${name}`);
       //create new file
-      fs.writeFileSync(`${parentDir}/${name}/new.md`, 
-      `${name} created on ${generateDate()} at ${clockState}`);
+      fs.writeFileSync(
+        `${parentDir}/${name}/new.md`,
+        `${name} created on ${generateDate()} at ${clockState}`
+      );
       Update();
     }
     setIsCreatingFolder(false);
-
-
-  }
+  };
 
   const checkForPandoc = () => {
-    commandExists("pandoc", (err, exists ) => {
+    commandExists("pandoc", (err, exists) => {
       if (err) {
         console.log(err);
       }
@@ -98,9 +98,11 @@ export default function Next() {
   };
 
   const getSynonyms = () => {
-    const answer:string[] = new Array() 
-    let response =  find_synonym(activeWord())
-    if (!response) {return;}
+    const answer: string[] = new Array();
+    let response = find_synonym(activeWord());
+    if (!response) {
+      return;
+    }
 
     for (let i = 0; i < response.length; i++) {
       answer.push(response[i]);
@@ -109,7 +111,7 @@ export default function Next() {
     setDisplayThesaurus(true);
   };
 
-  const find_synonym = (str:string) => {
+  const find_synonym = (str: string) => {
     if (str.trim().length < 4) {
       return;
     }
@@ -137,7 +139,7 @@ export default function Next() {
   };
 
   function uniq(a1: string[]) {
-    var a2:string[] = new Array() 
+    var a2: string[] = new Array();
     for (const id in a1) {
       if (a2.indexOf(a1[id]) === -1) {
         a2[a2.length] = a1[id];
@@ -148,8 +150,8 @@ export default function Next() {
 
   const activeWordLocation = () => {
     const area = ref.current;
-    const position = area!.selectionStart
-    var from = position  - 1;
+    const position = area!.selectionStart;
+    var from = position - 1;
 
     // Find beginning of word
     while (from > -1) {
@@ -214,22 +216,22 @@ export default function Next() {
     }
   };
 
-    function find(word: string) {
+  function find(word: string) {
     if (word.trim().length < 4) {
-      toogleFinder(false)
-      setFound(true)
-      setWordToFind("")
+      toogleFinder(false);
+      setFound(true);
+      setWordToFind("");
       return;
     }
 
-    const area = ref.current; 
+    const area = ref.current;
     const startPos = area?.value.toLowerCase().indexOf(word) as number | null;
     const endPos = startPos + word.length;
 
     if (typeof area?.selectionStart != "undefined") {
       area?.focus();
       if (startPos !== -1) {
-        scrollAnimate(area, endPos -100, 200)
+        scrollAnimate(area, endPos - 100, 200);
         area.setSelectionRange(startPos, endPos);
         toogleFinder(false);
       } else {
@@ -246,29 +248,28 @@ export default function Next() {
     return startPos;
   }
 
-  function scrollAnimate (element:HTMLElement, to:number, duration:number) {
-    const start = element.scrollTop
-    const change = to - start
-    let currentTime = 0
-    const increment = 20 
+  function scrollAnimate(element: HTMLElement, to: number, duration: number) {
+    const start = element.scrollTop;
+    const change = to - start;
+    let currentTime = 0;
+    const increment = 20;
     const animate = function () {
-      currentTime += increment
-      const val = easeInOutQuad(currentTime, start, change, duration)
-      element.scrollTop = val
+      currentTime += increment;
+      const val = easeInOutQuad(currentTime, start, change, duration);
+      element.scrollTop = val;
       if (currentTime < duration) {
-        requestAnimationFrame(animate)
+        requestAnimationFrame(animate);
       }
-    }
-    requestAnimationFrame(animate)
-  }
- 
-  function easeInOutQuad (t:number, b:number, c:number, d:number) {
-    t /= d / 2
-    if (t < 1) return c / 2 * t * t + b
-    t--
-    return -c / 2 * (t * (t - 2) - 1) + b
+    };
+    requestAnimationFrame(animate);
   }
 
+  function easeInOutQuad(t: number, b: number, c: number, d: number) {
+    t /= d / 2;
+    if (t < 1) return (c / 2) * t * t + b;
+    t--;
+    return (-c / 2) * (t * (t - 2) - 1) + b;
+  }
 
   const generateDate = () => {
     const date = new Date();
@@ -299,23 +300,22 @@ export default function Next() {
 
   const openExternalInDefaultBrowser = () => {
     document.addEventListener("click", (event) => {
-      const element = event.target  as HTMLAnchorElement | null;;
+      const element = event.target as HTMLAnchorElement | null;
       if (element?.tagName === "A") {
         event.preventDefault();
         open(element?.href);
       }
     });
-
   };
 
   const Update = () => {
     ipcRenderer.invoke("getTheFile").then((files = []) => {
       setFiles(files);
-      setStruct(files[0].structure.children)
+      setStruct(files[0].structure.children);
     });
   };
   const convertToPDF = () => {
-    try{
+    try {
       const path = `${Desktop}/${name.replace(/\.md$/, "")}.pdf`;
       pandoc(value, `-f markdown -t pdf -o ${path}`, function (err, result) {
         if (err) console.log(err);
@@ -323,13 +323,13 @@ export default function Next() {
           open(path);
         }
       });
-    }catch(e){
-      console.log(e)
+    } catch (e) {
+      console.log(e);
     }
   };
 
   const converToDocx = () => {
-    try{
+    try {
       const path = `${Desktop}/${name.replace(/\.md$/, "")}.docx`;
       pandoc(value, `-f markdown -t docx -o ${path}`, function (err, result) {
         if (err) console.log(err);
@@ -337,10 +337,9 @@ export default function Next() {
           open(path);
         }
       });
-    }catch(e){
-      console.log(e)
+    } catch (e) {
+      console.log(e);
     }
-  
   };
 
   useEffect(() => {
@@ -395,11 +394,11 @@ export default function Next() {
 
   useEffect(() => {
     dragDrop("body", (files) => {
-      const checkIndexNameValue = files[files.length - 1].name 
-      console.log(checkIndexNameValue)
+      const checkIndexNameValue = files[files.length - 1].name;
+      console.log(checkIndexNameValue);
       const _files = files.map((file) => {
         let fileName = file.name;
-        console.log("maddddd",fileName)
+        console.log("maddddd", fileName);
         let filePath = file.path;
         const extension = file.path.split(".").pop();
         if (extension != "md" && extension === "docx") {
@@ -418,17 +417,20 @@ export default function Next() {
           setFiles(files);
           setInsert(false);
           // set the value to currently added file
-          const index = files.findIndex((file) => file.name === checkIndexNameValue.split(".")[0]);
-        index !== -1 ?
-        () => {
-          setValue(files[index].body);
-          setName(files[index].name);
-          setPath(files[index].path);
-        } : () => {
-          setValue(files[0].body);
-          setName(files[0].name);
-          setPath(files[0].path);
-        }
+          const index = files.findIndex(
+            (file) => file.name === checkIndexNameValue.split(".")[0]
+          );
+          index !== -1
+            ? () => {
+                setValue(files[index].body);
+                setName(files[index].name);
+                setPath(files[index].path);
+              }
+            : () => {
+                setValue(files[0].body);
+                setName(files[0].name);
+                setPath(files[0].path);
+              };
           Update();
         });
       });
@@ -497,10 +499,12 @@ export default function Next() {
 
   const createNewFile = () => {
     fileName != ""
-      ? ipcRenderer.invoke("createNewFile",parentDir, fileName.replace(/\.md$/, "")).then(() => {
-          setFiles(files);
-          Update();
-        })
+      ? ipcRenderer
+          .invoke("createNewFile", parentDir, fileName.replace(/\.md$/, ""))
+          .then(() => {
+            setFiles(files);
+            Update();
+          })
       : null;
   };
 
@@ -616,7 +620,7 @@ export default function Next() {
           }
           ipcRenderer.invoke("deleteFile", name, path).then(() => {
             Update();
-            setStruct(files[0].structure.children)
+            setStruct(files[0].structure.children);
             const index = Math.floor(Math.random() * files.length);
             setInsert(false);
             setValue(files[index].body);
@@ -670,7 +674,7 @@ export default function Next() {
     };
   });
 
-  const insertInTexarea = (s:string) => {
+  const insertInTexarea = (s: string) => {
     const area = ref.current;
     const pos = area.selectionStart;
     area.setSelectionRange(pos, pos);
@@ -717,7 +721,6 @@ export default function Next() {
       setCursor(`${lineNo}L ${colNo}C`);
     }
   };
-
 
   const toggleButtomMenu = () => {
     const menu = document.getElementById("buttomMenu");
@@ -777,7 +780,7 @@ export default function Next() {
                     textOverflow: "ellipsis",
                   }}
                 >
-                  <details tabIndex={1} open>
+                  <details tabIndex={-1} open>
                     <summary
                       style={{
                         cursor: "pointer",
@@ -793,33 +796,32 @@ export default function Next() {
                     {struct
                       .map((file, index) =>
                         file.children ? (
-                          !fs.existsSync(file.path) ? null :
-                          !fs.readdirSync(file.path).length ? null :
-                          
-                          <details key={index} tabIndex={-1}>
-                            <summary
-                              style={{
-                                cursor: "pointer",
-                                fontSize: "12px",
-                                fontWeight: "bold",
-                                fontFamily:
-                                  "--apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
-                                marginLeft: "1em",
-                              }}
-                              onClick={() => {
-                                setParentDir(file.path);
-                              }}
-                            >
-                              {" "}
-                              {file.name.charAt(0).toUpperCase() +
-                                file.name.slice(1)}
-                            </summary>
-                           {file.children
-                              .map((child, index) =>
-                               !fs.existsSync(child.path) ? null :
-                                fs.statSync(child.path).isDirectory() ? (
-                                  !fs.readdirSync(child.path).length 
-                                  ? null : (
+                          !fs.existsSync(file.path) ? null : !fs.readdirSync(
+                              file.path
+                            ).length ? null : (
+                            <details key={index} tabIndex={-1}>
+                              <summary
+                                style={{
+                                  cursor: "pointer",
+                                  fontSize: "12px",
+                                  fontWeight: "bold",
+                                  fontFamily:
+                                    "--apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
+                                  marginLeft: "1em",
+                                }}
+                                onClick={() => {
+                                  setParentDir(file.path);
+                                }}
+                              >
+                                {" "}
+                                {file.name.charAt(0).toUpperCase() +
+                                  file.name.slice(1)}
+                              </summary>
+                              {file.children.map((child, index) =>
+                                !fs.existsSync(child.path) ? null : fs
+                                    .statSync(child.path)
+                                    .isDirectory() ? (
+                                  !fs.readdirSync(child.path).length ? null : (
                                     <div
                                       style={{
                                         marginLeft: "1.8em",
@@ -832,7 +834,7 @@ export default function Next() {
                                             whiteSpace: "nowrap",
                                             overflow: "hidden",
                                             maxWidth: "100%",
-                                            textOverflow: "ellipsis", 
+                                            textOverflow: "ellipsis",
                                           }}
                                           onClick={() => {
                                             setParentDir(file.path);
@@ -860,7 +862,11 @@ export default function Next() {
                                                 }
                                                 onClick={(e) => {
                                                   try {
-                                                    setParentDir(mainPath.dirname(child.path));
+                                                    setParentDir(
+                                                      mainPath.dirname(
+                                                        child.path
+                                                      )
+                                                    );
                                                     saveFile();
                                                     setValue(
                                                       fs.readFileSync(
@@ -871,6 +877,9 @@ export default function Next() {
                                                     setName(child.name);
                                                     setPath(child.path);
                                                     setInsert(false);
+                                                    document.getElementById(
+                                                      "previewArea"
+                                                    ).scrollTop = 0;
                                                   } catch (err) {
                                                     console.log(err);
                                                   }
@@ -919,6 +928,7 @@ export default function Next() {
                                   <ol className="files">
                                     <button
                                       style={{
+                                        marginLeft: "1.8em",
                                         whiteSpace: "nowrap",
                                         overflow: "hidden",
                                         maxWidth: "100%",
@@ -938,17 +948,43 @@ export default function Next() {
                                           setName(child.name);
                                           setPath(child.path);
                                           setInsert(false);
+                                          document.getElementById(
+                                            "previewArea"
+                                          ).scrollTop = 0;
                                         } catch (err) {
                                           console.log(err);
                                         }
                                       }}
                                     >
-                                      {child.name.slice(0, -3)}
+                                      <p
+                                        style={{
+                                          display: "inline",
+                                          width: "100%",
+                                          whiteSpace: "nowrap",
+                                          overflow: "hidden",
+                                          textOverflow: "ellipsis",
+                                        }}
+                                      >
+                                        <svg
+                                          style={{
+                                            display: "inline",
+                                          }}
+                                          height="22"
+                                          viewBox="0 0 24 24"
+                                        >
+                                          <path
+                                            fill="#888888"
+                                            d="M20.56 18H3.44C2.65 18 2 17.37 2 16.59V7.41C2 6.63 2.65 6 3.44 6h17.12c.79 0 1.44.63 1.44 1.41v9.18c0 .78-.65 1.41-1.44 1.41M6.81 15.19v-3.66l1.92 2.35l1.92-2.35v3.66h1.93V8.81h-1.93l-1.92 2.35l-1.92-2.35H4.89v6.38h1.92M19.69 12h-1.92V8.81h-1.92V12h-1.93l2.89 3.28L19.69 12Z"
+                                          />
+                                        </svg>{" "}
+                                        {child.name.slice(0, -3)}
+                                      </p>
                                     </button>
                                   </ol>
-                                ) 
+                                )
                               )}
-                          </details>
+                            </details>
+                          )
                         ) : (
                           <>
                             <ol className="files">
@@ -958,21 +994,46 @@ export default function Next() {
                                   path === file.path ? "selected" : "greys"
                                 }
                                 onClick={(e) => {
-                                  try{
-                                  setParentDir(mainPath.dirname(file.path));
-                                  saveFile();
-                                  setValue(fs.readFileSync(file.path, "utf8"));
-                                  setName(file.name);
-                                  setPath(file.path);
-                                  setInsert(false)
-                                  }catch(err){
-                                    console.log(err)
+                                  try {
+                                    setParentDir(mainPath.dirname(file.path));
+                                    saveFile();
+                                    setValue(
+                                      fs.readFileSync(file.path, "utf8")
+                                    );
+                                    setName(file.name);
+                                    setPath(file.path);
+                                    setInsert(false);
+                                    document.getElementById(
+                                      "previewArea"
+                                    ).scrollTop = 0;
+                                  } catch (err) {
+                                    console.log(err);
                                   }
                                 }}
                               >
                                 <p
-                                  style={{ display: "inline" }}
-                                >{`${file.name.slice(0,-3)} `}</p>
+                                  style={{
+                                    display: "inline",
+                                    width: "100%",
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                  }}
+                                >
+                                  <svg
+                                    style={{
+                                      display: "inline",
+                                    }}
+                                    height="22"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      fill="#888888"
+                                      d="M20.56 18H3.44C2.65 18 2 17.37 2 16.59V7.41C2 6.63 2.65 6 3.44 6h17.12c.79 0 1.44.63 1.44 1.41v9.18c0 .78-.65 1.41-1.44 1.41M6.81 15.19v-3.66l1.92 2.35l1.92-2.35v3.66h1.93V8.81h-1.93l-1.92 2.35l-1.92-2.35H4.89v6.38h1.92M19.69 12h-1.92V8.81h-1.92V12h-1.93l2.89 3.28L19.69 12Z"
+                                    />
+                                  </svg>{" "}
+                                  {file.name.slice(0, -3)}
+                                </p>
                               </button>
                             </ol>
                           </>
@@ -985,8 +1046,7 @@ export default function Next() {
                           return 1;
                         }
                       })}
-                      
-                      
+
                     {fileNameBox ? (
                       <form
                         onSubmit={() => {
@@ -994,7 +1054,9 @@ export default function Next() {
                             setFileNameBox(false);
                             return;
                           }
-                           isCreatingFolder ? createNewDir(fileName) : createNewFile();
+                          isCreatingFolder
+                            ? createNewDir(fileName)
+                            : createNewFile();
                           setFileNameBox(false);
                           setTimeout(() => {
                             setFileName("");
@@ -1005,15 +1067,20 @@ export default function Next() {
                           autoFocus
                           className="createFile"
                           type="text"
-                          placeholder= {isCreatingFolder ? "Folder Name" : "File Name"}
+                          placeholder={
+                            isCreatingFolder ? "Folder Name" : "File Name"
+                          }
                           onChange={(e) => setFileName(e.target.value)}
                         />
                       </form>
                     ) : null}
                   </details>
                 </div>
-                <div className={"fixed util"}
-                style={buttomMenuState ? {bottom: "5rem"} : {bottom: "0.25rem"}}
+                <div
+                  className={"fixed util"}
+                  style={
+                    buttomMenuState ? { bottom: "5rem" } : { bottom: "0.25rem" }
+                  }
                 >
                   <div
                     tabIndex={-1}
@@ -1022,14 +1089,12 @@ export default function Next() {
                     aria-expanded="false"
                     onClick={toggleButtomMenu}
                     style={{ cursor: "pointer" }}
-                
-
                   >
                     <p
                       style={{ display: "inline" }}
                       className={buttomMenuState ? "Opened" : "Closed"}
                     ></p>
-                    <p style={{ display: "inline"}}>Utilities</p>
+                    <p style={{ display: "inline" }}>Utilities</p>
                   </div>
                   <div
                     className={buttomMenuState ? "slideIn" : ""}
@@ -1052,10 +1117,13 @@ export default function Next() {
                       New File
                     </button>
                     <br />
-                    <button tabIndex={-1} onClick={() => {
-                      setFileNameBox(true);
-                      setIsCreatingFolder(true);
-                    }}>
+                    <button
+                      tabIndex={-1}
+                      onClick={() => {
+                        setFileNameBox(true);
+                        setIsCreatingFolder(true);
+                      }}
+                    >
                       New Folder
                     </button>
                     {pandocAvailable ? (
@@ -1216,11 +1284,12 @@ export default function Next() {
                           if (wordToFind.length < 1) {
                             toogleFinder(false);
                             return;
-                          } find(wordToFind) 
+                          }
+                          find(wordToFind);
                         }}
                       >
                         <input
-                        id="finderInput"
+                          id="finderInput"
                           autoFocus
                           className="createFile"
                           type="text"
