@@ -801,6 +801,7 @@ export default function Next() {
                             ).length ? null : (
                             <details key={index} tabIndex={-1}>
                               <summary
+                                    className="files"
                                 style={{
                                   cursor: "pointer",
                                   fontSize: "12px",
@@ -829,6 +830,7 @@ export default function Next() {
                                     >
                                       <details key={index} tabIndex={-1}>
                                         <summary
+                                          className="files"
                                           style={{
                                             cursor: "pointer",
                                             whiteSpace: "nowrap",
@@ -846,20 +848,10 @@ export default function Next() {
                                         </summary>
                                         {child.children
                                           .map((child, index) => (
-                                            <ol className="files">
-                                              <button
-                                                style={{
-                                                  whiteSpace: "nowrap",
-                                                  overflow: "hidden",
-                                                  maxWidth: "100%",
-                                                  textOverflow: "ellipsis",
-                                                }}
-                                                tabIndex={-1}
-                                                className={
-                                                  path === child.path
-                                                    ? "selected"
-                                                    : "greys"
-                                                }
+                                            <ol className="files"
+                                            style={{
+                                            cursor: "pointer"}}
+
                                                 onClick={(e) => {
                                                   try {
                                                     setParentDir(
@@ -883,6 +875,20 @@ export default function Next() {
                                                     console.log(err);
                                                   }
                                                 }}
+                                            >
+                                              <button
+                                                style={{
+                                                  whiteSpace: "nowrap",
+                                                  overflow: "hidden",
+                                                  maxWidth: "100%",
+                                                  textOverflow: "ellipsis",
+                                                }}
+                                                tabIndex={-1}
+                                                className={
+                                                  path === child.path
+                                                    ? "selected"
+                                                    : "greys"
+                                                }
                                               >
                                                 <p
                                                   style={{
@@ -924,20 +930,8 @@ export default function Next() {
                                     </div>
                                   )
                                 ) : (
-                                  <ol className="files">
-                                    <button
-                                      style={{
-                                        marginLeft: "1.8em",
-                                        whiteSpace: "nowrap",
-                                        overflow: "hidden",
-                                        maxWidth: "100%",
-                                      }}
-                                      tabIndex={-1}
-                                      className={
-                                        path === child.path
-                                          ? "selected"
-                                          : "greys"
-                                      }
+                                  <ol className="files"
+                                    
                                       onClick={(e) => {
                                         try {
                                           saveFile();
@@ -952,6 +946,22 @@ export default function Next() {
                                           console.log(err);
                                         }
                                       }}
+                                            style={{
+                                            cursor: "pointer"}}
+                                  >
+                                    <button
+                                      style={{
+                                        marginLeft: "1.8em",
+                                        whiteSpace: "nowrap",
+                                        overflow: "hidden",
+                                        maxWidth: "100%",
+                                      }}
+                                      tabIndex={-1}
+                                      className={
+                                        path === child.path
+                                          ? "selected"
+                                          : "greys"
+                                      }
                                     >
                                       <p
                                         style={{
@@ -984,12 +994,8 @@ export default function Next() {
                           )
                         ) : (
                           <>
-                            <ol className="files">
-                              <button
-                                tabIndex={-1}
-                                className={
-                                  path === file.path ? "selected" : "greys"
-                                }
+                            <ol className="files"
+                            
                                 onClick={(e) => {
                                   try {
                                     setParentDir(mainPath.dirname(file.path));
@@ -1005,6 +1011,14 @@ export default function Next() {
                                     console.log(err);
                                   }
                                 }}
+                                            style={{
+                                            cursor: "pointer"}}
+                            >
+                              <button
+                                tabIndex={-1}
+                                className={
+                                  path === file.path ? "selected" : "greys"
+                                }
                               >
                                 <p
                                   style={{

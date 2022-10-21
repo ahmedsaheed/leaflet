@@ -55,6 +55,12 @@ h3{
 
 }
 
+.files:hover {
+  background-color: #2d2d2d;
+  border-radius: 3px;
+}
+
+
   kbd {
     display: inline-block;
     padding: 3px 5px;
@@ -161,6 +167,11 @@ strong{
     justify-content: space-between;
     align-items: center
 
+}
+
+.files:hover {
+  background-color: rgba(0,0,0,0.04);
+  border-radius: 3px;
 }
 
   mark{
