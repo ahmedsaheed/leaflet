@@ -1,7 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ipcRenderer } from "electron";
 import "react-cmdk/dist/cmdk.css";
-import CommandPalette, { filterItems, getItemIndex, JsonStructureItem } from "react-cmdk";
+import CommandPalette, {
+  filterItems,
+  getItemIndex,
+} from "react-cmdk";
 import { progress } from "../components/progress";
 import { getMarkdown } from "../lib/mdParser";
 import commandExists from "command-exists";
@@ -78,45 +81,54 @@ export default function Next() {
 
   const filteredItems = filterItems(
     [
-    {
-      heading: "Files",
-      id: "files",
-      // @ts-ignore
-      items: [
-        ...files.map((file) => ({
-          id: file.path,
-          children: file.name,
-          icon: "DocumentTextIcon",
-          onClick: () => {
-            setValue(file.body);
-            setName(file.name);
-            setPath(file.path);
-          }
-        }))
-      ]
-    },
-    {
-      heading: "Help",
-      id: "advanced",
-      items: [
-        {
-          id: "help",
-          children: "Help & Documentation",
-          icon: "QuestionMarkCircleIcon",
-          href: "/rss/feed.xml",
-        },
-        {
-          id: "keys",
-          children: "Keyboard Shortcuts",
-          icon: "KeyIcon",
-          href: "mailto:ahmedsaheed2@outlook.com"
-        },
-        
-      ],
-    },
-  ],
-  search
-);
+      {
+        heading: "Files",
+        id: "files",
+        // @ts-ignore
+        items: [
+          ...files.map((file) => ({
+            id: file.path,
+            children: `${file.name} - ${mainPath.basename(mainPath.dirname(file.path)).toLowerCase()}`,
+            icon: "DocumentTextIcon",
+            onClick: () => {
+              try {
+                saveFile();
+                setValue(file.body);
+                setName(file.name);
+                setPath(file.path);
+                setInsert(false);
+                document.documentElement.scrollTop = 0;
+              } catch (err) {
+                console.log(err);
+              }
+              setValue(file.body);
+              setName(file.name);
+              setPath(file.path);
+            },
+          })),
+        ],
+      },
+      {
+        heading: "Help",
+        id: "advanced",
+        items: [
+          {
+            id: "help",
+            children: "Help & Documentation",
+            icon: "QuestionMarkCircleIcon",
+            href: "https://github.com/ahmedsaheed/Leaflet",
+          },
+          {
+            id: "keys",
+            children: "Keyboard Shortcuts",
+            icon: "KeyIcon",
+            href: "https://github.com/ahmedsaheed/Leaflet#shortcuts-and-controls",
+          },
+        ],
+      },
+    ],
+    search
+  );
   const createNewDir = (name: string) => {
     if (fs.existsSync(mainPath.join(parentDir, name)) || name === "") {
       return;
@@ -694,10 +706,10 @@ export default function Next() {
         e.preventDefault();
         e.stopPropagation();
         setClick(!click);
-        return
+        return;
       } else if (e.key === "Escape") {
-        setClick(false)
-        return
+        setClick(false);
+        return;
       }
       if (e.key === "Tab") {
         if (!insert) {
@@ -858,7 +870,7 @@ export default function Next() {
                             ).length ? null : (
                             <details key={index} tabIndex={-1}>
                               <summary
-                                    className="files"
+                                className="files"
                                 style={{
                                   cursor: "pointer",
                                   fontSize: "12px",
@@ -905,33 +917,32 @@ export default function Next() {
                                         </summary>
                                         {child.children
                                           .map((child, index) => (
-                                            <ol className="files"
-                                            style={{
-                                            cursor: "pointer"}}
+                                            <ol
+                                              className="files"
+                                              style={{
+                                                cursor: "pointer",
+                                              }}
+                                              onClick={(e) => {
+                                                try {
+                                                  setParentDir(
+                                                    mainPath.dirname(child.path)
+                                                  );
+                                                  saveFile();
+                                                  setValue(
+                                                    fs.readFileSync(
+                                                      child.path,
+                                                      "utf8"
+                                                    )
+                                                  );
+                                                  setName(child.name);
+                                                  setPath(child.path);
+                                                  setInsert(false);
 
-                                                onClick={(e) => {
-                                                  try {
-                                                    setParentDir(
-                                                      mainPath.dirname(
-                                                        child.path
-                                                      )
-                                                    );
-                                                    saveFile();
-                                                    setValue(
-                                                      fs.readFileSync(
-                                                        child.path,
-                                                        "utf8"
-                                                      )
-                                                    );
-                                                    setName(child.name);
-                                                    setPath(child.path);
-                                                    setInsert(false);
-
-                                    document.documentElement.scrollTop = 0;
-                                                  } catch (err) {
-                                                    console.log(err);
-                                                  }
-                                                }}
+                                                  document.documentElement.scrollTop = 0;
+                                                } catch (err) {
+                                                  console.log(err);
+                                                }
+                                              }}
                                             >
                                               <button
                                                 style={{
@@ -987,24 +998,25 @@ export default function Next() {
                                     </div>
                                   )
                                 ) : (
-                                  <ol className="files"
-                                    
-                                      onClick={(e) => {
-                                        try {
-                                          saveFile();
-                                          setValue(
-                                            fs.readFileSync(child.path, "utf8")
-                                          );
-                                          setName(child.name);
-                                          setPath(child.path);
-                                          setInsert(false);
-                                    document.documentElement.scrollTop = 0;
-                                        } catch (err) {
-                                          console.log(err);
-                                        }
-                                      }}
-                                            style={{
-                                            cursor: "pointer"}}
+                                  <ol
+                                    className="files"
+                                    onClick={(e) => {
+                                      try {
+                                        saveFile();
+                                        setValue(
+                                          fs.readFileSync(child.path, "utf8")
+                                        );
+                                        setName(child.name);
+                                        setPath(child.path);
+                                        setInsert(false);
+                                        document.documentElement.scrollTop = 0;
+                                      } catch (err) {
+                                        console.log(err);
+                                      }
+                                    }}
+                                    style={{
+                                      cursor: "pointer",
+                                    }}
                                   >
                                     <button
                                       style={{
@@ -1051,25 +1063,24 @@ export default function Next() {
                           )
                         ) : (
                           <>
-                            <ol className="files"
-                            
-                                onClick={(e) => {
-                                  try {
-                                    setParentDir(mainPath.dirname(file.path));
-                                    saveFile();
-                                    setValue(
-                                      fs.readFileSync(file.path, "utf8")
-                                    );
-                                    setName(file.name);
-                                    setPath(file.path);
-                                    setInsert(false);
-                                    document.documentElement.scrollTop = 0;
-                                  } catch (err) {
-                                    console.log(err);
-                                  }
-                                }}
-                                            style={{
-                                            cursor: "pointer"}}
+                            <ol
+                              className="files"
+                              onClick={(e) => {
+                                try {
+                                  setParentDir(mainPath.dirname(file.path));
+                                  saveFile();
+                                  setValue(fs.readFileSync(file.path, "utf8"));
+                                  setName(file.name);
+                                  setPath(file.path);
+                                  setInsert(false);
+                                  document.documentElement.scrollTop = 0;
+                                } catch (err) {
+                                  console.log(err);
+                                }
+                              }}
+                              style={{
+                                cursor: "pointer",
+                              }}
                             >
                               <button
                                 tabIndex={-1}
@@ -1145,47 +1156,72 @@ export default function Next() {
                 <div
                   className={"fixed util"}
                   style={{
-                     bottom: "0.25rem"
+                    bottom: "0.25rem",
                   }}
                 >
-                   <div style={{paddingLeft: "10px"}} className="menu" role="button" onClick={() => setClick(true)}>
-        Utilities
-{click && (
-<CommandPalette
-onChangeSearch={setSearch}
-onChangeOpen={setClick}
-search={search}
-isOpen={menuOpen}
-page={page}
->
-<CommandPalette.Page id="root">
-  {filteredItems.length ? (
-    filteredItems.map((list) => (
-      <CommandPalette.List key={list.id} heading={list.heading}>
-        {list.items.map(({ id, ...rest }) => (
-          <CommandPalette.ListItem
-            key={id}
-            index={getItemIndex(filteredItems, id)}
-            {...rest}
-          />
-        ))}
-      </CommandPalette.List>
-    ))
-  ) : (
-    <CommandPalette.FreeSearchAction />
-  )}
-</CommandPalette.Page>
+                  <div
+                    style={{ paddingLeft: "10px" }}
+                    className="menu"
+                    role="button"
+                    onClick={() => setClick(true)}
+                  >
+                    Utilities
+                    <span style={{float: "right", marginRight: "2em"}}><code style={{borderRadius: "2px"}}>⌘</code> <code style={{borderRadius: "2px"}}>k</code></span>
+                    {click && (
+                      <CommandPalette
+                        onChangeSearch={setSearch}
+                        onChangeOpen={setClick}
+                        search={search}
+                        isOpen={menuOpen}
+                        page={page}
+                        placeholder="Search for notes and utilities"
+                        footer = {
+                          <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%"}}>
 
-<CommandPalette.Page id="projects">
-  {/* Projects page */}
-</CommandPalette.Page>
-</CommandPalette>
+                            <div style={{marginLeft: "2em",display: "flex", alignItems: "center", paddingTop: "5px", paddingBottom: "5px"}}>
+                              <span style={{marginRight: "2em" ,color:"#888888"}}>
+                              <svg style={{display: "inline"}} width="15" height="15" viewBox="0 0 32 32"><path fill="#888888" d="M27.6 20.6L24 24.2V4h-2v20.2l-3.6-3.6L17 22l6 6l6-6zM9 4l-6 6l1.4 1.4L8 7.8V28h2V7.8l3.6 3.6L15 10z"/></svg>
+                              &nbsp;Select
+                                </span>
 
-)
-}
+                              <span style={{color:"#888888"}}>
+                              <svg style={{display: "inline"}} width="15" height="15" viewBox="0 0 512 512"><path d="M432.8 136v96H122.3l84.4-86.2-33.2-33.8L32 256l141.5 144 33.2-33.8-84.4-86.2H480V136h-47.2z" fill="#888888"/></svg>
+                              &nbsp;Open</span>
+                            
+                            </div>
+                            </div>
 
-    </div>   
-                {/* {Menu()} */}
+                        }
+                      >
+                        <CommandPalette.Page id="root">
+                          {filteredItems.length ? (
+                            filteredItems.map((list) => (
+                              <CommandPalette.List
+                                key={list.id}
+                                heading={list.heading}
+                              >
+                                {list.items.map(({ id, ...rest }) => (
+                                  <CommandPalette.ListItem
+                                    showType = {true}
+                                    key={id}
+                                    index={getItemIndex(filteredItems, id)}
+                                    {...rest}
+                                  />
+                                
+                                ))}
+                              </CommandPalette.List>
+                            ))
+                          ) : (
+                            <CommandPalette.FreeSearchAction />
+                          )}
+                        </CommandPalette.Page>
+
+                        <CommandPalette.Page id="projects">
+                          {/* Projects page */}
+                        </CommandPalette.Page>
+                      </CommandPalette>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
