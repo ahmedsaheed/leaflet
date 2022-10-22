@@ -22,7 +22,10 @@ h3{
   font-size: 18px;
   padding: 3px, 2px;
 }
+.command-palette .command-palette-content{
 
+    font-family: "iA Writer Mono", monospace !important;
+}
 @media (prefers-color-scheme: dark) {
   body {
     font-weight: 600;

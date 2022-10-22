@@ -1,9 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ipcRenderer } from "electron";
+import "react-cmdk/dist/cmdk.css";
+import CommandPalette, { filterItems, getItemIndex, JsonStructureItem } from "react-cmdk";
 import { progress } from "../components/progress";
 import { getMarkdown } from "../lib/mdParser";
 import commandExists from "command-exists";
 import { SYNONYMS } from "../lib/synonyms";
+import Menu from "../components/menu";
 import fs from "fs-extra";
 import dragDrop from "drag-drop";
 import Head from "next/head";
@@ -25,6 +28,10 @@ export default function Next() {
   const [files, setFiles] = useState<file[]>([]);
   const [name, setName] = useState<string>("");
   const [path, setPath] = useState<string>("");
+  const [page, setPage] = useState<"root" | "projects">("root");
+  const [menuOpen, setMenuOpen] = useState<boolean>(true);
+  const [search, setSearch] = useState("");
+  const [click, setClick] = useState<boolean>(false);
   const [isEdited, setIsEdited] = useState<boolean>(false);
   const [fileNameBox, setFileNameBox] = useState<boolean>(false);
   const [fileName, setFileName] = useState<string>("");
@@ -70,6 +77,63 @@ export default function Next() {
     }
   }, [files]);
 
+  const filteredItems = filterItems(
+    [
+    {
+      heading: "Files",
+      id: "files",
+      // @ts-ignore
+      items: [
+        ...files.map((file) => ({
+          id: file.path,
+          children: file.name,
+          icon: "DocumentTextIcon",
+          onClick: () => {
+            setValue(file.body);
+            setName(file.name);
+            setPath(file.path);
+          }
+        }))
+      ]
+    },
+   
+    
+    // {
+    //   heading: "General",
+    //   id: "general",
+    //   items: [
+    //     {
+    //       id: "theme",
+    //       children: theme == "light" ? "Dark Mode" : "Light Mode",
+    //       icon: theme === "dark" ? "LightBulbIcon" : "MoonIcon",
+    //       // onClick: () => {toggleDarkMode()},
+    //     },
+
+    //   ],
+
+    // },
+    {
+      heading: "Help",
+      id: "advanced",
+      items: [
+        {
+          id: "help",
+          children: "Help & Documentation",
+          icon: "QuestionMarkCircleIcon",
+          href: "/rss/feed.xml",
+        },
+        {
+          id: "keys",
+          children: "Keyboard Shortcuts",
+          icon: "KeyIcon",
+          href: "mailto:ahmedsaheed2@outlook.com"
+        },
+        
+      ],
+    },
+  ],
+  search
+);
   const createNewDir = (name: string) => {
     if (fs.existsSync(mainPath.join(parentDir, name)) || name === "") {
       return;
@@ -642,6 +706,16 @@ export default function Next() {
         e.preventDefault();
         return;
       }
+
+      if (e.metaKey && e.key === "k") {
+        e.preventDefault();
+        e.stopPropagation();
+        setClick(!click);
+        return
+      } else if (e.key === "Escape") {
+        setClick(false)
+        return
+      }
       if (e.key === "Tab") {
         if (!insert) {
           e.preventDefault();
@@ -1087,67 +1161,48 @@ export default function Next() {
                 </div>
                 <div
                   className={"fixed util"}
-                  style={
-                    buttomMenuState ? { bottom: "5rem" } : { bottom: "0.25rem" }
-                  }
+                  style={{
+                     bottom: "0.25rem"
+                  }}
                 >
-                  <div
-                    tabIndex={-1}
-                    id="buttomMenu"
-                    role="button"
-                    aria-expanded="false"
-                    onClick={toggleButtomMenu}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <p
-                      style={{ display: "inline" }}
-                      className={buttomMenuState ? "Opened" : "Closed"}
-                    ></p>
-                    <p style={{ display: "inline" }}>Utilities</p>
-                  </div>
-                  <div
-                    className={buttomMenuState ? "slideIn" : ""}
-                    style={
-                      buttomMenuState
-                        ? { display: "block", opacity: "0", paddingLeft: "2vw" }
-                        : { display: "none" }
-                    }
-                  >
-                    <button tabIndex={-1} onClick={openWindow}>
-                      Add File
-                    </button>
-                    <br />
-                    <button
-                      tabIndex={-1}
-                      onClick={() => {
-                        setFileNameBox(true);
-                      }}
-                    >
-                      New File
-                    </button>
-                    <br />
-                    <button
-                      tabIndex={-1}
-                      onClick={() => {
-                        setFileNameBox(true);
-                        setIsCreatingFolder(true);
-                      }}
-                    >
-                      New Folder
-                    </button>
-                    {pandocAvailable ? (
-                      <>
-                        <br />
-                        <button tabIndex={-1} onClick={convertToPDF}>
-                          Covert to PDF
-                        </button>
-                        <br />
-                        <button tabIndex={-1} onClick={converToDocx}>
-                          Covert to Docx
-                        </button>
-                      </>
-                    ) : null}
-                  </div>
+                   <div style={{paddingLeft: "10px"}} className="menu" role="button" onClick={() => setClick(true)}>
+        Utilities
+{click && (
+<CommandPalette
+onChangeSearch={setSearch}
+onChangeOpen={setClick}
+search={search}
+isOpen={menuOpen}
+page={page}
+>
+<CommandPalette.Page id="root">
+  {filteredItems.length ? (
+    filteredItems.map((list) => (
+      <CommandPalette.List key={list.id} heading={list.heading}>
+        {list.items.map(({ id, ...rest }) => (
+          <CommandPalette.ListItem
+            key={id}
+            index={getItemIndex(filteredItems, id)}
+            {...rest}
+          />
+        ))}
+      </CommandPalette.List>
+    ))
+  ) : (
+    <CommandPalette.FreeSearchAction />
+  )}
+</CommandPalette.Page>
+
+<CommandPalette.Page id="projects">
+  {/* Projects page */}
+</CommandPalette.Page>
+</CommandPalette>
+
+)
+}
+
+    </div>   
+                {/* {Menu()} */}
                 </div>
               </div>
             </div>
