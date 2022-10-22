@@ -82,6 +82,46 @@ export default function Next() {
   const filteredItems = filterItems(
     [
       {
+        heading: "General",
+        id : "general",
+        items: [
+          {
+            id: "new",
+            children: "New File",
+            onClick: () => {
+              setMenuOpen(false);
+              setFileNameBox(true);
+            }
+          },
+          {
+            id: "folder",
+            children: "New Folder",
+            onClick: () => {
+              setMenuOpen(false);
+              setFileNameBox(true);
+            }
+          },
+          {
+            id: "export",
+            disabled: pandocAvailable ? false : true,
+            children: "Export to PDF",
+            onClick: () => {
+              setMenuOpen(false);
+              convertToPDF();
+            }
+          },
+          {
+            disabled: pandocAvailable ? false : true,
+            id: "export",
+            children: "Export to Docx",
+            onClick: () => {
+              setMenuOpen(false);
+              converToDocx();
+            }
+          },
+        ]
+      },
+      {
         heading: "Files",
         id: "files",
         // @ts-ignore
