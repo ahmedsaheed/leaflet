@@ -829,7 +829,7 @@ export default function Next() {
         <div>
           <div
             className="fs fixed"
-            style={{ width: "30vw", maxWidth: "30vw", minHeight: "100vh" }}
+            style={{ width: "18.5em", maxWidth: "18.5em", minHeight: "100vh" }}
           >
             <div>
               <div
@@ -1160,7 +1160,10 @@ export default function Next() {
                   }}
                 >
                   <div
-                    style={{ paddingLeft: "10px" }}
+                    style={{ paddingLeft: "10px",
+                    width: "18.5em", maxWidth: "18.5em"
+
+                  }}
                     className="menu"
                     role="button"
                     onClick={() => setClick(true)}
@@ -1230,8 +1233,10 @@ export default function Next() {
 
         <div
           style={{
-            paddingRight: "20px",
-            maxWidth: "70vw",
+            padding: "40px",
+            width:  "calc(100vw - 18.5em)",
+            minWidth:  "calc(100vw - 18.5em)",
+            maxWidth: "calc(100vw - 18.5em)",
             paddingTop: "10vh",
           }}
         >
@@ -1299,8 +1304,10 @@ export default function Next() {
           <div
             className="fixed inset-x-0 bottom-0 ButtomBar"
             style={{
+            //   width:  "100vw",
+              display: "inline",
               userSelect: "none",
-              marginLeft: "30%",
+              marginLeft: "18.55em",
               maxHeight: "10vh",
               marginTop: "20px",
             }}
@@ -1309,7 +1316,7 @@ export default function Next() {
               <div
                 style={{
                   paddingTop: "5px",
-                  paddingRight: "40px",
+                  paddingRight: "30px",
                   paddingBottom: "5px",
                   alignContent: "center",
                   overflow: "hidden",
@@ -1353,7 +1360,7 @@ export default function Next() {
                   className="Left"
                   style={{
                     float: "left",
-                    paddingLeft: "40px",
+                    paddingLeft: "30px",
                     paddingTop: "5px",
                     paddingBottom: "5px",
                   }}
@@ -1394,7 +1401,7 @@ export default function Next() {
                   className="Left"
                   style={{
                     float: "left",
-                    paddingLeft: "40px",
+                    paddingLeft: "30px",
                     paddingTop: "5px",
                     paddingBottom: "5px",
                   }}
