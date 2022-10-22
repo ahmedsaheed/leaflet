@@ -705,6 +705,7 @@ export default function Next() {
       if (e.metaKey && e.key === "k") {
         e.preventDefault();
         e.stopPropagation();
+        setSearch("")
         setClick(!click);
         return;
       } else if (e.key === "Escape") {
@@ -791,16 +792,6 @@ export default function Next() {
     }
   };
 
-  const toggleButtomMenu = () => {
-    const menu = document.getElementById("buttomMenu");
-    if (menu?.getAttribute("aria-expanded") === "false") {
-      menu.setAttribute("aria-expanded", "true");
-      setButtomMenuState(true);
-    } else {
-      menu?.setAttribute("aria-expanded", "false");
-      setButtomMenuState(false);
-    }
-  };
 
   return (
     <>
@@ -1166,7 +1157,9 @@ export default function Next() {
                   }}
                     className="menu"
                     role="button"
-                    onClick={() => setClick(true)}
+                    onClick={() =>{ try {setClick(true); setSearch("")}
+                    catch (err) { console.log(err) }}
+                  }
                   >
                     Utilities
                     <span style={{float: "right", marginRight: "2em"}}><code style={{borderRadius: "2px"}}>⌘</code> <code style={{borderRadius: "2px"}}>k</code></span>
@@ -1179,7 +1172,7 @@ export default function Next() {
                         page={page}
                         placeholder="Search for notes and utilities"
                         footer = {
-                          <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%"}}>
+                          <div style={{ fontSize :"12px",display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%"}}>
 
                             <div style={{marginLeft: "2em",display: "flex", alignItems: "center", paddingTop: "5px", paddingBottom: "5px"}}>
                               <span style={{marginRight: "2em" ,color:"#888888"}}>
