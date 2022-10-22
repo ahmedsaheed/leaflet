@@ -6,7 +6,6 @@ import { progress } from "../components/progress";
 import { getMarkdown } from "../lib/mdParser";
 import commandExists from "command-exists";
 import { SYNONYMS } from "../lib/synonyms";
-import Menu from "../components/menu";
 import fs from "fs-extra";
 import dragDrop from "drag-drop";
 import Head from "next/head";
