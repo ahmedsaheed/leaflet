@@ -95,22 +95,6 @@ export default function Next() {
         }))
       ]
     },
-   
-    
-    // {
-    //   heading: "General",
-    //   id: "general",
-    //   items: [
-    //     {
-    //       id: "theme",
-    //       children: theme == "light" ? "Dark Mode" : "Light Mode",
-    //       icon: theme === "dark" ? "LightBulbIcon" : "MoonIcon",
-    //       // onClick: () => {toggleDarkMode()},
-    //     },
-
-    //   ],
-
-    // },
     {
       heading: "Help",
       id: "advanced",
