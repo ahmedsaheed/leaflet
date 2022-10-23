@@ -79,6 +79,30 @@ export default function Next() {
     }
   }, [files]);
 
+  const PDFIcon: React.FC<{}> = () => {
+    return(
+      <svg style={{ display: "inline" }} width="18" height="18" viewBox="0 0 32 32"><path fill="#888888" d="M30 18v-2h-6v10h2v-4h3v-2h-3v-2h4zm-11 8h-4V16h4a3.003 3.003 0 0 1 3 3v4a3.003 3.003 0 0 1-3 3zm-2-2h2a1.001 1.001 0 0 0 1-1v-4a1.001 1.001 0 0 0-1-1h-2zm-6-8H6v10h2v-3h3a2.003 2.003 0 0 0 2-2v-3a2.002 2.002 0 0 0-2-2zm-3 5v-3h3l.001 3z"/><path fill="currentColor" d="M22 14v-4a.91.91 0 0 0-.3-.7l-7-7A.909.909 0 0 0 14 2H4a2.006 2.006 0 0 0-2 2v24a2 2 0 0 0 2 2h16v-2H4V4h8v6a2.006 2.006 0 0 0 2 2h6v2Zm-8-4V4.4l5.6 5.6Z"/></svg>
+  )}
+
+  const DOCXIcon: React.FC<{}> = () => {
+    return(
+      <svg style={{ display: "inline" }} width="18" height="18" viewBox="0 0 16 16"><path fill="#888888" fill-rule="evenodd" d="M14 4.5V11h-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5L14 4.5Zm-6.839 9.688v-.522a1.54 1.54 0 0 0-.117-.641a.861.861 0 0 0-.322-.387a.862.862 0 0 0-.469-.129a.868.868 0 0 0-.471.13a.868.868 0 0 0-.32.386a1.54 1.54 0 0 0-.117.641v.522c0 .256.04.47.117.641a.868.868 0 0 0 .32.387a.883.883 0 0 0 .471.126a.877.877 0 0 0 .469-.126a.861.861 0 0 0 .322-.386a1.55 1.55 0 0 0 .117-.642Zm.803-.516v.513c0 .375-.068.7-.205.973a1.47 1.47 0 0 1-.589.627c-.254.144-.56.216-.917.216a1.86 1.86 0 0 1-.92-.216a1.463 1.463 0 0 1-.589-.627a2.151 2.151 0 0 1-.205-.973v-.513c0-.379.069-.704.205-.975c.137-.274.333-.483.59-.627c.257-.147.564-.22.92-.22c.357 0 .662.073.916.22c.256.146.452.356.59.63c.136.271.204.595.204.972ZM1 15.925v-3.999h1.459c.406 0 .741.078 1.005.235c.264.156.46.382.589.68c.13.296.196.655.196 1.074c0 .422-.065.784-.196 1.084c-.131.301-.33.53-.595.689c-.264.158-.597.237-.999.237H1Zm1.354-3.354H1.79v2.707h.563c.185 0 .346-.028.483-.082a.8.8 0 0 0 .334-.252c.088-.114.153-.254.196-.422a2.3 2.3 0 0 0 .068-.592c0-.3-.04-.552-.118-.753a.89.89 0 0 0-.354-.454c-.158-.102-.361-.152-.61-.152Zm6.756 1.116c0-.248.034-.46.103-.633a.868.868 0 0 1 .301-.398a.814.814 0 0 1 .475-.138c.15 0 .283.032.398.097a.7.7 0 0 1 .273.26a.85.85 0 0 1 .12.381h.765v-.073a1.33 1.33 0 0 0-.466-.964a1.44 1.44 0 0 0-.49-.272a1.836 1.836 0 0 0-.606-.097c-.355 0-.66.074-.911.223c-.25.148-.44.359-.571.633c-.131.273-.197.6-.197.978v.498c0 .379.065.704.194.976c.13.271.321.48.571.627c.25.144.555.216.914.216c.293 0 .555-.054.785-.164c.23-.11.414-.26.551-.454a1.27 1.27 0 0 0 .226-.674v-.076h-.765a.8.8 0 0 1-.117.364a.699.699 0 0 1-.273.248a.874.874 0 0 1-.401.088a.845.845 0 0 1-.478-.131a.834.834 0 0 1-.298-.393a1.7 1.7 0 0 1-.103-.627v-.495Zm5.092-1.76h.894l-1.275 2.006l1.254 1.992h-.908l-.85-1.415h-.035l-.852 1.415h-.862l1.24-2.015l-1.228-1.984h.932l.832 1.439h.035l.823-1.439Z"/></svg>
+    )
+  }
+
+  const capitalize = (s: string) => {
+    if (typeof s !== 'string') return ''
+    const words = s.split(" ");
+
+    for (let i = 0; i < words.length; i++) {
+      words[i] = words[i][0].toUpperCase() + words[i].substr(1) + " ";
+  }
+  words.join(" ");
+
+
+return words;
+  }
+
   const filteredItems = filterItems(
     [
       {
@@ -88,6 +112,8 @@ export default function Next() {
           {
             id: "new",
             children: "New File",
+            icon: "NewspaperIcon",
+            showType: false,
             onClick: () => {
               setMenuOpen(false);
               setFileNameBox(true);
@@ -96,6 +122,8 @@ export default function Next() {
           {
             id: "folder",
             children: "New Folder",
+            icon: "FolderOpenIcon",
+            showType: false,
             onClick: () => {
               setMenuOpen(false);
               setFileNameBox(true);
@@ -103,8 +131,10 @@ export default function Next() {
           },
           {
             id: "export",
+            showType: false,
             disabled: pandocAvailable ? false : true,
-            children: "Export to PDF",
+            children: `Export ${name.endsWith(".md") ? name.charAt(0).toUpperCase() + name.slice(1, -3) : name.charAt(0).toUpperCase() + name.slice(1)} to PDF`,
+            icon:() => <PDFIcon/>,
             onClick: () => {
               setMenuOpen(false);
               convertToPDF();
@@ -113,12 +143,19 @@ export default function Next() {
           {
             disabled: pandocAvailable ? false : true,
             id: "export",
-            children: "Export to Docx",
+            showType: false,
+            children: `Export ${name.endsWith(".md") ? name.charAt(0).toUpperCase() + name.slice(1, -3) : name.charAt(0).toUpperCase() + name.slice(1)} to Docx`,
+            icon:() => <DOCXIcon/>,
+
             onClick: () => {
               setMenuOpen(false);
               converToDocx();
             }
           },
+         
+
+            
+          
         ]
       },
       {
@@ -127,8 +164,10 @@ export default function Next() {
         // @ts-ignore
         items: [
           ...files.map((file) => ({
-            id: file.path,
-            children: `${file.name} - ${mainPath.basename(mainPath.dirname(file.path)).toLowerCase()}`,
+            id: file.name,
+            showType: false,
+            //children: file.name,
+            children: <p>{file.name} — <span style={{fontSize: "12px", color: "#888888"}}>{capitalize(mainPath.basename(mainPath.dirname(file.path)).toLowerCase())}</span></p>,
             icon: "DocumentTextIcon",
             onClick: () => {
               try {
@@ -154,15 +193,25 @@ export default function Next() {
         items: [
           {
             id: "help",
+            showType: false,
             children: "Help & Documentation",
             icon: "QuestionMarkCircleIcon",
-            href: "https://github.com/ahmedsaheed/Leaflet",
+            onClick: (event) => {
+              event.preventDefault();
+              open("https://github.com/ahmedsaheed/Leaflet")
+              setMenuOpen(false);
+            }
           },
           {
             id: "keys",
+            showType: false,
             children: "Keyboard Shortcuts",
             icon: "KeyIcon",
-            href: "https://github.com/ahmedsaheed/Leaflet#shortcuts-and-controls",
+            onClick: (event) => {
+              event.preventDefault();
+              open("https://github.com/ahmedsaheed/Leaflet#shortcuts-and-controls")
+              setMenuOpen(false);
+            }
           },
         ],
       },
