@@ -46,7 +46,6 @@ export default function Next() {
   const [count, setCount] = useState<number>(0);
   const [finder, toogleFinder] = useState<boolean>(false);
   const [found, setFound] = useState<boolean>(true);
-  const [buttomMenuState, setButtomMenuState] = useState<boolean>(false);
   const [saver, setSaver] = useState<string>("");
   const [wordToFind, setWordToFind] = useState<string>("");
   const appDir = mainPath.resolve(os.homedir(), "leaflet");
@@ -115,7 +114,6 @@ return words;
             icon: "NewspaperIcon",
             showType: false,
             onClick: () => {
-              setMenuOpen(false);
               setFileNameBox(true);
             }
           },
@@ -125,8 +123,10 @@ return words;
             icon: "FolderOpenIcon",
             showType: false,
             onClick: () => {
-              setMenuOpen(false);
-              setFileNameBox(true);
+              try{
+                setIsCreatingFolder(true);
+              setFileNameBox(true);}
+            catch(e){console.log(e)}
             }
           },
           {
@@ -136,9 +136,13 @@ return words;
             children: `Export ${name.endsWith(".md") ? name.charAt(0).toUpperCase() + name.slice(1, -3) : name.charAt(0).toUpperCase() + name.slice(1)} to PDF`,
             icon:() => <PDFIcon/>,
             onClick: () => {
-              setMenuOpen(false);
+              try{
               convertToPDF();
             }
+              catch(e){
+                console.log(e);
+            }
+          }
           },
           {
             disabled: pandocAvailable ? false : true,
@@ -146,10 +150,14 @@ return words;
             showType: false,
             children: `Export ${name.endsWith(".md") ? name.charAt(0).toUpperCase() + name.slice(1, -3) : name.charAt(0).toUpperCase() + name.slice(1)} to Docx`,
             icon:() => <DOCXIcon/>,
-
             onClick: () => {
-              setMenuOpen(false);
-              converToDocx();
+              try{
+                converToDocx();
+              }catch(e){
+                console.log(e)
+
+              }
+              
             }
           },
          
@@ -180,9 +188,6 @@ return words;
               } catch (err) {
                 console.log(err);
               }
-              setValue(file.body);
-              setName(file.name);
-              setPath(file.path);
             },
           })),
         ],
@@ -199,7 +204,6 @@ return words;
             onClick: (event) => {
               event.preventDefault();
               open("https://github.com/ahmedsaheed/Leaflet")
-              setMenuOpen(false);
             }
           },
           {
@@ -210,7 +214,6 @@ return words;
             onClick: (event) => {
               event.preventDefault();
               open("https://github.com/ahmedsaheed/Leaflet#shortcuts-and-controls")
-              setMenuOpen(false);
             }
           },
         ],
