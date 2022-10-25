@@ -55,7 +55,6 @@
     "url": "https://github.com/ahmedsaheed/Leaflet.git"
   },
   "dependencies": {
-    "@fontsource/ia-writer-duospace": "^4.5.3",
     "@fontsource/ia-writer-mono": "^4.5.3",
     "chokidar": "^3.5.3",
     "command-exists": "^1.2.9",
@@ -76,7 +75,7 @@
     "markdown-it-footnote": "^3.0.3",
     "markdown-it-gridtables": "^0.5.0",
     "markdown-it-implicit-figures": "^0.10.0",
-    "markdown-it-metadata-block": "^1.0.2",
+    "markdown-it-meta": "^0.0.1",
     "markdown-it-pandoc": "^2.1.0",
     "markdown-it-sub": "^1.0.0",
     "markdown-it-sup": "^1.0.0",

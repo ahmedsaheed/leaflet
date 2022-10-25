@@ -1032,11 +1032,6 @@
     "minimatch" "^3.0.4"
     "plist" "^3.0.4"
 
-"@fontsource/ia-writer-duospace@^4.5.3":
-  "integrity" "sha512-SdWPnzghBqA++g5GWOE2Gc6vEu374PM1WMT4RhgZHlx1sJAGDKT3046y0kblz5NAb47C77ksZ375g6GeDHg13A=="
-  "resolved" "https://registry.npmjs.org/@fontsource/ia-writer-duospace/-/ia-writer-duospace-4.5.3.tgz"
-  "version" "4.5.3"
-
 "@fontsource/ia-writer-mono@^4.5.3":
   "integrity" "sha512-/k0n7sRaiehoFZKzvcKV4CdxwFVO8cMb3VHBDnYZVw9vzBfO9lSk+DER/c56cQ3z85Us0wfMSuP9woqvDwSLaw=="
   "resolved" "https://registry.npmjs.org/@fontsource/ia-writer-mono/-/ia-writer-mono-4.5.3.tgz"
@@ -1596,6 +1591,13 @@
   "integrity" "sha512-e0hDa9H2Z9AwFkk2qDlwhoMYE4eToKarchkQHovNdLTCYMHZHeRjI71crOh+dio4K6u1IcwubQqo79Ga4CyAQA=="
   "resolved" "https://registry.npmjs.org/arg/-/arg-5.0.1.tgz"
   "version" "5.0.1"
+
+"argparse@^1.0.7":
+  "integrity" "sha512-o5Roy6tNG4SL/FOkCAN6RzjiakZS25RLYFrcMttJqbdd8BWrnA+fGz57iN5Pb06pvBGvl5gQ0B48dJlslXvoTg=="
+  "resolved" "https://registry.npmjs.org/argparse/-/argparse-1.0.10.tgz"
+  "version" "1.0.10"
+  dependencies:
+    "sprintf-js" "~1.0.2"
 
 "argparse@^2.0.1":
   "integrity" "sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q=="
@@ -2670,6 +2672,11 @@
     "esrecurse" "^4.3.0"
     "estraverse" "^4.1.1"
 
+"esprima@^4.0.0":
+  "integrity" "sha512-eGuFFw7Upda+g4p+QHvnW0RyTX/SVeJBDM/gCtMARO0cLuT2HcEKnTPvhjV6aGeqrCB/sbNop0Kszm0jsaWU4A=="
+  "resolved" "https://registry.npmjs.org/esprima/-/esprima-4.0.1.tgz"
+  "version" "4.0.1"
+
 "esrecurse@^4.3.0":
   "integrity" "sha512-KmfKL3b6G+RXvP8N1vr3Tq1kL/oCFgn2NYXEtqP8/L3pKapUA4G8cFVaoF3SU323CD4XypR/ffioHmkti6/Tag=="
   "resolved" "https://registry.npmjs.org/esrecurse/-/esrecurse-4.3.0.tgz"
@@ -3341,6 +3348,14 @@
   "resolved" "https://registry.npmjs.org/js-tokens/-/js-tokens-4.0.0.tgz"
   "version" "4.0.0"
 
+"js-yaml@^3.8.1":
+  "integrity" "sha512-okMH7OXXJ7YrN9Ok3/SXrnu4iX9yOk+25nqX4imS2npuvTYDmo/QEZoqwZkYaIDk3jVvBOTOIEgEhaLOynBS9g=="
+  "resolved" "https://registry.npmjs.org/js-yaml/-/js-yaml-3.14.1.tgz"
+  "version" "3.14.1"
+  dependencies:
+    "argparse" "^1.0.7"
+    "esprima" "^4.0.0"
+
 "js-yaml@^4.1.0":
   "integrity" "sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA=="
   "resolved" "https://registry.npmjs.org/js-yaml/-/js-yaml-4.1.0.tgz"
@@ -3584,10 +3599,12 @@
   "resolved" "https://registry.npmjs.org/markdown-it-implicit-figures/-/markdown-it-implicit-figures-0.10.0.tgz"
   "version" "0.10.0"
 
-"markdown-it-metadata-block@^1.0.2":
-  "integrity" "sha512-6//Fdar0x0d6lpTYL1RSt2lxRHscRqZqVuQOfTjL/oWhH7QhDo3ahkDg9ai4MF6sRKKAa7ztFneadWeDcwsocg=="
-  "resolved" "https://registry.npmjs.org/markdown-it-metadata-block/-/markdown-it-metadata-block-1.0.2.tgz"
-  "version" "1.0.2"
+"markdown-it-meta@^0.0.1":
+  "integrity" "sha512-sCQG7mHJM3i4l6MztgzxE8t3aTQB5CSCO0wq8k6CEaqud40eryWXqPesq5AyztbYgwnxJcNIsmFsKDRkrl6Zuw=="
+  "resolved" "https://registry.npmjs.org/markdown-it-meta/-/markdown-it-meta-0.0.1.tgz"
+  "version" "0.0.1"
+  dependencies:
+    "js-yaml" "^3.8.1"
 
 "markdown-it-pandoc@^2.1.0":
   "integrity" "sha512-t/ZTfYhDZkqsq4Iqwza4oYbwYOaDmSsdqbKvTsVtHUCa6rbj44RCxqY2c8kxVchzyLkx15kwG913uY/lxlX7ZQ=="
@@ -4572,6 +4589,11 @@
   "integrity" "sha512-VE0SOVEHCk7Qc8ulkWw3ntAzXuqf7S2lvwQaDLRnUeIEaKNQJzV6BwmLKhOqT61aGhfUMrXeaBk+oDGCzvhcug=="
   "resolved" "https://registry.npmjs.org/sprintf-js/-/sprintf-js-1.1.2.tgz"
   "version" "1.1.2"
+
+"sprintf-js@~1.0.2":
+  "integrity" "sha512-D9cPgkvLlV3t3IzL0D0YLvGA9Ahk4PcvVwUbN0dSGr1aP0Nrt4AEnTUbuGvquEC0mA64Gqt1fzirlRs5ibXx8g=="
+  "resolved" "https://registry.npmjs.org/sprintf-js/-/sprintf-js-1.0.3.tgz"
+  "version" "1.0.3"
 
 "stat-mode@^1.0.0":
   "integrity" "sha512-jH9EhtKIjuXZ2cWxmXS8ZP80XyC3iasQxMDV8jzhNJpfDb7VbQLVW4Wvsxz9QZvzV+G4YoSfBUVKDOyxLzi/sg=="

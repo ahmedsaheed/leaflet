@@ -1,10 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ipcRenderer } from "electron";
 import "react-cmdk/dist/cmdk.css";
-import CommandPalette, {
-  filterItems,
-  getItemIndex,
-} from "react-cmdk";
+import CommandPalette, { filterItems, getItemIndex } from "react-cmdk";
 import { progress } from "../components/progress";
 import { getMarkdown } from "../lib/mdParser";
 import commandExists from "command-exists";
@@ -79,34 +76,59 @@ export default function Next() {
   }, [files]);
 
   const PDFIcon: React.FC<{}> = () => {
-    return(
-      <svg style={{ display: "inline" }} width="18" height="18" viewBox="0 0 32 32"><path fill="#888888" d="M30 18v-2h-6v10h2v-4h3v-2h-3v-2h4zm-11 8h-4V16h4a3.003 3.003 0 0 1 3 3v4a3.003 3.003 0 0 1-3 3zm-2-2h2a1.001 1.001 0 0 0 1-1v-4a1.001 1.001 0 0 0-1-1h-2zm-6-8H6v10h2v-3h3a2.003 2.003 0 0 0 2-2v-3a2.002 2.002 0 0 0-2-2zm-3 5v-3h3l.001 3z"/><path fill="currentColor" d="M22 14v-4a.91.91 0 0 0-.3-.7l-7-7A.909.909 0 0 0 14 2H4a2.006 2.006 0 0 0-2 2v24a2 2 0 0 0 2 2h16v-2H4V4h8v6a2.006 2.006 0 0 0 2 2h6v2Zm-8-4V4.4l5.6 5.6Z"/></svg>
-  )}
+    return (
+      <svg
+        style={{ display: "inline" }}
+        width="18"
+        height="18"
+        viewBox="0 0 32 32"
+      >
+        <path
+          fill="#888888"
+          d="M30 18v-2h-6v10h2v-4h3v-2h-3v-2h4zm-11 8h-4V16h4a3.003 3.003 0 0 1 3 3v4a3.003 3.003 0 0 1-3 3zm-2-2h2a1.001 1.001 0 0 0 1-1v-4a1.001 1.001 0 0 0-1-1h-2zm-6-8H6v10h2v-3h3a2.003 2.003 0 0 0 2-2v-3a2.002 2.002 0 0 0-2-2zm-3 5v-3h3l.001 3z"
+        />
+        <path
+          fill="currentColor"
+          d="M22 14v-4a.91.91 0 0 0-.3-.7l-7-7A.909.909 0 0 0 14 2H4a2.006 2.006 0 0 0-2 2v24a2 2 0 0 0 2 2h16v-2H4V4h8v6a2.006 2.006 0 0 0 2 2h6v2Zm-8-4V4.4l5.6 5.6Z"
+        />
+      </svg>
+    );
+  };
 
   const DOCXIcon: React.FC<{}> = () => {
-    return(
-      <svg style={{ display: "inline" }} width="18" height="18" viewBox="0 0 16 16"><path fill="#888888" fill-rule="evenodd" d="M14 4.5V11h-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5L14 4.5Zm-6.839 9.688v-.522a1.54 1.54 0 0 0-.117-.641a.861.861 0 0 0-.322-.387a.862.862 0 0 0-.469-.129a.868.868 0 0 0-.471.13a.868.868 0 0 0-.32.386a1.54 1.54 0 0 0-.117.641v.522c0 .256.04.47.117.641a.868.868 0 0 0 .32.387a.883.883 0 0 0 .471.126a.877.877 0 0 0 .469-.126a.861.861 0 0 0 .322-.386a1.55 1.55 0 0 0 .117-.642Zm.803-.516v.513c0 .375-.068.7-.205.973a1.47 1.47 0 0 1-.589.627c-.254.144-.56.216-.917.216a1.86 1.86 0 0 1-.92-.216a1.463 1.463 0 0 1-.589-.627a2.151 2.151 0 0 1-.205-.973v-.513c0-.379.069-.704.205-.975c.137-.274.333-.483.59-.627c.257-.147.564-.22.92-.22c.357 0 .662.073.916.22c.256.146.452.356.59.63c.136.271.204.595.204.972ZM1 15.925v-3.999h1.459c.406 0 .741.078 1.005.235c.264.156.46.382.589.68c.13.296.196.655.196 1.074c0 .422-.065.784-.196 1.084c-.131.301-.33.53-.595.689c-.264.158-.597.237-.999.237H1Zm1.354-3.354H1.79v2.707h.563c.185 0 .346-.028.483-.082a.8.8 0 0 0 .334-.252c.088-.114.153-.254.196-.422a2.3 2.3 0 0 0 .068-.592c0-.3-.04-.552-.118-.753a.89.89 0 0 0-.354-.454c-.158-.102-.361-.152-.61-.152Zm6.756 1.116c0-.248.034-.46.103-.633a.868.868 0 0 1 .301-.398a.814.814 0 0 1 .475-.138c.15 0 .283.032.398.097a.7.7 0 0 1 .273.26a.85.85 0 0 1 .12.381h.765v-.073a1.33 1.33 0 0 0-.466-.964a1.44 1.44 0 0 0-.49-.272a1.836 1.836 0 0 0-.606-.097c-.355 0-.66.074-.911.223c-.25.148-.44.359-.571.633c-.131.273-.197.6-.197.978v.498c0 .379.065.704.194.976c.13.271.321.48.571.627c.25.144.555.216.914.216c.293 0 .555-.054.785-.164c.23-.11.414-.26.551-.454a1.27 1.27 0 0 0 .226-.674v-.076h-.765a.8.8 0 0 1-.117.364a.699.699 0 0 1-.273.248a.874.874 0 0 1-.401.088a.845.845 0 0 1-.478-.131a.834.834 0 0 1-.298-.393a1.7 1.7 0 0 1-.103-.627v-.495Zm5.092-1.76h.894l-1.275 2.006l1.254 1.992h-.908l-.85-1.415h-.035l-.852 1.415h-.862l1.24-2.015l-1.228-1.984h.932l.832 1.439h.035l.823-1.439Z"/></svg>
-    )
-  }
+    return (
+      <svg
+        style={{ display: "inline" }}
+        width="18"
+        height="18"
+        viewBox="0 0 16 16"
+      >
+        <path
+          fill="#888888"
+          fill-rule="evenodd"
+          d="M14 4.5V11h-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5L14 4.5Zm-6.839 9.688v-.522a1.54 1.54 0 0 0-.117-.641a.861.861 0 0 0-.322-.387a.862.862 0 0 0-.469-.129a.868.868 0 0 0-.471.13a.868.868 0 0 0-.32.386a1.54 1.54 0 0 0-.117.641v.522c0 .256.04.47.117.641a.868.868 0 0 0 .32.387a.883.883 0 0 0 .471.126a.877.877 0 0 0 .469-.126a.861.861 0 0 0 .322-.386a1.55 1.55 0 0 0 .117-.642Zm.803-.516v.513c0 .375-.068.7-.205.973a1.47 1.47 0 0 1-.589.627c-.254.144-.56.216-.917.216a1.86 1.86 0 0 1-.92-.216a1.463 1.463 0 0 1-.589-.627a2.151 2.151 0 0 1-.205-.973v-.513c0-.379.069-.704.205-.975c.137-.274.333-.483.59-.627c.257-.147.564-.22.92-.22c.357 0 .662.073.916.22c.256.146.452.356.59.63c.136.271.204.595.204.972ZM1 15.925v-3.999h1.459c.406 0 .741.078 1.005.235c.264.156.46.382.589.68c.13.296.196.655.196 1.074c0 .422-.065.784-.196 1.084c-.131.301-.33.53-.595.689c-.264.158-.597.237-.999.237H1Zm1.354-3.354H1.79v2.707h.563c.185 0 .346-.028.483-.082a.8.8 0 0 0 .334-.252c.088-.114.153-.254.196-.422a2.3 2.3 0 0 0 .068-.592c0-.3-.04-.552-.118-.753a.89.89 0 0 0-.354-.454c-.158-.102-.361-.152-.61-.152Zm6.756 1.116c0-.248.034-.46.103-.633a.868.868 0 0 1 .301-.398a.814.814 0 0 1 .475-.138c.15 0 .283.032.398.097a.7.7 0 0 1 .273.26a.85.85 0 0 1 .12.381h.765v-.073a1.33 1.33 0 0 0-.466-.964a1.44 1.44 0 0 0-.49-.272a1.836 1.836 0 0 0-.606-.097c-.355 0-.66.074-.911.223c-.25.148-.44.359-.571.633c-.131.273-.197.6-.197.978v.498c0 .379.065.704.194.976c.13.271.321.48.571.627c.25.144.555.216.914.216c.293 0 .555-.054.785-.164c.23-.11.414-.26.551-.454a1.27 1.27 0 0 0 .226-.674v-.076h-.765a.8.8 0 0 1-.117.364a.699.699 0 0 1-.273.248a.874.874 0 0 1-.401.088a.845.845 0 0 1-.478-.131a.834.834 0 0 1-.298-.393a1.7 1.7 0 0 1-.103-.627v-.495Zm5.092-1.76h.894l-1.275 2.006l1.254 1.992h-.908l-.85-1.415h-.035l-.852 1.415h-.862l1.24-2.015l-1.228-1.984h.932l.832 1.439h.035l.823-1.439Z"
+        />
+      </svg>
+    );
+  };
 
   const capitalize = (s: string) => {
-    if (typeof s !== 'string') return ''
+    if (typeof s !== "string") return "";
     const words = s.split(" ");
 
     for (let i = 0; i < words.length; i++) {
       words[i] = words[i][0].toUpperCase() + words[i].substr(1) + " ";
-  }
-  words.join(" ");
+    }
+    words.join(" ");
 
-
-return words;
-  }
+    return words;
+  };
 
   const filteredItems = filterItems(
     [
       {
         heading: "General",
-        id : "general",
+        id: "general",
         items: [
           {
             id: "new",
@@ -115,7 +137,7 @@ return words;
             showType: false,
             onClick: () => {
               setFileNameBox(true);
-            }
+            },
           },
           {
             id: "folder",
@@ -123,48 +145,51 @@ return words;
             icon: "FolderOpenIcon",
             showType: false,
             onClick: () => {
-              try{
+              try {
                 setIsCreatingFolder(true);
-              setFileNameBox(true);}
-            catch(e){console.log(e)}
-            }
-          },
-          {
-            id: "export",
-            showType: false,
-            disabled: pandocAvailable ? false : true,
-            children: `Export ${name.endsWith(".md") ? name.charAt(0).toUpperCase() + name.slice(1, -3) : name.charAt(0).toUpperCase() + name.slice(1)} to PDF`,
-            icon:() => <PDFIcon/>,
-            onClick: () => {
-              try{
-              convertToPDF();
-            }
-              catch(e){
+                setFileNameBox(true);
+              } catch (e) {
                 console.log(e);
-            }
-          }
+              }
+            },
+          },
+          {
+            id: "export",
+            showType: false,
+            disabled: pandocAvailable ? false : true,
+            children: `Export ${
+              name.endsWith(".md")
+                ? name.charAt(0).toUpperCase() + name.slice(1, -3)
+                : name.charAt(0).toUpperCase() + name.slice(1)
+            } to PDF`,
+            icon: () => <PDFIcon />,
+            onClick: () => {
+              try {
+                convertToPDF();
+              } catch (e) {
+                console.log(e);
+              }
+            },
           },
           {
             disabled: pandocAvailable ? false : true,
             id: "export",
             showType: false,
-            children: `Export ${name.endsWith(".md") ? name.charAt(0).toUpperCase() + name.slice(1, -3) : name.charAt(0).toUpperCase() + name.slice(1)} to Docx`,
-            icon:() => <DOCXIcon/>,
+            children: `Export ${
+              name.endsWith(".md")
+                ? name.charAt(0).toUpperCase() + name.slice(1, -3)
+                : name.charAt(0).toUpperCase() + name.slice(1)
+            } to Docx`,
+            icon: () => <DOCXIcon />,
             onClick: () => {
-              try{
+              try {
                 converToDocx();
-              }catch(e){
-                console.log(e)
-
+              } catch (e) {
+                console.log(e);
               }
-              
-            }
+            },
           },
-         
-
-            
-          
-        ]
+        ],
       },
       {
         heading: "Files",
@@ -175,7 +200,16 @@ return words;
             id: file.name,
             showType: false,
             //children: file.name,
-            children: <p>{file.name} — <span style={{fontSize: "12px", color: "#888888"}}>{capitalize(mainPath.basename(mainPath.dirname(file.path)).toLowerCase())}</span></p>,
+            children: (
+              <p>
+                {file.name} —{" "}
+                <span style={{ fontSize: "12px", color: "#888888" }}>
+                  {capitalize(
+                    mainPath.basename(mainPath.dirname(file.path)).toLowerCase()
+                  )}
+                </span>
+              </p>
+            ),
             icon: "DocumentTextIcon",
             onClick: () => {
               try {
@@ -203,8 +237,8 @@ return words;
             icon: "QuestionMarkCircleIcon",
             onClick: (event) => {
               event.preventDefault();
-              open("https://github.com/ahmedsaheed/Leaflet")
-            }
+              open("https://github.com/ahmedsaheed/Leaflet");
+            },
           },
           {
             id: "keys",
@@ -213,8 +247,10 @@ return words;
             icon: "KeyIcon",
             onClick: (event) => {
               event.preventDefault();
-              open("https://github.com/ahmedsaheed/Leaflet#shortcuts-and-controls")
-            }
+              open(
+                "https://github.com/ahmedsaheed/Leaflet#shortcuts-and-controls"
+              );
+            },
           },
         ],
       },
@@ -452,7 +488,10 @@ return words;
   const openExternalInDefaultBrowser = () => {
     document.addEventListener("click", (event) => {
       const element = event.target as HTMLAnchorElement | null;
-      if (element?.tagName === "A") {
+      if (
+        element?.tagName === "A" &&
+        !(element?.href.indexOf(window.location.href) > -1)
+      ) {
         event.preventDefault();
         open(element?.href);
       }
@@ -793,11 +832,19 @@ return words;
         e.preventDefault();
         return;
       }
+      if (e.key === "j" && (e.ctrlKey || e.metaKey)) {
+        if (!insert) {
+          return;
+        }
+        addYaml();
+        e.preventDefault();
+        return;
+      }
 
       if (e.metaKey && e.key === "k") {
         e.preventDefault();
         e.stopPropagation();
-        setSearch("")
+        setSearch("");
         setClick(!click);
         return;
       } else if (e.key === "Escape") {
@@ -871,6 +918,39 @@ return words;
     });
   };
 
+  const addYaml = () => {
+    const area = ref.current;
+    const pos = area.selectionStart;
+    area.setSelectionRange(pos, pos);
+    document.execCommand(
+      "insertText",
+      false,
+      `---
+ tags:
+  - programming
+  - computers
+  - conversations
+ material:
+  - {github: 'https://github.com/'} 
+  - {mala: 'https://github.com/'}
+  - {xala: 'https://github.com/'}   
+---`
+    );
+    area.setSelectionRange(pos + 4, pos + 4);
+  };
+
+  const checkObject = (obj) => {
+    if (Object.keys(obj).length === 0) {
+      return false;
+    }
+    return true;
+  };
+
+  const getBG = () => {
+    const bg = ["#90FFFF", "#EE82EE", "#FEC1CB", "#65CDAA", "#F0E68C"];
+    return bg[Math.floor(Math.random() * bg.length)];
+  };
+
   const cursorUpdate = (e) => {
     if (e.target.selectionStart !== e.target.selectionEnd) {
       setCursor(`[${e.target.selectionStart}, ${e.target.selectionEnd}]`);
@@ -883,7 +963,6 @@ return words;
       setCursor(`${lineNo}L ${colNo}C`);
     }
   };
-
 
   return (
     <>
@@ -1243,18 +1322,27 @@ return words;
                   }}
                 >
                   <div
-                    style={{ paddingLeft: "10px",
-                    width: "18.5em", maxWidth: "18.5em"
-
-                  }}
+                    style={{
+                      paddingLeft: "10px",
+                      width: "18.5em",
+                      maxWidth: "18.5em",
+                    }}
                     className="menu"
                     role="button"
-                    onClick={() =>{ try {setClick(true); setSearch("")}
-                    catch (err) { console.log(err) }}
-                  }
+                    onClick={() => {
+                      try {
+                        setClick(true);
+                        setSearch("");
+                      } catch (err) {
+                        console.log(err);
+                      }
+                    }}
                   >
                     Utilities
-                    <span style={{float: "right", marginRight: "2em"}}><code style={{borderRadius: "2px"}}>⌘</code> <code style={{borderRadius: "2px"}}>k</code></span>
+                    <span style={{ float: "right", marginRight: "2em" }}>
+                      <code style={{ borderRadius: "2px" }}>⌘</code>{" "}
+                      <code style={{ borderRadius: "2px" }}>k</code>
+                    </span>
                     {click && (
                       <CommandPalette
                         onChangeSearch={setSearch}
@@ -1263,22 +1351,58 @@ return words;
                         isOpen={menuOpen}
                         page={page}
                         placeholder="Search for notes and utilities"
-                        footer = {
-                          <div style={{ fontSize :"12px",display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%"}}>
+                        footer={
+                          <div
+                            style={{
+                              fontSize: "12px",
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                              width: "100%",
+                            }}
+                          >
+                            <div
+                              style={{
+                                marginLeft: "2em",
+                                display: "flex",
+                                alignItems: "center",
+                                paddingTop: "5px",
+                                paddingBottom: "5px",
+                              }}
+                            >
+                              <span
+                                style={{ marginRight: "2em", color: "#888888" }}
+                              >
+                                <svg
+                                  style={{ display: "inline" }}
+                                  width="15"
+                                  height="15"
+                                  viewBox="0 0 32 32"
+                                >
+                                  <path
+                                    fill="#888888"
+                                    d="M27.6 20.6L24 24.2V4h-2v20.2l-3.6-3.6L17 22l6 6l6-6zM9 4l-6 6l1.4 1.4L8 7.8V28h2V7.8l3.6 3.6L15 10z"
+                                  />
+                                </svg>
+                                &nbsp;Select
+                              </span>
 
-                            <div style={{marginLeft: "2em",display: "flex", alignItems: "center", paddingTop: "5px", paddingBottom: "5px"}}>
-                              <span style={{marginRight: "2em" ,color:"#888888"}}>
-                              <svg style={{display: "inline"}} width="15" height="15" viewBox="0 0 32 32"><path fill="#888888" d="M27.6 20.6L24 24.2V4h-2v20.2l-3.6-3.6L17 22l6 6l6-6zM9 4l-6 6l1.4 1.4L8 7.8V28h2V7.8l3.6 3.6L15 10z"/></svg>
-                              &nbsp;Select
-                                </span>
-
-                              <span style={{color:"#888888"}}>
-                              <svg style={{display: "inline"}} width="15" height="15" viewBox="0 0 512 512"><path d="M432.8 136v96H122.3l84.4-86.2-33.2-33.8L32 256l141.5 144 33.2-33.8-84.4-86.2H480V136h-47.2z" fill="#888888"/></svg>
-                              &nbsp;Open</span>
-                            
+                              <span style={{ color: "#888888" }}>
+                                <svg
+                                  style={{ display: "inline" }}
+                                  width="15"
+                                  height="15"
+                                  viewBox="0 0 512 512"
+                                >
+                                  <path
+                                    d="M432.8 136v96H122.3l84.4-86.2-33.2-33.8L32 256l141.5 144 33.2-33.8-84.4-86.2H480V136h-47.2z"
+                                    fill="#888888"
+                                  />
+                                </svg>
+                                &nbsp;Open
+                              </span>
                             </div>
-                            </div>
-
+                          </div>
                         }
                       >
                         <CommandPalette.Page id="root">
@@ -1290,12 +1414,11 @@ return words;
                               >
                                 {list.items.map(({ id, ...rest }) => (
                                   <CommandPalette.ListItem
-                                    showType = {true}
+                                    showType={true}
                                     key={id}
                                     index={getItemIndex(filteredItems, id)}
                                     {...rest}
                                   />
-                                
                                 ))}
                               </CommandPalette.List>
                             ))
@@ -1319,8 +1442,8 @@ return words;
         <div
           style={{
             padding: "40px",
-            width:  "calc(100vw - 18.5em)",
-            minWidth:  "calc(100vw - 18.5em)",
+            width: "calc(100vw - 18.5em)",
+            minWidth: "calc(100vw - 18.5em)",
             maxWidth: "calc(100vw - 18.5em)",
             paddingTop: "10vh",
           }}
@@ -1373,6 +1496,249 @@ return words;
           ) : (
             <>
               <div style={{ overflow: "hidden" }}>
+                {/* <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    lineHeight: "1.2",
+                    fontWeight: "700",
+                    userSelect: "none",
+                  }}
+                >
+                  <h1
+                    style={{
+                      width: "100%",
+                      fontSize: "40px",
+                      whiteSpace: "pre-wrap",
+                      wordBreak: "break-word",
+                      padding: "3px 2px",
+                    }}
+                  >
+                    {name?.endsWith(".md")
+                      ? capitalize(name.slice(0, -3).replace(/-/g, " "))
+                      : capitalize(name.replace(/-/g, " ").replace(/_/g, " "))}
+                  </h1>
+                </div> */}
+                <div style={{ paddingTop: "1em", userSelect: "none" }}>
+                  {/* <div style={{ display: "flex" }}>
+                    <div
+                      style={{
+                        alignItems: "center",
+                        padding: "0px 6px 10px",
+                        color: "#888888",
+                        display: "flex",
+                        width: "130px",
+                        flex: "0 0 auto",
+                      }}
+                    >
+                      <svg
+                        style={{ display: "inline" }}
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          fill="#888888"
+                          d="M12 20c4.4 0 8-3.6 8-8s-3.6-8-8-8s-8 3.6-8 8s3.6 8 8 8m0-18c5.5 0 10 4.5 10 10s-4.5 10-10 10S2 17.5 2 12S6.5 2 12 2m.5 5v6H7v-1.5h4V7h1.5Z"
+                        />
+                      </svg>
+                      &nbsp;Created&nbsp;{" "}
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        flex: "1 1 auto",
+                        alignItems: "center",
+                        minWidth: "0",
+                        paddingBottom: "10px",
+                      }}
+                    >
+                      <span style={{ color: "#888888" }}>
+                        {fs.statSync(path)?.ctime.toLocaleDateString()}
+                      </span>
+                    </div>
+                  </div>
+                  <div style={{ display: "flex" }}>
+                    <div
+                      style={{
+                        alignItems: "center",
+                        color: "#888888",
+                        padding: "0px 6px 10px",
+                        display: "flex",
+                        width: "130px",
+                        flex: "0 0 auto",
+                      }}
+                    >
+                      <svg
+                        style={{ display: "inline" }}
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          fill="#888888"
+                          d="M5 23.7q-.825 0-1.413-.588Q3 22.525 3 21.7v-14q0-.825.587-1.413Q4.175 5.7 5 5.7h8.925l-2 2H5v14h14v-6.95l2-2v8.95q0 .825-.587 1.412q-.588.588-1.413.588Zm7-9Zm4.175-8.425l1.425 1.4l-6.6 6.6V15.7h1.4l6.625-6.625l1.425 1.4l-7.2 7.225H9v-4.25Zm4.275 4.2l-4.275-4.2l2.5-2.5q.6-.6 1.438-.6q.837 0 1.412.6l1.4 1.425q.575.575.575 1.4T22.925 8Z"
+                        />
+                      </svg>
+                      &nbsp;Edited&nbsp;
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        flex: "1 1 auto",
+                        alignItems: "center",
+                        minWidth: "0",
+                        paddingBottom: "10px",
+                      }}
+                    >
+                      <span style={{ color: "#888888" }}>
+                        {fs.statSync(path).ctime.toLocaleDateString() +
+                          " " +
+                          fs.statSync(path).mtime.toLocaleTimeString()}
+                      </span>
+                    </div>
+                  </div> */}
+                  {checkObject(getMarkdown(value).metadata) ? (
+                    <>
+                      {getMarkdown(value).metadata.tags ? (
+                        <div style={{ display: "flex" }}>
+                          <div
+                            style={{
+                              alignItems: "center",
+                              padding: "0px 6px 10px",
+                              color: "#888888",
+                              display: "flex",
+                              width: "130px",
+                              flex: "0 0 auto",
+                            }}
+                          >
+                            <svg
+                              style={{ display: "inline" }}
+                              width="16"
+                              height="16"
+                              viewBox="0 0 16 16"
+                            >
+                              <g fill="#888888">
+                                <path d="M3 2v4.586l7 7L14.586 9l-7-7H3zM2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586V2z" />
+                                <path d="M5.5 5a.5.5 0 1 1 0-1a.5.5 0 0 1 0 1zm0 1a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3zM1 7.086a1 1 0 0 0 .293.707L8.75 15.25l-.043.043a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 0 7.586V3a1 1 0 0 1 1-1v5.086z" />
+                              </g>
+                            </svg>
+                            &nbsp;Tags&nbsp;
+                          </div>
+                          <div
+                            style={{
+                              display: "flex",
+                              flex: "1 1 auto",
+                              alignItems: "center",
+                              minWidth: "0",
+                              paddingBottom: "10px",
+                            }}
+                          >
+                            <span
+                              style={{
+                                width: "100%",
+                                color: "#888888",
+                                whiteSpace: "nowrap",
+                                overflowX: "scroll",
+                              }}
+                            >
+                              {getMarkdown(value).metadata.tags?.map((tag) =>
+                                typeof tag === "string" ? (
+                                  <code
+                                    style={{
+                                      borderRadius: "4px",
+                                      marginRight: "1em",
+                                      display: "inline-block",
+                                      overflow: "hidden",
+                                      color: "#000",
+                                      backgroundColor: getBG(),
+                                    }}
+                                  >
+                                    {tag.toLowerCase()}
+                                  </code>
+                                ) : null
+                              )}
+                            </span>
+                          </div>
+                        </div>
+                      ) : null}
+                      {getMarkdown(value).metadata.material ? (
+                        <div style={{ display: "flex" }}>
+                          <div
+                            style={{
+                              alignItems: "center",
+                              padding: "0px 6px 10px",
+                              color: "#888888",
+                              display: "flex",
+                              width: "130px",
+                              flex: "0 0 auto",
+                            }}
+                          >
+                            <svg
+                              style={{ display: "inline" }}
+                              width="16"
+                              height="16"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                fill="#888888"
+                                d="M16.5 6v11.5a4 4 0 0 1-4 4a4 4 0 0 1-4-4V5A2.5 2.5 0 0 1 11 2.5A2.5 2.5 0 0 1 13.5 5v10.5a1 1 0 0 1-1 1a1 1 0 0 1-1-1V6H10v9.5a2.5 2.5 0 0 0 2.5 2.5a2.5 2.5 0 0 0 2.5-2.5V5a4 4 0 0 0-4-4a4 4 0 0 0-4 4v12.5a5.5 5.5 0 0 0 5.5 5.5a5.5 5.5 0 0 0 5.5-5.5V6h-1.5Z"
+                              />
+                            </svg>
+                            &nbsp;Material&nbsp;
+                          </div>
+                          <div
+                            style={{
+                              display: "flex",
+                              flex: "1 1 auto",
+                              alignItems: "center",
+                              minWidth: "0",
+                              paddingBottom: "10px",
+                            }}
+                          >
+                            <span
+                              style={{
+                                width: "100%",
+                                color: "#888888",
+                                whiteSpace: "nowrap",
+                                overflowX: "scroll",
+                              }}
+                            >
+                              {getMarkdown(value).metadata.material.map(
+                                (materials) =>
+                                  Object.entries(materials).map(
+                                    ([key, value]) =>
+                                      //TODO: Look for a better way to do this
+                                      value.toString().startsWith("http") &&
+                                      key != value ? (
+                                        <code
+                                          style={{
+                                            borderRadius: "4px",
+                                            marginRight: "1em",
+                                            display: "inline-block",
+                                            overflow: "hidden",
+                                            color: "#000",
+                                            backgroundColor: getBG(),
+                                          }}
+                                        >
+                                          <a
+                                            target="_blank"
+                                            style={{ borderBottom: "none" }}
+                                            href={value.toString()}
+                                          >
+                                            {key.toLowerCase()}
+                                          </a>
+                                        </code>
+                                      ) : null
+                                  )
+                              )}
+                            </span>
+                          </div>
+                        </div>
+                      ) : null}
+                    </>
+                  ) : null}
+                </div>
                 <div
                   id="previewArea"
                   style={{
@@ -1381,7 +1747,7 @@ return words;
                     overflow: "scroll",
                   }}
                   className="third h-full w-full"
-                  dangerouslySetInnerHTML={getMarkdown(value)}
+                  dangerouslySetInnerHTML={getMarkdown(value).document}
                 />
               </div>
             </>
@@ -1389,7 +1755,7 @@ return words;
           <div
             className="fixed inset-x-0 bottom-0 ButtomBar"
             style={{
-            //   width:  "100vw",
+              //   width:  "100vw",
               display: "inline",
               userSelect: "none",
               marginLeft: "18.55em",
@@ -1542,19 +1908,6 @@ return words;
                     paddingBottom: "5px",
                   }}
                 >
-                  <span style={{ float: "left" }}>
-                    <svg
-                      style={{ display: "inline" }}
-                      width="32"
-                      height="22"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        fill="#888888"
-                        d="M20.56 18H3.44C2.65 18 2 17.37 2 16.59V7.41C2 6.63 2.65 6 3.44 6h17.12c.79 0 1.44.63 1.44 1.41v9.18c0 .78-.65 1.41-1.44 1.41M6.81 15.19v-3.66l1.92 2.35l1.92-2.35v3.66h1.93V8.81h-1.93l-1.92 2.35l-1.92-2.35H4.89v6.38h1.92M19.69 12h-1.92V8.81h-1.92V12h-1.93l2.89 3.28L19.69 12Z"
-                      />
-                    </svg>
-                  </span>
                   <div style={{ display: "inline", marginLeft: "20px" }}></div>
                   {clockState}
                 </div>

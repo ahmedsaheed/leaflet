@@ -149,13 +149,14 @@ strong{
 
 @media (prefers-color-scheme: light) {
   body {
-    font-weight: 600;
+    /* font-weight: 600; */
     -webkit-app-region: drag;
+    fill: currentColor;
     background: #fff;
-    color: #37352F;
+    color: rgb(55, 53, 47);
     font-family: "iA Writer Mono", monospace;
-    font-size: 13px;
-    -webkit-font-smoothing: antialiased;
+    font-size: 85%;
+    -webkit-font-smoothing: auto;
     letter-spacing: 0.055em;
     line-height: 1.6;
 
@@ -422,15 +423,4 @@ details[open] summary::before {
   transform: rotate(90deg);
 }
 
-
-.slideIn{
-  -webkit-animation: slide-up 900ms  forwards;
-  animation: slide-up 900ms forwards;
-
-}
-
-@keyframes slide-up {
-  0% { -webkit-transform: translateY(100%); opacity: 1 }
-  100% { -webkit-transform: translateY(0); opacity: 1  }
-}
 
