@@ -1,8 +1,16 @@
-import React, { useEffect,useCallback, useRef, useState } from "react";
+import React, { useEffect, useCallback, useRef, useState } from "react";
 import { ipcRenderer } from "electron";
 import "react-cmdk/dist/cmdk.css";
-import codeMirrior from "../components/editor";
-import { PDFIcon, DOCXIcon, MARKDOWNIcon, COMMANDPALLETEOPENIcon, COMMANDPALLETESELECTIcon } from "../components/icons"
+import { useCodeMirror, extensions } from "../components/editor";
+import {
+  PDFIcon,
+  DOCXIcon,
+  MARKDOWNIcon,
+  MATERIALIcon,
+  TAGIcon,
+  COMMANDPALLETEOPENIcon,
+  COMMANDPALLETESELECTIcon,
+} from "../components/icons";
 import CommandPalette, { filterItems, getItemIndex } from "react-cmdk";
 import { progress } from "../components/progress";
 import { getMarkdown } from "../lib/mdParser";
@@ -15,17 +23,14 @@ import pandoc from "node-pandoc";
 import mainPath from "path";
 import open from "open";
 import os from "os";
-
+import { Extension } from "@codemirror/state";
 
 export default function Next() {
-
-
-  interface contectProps {
+  interface contentProps {
     initialDoc: string;
     onChange: (doc: string) => void;
   }
 
-  
   type file = {
     path: string;
     name: string;
@@ -86,42 +91,50 @@ export default function Next() {
     }
   }, [files]);
 
-const Editor: React.FC<contectProps> = (props) => {
-  const { onChange, initialDoc } = props
-  
-  const handleChange = useCallback( 
-    state => {
-      onChange(state.doc.toString())
-      setValue(state.doc.toString())
-      },
-    [onChange]
-  )
-  const [refContainer, view] = codeMirrior<HTMLDivElement>({
-    initialDoc: initialDoc,
-    onChange: handleChange
-  })
+  // const Editor: React.FC<contentProps> = (props) => {
+  //   const { onChange, initialDoc } = props
 
-  useEffect(() => {
-    if (view) {
-      //sync the view with the value
-      // view.dispatch({
-      //   changes: {
-      //     from: 0,
-      //     to: view.state.doc.length,
-      //     insert: value
-      //   }
-      // })
+  //   const handleChange = useCallback(
+  //     state => {
+  //       onChange(state.doc.toString())
+  //       setValue(state.doc.toString())
+  //       },
+  //     [onChange]
+  //   )
+  //   const [refContainer, view] = codeMirrior<HTMLDivElement>({
+  //     initialDoc: initialDoc,
+  //     onChange: handleChange
+  //   })
 
+  // useEffect(() => {
+  //   if (view) {
+  //     //sync the view with the value
+  //     // view.dispatch({
+  //     //   changes: {
+  //     //     from: 0,
+  //     //     to: view.state.doc.length,
+  //     //     insert: value
+  //     //   }
+  //     // })
 
-    
-    }
-  }, [view])
+  //   }
+  // }, [view])
 
-  return (
-      <div style={{height: "100vh"}}  ref={refContainer}>
-        </div>
-  )
-}
+  //   return (
+  //       <div style={{height: "100vh"}}  ref={refContainer}>
+  //         </div>
+  //   )
+  // }
+
+  type CodeMirrorProps = {
+    extensions: Extension[];
+  };
+
+  const CodeMirror = ({ extensions }: CodeMirrorProps) => {
+    const { ref } = useCodeMirror(extensions, value);
+
+    return <div ref={ref} />;
+  };
 
   const capitalize = (s: string) => {
     if (typeof s !== "string") return "";
@@ -975,6 +988,21 @@ const Editor: React.FC<contectProps> = (props) => {
     }
   };
 
+  const onFileTreeClick = (path: string, name: string) => {
+    try {
+      setParentDir(mainPath.dirname(path));
+      saveFile();
+      setValue(fs.readFileSync(path, "utf8"));
+      setName(name);
+      setPath(path);
+      setInsert(false);
+
+      document.documentElement.scrollTop = 0;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <>
       <Head>
@@ -1095,26 +1123,11 @@ const Editor: React.FC<contectProps> = (props) => {
                                               style={{
                                                 cursor: "pointer",
                                               }}
-                                              onClick={(e) => {
-                                                try {
-                                                  setParentDir(
-                                                    mainPath.dirname(child.path)
-                                                  );
-                                                  saveFile();
-                                                  setValue(
-                                                    fs.readFileSync(
-                                                      child.path,
-                                                      "utf8"
-                                                    )
-                                                  );
-                                                  setName(child.name);
-                                                  setPath(child.path);
-                                                  setInsert(false);
-
-                                                  document.documentElement.scrollTop = 0;
-                                                } catch (err) {
-                                                  console.log(err);
-                                                }
+                                              onClick={() => {
+                                                onFileTreeClick(
+                                                  child.path,
+                                                  child.name
+                                                );
                                               }}
                                             >
                                               <button
@@ -1140,8 +1153,7 @@ const Editor: React.FC<contectProps> = (props) => {
                                                     textOverflow: "ellipsis",
                                                   }}
                                                 >
-                                                  <MARKDOWNIcon/>
-                                                  {" "}
+                                                  <MARKDOWNIcon />{" "}
                                                   {child.name.slice(0, -3)}
                                                 </p>
                                               </button>
@@ -1164,18 +1176,7 @@ const Editor: React.FC<contectProps> = (props) => {
                                   <ol
                                     className="files"
                                     onClick={(e) => {
-                                      try {
-                                        saveFile();
-                                        setValue(
-                                          fs.readFileSync(child.path, "utf8")
-                                        );
-                                        setName(child.name);
-                                        setPath(child.path);
-                                        setInsert(false);
-                                        document.documentElement.scrollTop = 0;
-                                      } catch (err) {
-                                        console.log(err);
-                                      }
+                                      onFileTreeClick(child.path, child.name);
                                     }}
                                     style={{
                                       cursor: "pointer",
@@ -1204,8 +1205,7 @@ const Editor: React.FC<contectProps> = (props) => {
                                           textOverflow: "ellipsis",
                                         }}
                                       >
-                                       <MARKDOWNIcon/>
-                                        {" "}
+                                        <MARKDOWNIcon />{" "}
                                         {child.name.slice(0, -3)}
                                       </p>
                                     </button>
@@ -1219,17 +1219,18 @@ const Editor: React.FC<contectProps> = (props) => {
                             <ol
                               className="files"
                               onClick={(e) => {
-                                try {
-                                  setParentDir(mainPath.dirname(file.path));
-                                  saveFile();
-                                  setValue(fs.readFileSync(file.path, "utf8"));
-                                  setName(file.name);
-                                  setPath(file.path);
-                                  setInsert(false);
-                                  document.documentElement.scrollTop = 0;
-                                } catch (err) {
-                                  console.log(err);
-                                }
+                                onFileTreeClick(file.path, file.name);
+                                // try {
+                                //   setParentDir(mainPath.dirname(file.path));
+                                //   saveFile();
+                                //   setValue(fs.readFileSync(file.path, "utf8"));
+                                //   setName(file.name);
+                                //   setPath(file.path);
+                                //   setInsert(false);
+                                //   document.documentElement.scrollTop = 0;
+                                // } catch (err) {
+                                //   console.log(err);
+                                // }
                               }}
                               style={{
                                 cursor: "pointer",
@@ -1250,9 +1251,7 @@ const Editor: React.FC<contectProps> = (props) => {
                                     textOverflow: "ellipsis",
                                   }}
                                 >
-                               <MARKDOWNIcon/>
-                                 {" "}
-                                  {file.name.slice(0, -3)}
+                                  <MARKDOWNIcon /> {file.name.slice(0, -3)}
                                 </p>
                               </button>
                             </ol>
@@ -1354,12 +1353,12 @@ const Editor: React.FC<contectProps> = (props) => {
                               <span
                                 style={{ marginRight: "2em", color: "#888888" }}
                               >
-                                <COMMANDPALLETESELECTIcon/>
+                                <COMMANDPALLETESELECTIcon />
                                 &nbsp;Select
                               </span>
 
                               <span style={{ color: "#888888" }}>
-                                <COMMANDPALLETEOPENIcon/>
+                                <COMMANDPALLETEOPENIcon />
                                 &nbsp;Open
                               </span>
                             </div>
@@ -1453,8 +1452,7 @@ const Editor: React.FC<contectProps> = (props) => {
                   }}
                 />
               </div>
-              {/* <Editor   initialDoc={value} onChange={handleMarkdownChange} /> */}
-
+              // <CodeMirror extensions={extensions} />
             </div>
           ) : (
             <>
@@ -1575,17 +1573,7 @@ const Editor: React.FC<contectProps> = (props) => {
                               flex: "0 0 auto",
                             }}
                           >
-                            <svg
-                              style={{ display: "inline" }}
-                              width="16"
-                              height="16"
-                              viewBox="0 0 16 16"
-                            >
-                              <g fill="#888888">
-                                <path d="M3 2v4.586l7 7L14.586 9l-7-7H3zM2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586V2z" />
-                                <path d="M5.5 5a.5.5 0 1 1 0-1a.5.5 0 0 1 0 1zm0 1a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3zM1 7.086a1 1 0 0 0 .293.707L8.75 15.25l-.043.043a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 0 7.586V3a1 1 0 0 1 1-1v5.086z" />
-                              </g>
-                            </svg>
+                            <TAGIcon />
                             &nbsp;Tags&nbsp;
                           </div>
                           <div
@@ -1637,17 +1625,7 @@ const Editor: React.FC<contectProps> = (props) => {
                               flex: "0 0 auto",
                             }}
                           >
-                            <svg
-                              style={{ display: "inline" }}
-                              width="16"
-                              height="16"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                fill="#888888"
-                                d="M16.5 6v11.5a4 4 0 0 1-4 4a4 4 0 0 1-4-4V5A2.5 2.5 0 0 1 11 2.5A2.5 2.5 0 0 1 13.5 5v10.5a1 1 0 0 1-1 1a1 1 0 0 1-1-1V6H10v9.5a2.5 2.5 0 0 0 2.5 2.5a2.5 2.5 0 0 0 2.5-2.5V5a4 4 0 0 0-4-4a4 4 0 0 0-4 4v12.5a5.5 5.5 0 0 0 5.5 5.5a5.5 5.5 0 0 0 5.5-5.5V6h-1.5Z"
-                              />
-                            </svg>
+                            <MATERIALIcon />
                             &nbsp;Material&nbsp;
                           </div>
                           <div
@@ -1881,4 +1859,4 @@ const Editor: React.FC<contectProps> = (props) => {
       </div>
     </>
   );
-                }
+}

@@ -83,3 +83,37 @@ export const COMMANDPALLETESELECTIcon = () => {
     </svg>
   );
 };
+
+
+export const TAGIcon = () => {
+   return( 
+                            <svg
+                              style={{ display: "inline" }}
+                              width="16"
+                              height="16"
+                              viewBox="0 0 16 16"
+                            >
+                              <g fill="#888888">
+                                <path d="M3 2v4.586l7 7L14.586 9l-7-7H3zM2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586V2z" />
+                                <path d="M5.5 5a.5.5 0 1 1 0-1a.5.5 0 0 1 0 1zm0 1a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3zM1 7.086a1 1 0 0 0 .293.707L8.75 15.25l-.043.043a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 0 7.586V3a1 1 0 0 1 1-1v5.086z" />
+                              </g>
+                            </svg>
+)}
+
+
+export const MATERIALIcon = () => {
+    return(
+        
+                            <svg
+                              style={{ display: "inline" }}
+                              width="16"
+                              height="16"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                fill="#888888"
+                                d="M16.5 6v11.5a4 4 0 0 1-4 4a4 4 0 0 1-4-4V5A2.5 2.5 0 0 1 11 2.5A2.5 2.5 0 0 1 13.5 5v10.5a1 1 0 0 1-1 1a1 1 0 0 1-1-1V6H10v9.5a2.5 2.5 0 0 0 2.5 2.5a2.5 2.5 0 0 0 2.5-2.5V5a4 4 0 0 0-4-4a4 4 0 0 0-4 4v12.5a5.5 5.5 0 0 0 5.5 5.5a5.5 5.5 0 0 0 5.5-5.5V6h-1.5Z"
+                              />
+                            </svg>
+    )
+}
