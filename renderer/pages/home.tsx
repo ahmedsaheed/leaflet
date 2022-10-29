@@ -1,7 +1,6 @@
 import React, { useEffect, useCallback, useRef, useState } from "react";
 import { ipcRenderer } from "electron";
 import "react-cmdk/dist/cmdk.css";
-import { useCodeMirror, extensions } from "../components/editor";
 import {
   PDFIcon,
   DOCXIcon,
@@ -23,14 +22,8 @@ import pandoc from "node-pandoc";
 import mainPath from "path";
 import open from "open";
 import os from "os";
-import { Extension } from "@codemirror/state";
 
 export default function Next() {
-  interface contentProps {
-    initialDoc: string;
-    onChange: (doc: string) => void;
-  }
-
   type file = {
     path: string;
     name: string;
@@ -91,50 +84,7 @@ export default function Next() {
     }
   }, [files]);
 
-  // const Editor: React.FC<contentProps> = (props) => {
-  //   const { onChange, initialDoc } = props
 
-  //   const handleChange = useCallback(
-  //     state => {
-  //       onChange(state.doc.toString())
-  //       setValue(state.doc.toString())
-  //       },
-  //     [onChange]
-  //   )
-  //   const [refContainer, view] = codeMirrior<HTMLDivElement>({
-  //     initialDoc: initialDoc,
-  //     onChange: handleChange
-  //   })
-
-  // useEffect(() => {
-  //   if (view) {
-  //     //sync the view with the value
-  //     // view.dispatch({
-  //     //   changes: {
-  //     //     from: 0,
-  //     //     to: view.state.doc.length,
-  //     //     insert: value
-  //     //   }
-  //     // })
-
-  //   }
-  // }, [view])
-
-  //   return (
-  //       <div style={{height: "100vh"}}  ref={refContainer}>
-  //         </div>
-  //   )
-  // }
-
-  type CodeMirrorProps = {
-    extensions: Extension[];
-  };
-
-  const CodeMirror = ({ extensions }: CodeMirrorProps) => {
-    const { ref } = useCodeMirror(extensions, value);
-
-    return <div ref={ref} />;
-  };
 
   const capitalize = (s: string) => {
     if (typeof s !== "string") return "";
@@ -513,8 +463,8 @@ export default function Next() {
     document.addEventListener("click", (event) => {
       const element = event.target as HTMLAnchorElement | null;
       if (
-        element?.tagName === "A" &&
-        !(element?.href.indexOf(window.location.href) > -1)
+         element?.tagName === "A" &&
+        (element?.href.indexOf(window.location.href) > -1 === false) 
       ) {
         event.preventDefault();
         open(element?.href);
@@ -1047,12 +997,15 @@ export default function Next() {
                     marginBottom: "2vh",
                     maxHeight: "70vh",
                     overflow: "hidden",
+                    outline: "none",
+                    overflowY: "scroll",
                     textOverflow: "ellipsis",
                   }}
                 >
                   <details tabIndex={-1} open>
                     <summary
                       style={{
+                        outline: "none",
                         cursor: "pointer",
                         fontSize: "16px",
                         fontWeight: "bold",
@@ -1073,6 +1026,7 @@ export default function Next() {
                               <summary
                                 className="files"
                                 style={{
+                                  outline: "none",
                                   cursor: "pointer",
                                   fontSize: "12px",
                                   fontWeight: "bold",
@@ -1106,6 +1060,7 @@ export default function Next() {
                                             whiteSpace: "nowrap",
                                             overflow: "hidden",
                                             maxWidth: "100%",
+                                            outline: "none",
                                             textOverflow: "ellipsis",
                                           }}
                                           onClick={() => {
@@ -1134,6 +1089,7 @@ export default function Next() {
                                                 style={{
                                                   whiteSpace: "nowrap",
                                                   overflow: "hidden",
+                                                  outline: "none",
                                                   maxWidth: "100%",
                                                   textOverflow: "ellipsis",
                                                 }}
@@ -1188,6 +1144,7 @@ export default function Next() {
                                         whiteSpace: "nowrap",
                                         overflow: "hidden",
                                         maxWidth: "100%",
+                                        outline: "none",
                                       }}
                                       tabIndex={-1}
                                       className={
@@ -1203,6 +1160,7 @@ export default function Next() {
                                           whiteSpace: "nowrap",
                                           overflow: "hidden",
                                           textOverflow: "ellipsis",
+                                          outline: "none",
                                         }}
                                       >
                                         <MARKDOWNIcon />{" "}
@@ -1218,19 +1176,8 @@ export default function Next() {
                           <>
                             <ol
                               className="files"
-                              onClick={(e) => {
+                              onClick={() => {
                                 onFileTreeClick(file.path, file.name);
-                                // try {
-                                //   setParentDir(mainPath.dirname(file.path));
-                                //   saveFile();
-                                //   setValue(fs.readFileSync(file.path, "utf8"));
-                                //   setName(file.name);
-                                //   setPath(file.path);
-                                //   setInsert(false);
-                                //   document.documentElement.scrollTop = 0;
-                                // } catch (err) {
-                                //   console.log(err);
-                                // }
                               }}
                               style={{
                                 cursor: "pointer",
@@ -1238,12 +1185,14 @@ export default function Next() {
                             >
                               <button
                                 tabIndex={-1}
+                                style={{outline: "none"}}
                                 className={
                                   path === file.path ? "selected" : "greys"
                                 }
                               >
                                 <p
                                   style={{
+                                    outline: "none",
                                     display: "inline",
                                     width: "100%",
                                     whiteSpace: "nowrap",
@@ -1388,7 +1337,6 @@ export default function Next() {
                         </CommandPalette.Page>
 
                         <CommandPalette.Page id="projects">
-                          {/* Projects page */}
                         </CommandPalette.Page>
                       </CommandPalette>
                     )}
@@ -1452,7 +1400,6 @@ export default function Next() {
                   }}
                 />
               </div>
-              // <CodeMirror extensions={extensions} />
             </div>
           ) : (
             <>
