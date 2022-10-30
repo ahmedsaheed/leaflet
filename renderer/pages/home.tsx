@@ -1,7 +1,10 @@
-import React, { useEffect, useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ipcRenderer } from "electron";
 import "react-cmdk/dist/cmdk.css";
+import Clock from "react-live-clock";
+import { codeMirrior } from "../lib/editor";
 import {
+  getBG,
   PDFIcon,
   DOCXIcon,
   MARKDOWNIcon,
@@ -9,7 +12,12 @@ import {
   TAGIcon,
   COMMANDPALLETEOPENIcon,
   COMMANDPALLETESELECTIcon,
-} from "../components/icons";
+} from "../lib/util";
+import { 
+  METADATE,
+  METATAGS,
+  METAMATERIAL
+} from "../lib/metadata";
 import CommandPalette, { filterItems, getItemIndex } from "react-cmdk";
 import { progress } from "../components/progress";
 import { getMarkdown } from "../lib/mdParser";
@@ -32,8 +40,8 @@ export default function Next() {
   };
   const [value, setValue] = useState<string>("");
   const [insert, setInsert] = useState<boolean>(false);
-  const [scroll, setScroll] = useState<number>(0);
   const [files, setFiles] = useState<file[]>([]);
+  const [scroll, setScroll] = useState<number>(0);
   const [name, setName] = useState<string>("");
   const [path, setPath] = useState<string>("");
   const [page, setPage] = useState<"root" | "projects">("root");
@@ -61,22 +69,64 @@ export default function Next() {
   const Desktop = require("os").homedir() + "/Desktop";
   const ref = useRef<HTMLTextAreaElement>(null);
   let synonyms = {};
+  const date = new Date();
+
+  interface contentProps {
+    initialDoc: string;
+    onChange: (doc: string) => void;
+  }
+
+ const Editor: React.FC<contentProps> = (props) => {
+    const { onChange, initialDoc } = props
+
+    const handleChange = useCallback(
+      state => {
+        onChange(state.doc.toString())
+        setValue(state.doc.toString())
+        },
+      [onChange]
+    )
+    const [refContainer, view] = codeMirrior<HTMLDivElement>({
+      initialDoc: initialDoc,
+      onChange: handleChange
+    })
+
+  useEffect(() => {
+    if (view) {
+
+      
+      
+    }
+  }, [view])
+
+    return (
+        <div style={{height: "100%"}}  ref={refContainer}></div>
+    )
+  }
 
   useEffect(() => {
     openExternalInDefaultBrowser();
     checkForPandoc();
-    window.addEventListener("scroll", onScroll);
     ipcRenderer.invoke("getTheFile").then((files = []) => {
       setFiles(files);
       setValue(files[0] ? `${files[0].body}` : "");
       setName(files[0] ? `${files[0].name}` : "");
       setPath(files[0] ? `${files[0].path}` : "");
     });
-    setInterval(() => {
-      const date = new Date();
-      setClockState(date.toLocaleTimeString());
-    }, 1000);
+
   }, []);
+
+
+  // useEffect(() => {
+  //  let clock =  setInterval(() => {
+  //     setClockState(date.toLocaleTimeString());
+  //   }, 1000);
+
+  //   return () => {
+  //   clearTimeout(clock);
+  // }
+  // }, [clockState]);
+
 
   useEffect(() => {
     if (files.length > 0) {
@@ -84,7 +134,18 @@ export default function Next() {
     }
   }, [files]);
 
-
+  const onScroll = () => {
+    let ScrollPercent = 0;
+    const Scrolled = document.documentElement.scrollTop;
+    const MaxHeight =
+      document.documentElement.scrollHeight -
+      document.documentElement.clientHeight;
+    ScrollPercent = (Scrolled / MaxHeight) * 100;
+    setScroll(ScrollPercent);
+  };
+  if(typeof window !== 'undefined') {
+      //  window.addEventListener('scroll', onScroll);
+  }
 
   const capitalize = (s: string) => {
     if (typeof s !== "string") return "";
@@ -864,15 +925,16 @@ export default function Next() {
     document.execCommand("insertText", false, s);
   };
 
-  const onScroll = () => {
-    let ScrollPercent = 0;
-    const Scrolled = document.documentElement.scrollTop;
-    const MaxHeight =
-      document.documentElement.scrollHeight -
-      document.documentElement.clientHeight;
-    ScrollPercent = (Scrolled / MaxHeight) * 100;
-    setScroll(ScrollPercent);
-  };
+  function newChangeHandler(doc: string) {
+    setValue(doc);
+    if (doc === fs.readFileSync(path, "utf8")) {
+      setIsEdited(false);
+    } else {
+      setSaver("EDITED");
+      setIsEdited(true);
+    }
+
+  }
 
   function handleChange(e) {
     setValue(e.target.value);
@@ -914,16 +976,15 @@ export default function Next() {
   };
 
   const checkObject = (obj) => {
-    if (Object.keys(obj).length === 0) {
-      return false;
-    }
-    return true;
+    // if (Object.keys(obj).length === 0) {
+    //   return false;
+    // }
+    // return true;
+    return typeof obj === 'object' && obj !== null;
+
   };
 
-  const getBG = () => {
-    const bg = ["#90FFFF", "#EE82EE", "#FEC1CB", "#65CDAA", "#F0E68C"];
-    return bg[Math.floor(Math.random() * bg.length)];
-  };
+  
 
   const cursorUpdate = (e) => {
     if (e.target.selectionStart !== e.target.selectionEnd) {
@@ -1359,7 +1420,7 @@ export default function Next() {
           {insert ? (
             <div className="markdown-content">
               <div style={{ overflow: "hidden" }}>
-                <textarea
+                {/* <textarea
                   ref={ref}
                   autoFocus
                   id="markdown-content"
@@ -1398,7 +1459,11 @@ export default function Next() {
                     overflow: "auto",
                     display: "block",
                   }}
-                />
+                /> */}
+                  <Editor initialDoc={value} onChange={function (doc) {
+                 newChangeHandler(doc)
+                  }}/> 
+
               </div>
             </div>
           ) : (
@@ -1428,202 +1493,12 @@ export default function Next() {
                   </h1>
                 </div> */}
                 <div style={{ paddingTop: "1em", userSelect: "none" }}>
-                  {/* <div style={{ display: "flex" }}>
-                    <div
-                      style={{
-                        alignItems: "center",
-                        padding: "0px 6px 10px",
-                        color: "#888888",
-                        display: "flex",
-                        width: "130px",
-                        flex: "0 0 auto",
-                      }}
-                    >
-                      <svg
-                        style={{ display: "inline" }}
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          fill="#888888"
-                          d="M12 20c4.4 0 8-3.6 8-8s-3.6-8-8-8s-8 3.6-8 8s3.6 8 8 8m0-18c5.5 0 10 4.5 10 10s-4.5 10-10 10S2 17.5 2 12S6.5 2 12 2m.5 5v6H7v-1.5h4V7h1.5Z"
-                        />
-                      </svg>
-                      &nbsp;Created&nbsp;{" "}
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        flex: "1 1 auto",
-                        alignItems: "center",
-                        minWidth: "0",
-                        paddingBottom: "10px",
-                      }}
-                    >
-                      <span style={{ color: "#888888" }}>
-                        {fs.statSync(path)?.ctime.toLocaleDateString()}
-                      </span>
-                    </div>
-                  </div>
-                  <div style={{ display: "flex" }}>
-                    <div
-                      style={{
-                        alignItems: "center",
-                        color: "#888888",
-                        padding: "0px 6px 10px",
-                        display: "flex",
-                        width: "130px",
-                        flex: "0 0 auto",
-                      }}
-                    >
-                      <svg
-                        style={{ display: "inline" }}
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          fill="#888888"
-                          d="M5 23.7q-.825 0-1.413-.588Q3 22.525 3 21.7v-14q0-.825.587-1.413Q4.175 5.7 5 5.7h8.925l-2 2H5v14h14v-6.95l2-2v8.95q0 .825-.587 1.412q-.588.588-1.413.588Zm7-9Zm4.175-8.425l1.425 1.4l-6.6 6.6V15.7h1.4l6.625-6.625l1.425 1.4l-7.2 7.225H9v-4.25Zm4.275 4.2l-4.275-4.2l2.5-2.5q.6-.6 1.438-.6q.837 0 1.412.6l1.4 1.425q.575.575.575 1.4T22.925 8Z"
-                        />
-                      </svg>
-                      &nbsp;Edited&nbsp;
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        flex: "1 1 auto",
-                        alignItems: "center",
-                        minWidth: "0",
-                        paddingBottom: "10px",
-                      }}
-                    >
-                      <span style={{ color: "#888888" }}>
-                        {fs.statSync(path).ctime.toLocaleDateString() +
-                          " " +
-                          fs.statSync(path).mtime.toLocaleTimeString()}
-                      </span>
-                    </div>
-                  </div> */}
                   {checkObject(getMarkdown(value).metadata) ? (
                     <>
-                      {getMarkdown(value).metadata.tags ? (
-                        <div style={{ display: "flex" }}>
-                          <div
-                            style={{
-                              alignItems: "center",
-                              padding: "0px 6px 10px",
-                              color: "#888888",
-                              display: "flex",
-                              width: "130px",
-                              flex: "0 0 auto",
-                            }}
-                          >
-                            <TAGIcon />
-                            &nbsp;Tags&nbsp;
-                          </div>
-                          <div
-                            style={{
-                              display: "flex",
-                              flex: "1 1 auto",
-                              alignItems: "center",
-                              minWidth: "0",
-                              paddingBottom: "10px",
-                            }}
-                          >
-                            <span
-                              style={{
-                                width: "100%",
-                                color: "#888888",
-                                whiteSpace: "nowrap",
-                                overflowX: "scroll",
-                              }}
-                            >
-                              {getMarkdown(value).metadata.tags?.map((tag) =>
-                                typeof tag === "string" ? (
-                                  <code
-                                    style={{
-                                      borderRadius: "4px",
-                                      marginRight: "1em",
-                                      display: "inline-block",
-                                      overflow: "hidden",
-                                      color: "#000",
-                                      backgroundColor: getBG(),
-                                    }}
-                                  >
-                                    {tag.toLowerCase()}
-                                  </code>
-                                ) : null
-                              )}
-                            </span>
-                          </div>
-                        </div>
-                      ) : null}
-                      {getMarkdown(value).metadata.material ? (
-                        <div style={{ display: "flex" }}>
-                          <div
-                            style={{
-                              alignItems: "center",
-                              padding: "0px 6px 10px",
-                              color: "#888888",
-                              display: "flex",
-                              width: "130px",
-                              flex: "0 0 auto",
-                            }}
-                          >
-                            <MATERIALIcon />
-                            &nbsp;Material&nbsp;
-                          </div>
-                          <div
-                            style={{
-                              display: "flex",
-                              flex: "1 1 auto",
-                              alignItems: "center",
-                              minWidth: "0",
-                              paddingBottom: "10px",
-                            }}
-                          >
-                            <span
-                              style={{
-                                width: "100%",
-                                color: "#888888",
-                                whiteSpace: "nowrap",
-                                overflowX: "scroll",
-                              }}
-                            >
-                              {getMarkdown(value).metadata.material.map(
-                                (materials) =>
-                                  Object.entries(materials).map(
-                                    ([key, value]) =>
-                                      //TODO: Look for a better way to do this
-                                      value.toString().startsWith("http") &&
-                                      key != value ? (
-                                        <code
-                                          style={{
-                                            borderRadius: "4px",
-                                            marginRight: "1em",
-                                            display: "inline-block",
-                                            overflow: "hidden",
-                                            color: "#000",
-                                            backgroundColor: getBG(),
-                                          }}
-                                        >
-                                          <a
-                                            target="_blank"
-                                            style={{ borderBottom: "none" }}
-                                            href={value.toString()}
-                                          >
-                                            {key.toLowerCase()}
-                                          </a>
-                                        </code>
-                                      ) : null
-                                  )
-                              )}
-                            </span>
-                          </div>
-                        </div>
-                      ) : null}
+                    <METADATE incoming={getMarkdown(value).metadata.date} />
+                    <METATAGS incoming={getMarkdown(value).metadata.tags} />
+                    <METAMATERIAL incoming={getMarkdown(value).metadata.material} />
+
                     </>
                   ) : null}
                 </div>
@@ -1797,7 +1672,10 @@ export default function Next() {
                   }}
                 >
                   <div style={{ display: "inline", marginLeft: "20px" }}></div>
-                  {clockState}
+                  {/* {clockState} */}
+                  {/* <Clock
+                    format={'h:mm:ssa'}
+                    ticking={true} /> */}
                 </div>
               </>
             )}

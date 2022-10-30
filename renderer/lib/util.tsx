@@ -84,36 +84,54 @@ export const COMMANDPALLETESELECTIcon = () => {
   );
 };
 
-
 export const TAGIcon = () => {
-   return( 
-                            <svg
-                              style={{ display: "inline" }}
-                              width="16"
-                              height="16"
-                              viewBox="0 0 16 16"
-                            >
-                              <g fill="#888888">
-                                <path d="M3 2v4.586l7 7L14.586 9l-7-7H3zM2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586V2z" />
-                                <path d="M5.5 5a.5.5 0 1 1 0-1a.5.5 0 0 1 0 1zm0 1a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3zM1 7.086a1 1 0 0 0 .293.707L8.75 15.25l-.043.043a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 0 7.586V3a1 1 0 0 1 1-1v5.086z" />
-                              </g>
-                            </svg>
-)}
-
+  return (
+    <svg
+      style={{ display: "inline" }}
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+    >
+      <g fill="#888888">
+        <path d="M3 2v4.586l7 7L14.586 9l-7-7H3zM2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586V2z" />
+        <path d="M5.5 5a.5.5 0 1 1 0-1a.5.5 0 0 1 0 1zm0 1a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3zM1 7.086a1 1 0 0 0 .293.707L8.75 15.25l-.043.043a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 0 7.586V3a1 1 0 0 1 1-1v5.086z" />
+      </g>
+    </svg>
+  );
+};
 
 export const MATERIALIcon = () => {
-    return(
-        
-                            <svg
-                              style={{ display: "inline" }}
-                              width="16"
-                              height="16"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                fill="#888888"
-                                d="M16.5 6v11.5a4 4 0 0 1-4 4a4 4 0 0 1-4-4V5A2.5 2.5 0 0 1 11 2.5A2.5 2.5 0 0 1 13.5 5v10.5a1 1 0 0 1-1 1a1 1 0 0 1-1-1V6H10v9.5a2.5 2.5 0 0 0 2.5 2.5a2.5 2.5 0 0 0 2.5-2.5V5a4 4 0 0 0-4-4a4 4 0 0 0-4 4v12.5a5.5 5.5 0 0 0 5.5 5.5a5.5 5.5 0 0 0 5.5-5.5V6h-1.5Z"
-                              />
-                            </svg>
-    )
-}
+  return (
+    <svg
+      style={{ display: "inline" }}
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+    >
+      <path
+        fill="#888888"
+        d="M16.5 6v11.5a4 4 0 0 1-4 4a4 4 0 0 1-4-4V5A2.5 2.5 0 0 1 11 2.5A2.5 2.5 0 0 1 13.5 5v10.5a1 1 0 0 1-1 1a1 1 0 0 1-1-1V6H10v9.5a2.5 2.5 0 0 0 2.5 2.5a2.5 2.5 0 0 0 2.5-2.5V5a4 4 0 0 0-4-4a4 4 0 0 0-4 4v12.5a5.5 5.5 0 0 0 5.5 5.5a5.5 5.5 0 0 0 5.5-5.5V6h-1.5Z"
+      />
+    </svg>
+  );
+};
+export const getBG = () => {
+  const bg = ["#90FFFF", "#EE82EE", "#FEC1CB", "#65CDAA", "#F0E68C"];
+  return bg[Math.floor(Math.random() * bg.length)];
+};
+
+export const CLOCKIcon = () => {
+  return (
+    <svg
+      style={{ display: "inline" }}
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+    >
+      <path
+        fill="#888888"
+        d="M12 20c4.4 0 8-3.6 8-8s-3.6-8-8-8s-8 3.6-8 8s3.6 8 8 8m0-18c5.5 0 10 4.5 10 10s-4.5 10-10 10S2 17.5 2 12S6.5 2 12 2m.5 5v6H7v-1.5h4V7h1.5Z"
+      />
+    </svg>
+  );
+};

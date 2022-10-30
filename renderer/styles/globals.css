@@ -28,7 +28,7 @@ h3{
 }
 @media (prefers-color-scheme: dark) {
   body {
-    font-weight: 600;
+    /* font-weight: 400; */
     -webkit-app-region: drag;
     background: #1e1e1e;
     color: white;
