@@ -31,8 +31,8 @@ import CodeMirror from '@uiw/react-codemirror';
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import {getStatistics} from "@uiw/react-codemirror"
 import { EditorView } from "@codemirror/view";
-import {tags} from "@lezer/highlight";
-import { bracketMatching, HighlightStyle, indentOnInput, syntaxHighlighting } from "@codemirror/language";
+import { indentOnInput } from "@codemirror/language";
+import { usePrefersColorScheme } from "../lib/theme";
 
 
 
@@ -74,6 +74,8 @@ export default function Next() {
   const Desktop = require("os").homedir() + "/Desktop";
   const ref = useRef<HTMLTextAreaElement>(null);
   let synonyms = {};
+  const prefersColorScheme = usePrefersColorScheme()
+  const isDarkMode = prefersColorScheme === 'dark'
 
   useEffect(() => {
     openExternalInDefaultBrowser();
@@ -86,31 +88,6 @@ export default function Next() {
     });
 
   }, []);
-
-
-  // const highlight = HighlightStyle.define([
-  //   {
-  //     tag: tags.heading1,
-  //     fontSize: '1.6em',
-  //     fontWeight: 'bold'
-  //   },
-  //   {
-  //     tag: tags.heading2,
-  //     fontSize: '1.4em',
-  //     fontWeight: 'bold'
-  //   },
-  //   {
-  //     tag: tags.heading3,
-  //     fontSize: '1.2em',
-  //     fontWeight: 'bold'
-  //   }
-  // ])
-
-  const transparentTheme = EditorView.theme({
-    '&': {
-      backgroundColor: 'transparent !important',
-    },
-  })
 
   useEffect(() => {
     let clock = setInterval(() => {
@@ -148,17 +125,24 @@ export default function Next() {
     setCursor(`${line}L:${column}C`)
 
   }
+
+  const checkEdit = (doc) => {
+    if (!path){}
+     doc.toString() === fs.readFileSync(path, "utf8") ? 
+     setIsEdited(false)
+    :
+      setSaver("EDITED");
+      setIsEdited(true);
+    
+  }
     
   const onChange = useCallback((doc, viewUpdate) => {
     setValue(doc.toString())
-    updateCursor(viewUpdate.state.doc.lineAt(getStatistics(viewUpdate).selection.main.head), getStatistics(viewUpdate).selection.main.head)
-    // if (doc.toString() === fs.readFileSync(path, "utf8")) {
-    //   setIsEdited(false);
-    // } else {
-    //   setSaver("EDITED");
-    //   setIsEdited(true);
-    // }
-  },[])
+    let offset = getStatistics(viewUpdate).selection.main.head
+    let line = viewUpdate.state.doc.lineAt(offset);
+    updateCursor(line, offset)
+    checkEdit(doc)
+  },[path])
   const capitalize = (s: string) => {
     if (typeof s !== "string") return "";
     const words = s.split(" ");
@@ -1346,7 +1330,7 @@ export default function Next() {
                         search={search}
                         isOpen={menuOpen}
                         page={page}
-                        placeholder="Search for notes and utilities"
+                        placeholder="Select a command..."
                         footer={
                           <div
                             style={{
@@ -1355,6 +1339,7 @@ export default function Next() {
                               justifyContent: "space-between",
                               alignItems: "center",
                               width: "100%",
+                              userSelect: "none",
                             }}
                           >
                             <div
@@ -1471,11 +1456,10 @@ export default function Next() {
                         value={value}
                         height="100%"
                         width="100%"
-                        theme={githubDark}
+                        theme={isDarkMode ? githubDark : githubLight}
                         basicSetup={false}
                         extensions={[ 
                           indentOnInput(),
-                          //transparentTheme,
                         markdown({
                           base: markdownLanguage,
                           codeLanguages: languages,

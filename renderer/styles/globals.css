@@ -419,7 +419,7 @@ details[open] summary::before {
   transform: rotate(90deg);
 }
 
-.ͼy{
+.cm-theme > div {
   background-color: transparent !important;
 }
 .cm-line{
