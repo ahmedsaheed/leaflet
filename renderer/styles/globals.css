@@ -2,29 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+h1{
+  font-weight: 600;
+  line-height: 1.2 !important;
+  font-size: 24px;
+  margin: 0.8em 0;
+}
 
 h2 {
   font-weight: 600;
   font-size: 20px;
   line-height: 1.2 !important;
-  padding: 3px, 2px;
-
-}
-h1{
-  font-weight: 600;
-  line-height: 1.2 !important;
-  font-size: 24px;
-  padding: 3px, 2px;
+  margin: 0.8em 0;
 }
 h3{
   font-weight: 600;
   line-height: 1.2 !important;  
   font-size: 18px;
-  padding: 3px, 2px;
+  margin: 0.8em 0;
 }
 .command-palette .command-palette-content{
-
-    font-family: "iA Writer Mono", monospace !important;
+  font-family: "iA Writer Mono", monospace !important;
 }
 @media (prefers-color-scheme: dark) {
   body {
@@ -85,7 +83,6 @@ h3{
     font-family: "iA Writer Mono", monospace;
     background-color: #232223;
     border-radius: 5px;
-    margin: 10px;
   }
   code{
     background-color: #232223;
@@ -102,7 +99,6 @@ h3{
   }
   .fileBody{
      padding: 0 10px 10px 10px; 
-
   }
  
 
@@ -155,7 +151,7 @@ strong{
     background: #fff;
     color: rgb(55, 53, 47);
     font-family: "iA Writer Mono", monospace;
-    font-size: 85%;
+    font-size: 13px;
     -webkit-font-smoothing: auto;
     letter-spacing: 0.055em;
     line-height: 1.6;
@@ -220,7 +216,6 @@ strong{
     font-family: "iA Writer Mono", monospace;
     background-color: rgb(222, 226, 230);
     border-radius: 5px;
-    margin: 10px;
   }
 
   code{
@@ -275,11 +270,14 @@ li {
   padding: 3px, 2px;
 
  } 
-ul,
-ol {
+ul, ol {
   margin-left: 2em;
+  margin-top: 1em;
 }
-
+.fileBody ol{
+  margin-left: 2em;
+  margin-top: 0;
+}
 
 hr {
   margin-bottom: 2em;
@@ -331,8 +329,6 @@ code {
     font-family: "iA Writer Mono", monospace;
     padding: 0.2em 0.4em;
     white-space: pre-wrap;
-
-
 }
 pre code {
   display: block;
@@ -423,22 +419,11 @@ details[open] summary::before {
   transform: rotate(90deg);
 }
 
-.ͼ1j{
+.ͼy{
   background-color: transparent !important;
 }
-.ͼ1 .cm-scroller{
-  /* width: 100%; */
-  /* overflow: hidden; */
-  white-space: pre-wrap !important;
-  word-wrap: break-word;
-
-}
-.ͼ1 .cm-content{
-  width: 100%;
-  white-space: pre-wrap !important;
-  word-wrap: break-word;
-  flex-shrink: 1;
-  outline: none;
-
-
+.cm-line{
+  font : 13px "iA Writer Mono", monospace;
+  letter-spacing: 0.055em;
+  line-height: 1.6;
 }

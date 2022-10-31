@@ -29,6 +29,12 @@ import { languages } from "@codemirror/language-data";
 import { githubLight, githubDark } from '@uiw/codemirror-theme-github';
 import CodeMirror from '@uiw/react-codemirror';
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
+import {getStatistics} from "@uiw/react-codemirror"
+import { EditorView } from "@codemirror/view";
+import {tags} from "@lezer/highlight";
+import { bracketMatching, HighlightStyle, indentOnInput, syntaxHighlighting } from "@codemirror/language";
+
+
 
 export default function Next() {
   type file = {
@@ -82,6 +88,30 @@ export default function Next() {
   }, []);
 
 
+  // const highlight = HighlightStyle.define([
+  //   {
+  //     tag: tags.heading1,
+  //     fontSize: '1.6em',
+  //     fontWeight: 'bold'
+  //   },
+  //   {
+  //     tag: tags.heading2,
+  //     fontSize: '1.4em',
+  //     fontWeight: 'bold'
+  //   },
+  //   {
+  //     tag: tags.heading3,
+  //     fontSize: '1.2em',
+  //     fontWeight: 'bold'
+  //   }
+  // ])
+
+  const transparentTheme = EditorView.theme({
+    '&': {
+      backgroundColor: 'transparent !important',
+    },
+  })
+
   useEffect(() => {
     let clock = setInterval(() => {
       const date = new Date();
@@ -112,11 +142,16 @@ export default function Next() {
   return () => window.removeEventListener("scroll", handleScroll);
 }, []);
 
+  const updateCursor = (a,b) => {
+    const line = a.number
+    const column = b - a.from
+    setCursor(`${line}L:${column}C`)
 
-
+  }
     
   const onChange = useCallback((doc, viewUpdate) => {
     setValue(doc.toString())
+    updateCursor(viewUpdate.state.doc.lineAt(getStatistics(viewUpdate).selection.main.head), getStatistics(viewUpdate).selection.main.head)
     // if (doc.toString() === fs.readFileSync(path, "utf8")) {
     //   setIsEdited(false);
     // } else {
@@ -867,11 +902,6 @@ export default function Next() {
           e.preventDefault();
           return;
         }
-        if (!displayThesaurus) {
-          insertInTexarea("    ");
-          e.preventDefault();
-          return;
-        }
       }
       if (displayThesaurus) {
         if (e.key === "Tab") {
@@ -1444,11 +1474,14 @@ export default function Next() {
                         theme={githubDark}
                         basicSetup={false}
                         extensions={[ 
+                          indentOnInput(),
+                          //transparentTheme,
                         markdown({
                           base: markdownLanguage,
                           codeLanguages: languages,
                           addKeymap: true
                         }),
+                        [EditorView.lineWrapping],
                         ]}
                         onChange={onChange}
                       />
@@ -1507,7 +1540,6 @@ export default function Next() {
           <div
             className="fixed inset-x-0 bottom-0 ButtomBar"
             style={{
-              //   width:  "100vw",
               display: "inline",
               userSelect: "none",
               marginLeft: "18.55em",
