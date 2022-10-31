@@ -423,4 +423,22 @@ details[open] summary::before {
   transform: rotate(90deg);
 }
 
+.ͼ1j{
+  background-color: transparent !important;
+}
+.ͼ1 .cm-scroller{
+  /* width: 100%; */
+  /* overflow: hidden; */
+  white-space: pre-wrap !important;
+  word-wrap: break-word;
 
+}
+.ͼ1 .cm-content{
+  width: 100%;
+  white-space: pre-wrap !important;
+  word-wrap: break-word;
+  flex-shrink: 1;
+  outline: none;
+
+
+}

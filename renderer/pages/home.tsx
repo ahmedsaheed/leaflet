@@ -1,15 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ipcRenderer } from "electron";
 import "react-cmdk/dist/cmdk.css";
-import Clock from "react-live-clock";
-import { codeMirrior } from "../lib/editor";
 import {
-  getBG,
   PDFIcon,
   DOCXIcon,
   MARKDOWNIcon,
-  MATERIALIcon,
-  TAGIcon,
   COMMANDPALLETEOPENIcon,
   COMMANDPALLETESELECTIcon,
 } from "../lib/util";
@@ -30,6 +25,10 @@ import pandoc from "node-pandoc";
 import mainPath from "path";
 import open from "open";
 import os from "os";
+import { languages } from "@codemirror/language-data";
+import { githubLight, githubDark } from '@uiw/codemirror-theme-github';
+import CodeMirror from '@uiw/react-codemirror';
+import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 
 export default function Next() {
   type file = {
@@ -69,40 +68,6 @@ export default function Next() {
   const Desktop = require("os").homedir() + "/Desktop";
   const ref = useRef<HTMLTextAreaElement>(null);
   let synonyms = {};
-  const date = new Date();
-
-  interface contentProps {
-    initialDoc: string;
-    onChange: (doc: string) => void;
-  }
-
- const Editor: React.FC<contentProps> = (props) => {
-    const { onChange, initialDoc } = props
-
-    const handleChange = useCallback(
-      state => {
-        onChange(state.doc.toString())
-        setValue(state.doc.toString())
-        },
-      [onChange]
-    )
-    const [refContainer, view] = codeMirrior<HTMLDivElement>({
-      initialDoc: initialDoc,
-      onChange: handleChange
-    })
-
-  useEffect(() => {
-    if (view) {
-
-      
-      
-    }
-  }, [view])
-
-    return (
-        <div style={{height: "100%"}}  ref={refContainer}></div>
-    )
-  }
 
   useEffect(() => {
     openExternalInDefaultBrowser();
@@ -117,16 +82,15 @@ export default function Next() {
   }, []);
 
 
-  // useEffect(() => {
-  //  let clock =  setInterval(() => {
-  //     setClockState(date.toLocaleTimeString());
-  //   }, 1000);
-
-  //   return () => {
-  //   clearTimeout(clock);
-  // }
-  // }, [clockState]);
-
+  useEffect(() => {
+    let clock = setInterval(() => {
+      const date = new Date();
+      setClockState(date.toLocaleTimeString());
+    }, 1000);
+    return () => {
+      clearInterval(clock);
+    }
+  }, []);
 
   useEffect(() => {
     if (files.length > 0) {
@@ -134,7 +98,8 @@ export default function Next() {
     }
   }, [files]);
 
-  const onScroll = () => {
+  useEffect(() => {
+  const handleScroll = () => {
     let ScrollPercent = 0;
     const Scrolled = document.documentElement.scrollTop;
     const MaxHeight =
@@ -143,10 +108,22 @@ export default function Next() {
     ScrollPercent = (Scrolled / MaxHeight) * 100;
     setScroll(ScrollPercent);
   };
-  if(typeof window !== 'undefined') {
-      //  window.addEventListener('scroll', onScroll);
-  }
+  window.addEventListener("scroll", handleScroll);
+  return () => window.removeEventListener("scroll", handleScroll);
+}, []);
 
+
+
+    
+  const onChange = useCallback((doc, viewUpdate) => {
+    setValue(doc.toString())
+    // if (doc.toString() === fs.readFileSync(path, "utf8")) {
+    //   setIsEdited(false);
+    // } else {
+    //   setSaver("EDITED");
+    //   setIsEdited(true);
+    // }
+  },[])
   const capitalize = (s: string) => {
     if (typeof s !== "string") return "";
     const words = s.split(" ");
@@ -298,7 +275,6 @@ export default function Next() {
     }
     if (fs.existsSync(parentDir)) {
       fs.mkdirSync(`${parentDir}/${name}`);
-      //create new file
       fs.writeFileSync(
         `${parentDir}/${name}/new.md`,
         `${name} created on ${generateDate()} at ${clockState}`
@@ -1460,9 +1436,22 @@ export default function Next() {
                     display: "block",
                   }}
                 /> */}
-                  <Editor initialDoc={value} onChange={function (doc) {
-                 newChangeHandler(doc)
-                  }}/> 
+                
+                  <CodeMirror
+                        value={value}
+                        height="100%"
+                        width="100%"
+                        theme={githubDark}
+                        basicSetup={false}
+                        extensions={[ 
+                        markdown({
+                          base: markdownLanguage,
+                          codeLanguages: languages,
+                          addKeymap: true
+                        }),
+                        ]}
+                        onChange={onChange}
+                      />
 
               </div>
             </div>
@@ -1672,10 +1661,7 @@ export default function Next() {
                   }}
                 >
                   <div style={{ display: "inline", marginLeft: "20px" }}></div>
-                  {/* {clockState} */}
-                  {/* <Clock
-                    format={'h:mm:ssa'}
-                    ticking={true} /> */}
+                  {clockState}
                 </div>
               </>
             )}
