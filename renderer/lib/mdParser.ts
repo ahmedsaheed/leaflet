@@ -1,17 +1,9 @@
 import hljs from "highlight.js";
-import metadata_block from 'markdown-it-metadata-block'
-import yaml from 'yaml'
-
+const meta = require('markdown-it-meta')
+import todo from "markdown-it-task-lists"
 
 export const getMarkdown = (value: string) => { 
-    //create object to store metadata with attributes of name and date
-    type metadata = {
-        name?: string,
-        date?: string,
-        noteType?: string
-    }
- 
-    const data: metadata = {}
+
 
     const md = require('markdown-it')({
         html: true,
@@ -29,14 +21,14 @@ export const getMarkdown = (value: string) => {
         },
       });
       require('markdown-it-pandoc')(md);
-      md.use(metadata_block,{
-        parseMetadata: yaml.parse,
-        data
-      })
-
+      md.use(meta)
+      md.use(todo, {enabled: true});
       try{
-
-        return { __html: md.render(value) };
+          const result = md.render(value)
+          return {
+            document: {__html: result},
+            metadata: md.meta
+          }
       }catch(err){
         return { __html: "Couldn't render, Something not right!" };
       }

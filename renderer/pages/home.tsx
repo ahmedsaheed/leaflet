@@ -1,5 +1,25 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ipcRenderer } from "electron";
+import { undo } from '@codemirror/commands';
+import "react-cmdk/dist/cmdk.css";
+import {
+  GETDATE,
+  LINK,
+  BOLD,
+  QUICKINSERT,
+  ADDYAML,
+  PDFIcon,
+  DOCXIcon,
+  MARKDOWNIcon,
+  COMMANDPALLETEOPENIcon,
+  COMMANDPALLETESELECTIcon,
+} from "../lib/util";
+import { 
+  METADATE,
+  METATAGS,
+  METAMATERIAL,
+} from "../lib/metadata";
+import CommandPalette, { filterItems, getItemIndex } from "react-cmdk";
 import { progress } from "../components/progress";
 import { getMarkdown } from "../lib/mdParser";
 import commandExists from "command-exists";
@@ -11,6 +31,19 @@ import pandoc from "node-pandoc";
 import mainPath from "path";
 import open from "open";
 import os from "os";
+import { languages } from "@codemirror/language-data";
+import { githubDark } from '@uiw/codemirror-theme-github';
+import CodeMirror from '@uiw/react-codemirror';
+import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
+import {getStatistics, ReactCodeMirrorRef} from "@uiw/react-codemirror"
+import { EditorView } from "@codemirror/view";
+import { codeFolding, foldGutter, indentOnInput } from "@codemirror/language";
+import { usePrefersColorScheme } from "../lib/theme";
+import { xcodeLight } from "@uiw/codemirror-theme-xcode";
+import { EditorSelection } from "@codemirror/state";
+
+
+
 
 export default function Next() {
   type file = {
@@ -21,10 +54,14 @@ export default function Next() {
   };
   const [value, setValue] = useState<string>("");
   const [insert, setInsert] = useState<boolean>(false);
-  const [scroll, setScroll] = useState<number>(0);
   const [files, setFiles] = useState<file[]>([]);
+  const [scroll, setScroll] = useState<number>(0);
   const [name, setName] = useState<string>("");
   const [path, setPath] = useState<string>("");
+  const [page, setPage] = useState<"root" | "projects">("root");
+  const [menuOpen, setMenuOpen] = useState<boolean>(true);
+  const [search, setSearch] = useState("");
+  const [click, setClick] = useState<boolean>(false);
   const [isEdited, setIsEdited] = useState<boolean>(false);
   const [fileNameBox, setFileNameBox] = useState<boolean>(false);
   const [fileName, setFileName] = useState<string>("");
@@ -37,7 +74,6 @@ export default function Next() {
   const [count, setCount] = useState<number>(0);
   const [finder, toogleFinder] = useState<boolean>(false);
   const [found, setFound] = useState<boolean>(true);
-  const [buttomMenuState, setButtomMenuState] = useState<boolean>(false);
   const [saver, setSaver] = useState<string>("");
   const [wordToFind, setWordToFind] = useState<string>("");
   const appDir = mainPath.resolve(os.homedir(), "leaflet");
@@ -45,24 +81,39 @@ export default function Next() {
   const [isCreatingFolder, setIsCreatingFolder] = useState<boolean>(false);
   const [parentDir, setParentDir] = useState<string>(appDir);
   const Desktop = require("os").homedir() + "/Desktop";
+  const [editorview, setEditorView] = useState<EditorView>();
   const ref = useRef<HTMLTextAreaElement>(null);
+  const refs = React.useRef<ReactCodeMirrorRef>({});
   let synonyms = {};
+  const prefersColorScheme = usePrefersColorScheme()
+  const isDarkMode = prefersColorScheme === 'dark'
 
   useEffect(() => {
     openExternalInDefaultBrowser();
     checkForPandoc();
-    window.addEventListener("scroll", onScroll);
     ipcRenderer.invoke("getTheFile").then((files = []) => {
       setFiles(files);
       setValue(files[0] ? `${files[0].body}` : "");
       setName(files[0] ? `${files[0].name}` : "");
       setPath(files[0] ? `${files[0].path}` : "");
     });
-    setInterval(() => {
-      const date = new Date();
-      setClockState(date.toLocaleTimeString());
-    }, 1000);
+
   }, []);
+
+  // useEffect(() => {
+  //   let clock = setInterval(() => {
+  //     const date = new Date();
+  //     setClockState(date.toLocaleTimeString());
+  //   }, 1000);
+  //   return () => {
+  //     clearInterval(clock);
+  //   }
+  // }, []);
+
+  useEffect(() => {
+    if (refs.current?.view)
+    setEditorView(refs.current?.view)
+  }, [refs.current]);
 
   useEffect(() => {
     if (files.length > 0) {
@@ -70,16 +121,198 @@ export default function Next() {
     }
   }, [files]);
 
+  useEffect(() => {
+  const handleScroll = () => {
+    let ScrollPercent = 0;
+    const Scrolled = document.documentElement.scrollTop;
+    const MaxHeight =
+      document.documentElement.scrollHeight -
+      document.documentElement.clientHeight;
+    ScrollPercent = (Scrolled / MaxHeight) * 100;
+    setScroll(ScrollPercent);
+  };
+  window.addEventListener("scroll", handleScroll);
+  return () => window.removeEventListener("scroll", handleScroll);
+}, []);
+
+  const updateCursor = (a,b) => {
+    const line = a.number
+    const column = b - a.from
+    setCursor(`${line}L:${column}C`)
+
+  }
+
+  const checkEdit = (doc) => {
+    if (!path) return;
+     doc.toString() === fs.readFileSync(path, "utf8") ? 
+     setIsEdited(false)
+    :
+      setSaver("EDITED");
+      setIsEdited(true);
+    
+  }
+
+  const onChange = useCallback((doc, viewUpdate) => {
+    setValue(doc.toString())
+    let offset = getStatistics(viewUpdate).selection.main.head
+    let line = viewUpdate.state.doc.lineAt(offset);
+    updateCursor(line, offset)
+    checkEdit(doc)
+  },[path])
+  const capitalize = (s: string) => {
+    if (typeof s !== "string") return "";
+    const words = s.split(" ");
+
+    for (let i = 0; i < words.length; i++) {
+      words[i] = words[i][0].toUpperCase() + words[i].substr(1) + " ";
+    }
+    words.join(" ");
+
+    return words;
+  };
+
+  const filteredItems = filterItems(
+    [
+      {
+        heading: "General",
+        id: "general",
+        items: [
+          {
+            id: "new",
+            children: "New File",
+            icon: "NewspaperIcon",
+            showType: false,
+            onClick: () => {
+              setFileNameBox(true);
+            },
+          },
+          {
+            id: "folder",
+            children: "New Folder",
+            icon: "FolderOpenIcon",
+            showType: false,
+            onClick: () => {
+              try {
+                setIsCreatingFolder(true);
+                setFileNameBox(true);
+              } catch (e) {
+                console.log(e);
+              }
+            },
+          },
+          {
+            id: "export",
+            showType: false,
+            disabled: pandocAvailable ? false : true,
+            children: `Export ${
+              name.endsWith(".md")
+                ? name.charAt(0).toUpperCase() + name.slice(1, -3)
+                : name.charAt(0).toUpperCase() + name.slice(1)
+            } to PDF`,
+            icon: () => <PDFIcon />,
+            onClick: () => {
+              try {
+                convertToPDF();
+              } catch (e) {
+                console.log(e);
+              }
+            },
+          },
+          {
+            disabled: pandocAvailable ? false : true,
+            id: "export",
+            showType: false,
+            children: `Export ${
+              name.endsWith(".md")
+                ? name.charAt(0).toUpperCase() + name.slice(1, -3)
+                : name.charAt(0).toUpperCase() + name.slice(1)
+            } to Docx`,
+            icon: () => <DOCXIcon />,
+            onClick: () => {
+              try {
+                converToDocx();
+              } catch (e) {
+                console.log(e);
+              }
+            },
+          },
+        ],
+      },
+      {
+        heading: "Files",
+        id: "files",
+        // @ts-ignore
+        items: [
+          ...files.map((file) => ({
+            id: file.name,
+            showType: false,
+            //children: file.name,
+            children: (
+              <p>
+                {file.name} —{" "}
+                <span style={{ fontSize: "12px", color: "#888888" }}>
+                  {capitalize(
+                    mainPath.basename(mainPath.dirname(file.path)).toLowerCase()
+                  )}
+                </span>
+              </p>
+            ),
+            icon: "DocumentTextIcon",
+            onClick: () => {
+              try {
+                saveFile();
+                setValue(file.body);
+                setName(file.name);
+                setPath(file.path);
+                setInsert(false);
+                document.documentElement.scrollTop = 0;
+              } catch (err) {
+                console.log(err);
+              }
+            },
+          })),
+        ],
+      },
+      {
+        heading: "Help",
+        id: "advanced",
+        items: [
+          {
+            id: "help",
+            showType: false,
+            children: "Help & Documentation",
+            icon: "QuestionMarkCircleIcon",
+            onClick: (event) => {
+              event.preventDefault();
+              open("https://github.com/ahmedsaheed/Leaflet");
+            },
+          },
+          {
+            id: "keys",
+            showType: false,
+            children: "Keyboard Shortcuts",
+            icon: "KeyIcon",
+            onClick: (event) => {
+              event.preventDefault();
+              open(
+                "https://github.com/ahmedsaheed/Leaflet#shortcuts-and-controls"
+              );
+            },
+          },
+        ],
+      },
+    ],
+    search
+  );
   const createNewDir = (name: string) => {
     if (fs.existsSync(mainPath.join(parentDir, name)) || name === "") {
       return;
     }
     if (fs.existsSync(parentDir)) {
       fs.mkdirSync(`${parentDir}/${name}`);
-      //create new file
       fs.writeFileSync(
         `${parentDir}/${name}/new.md`,
-        `${name} created on ${generateDate()} at ${clockState}`
+        `${name} created on ${GETDATE()} at ${clockState}`
       );
       Update();
     }
@@ -271,37 +504,20 @@ export default function Next() {
     return (-c / 2) * (t * (t - 2) - 1) + b;
   }
 
-  const generateDate = () => {
-    const date = new Date();
-    const strArray = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-    const s =
-      "" +
-      (date.getDate() <= 9 ? "0" + date.getDate() : date.getDate()) +
-      "-" +
-      strArray[date.getMonth()] +
-      "-" +
-      date.getFullYear() +
-      " ";
-    return s;
-  };
+
+
+
+
+<symbol viewBox="0 0 32 32" id="carbon-arrow-up-right"><path fill="#888888" d="M10 6v2h12.59L6 24.59L7.41 26L24 9.41V22h2V6H10z"></path></symbol>
+
 
   const openExternalInDefaultBrowser = () => {
     document.addEventListener("click", (event) => {
       const element = event.target as HTMLAnchorElement | null;
-      if (element?.tagName === "A") {
+      if (
+         element?.tagName === "A" &&
+        (element?.href.indexOf(window.location.href) > -1 === false) 
+      ) {
         event.preventDefault();
         open(element?.href);
       }
@@ -438,64 +654,52 @@ export default function Next() {
   }, []);
 
   const commentOut = () => {
-    const area = ref.current;
-    if (area?.selectionEnd === area?.selectionStart) {
-      return;
+    if(!insert || !editorview) return;
+    const main = editorview.state.selection.main;
+    const txt = editorview.state.sliceDoc(editorview.state.selection.main.from, editorview.state.selection.main.to);
+    if (txt.length === 0) return;
+    if (txt.startsWith("<!--") && txt.endsWith("-->")) {
+      const newText = txt.slice(4, -3)
+      editorview.dispatch({
+        changes: {
+          from: main.from,
+          to: main.to,
+          insert: newText,
+        },
+        selection: EditorSelection.cursor(main.from + newText.length),
+      })
+    }else{
+    const comment = `<!-- ${txt} -->`;
+    editorview.dispatch({
+      changes: {
+        from: main.from,
+        to: main.to,
+        insert: comment,
+      },
+      selection: EditorSelection.cursor(main.from + comment.length),
+    })
     }
-    let first = area!.selectionStart;
-    let second = area!.selectionEnd;
-    let length = second - first;
-    let selectedText = area!.value.substr(first, length);
-    if (selectedText.startsWith("<!--") && selectedText.endsWith("-->")) {
-      area!.value = area!.value.substr(0, first) + area?.value.substr(second);
-      area?.setSelectionRange(first, first);
-      document.execCommand(
-        "insertText",
-        false,
-        `${selectedText.substr(4, selectedText.length - 8)}`
-      );
-    } else {
-      area!.value = area?.value.substr(0, first) + area!.value.substr(second);
-      area?.setSelectionRange(first, first);
-      document.execCommand("insertText", false, `<!-- ${selectedText} -->`);
-    }
-  };
+  }
 
-  const bold = () => {
-    const area = ref.current;
-    let first = area!.selectionStart;
-    let second = area!.selectionEnd;
-    let length = second - first;
-    let selectedText = area!.value.substr(first, length);
-    selectedText.startsWith("**") && selectedText.endsWith("**")
-      ? document.execCommand(
-          "insertText",
-          false,
-          `${selectedText.substr(2, selectedText.length - 4)}`
-        )
-      : document.execCommand("insertText", false, `**${selectedText}** `);
-    area?.setSelectionRange(first + 2, first + 2);
-  };
 
-  const createLink = () => {
-    const area = ref.current;
-    let first = area!.selectionStart;
-    let second = area!.selectionEnd;
-    let length = second - first;
-    let selectedText = area?.value.substr(first, length);
-    if (selectedText?.match("[(.*?)]((.*?))")) {
-      return;
+  const onDelete = () => {
+    try {
+      if (!fs.existsSync(path)) {
+        return;
+      }
+      ipcRenderer.invoke("deleteFile", name, path).then(() => {
+        Update();
+        setStruct(files[0].structure.children);
+        const index = Math.floor(Math.random() * files.length);
+        setInsert(false);
+        setValue(files[index].body);
+        setName(files[index].name);
+        setPath(files[index].path);
+      });
+    } catch (e) {
+      console.log(e);
     }
-    area!.value = area!.value.substr(0, first) + area?.value.substr(second);
-    area?.setSelectionRange(first, first);
-    document.execCommand("insertText", false, `[${selectedText}](url)`);
-    selectedText?.length === 0
-      ? area?.setSelectionRange(first + 1, first + 1)
-      : area?.setSelectionRange(
-          first + 1 + selectedText!.length + 2,
-          first + 1 + selectedText!.length + 5
-        );
-  };
+  }
 
   const createNewFile = () => {
     fileName != ""
@@ -536,7 +740,7 @@ export default function Next() {
         if (!insert) {
           return;
         }
-        bold();
+        BOLD(editorview);
         e.preventDefault();
         return;
       }
@@ -553,15 +757,15 @@ export default function Next() {
         return;
       }
 
-      if ((e.ctrlKey || e.metaKey) && e.key === "f") {
-        if (!insert) {
-          return;
-        }
-        toogleFinder(true);
-        document.getElementById("finderInput")?.focus();
-        e.preventDefault();
-        return;
-      }
+      // if ((e.ctrlKey || e.metaKey) && e.key === "f") {
+      //   if (!insert) {
+      //     return;
+      //   }
+      //   toogleFinder(true);
+      //   document.getElementById("finderInput")?.focus();
+      //   e.preventDefault();
+      //   return;
+      // }
 
       if (e.key === "i" && (e.ctrlKey || e.metaKey)) {
         setInsert(true);
@@ -583,7 +787,7 @@ export default function Next() {
         if (!insert) {
           return;
         }
-        createLink();
+        LINK(editorview);
       }
 
       if (e.key === "n" && (e.ctrlKey || e.metaKey)) {
@@ -597,7 +801,7 @@ export default function Next() {
         if (!insert) {
           return;
         }
-        insertInTexarea(generateDate());
+        QUICKINSERT(editorview, GETDATE());
         e.preventDefault();
         return;
       }
@@ -614,22 +818,7 @@ export default function Next() {
         (e.key === "Backspace" || e.key === "Delete") &&
         (e.ctrlKey || e.metaKey)
       ) {
-        try {
-          if (!fs.existsSync(path)) {
-            return;
-          }
-          ipcRenderer.invoke("deleteFile", name, path).then(() => {
-            Update();
-            setStruct(files[0].structure.children);
-            const index = Math.floor(Math.random() * files.length);
-            setInsert(false);
-            setValue(files[index].body);
-            setName(files[index].name);
-            setPath(files[index].path);
-          });
-        } catch (e) {
-          console.log(e);
-        }
+        onDelete();
         e.preventDefault();
         return;
       }
@@ -638,17 +827,36 @@ export default function Next() {
         if (!insert) {
           return;
         }
-        insertInTexarea(clockState);
+        QUICKINSERT(editorview,clockState);
         e.preventDefault();
+        return;
+      }
+      if (e.key === "j" && (e.ctrlKey || e.metaKey)) {
+        if (!insert) {
+          return;
+        }
+        ADDYAML(editorview);
+        e.preventDefault();
+        return;
+      }
+      if (e.metaKey && e.key === "z") {
+        if (!insert || !editorview) return;
+        undo(editorview)
+
+      }
+
+      if (e.metaKey && e.key === "k") {
+        e.preventDefault();
+        e.stopPropagation();
+        setSearch("");
+        setClick(!click);
+        return;
+      } else if (e.key === "Escape") {
+        setClick(false);
         return;
       }
       if (e.key === "Tab") {
         if (!insert) {
-          e.preventDefault();
-          return;
-        }
-        if (!displayThesaurus) {
-          insertInTexarea("    ");
           e.preventDefault();
           return;
         }
@@ -674,32 +882,6 @@ export default function Next() {
     };
   });
 
-  const insertInTexarea = (s: string) => {
-    const area = ref.current;
-    const pos = area.selectionStart;
-    area.setSelectionRange(pos, pos);
-    document.execCommand("insertText", false, s);
-  };
-
-  const onScroll = () => {
-    let ScrollPercent = 0;
-    const Scrolled = document.documentElement.scrollTop;
-    const MaxHeight =
-      document.documentElement.scrollHeight -
-      document.documentElement.clientHeight;
-    ScrollPercent = (Scrolled / MaxHeight) * 100;
-    setScroll(ScrollPercent);
-  };
-
-  function handleChange(e) {
-    setValue(e.target.value);
-    if (e.target.value === fs.readFileSync(path, "utf8")) {
-      setIsEdited(false);
-    } else {
-      setSaver("EDITED");
-      setIsEdited(true);
-    }
-  }
   const openWindow = () => {
     ipcRenderer.invoke("app:on-fs-dialog-open").then(() => {
       ipcRenderer.invoke("getTheFile").then((files = []) => {
@@ -709,27 +891,24 @@ export default function Next() {
     });
   };
 
-  const cursorUpdate = (e) => {
-    if (e.target.selectionStart !== e.target.selectionEnd) {
-      setCursor(`[${e.target.selectionStart}, ${e.target.selectionEnd}]`);
-    } else {
-      var textLines = e.target.value
-        .substr(0, e.target.selectionEnd)
-        .split("\n");
-      var lineNo = textLines.length - 1;
-      var colNo = textLines[lineNo].length;
-      setCursor(`${lineNo}L ${colNo}C`);
-    }
+
+  const checkObject = (obj) => {
+    return typeof obj === 'object' && obj !== null;
+
   };
 
-  const toggleButtomMenu = () => {
-    const menu = document.getElementById("buttomMenu");
-    if (menu?.getAttribute("aria-expanded") === "false") {
-      menu.setAttribute("aria-expanded", "true");
-      setButtomMenuState(true);
-    } else {
-      menu?.setAttribute("aria-expanded", "false");
-      setButtomMenuState(false);
+  const onFileTreeClick = (path: string, name: string) => {
+    try {
+      setParentDir(mainPath.dirname(path));
+      saveFile();
+      setValue(fs.readFileSync(path, "utf8"));
+      setName(name);
+      setPath(path);
+      setInsert(false);
+
+      document.documentElement.scrollTop = 0;
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -760,7 +939,7 @@ export default function Next() {
         <div>
           <div
             className="fs fixed"
-            style={{ width: "30vw", maxWidth: "30vw", minHeight: "100vh" }}
+            style={{ width: "18.5em", maxWidth: "18.5em", minHeight: "100vh" }}
           >
             <div>
               <div
@@ -777,12 +956,15 @@ export default function Next() {
                     marginBottom: "2vh",
                     maxHeight: "70vh",
                     overflow: "hidden",
+                    outline: "none",
+                    overflowY: "scroll",
                     textOverflow: "ellipsis",
                   }}
                 >
                   <details tabIndex={-1} open>
                     <summary
                       style={{
+                        outline: "none",
                         cursor: "pointer",
                         fontSize: "16px",
                         fontWeight: "bold",
@@ -801,8 +983,9 @@ export default function Next() {
                             ).length ? null : (
                             <details key={index} tabIndex={-1}>
                               <summary
-                                    className="files"
+                                className="files"
                                 style={{
+                                  outline: "none",
                                   cursor: "pointer",
                                   fontSize: "12px",
                                   fontWeight: "bold",
@@ -836,6 +1019,7 @@ export default function Next() {
                                             whiteSpace: "nowrap",
                                             overflow: "hidden",
                                             maxWidth: "100%",
+                                            outline: "none",
                                             textOverflow: "ellipsis",
                                           }}
                                           onClick={() => {
@@ -848,38 +1032,23 @@ export default function Next() {
                                         </summary>
                                         {child.children
                                           .map((child, index) => (
-                                            <ol className="files"
-                                            style={{
-                                            cursor: "pointer"}}
-
-                                                onClick={(e) => {
-                                                  try {
-                                                    setParentDir(
-                                                      mainPath.dirname(
-                                                        child.path
-                                                      )
-                                                    );
-                                                    saveFile();
-                                                    setValue(
-                                                      fs.readFileSync(
-                                                        child.path,
-                                                        "utf8"
-                                                      )
-                                                    );
-                                                    setName(child.name);
-                                                    setPath(child.path);
-                                                    setInsert(false);
-
-                                    document.documentElement.scrollTop = 0;
-                                                  } catch (err) {
-                                                    console.log(err);
-                                                  }
-                                                }}
+                                            <ol
+                                              className="files"
+                                              style={{
+                                                cursor: "pointer",
+                                              }}
+                                              onClick={() => {
+                                                onFileTreeClick(
+                                                  child.path,
+                                                  child.name
+                                                );
+                                              }}
                                             >
                                               <button
                                                 style={{
                                                   whiteSpace: "nowrap",
                                                   overflow: "hidden",
+                                                  outline: "none",
                                                   maxWidth: "100%",
                                                   textOverflow: "ellipsis",
                                                 }}
@@ -899,18 +1068,7 @@ export default function Next() {
                                                     textOverflow: "ellipsis",
                                                   }}
                                                 >
-                                                  <svg
-                                                    style={{
-                                                      display: "inline",
-                                                    }}
-                                                    height="22"
-                                                    viewBox="0 0 24 24"
-                                                  >
-                                                    <path
-                                                      fill="#888888"
-                                                      d="M20.56 18H3.44C2.65 18 2 17.37 2 16.59V7.41C2 6.63 2.65 6 3.44 6h17.12c.79 0 1.44.63 1.44 1.41v9.18c0 .78-.65 1.41-1.44 1.41M6.81 15.19v-3.66l1.92 2.35l1.92-2.35v3.66h1.93V8.81h-1.93l-1.92 2.35l-1.92-2.35H4.89v6.38h1.92M19.69 12h-1.92V8.81h-1.92V12h-1.93l2.89 3.28L19.69 12Z"
-                                                    />
-                                                  </svg>{" "}
+                                                  <MARKDOWNIcon />{" "}
                                                   {child.name.slice(0, -3)}
                                                 </p>
                                               </button>
@@ -930,24 +1088,14 @@ export default function Next() {
                                     </div>
                                   )
                                 ) : (
-                                  <ol className="files"
-                                    
-                                      onClick={(e) => {
-                                        try {
-                                          saveFile();
-                                          setValue(
-                                            fs.readFileSync(child.path, "utf8")
-                                          );
-                                          setName(child.name);
-                                          setPath(child.path);
-                                          setInsert(false);
-                                    document.documentElement.scrollTop = 0;
-                                        } catch (err) {
-                                          console.log(err);
-                                        }
-                                      }}
-                                            style={{
-                                            cursor: "pointer"}}
+                                  <ol
+                                    className="files"
+                                    onClick={(e) => {
+                                      onFileTreeClick(child.path, child.name);
+                                    }}
+                                    style={{
+                                      cursor: "pointer",
+                                    }}
                                   >
                                     <button
                                       style={{
@@ -955,6 +1103,7 @@ export default function Next() {
                                         whiteSpace: "nowrap",
                                         overflow: "hidden",
                                         maxWidth: "100%",
+                                        outline: "none",
                                       }}
                                       tabIndex={-1}
                                       className={
@@ -970,20 +1119,10 @@ export default function Next() {
                                           whiteSpace: "nowrap",
                                           overflow: "hidden",
                                           textOverflow: "ellipsis",
+                                          outline: "none",
                                         }}
                                       >
-                                        <svg
-                                          style={{
-                                            display: "inline",
-                                          }}
-                                          height="22"
-                                          viewBox="0 0 24 24"
-                                        >
-                                          <path
-                                            fill="#888888"
-                                            d="M20.56 18H3.44C2.65 18 2 17.37 2 16.59V7.41C2 6.63 2.65 6 3.44 6h17.12c.79 0 1.44.63 1.44 1.41v9.18c0 .78-.65 1.41-1.44 1.41M6.81 15.19v-3.66l1.92 2.35l1.92-2.35v3.66h1.93V8.81h-1.93l-1.92 2.35l-1.92-2.35H4.89v6.38h1.92M19.69 12h-1.92V8.81h-1.92V12h-1.93l2.89 3.28L19.69 12Z"
-                                          />
-                                        </svg>{" "}
+                                        <MARKDOWNIcon />{" "}
                                         {child.name.slice(0, -3)}
                                       </p>
                                     </button>
@@ -994,34 +1133,25 @@ export default function Next() {
                           )
                         ) : (
                           <>
-                            <ol className="files"
-                            
-                                onClick={(e) => {
-                                  try {
-                                    setParentDir(mainPath.dirname(file.path));
-                                    saveFile();
-                                    setValue(
-                                      fs.readFileSync(file.path, "utf8")
-                                    );
-                                    setName(file.name);
-                                    setPath(file.path);
-                                    setInsert(false);
-                                    document.documentElement.scrollTop = 0;
-                                  } catch (err) {
-                                    console.log(err);
-                                  }
-                                }}
-                                            style={{
-                                            cursor: "pointer"}}
+                            <ol
+                              className="files"
+                              onClick={() => {
+                                onFileTreeClick(file.path, file.name);
+                              }}
+                              style={{
+                                cursor: "pointer",
+                              }}
                             >
                               <button
                                 tabIndex={-1}
+                                style={{outline: "none"}}
                                 className={
                                   path === file.path ? "selected" : "greys"
                                 }
                               >
                                 <p
                                   style={{
+                                    outline: "none",
                                     display: "inline",
                                     width: "100%",
                                     whiteSpace: "nowrap",
@@ -1029,19 +1159,7 @@ export default function Next() {
                                     textOverflow: "ellipsis",
                                   }}
                                 >
-                                  <svg
-                                    style={{
-                                      display: "inline",
-                                    }}
-                                    height="22"
-                                    viewBox="0 0 24 24"
-                                  >
-                                    <path
-                                      fill="#888888"
-                                      d="M20.56 18H3.44C2.65 18 2 17.37 2 16.59V7.41C2 6.63 2.65 6 3.44 6h17.12c.79 0 1.44.63 1.44 1.41v9.18c0 .78-.65 1.41-1.44 1.41M6.81 15.19v-3.66l1.92 2.35l1.92-2.35v3.66h1.93V8.81h-1.93l-1.92 2.35l-1.92-2.35H4.89v6.38h1.92M19.69 12h-1.92V8.81h-1.92V12h-1.93l2.89 3.28L19.69 12Z"
-                                    />
-                                  </svg>{" "}
-                                  {file.name.slice(0, -3)}
+                                  <MARKDOWNIcon /> {file.name.slice(0, -3)}
                                 </p>
                               </button>
                             </ol>
@@ -1087,66 +1205,101 @@ export default function Next() {
                 </div>
                 <div
                   className={"fixed util"}
-                  style={
-                    buttomMenuState ? { bottom: "5rem" } : { bottom: "0.25rem" }
-                  }
+                  style={{
+                    bottom: "0.25rem",
+                  }}
                 >
                   <div
-                    tabIndex={-1}
-                    id="buttomMenu"
+                    style={{
+                      paddingLeft: "10px",
+                      width: "18.5em",
+                      maxWidth: "18.5em",
+                    }}
+                    className="menu"
                     role="button"
-                    aria-expanded="false"
-                    onClick={toggleButtomMenu}
-                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      try {
+                        setClick(true);
+                        setSearch("");
+                      } catch (err) {
+                        console.log(err);
+                      }
+                    }}
                   >
-                    <p
-                      style={{ display: "inline" }}
-                      className={buttomMenuState ? "Opened" : "Closed"}
-                    ></p>
-                    <p style={{ display: "inline" }}>Utilities</p>
-                  </div>
-                  <div
-                    className={buttomMenuState ? "slideIn" : ""}
-                    style={
-                      buttomMenuState
-                        ? { display: "block", opacity: "0", paddingLeft: "2vw" }
-                        : { display: "none" }
-                    }
-                  >
-                    <button tabIndex={-1} onClick={openWindow}>
-                      Add File
-                    </button>
-                    <br />
-                    <button
-                      tabIndex={-1}
-                      onClick={() => {
-                        setFileNameBox(true);
-                      }}
-                    >
-                      New File
-                    </button>
-                    <br />
-                    <button
-                      tabIndex={-1}
-                      onClick={() => {
-                        setFileNameBox(true);
-                        setIsCreatingFolder(true);
-                      }}
-                    >
-                      New Folder
-                    </button>
-                    {pandocAvailable ? (
-                      <>
-                        <br />
-                        <button tabIndex={-1} onClick={convertToPDF}>
-                          Covert to PDF
-                        </button>
-                        <br />
-                        <button tabIndex={-1} onClick={converToDocx}>
-                          Covert to Docx
-                        </button>
-                      </>
-                    ) : null}
+                    Utilities
+                    <span style={{ float: "right", marginRight: "2em" }}>
+                      <code style={{ borderRadius: "2px" }}>⌘</code>{" "}
+                      <code style={{ borderRadius: "2px" }}>k</code>
+                    </span>
+                    {click && (
+                      <CommandPalette
+                        onChangeSearch={setSearch}
+                        onChangeOpen={setClick}
+                        search={search}
+                        isOpen={menuOpen}
+                        page={page}
+                        placeholder="Select a command..."
+                        footer={
+                          <div
+                            style={{
+                              fontSize: "12px",
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                              width: "100%",
+                              userSelect: "none",
+                            }}
+                          >
+                            <div
+                              style={{
+                                marginLeft: "2em",
+                                display: "flex",
+                                alignItems: "center",
+                                paddingTop: "5px",
+                                paddingBottom: "5px",
+                              }}
+                            >
+                              <span
+                                style={{ marginRight: "2em", color: "#888888" }}
+                              >
+                                <COMMANDPALLETESELECTIcon />
+                                &nbsp;Select
+                              </span>
+
+                              <span style={{ color: "#888888" }}>
+                                <COMMANDPALLETEOPENIcon />
+                                &nbsp;Open
+                              </span>
+                            </div>
+                          </div>
+                        }
+                      >
+                        <CommandPalette.Page id="root">
+                          {filteredItems.length ? (
+                            filteredItems.map((list) => (
+                              <CommandPalette.List
+                                key={list.id}
+                                heading={list.heading}
+                              >
+                                {list.items.map(({ id, ...rest }) => (
+                                  <CommandPalette.ListItem
+                                    showType={true}
+                                    key={id}
+                                    index={getItemIndex(filteredItems, id)}
+                                    {...rest}
+                                  />
+                                ))}
+                              </CommandPalette.List>
+                            ))
+                          ) : (
+                            <CommandPalette.FreeSearchAction />
+                          )}
+                        </CommandPalette.Page>
+
+                        <CommandPalette.Page id="projects">
+                        </CommandPalette.Page>
+                      </CommandPalette>
+                    )}
                   </div>
                 </div>
               </div>
@@ -1156,15 +1309,17 @@ export default function Next() {
 
         <div
           style={{
-            paddingRight: "20px",
-            maxWidth: "70vw",
+            padding: "40px",
+            width: "calc(100vw - 18.5em)",
+            minWidth: "calc(100vw - 18.5em)",
+            maxWidth: "calc(100vw - 18.5em)",
             paddingTop: "10vh",
           }}
         >
           {insert ? (
-            <div>
+            <div className="markdown-content">
               <div style={{ overflow: "hidden" }}>
-                <textarea
+                {/* <textarea
                   ref={ref}
                   autoFocus
                   id="markdown-content"
@@ -1203,12 +1358,67 @@ export default function Next() {
                     overflow: "auto",
                     display: "block",
                   }}
-                />
+                /> */}
+                
+                  <CodeMirror
+                        ref={refs}
+                        value={value}
+                        height="100%"
+                        width="100%"
+                        theme={isDarkMode ? githubDark : xcodeLight}
+                        basicSetup={false}
+                        extensions={[ 
+                          indentOnInput(),
+                          codeFolding(),
+                          foldGutter(),
+                        markdown({
+                          base: markdownLanguage,
+                          codeLanguages: languages,
+                          addKeymap: true
+                        }),
+                        [EditorView.lineWrapping],
+                        ]}
+                        onChange={onChange}
+                      />
+
               </div>
             </div>
           ) : (
             <>
               <div style={{ overflow: "hidden" }}>
+                {/* <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    lineHeight: "1.2",
+                    fontWeight: "700",
+                    userSelect: "none",
+                  }}
+                >
+                  <h1
+                    style={{
+                      width: "100%",
+                      fontSize: "40px",
+                      whiteSpace: "pre-wrap",
+                      wordBreak: "break-word",
+                      padding: "3px 2px",
+                    }}
+                  >
+                    {name?.endsWith(".md")
+                      ? capitalize(name.slice(0, -3).replace(/-/g, " "))
+                      : capitalize(name.replace(/-/g, " ").replace(/_/g, " "))}
+                  </h1>
+                </div> */}
+                <div style={{ paddingTop: "1em", userSelect: "none" }}>
+                  {checkObject(getMarkdown(value).metadata) ? (
+                    <>
+                    <METADATE incoming={getMarkdown(value).metadata.date} />
+                    <METATAGS incoming={getMarkdown(value).metadata.tags} />
+                    <METAMATERIAL incoming={getMarkdown(value).metadata.material} />
+
+                    </>
+                  ) : null}
+                </div>
                 <div
                   id="previewArea"
                   style={{
@@ -1217,7 +1427,7 @@ export default function Next() {
                     overflow: "scroll",
                   }}
                   className="third h-full w-full"
-                  dangerouslySetInnerHTML={getMarkdown(value)}
+                  dangerouslySetInnerHTML={getMarkdown(value).document}
                 />
               </div>
             </>
@@ -1225,8 +1435,9 @@ export default function Next() {
           <div
             className="fixed inset-x-0 bottom-0 ButtomBar"
             style={{
+              display: "inline",
               userSelect: "none",
-              marginLeft: "30%",
+              marginLeft: "18.55em",
               maxHeight: "10vh",
               marginTop: "20px",
             }}
@@ -1235,7 +1446,7 @@ export default function Next() {
               <div
                 style={{
                   paddingTop: "5px",
-                  paddingRight: "40px",
+                  paddingRight: "30px",
                   paddingBottom: "5px",
                   alignContent: "center",
                   overflow: "hidden",
@@ -1279,7 +1490,7 @@ export default function Next() {
                   className="Left"
                   style={{
                     float: "left",
-                    paddingLeft: "40px",
+                    paddingLeft: "30px",
                     paddingTop: "5px",
                     paddingBottom: "5px",
                   }}
@@ -1320,7 +1531,7 @@ export default function Next() {
                   className="Left"
                   style={{
                     float: "left",
-                    paddingLeft: "40px",
+                    paddingLeft: "30px",
                     paddingTop: "5px",
                     paddingBottom: "5px",
                   }}
@@ -1376,19 +1587,6 @@ export default function Next() {
                     paddingBottom: "5px",
                   }}
                 >
-                  <span style={{ float: "left" }}>
-                    <svg
-                      style={{ display: "inline" }}
-                      width="32"
-                      height="22"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        fill="#888888"
-                        d="M20.56 18H3.44C2.65 18 2 17.37 2 16.59V7.41C2 6.63 2.65 6 3.44 6h17.12c.79 0 1.44.63 1.44 1.41v9.18c0 .78-.65 1.41-1.44 1.41M6.81 15.19v-3.66l1.92 2.35l1.92-2.35v3.66h1.93V8.81h-1.93l-1.92 2.35l-1.92-2.35H4.89v6.38h1.92M19.69 12h-1.92V8.81h-1.92V12h-1.93l2.89 3.28L19.69 12Z"
-                      />
-                    </svg>
-                  </span>
                   <div style={{ display: "inline", marginLeft: "20px" }}></div>
                   {clockState}
                 </div>

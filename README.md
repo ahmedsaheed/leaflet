@@ -97,6 +97,8 @@ $ yarn build
 - <kbd>⌘ | Ctrl</kbd> + <kbd>d</kbd> : Convert to Docx
 - <kbd>⌘ | Ctrl</kbd> + <kbd>e</kbd> : Convert to PDF
 - <kbd>Shift</kbd> + <kbd>Tab</kbd> : Toggle Suggested Word
+- <kbd>⌘ | Ctrl</kbd> + <kbd>k</kbd> : Toggle Command Palette
+
 
 
 

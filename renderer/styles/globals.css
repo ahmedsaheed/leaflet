@@ -2,52 +2,61 @@
 @tailwind components;
 @tailwind utilities;
 
+h1{
+  font-weight: 600;
+  line-height: 1.2 !important;
+  font-size: 24px;
+  margin: 15px 0;
+}
 
 h2 {
   font-weight: 600;
   font-size: 20px;
   line-height: 1.2 !important;
-  padding: 3px, 2px;
-
-}
-h1{
-  font-weight: 600;
-  line-height: 1.2 !important;
-  font-size: 24px;
-  padding: 3px, 2px;
+  margin: 15px 0;
 }
 h3{
   font-weight: 600;
   line-height: 1.2 !important;  
   font-size: 18px;
-  padding: 3px, 2px;
+  margin: 15px 0;
 }
-
+.command-palette .command-palette-content{
+  font-family: "iA Writer Mono", monospace !important;
+}
 @media (prefers-color-scheme: dark) {
   body {
-    font-weight: 600;
+    /* font-weight: 400; */
     -webkit-app-region: drag;
     background: #1e1e1e;
     color: white;
     font-family: "iA Writer Mono", monospace;
     -webkit-font-smoothing: antialiased;
-    font-size: 13px;
+    font-size: 14px;
     letter-spacing: 0.055em;
     line-height: 1.6;
 
+  }
+  blockquote {
+    border-left: 2px solid #ff9a9e;
+    padding-left: 0.7em;
+    margin-inline-end: 0;
   }
   .ButtomBar {
     background-color: #100f11;
   }
   mark {
     background-color: #ff9a9e;
+    display: "block";
+    border: 1px solid #b3d4fc;
+    border-color: #b3d4fc;
 }
 .util{
     border-top: 1px solid #2d2d2d;
-    min-width: 30vw;
-    max-width: 30vw;
-    width: 30vw;
-    height: 28px;
+    min-width: 18.5em;
+    max-width: 18.5em;
+    width: 18.5em;
+    height: 28.5px;
     padding-top: 5px;
     justify-content: space-between;
     align-items: center;
@@ -77,12 +86,13 @@ h3{
 
   pre {
     font-family: "iA Writer Mono", monospace;
-    background-color: #232223;
+    background-color: #252525;
     border-radius: 5px;
-    margin: 10px;
   }
   code{
-    background-color: #232223;
+    background-color: #252525;
+    border-radius: 3px;
+
   }
 
     hr{
@@ -96,7 +106,6 @@ h3{
   }
   .fileBody{
      padding: 0 10px 10px 10px; 
-
   }
  
 
@@ -143,30 +152,33 @@ strong{
 
 @media (prefers-color-scheme: light) {
   body {
-    font-weight: 600;
+    /* font-weight: 600; */
     -webkit-app-region: drag;
+    fill: currentColor;
     background: #fff;
-    color: #37352F;
+    color: rgb(55, 53, 47);
     font-family: "iA Writer Mono", monospace;
-    font-size: 13px;
-    -webkit-font-smoothing: antialiased;
+    font-size: 14px;
+    -webkit-font-smoothing: auto;
     letter-spacing: 0.055em;
     line-height: 1.6;
-
-
-
   }
 
   .util{
     border-top: 1px solid #ddd;
-    min-width: 30vw;
-    max-width: 30vw;
-    width: 30vw;
-    height: 28px;
-    paddint-top: 5px;
+    min-width: 18.5em;
+    max-width: 18.5em;
+    width: 18.5em;
+    height: 28.5px;
+    padding-top: 5px;
     justify-content: space-between;
-    align-items: center
+    align-items: center;
 
+}
+blockquote {
+  border-left: 2px solid #b3d4fc;
+  padding-left: 0.7em;
+  margin-inline-end: 0;
 }
 
 .files:hover {
@@ -176,6 +188,9 @@ strong{
 
   mark{
     background-color: #b3d4fc;
+    display: "block";
+    border: 1px solid #b3d4fc;
+    border-color: #ff9a9e;
   }
 
   kbd {
@@ -202,19 +217,17 @@ strong{
   .ButtomBar {
     background-color: #fbfbfb;
     border-top: 1px solid #ddd; 
-
-
   }
 
   pre {
     font-family: "iA Writer Mono", monospace;
     background-color: rgb(222, 226, 230);
     border-radius: 5px;
-    margin: 10px;
   }
 
   code{
     background-color: rgb(222, 226, 230);
+    border-radius: 3px;
   }
 
   .fs {
@@ -228,7 +241,6 @@ strong{
   }
   .fileBody{
      padding: 0 10px 10px 10px; 
-
   }
 
   b {
@@ -250,8 +262,7 @@ strong{
   
   }
   hr{
-    border: 1px solid #7c7c7c;
-  
+    border: 1px solid #e0e0e0;
   }
 
   ::selection {
@@ -260,28 +271,29 @@ strong{
 }
 
 li { 
-   list-style: disc; 
-   margin-bottom: 10px; 
-  padding: 3px, 2px;
+  padding-top: 0.075em;
+  padding-bottom: 0.075em;
 
  } 
-ul,
-ol {
+ul, ol {
   margin-left: 2em;
+  margin-top: 1em;
+}
+.fileBody ol{
+  margin-left: 2em;
+  margin-top: 0;
 }
 
-
 hr {
-  margin-bottom: 2em;
-  margin-top: 2em;
+  margin: 1.5em 0;
 }
 
 img, video, iframe {
   margin-top: 1em;
   margin-bottom: 1em;
   animation: cool-fadein 1s;
-    object-fit: cover;
-    border-radius:4px;
+  object-fit: cover;
+  border-radius:4px;
 }
 @keyframes cool-fadein {
   0% {
@@ -296,11 +308,7 @@ img, video, iframe {
   }
 }
 
-blockquote {
-  border-left: 2px solid grey;
-  padding-left: 0.7em;
-  margin-inline-end: 0;
-}
+
 textarea{
   -webkit-app-region: no-drag;
   -webkit-writing-mode: horizontal-tb !important;
@@ -321,8 +329,6 @@ code {
     font-family: "iA Writer Mono", monospace;
     padding: 0.2em 0.4em;
     white-space: pre-wrap;
-
-
 }
 pre code {
   display: block;
@@ -333,9 +339,6 @@ pre code {
 
 p {
   margin: 0.8em 0;
-}
-a {
-  border-bottom: 1px solid #7c7c7c;;
 }
 
 .mainer {
@@ -379,11 +382,6 @@ th,td {
   display:none;
 }
 
-hr{
-  margin-left: 6em;
-  margin-right:6em; 
-  }
-
 .Closed:before{
   content: '\203A'; /* chevron */
   text-align: center;
@@ -413,15 +411,55 @@ details[open] summary::before {
   transform: rotate(90deg);
 }
 
-
-.slideIn{
-  -webkit-animation: slide-up 900ms  forwards;
-  animation: slide-up 900ms forwards;
-
+.cm-theme > div {
+  background-color: transparent !important;
+}
+.cm-line{
+  font : 14px "iA Writer Mono", monospace;
+  letter-spacing: 0.055em;
+  line-height: 1.6;
 }
 
-@keyframes slide-up {
-  0% { -webkit-transform: translateY(100%); opacity: 1 }
-  100% { -webkit-transform: translateY(0); opacity: 1  }
+ul > li {
+  list-style: disc;
+}
+ol > li {
+  list-style: list-number;
+}
+u{
+  text-decoration: underline;
 }
 
+a{
+  text-decoration: underline;
+}
+
+/* a::after{
+  content: url("https://api.iconify.design/ri:arrow-right-up-line.svg?color=%23888888");
+  padding: none
+} */
+
+.cm-gutters{
+  background-color: transparent !important;
+  border: none !important;
+}
+
+ .cm-foldPlaceholder{
+  background-color: transparent !important;
+  border: none !important;
+  
+ }
+
+  .cm-foldPlaceholder-folded{
+    background-color: transparent !important;
+    border: none !important;
+    
+  }
+
+/* 
+  span[title="Unfold line"] {
+    font-size: 2em;
+  } */
+  /* span[title="Unfold line"]::before{
+    content: url("https://api.iconify.design/ri:arrow-down-s-line.svg?color=%23888888");
+  } */

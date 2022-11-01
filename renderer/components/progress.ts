@@ -1,12 +1,9 @@
-export const progress = (scroll: number) => {
+export const progress = (scroll) => {
     const progress = ["|", "|", "|", "|", "|", "|", "|", "|", "|", "|"]
     .map((v, i) => {
       return i < (scroll / 100) * 10 ? "<b>|</b>" : v;
     })
     .join("");
-  const scroller = `${progress} ${scroll.toFixed(1)}%`;
-
-    return (
-      scroller
-        )
+  return `${progress} ${scroll.toFixed(1)}%`;
+        
 }
