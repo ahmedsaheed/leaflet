@@ -1,7 +1,13 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ipcRenderer } from "electron";
+import { undo } from '@codemirror/commands';
 import "react-cmdk/dist/cmdk.css";
 import {
+  GETDATE,
+  LINK,
+  BOLD,
+  QUICKINSERT,
+  ADDYAML,
   PDFIcon,
   DOCXIcon,
   MARKDOWNIcon,
@@ -11,7 +17,7 @@ import {
 import { 
   METADATE,
   METATAGS,
-  METAMATERIAL
+  METAMATERIAL,
 } from "../lib/metadata";
 import CommandPalette, { filterItems, getItemIndex } from "react-cmdk";
 import { progress } from "../components/progress";
@@ -26,14 +32,16 @@ import mainPath from "path";
 import open from "open";
 import os from "os";
 import { languages } from "@codemirror/language-data";
-import { githubLight, githubDark } from '@uiw/codemirror-theme-github';
+import { githubDark } from '@uiw/codemirror-theme-github';
 import CodeMirror from '@uiw/react-codemirror';
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
-import {getStatistics} from "@uiw/react-codemirror"
+import {getStatistics, ReactCodeMirrorRef} from "@uiw/react-codemirror"
 import { EditorView } from "@codemirror/view";
-import { indentOnInput } from "@codemirror/language";
+import { codeFolding, foldGutter, indentOnInput } from "@codemirror/language";
 import { usePrefersColorScheme } from "../lib/theme";
 import { xcodeLight } from "@uiw/codemirror-theme-xcode";
+import { EditorSelection } from "@codemirror/state";
+
 
 
 
@@ -73,7 +81,9 @@ export default function Next() {
   const [isCreatingFolder, setIsCreatingFolder] = useState<boolean>(false);
   const [parentDir, setParentDir] = useState<string>(appDir);
   const Desktop = require("os").homedir() + "/Desktop";
+  const [editorview, setEditorView] = useState<EditorView>();
   const ref = useRef<HTMLTextAreaElement>(null);
+  const refs = React.useRef<ReactCodeMirrorRef>({});
   let synonyms = {};
   const prefersColorScheme = usePrefersColorScheme()
   const isDarkMode = prefersColorScheme === 'dark'
@@ -90,15 +100,20 @@ export default function Next() {
 
   }, []);
 
+  // useEffect(() => {
+  //   let clock = setInterval(() => {
+  //     const date = new Date();
+  //     setClockState(date.toLocaleTimeString());
+  //   }, 1000);
+  //   return () => {
+  //     clearInterval(clock);
+  //   }
+  // }, []);
+
   useEffect(() => {
-    let clock = setInterval(() => {
-      const date = new Date();
-      setClockState(date.toLocaleTimeString());
-    }, 1000);
-    return () => {
-      clearInterval(clock);
-    }
-  }, []);
+    if (refs.current?.view)
+    setEditorView(refs.current?.view)
+  }, [refs.current]);
 
   useEffect(() => {
     if (files.length > 0) {
@@ -128,7 +143,7 @@ export default function Next() {
   }
 
   const checkEdit = (doc) => {
-    if (!path){}
+    if (!path) return;
      doc.toString() === fs.readFileSync(path, "utf8") ? 
      setIsEdited(false)
     :
@@ -136,7 +151,7 @@ export default function Next() {
       setIsEdited(true);
     
   }
-    
+
   const onChange = useCallback((doc, viewUpdate) => {
     setValue(doc.toString())
     let offset = getStatistics(viewUpdate).selection.main.head
@@ -297,7 +312,7 @@ export default function Next() {
       fs.mkdirSync(`${parentDir}/${name}`);
       fs.writeFileSync(
         `${parentDir}/${name}/new.md`,
-        `${name} created on ${generateDate()} at ${clockState}`
+        `${name} created on ${GETDATE()} at ${clockState}`
       );
       Update();
     }
@@ -489,32 +504,12 @@ export default function Next() {
     return (-c / 2) * (t * (t - 2) - 1) + b;
   }
 
-  const generateDate = () => {
-    const date = new Date();
-    const strArray = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-    const s =
-      "" +
-      (date.getDate() <= 9 ? "0" + date.getDate() : date.getDate()) +
-      "-" +
-      strArray[date.getMonth()] +
-      "-" +
-      date.getFullYear() +
-      " ";
-    return s;
-  };
+
+
+
+
+<symbol viewBox="0 0 32 32" id="carbon-arrow-up-right"><path fill="#888888" d="M10 6v2h12.59L6 24.59L7.41 26L24 9.41V22h2V6H10z"></path></symbol>
+
 
   const openExternalInDefaultBrowser = () => {
     document.addEventListener("click", (event) => {
@@ -659,64 +654,52 @@ export default function Next() {
   }, []);
 
   const commentOut = () => {
-    const area = ref.current;
-    if (area?.selectionEnd === area?.selectionStart) {
-      return;
+    if(!insert || !editorview) return;
+    const main = editorview.state.selection.main;
+    const txt = editorview.state.sliceDoc(editorview.state.selection.main.from, editorview.state.selection.main.to);
+    if (txt.length === 0) return;
+    if (txt.startsWith("<!--") && txt.endsWith("-->")) {
+      const newText = txt.slice(4, -3)
+      editorview.dispatch({
+        changes: {
+          from: main.from,
+          to: main.to,
+          insert: newText,
+        },
+        selection: EditorSelection.cursor(main.from + newText.length),
+      })
+    }else{
+    const comment = `<!-- ${txt} -->`;
+    editorview.dispatch({
+      changes: {
+        from: main.from,
+        to: main.to,
+        insert: comment,
+      },
+      selection: EditorSelection.cursor(main.from + comment.length),
+    })
     }
-    let first = area!.selectionStart;
-    let second = area!.selectionEnd;
-    let length = second - first;
-    let selectedText = area!.value.substr(first, length);
-    if (selectedText.startsWith("<!--") && selectedText.endsWith("-->")) {
-      area!.value = area!.value.substr(0, first) + area?.value.substr(second);
-      area?.setSelectionRange(first, first);
-      document.execCommand(
-        "insertText",
-        false,
-        `${selectedText.substr(4, selectedText.length - 8)}`
-      );
-    } else {
-      area!.value = area?.value.substr(0, first) + area!.value.substr(second);
-      area?.setSelectionRange(first, first);
-      document.execCommand("insertText", false, `<!-- ${selectedText} -->`);
-    }
-  };
+  }
 
-  const bold = () => {
-    const area = ref.current;
-    let first = area!.selectionStart;
-    let second = area!.selectionEnd;
-    let length = second - first;
-    let selectedText = area!.value.substr(first, length);
-    selectedText.startsWith("**") && selectedText.endsWith("**")
-      ? document.execCommand(
-          "insertText",
-          false,
-          `${selectedText.substr(2, selectedText.length - 4)}`
-        )
-      : document.execCommand("insertText", false, `**${selectedText}** `);
-    area?.setSelectionRange(first + 2, first + 2);
-  };
 
-  const createLink = () => {
-    const area = ref.current;
-    let first = area!.selectionStart;
-    let second = area!.selectionEnd;
-    let length = second - first;
-    let selectedText = area?.value.substr(first, length);
-    if (selectedText?.match("[(.*?)]((.*?))")) {
-      return;
+  const onDelete = () => {
+    try {
+      if (!fs.existsSync(path)) {
+        return;
+      }
+      ipcRenderer.invoke("deleteFile", name, path).then(() => {
+        Update();
+        setStruct(files[0].structure.children);
+        const index = Math.floor(Math.random() * files.length);
+        setInsert(false);
+        setValue(files[index].body);
+        setName(files[index].name);
+        setPath(files[index].path);
+      });
+    } catch (e) {
+      console.log(e);
     }
-    area!.value = area!.value.substr(0, first) + area?.value.substr(second);
-    area?.setSelectionRange(first, first);
-    document.execCommand("insertText", false, `[${selectedText}](url)`);
-    selectedText?.length === 0
-      ? area?.setSelectionRange(first + 1, first + 1)
-      : area?.setSelectionRange(
-          first + 1 + selectedText!.length + 2,
-          first + 1 + selectedText!.length + 5
-        );
-  };
+  }
 
   const createNewFile = () => {
     fileName != ""
@@ -757,7 +740,7 @@ export default function Next() {
         if (!insert) {
           return;
         }
-        bold();
+        BOLD(editorview);
         e.preventDefault();
         return;
       }
@@ -774,15 +757,15 @@ export default function Next() {
         return;
       }
 
-      if ((e.ctrlKey || e.metaKey) && e.key === "f") {
-        if (!insert) {
-          return;
-        }
-        toogleFinder(true);
-        document.getElementById("finderInput")?.focus();
-        e.preventDefault();
-        return;
-      }
+      // if ((e.ctrlKey || e.metaKey) && e.key === "f") {
+      //   if (!insert) {
+      //     return;
+      //   }
+      //   toogleFinder(true);
+      //   document.getElementById("finderInput")?.focus();
+      //   e.preventDefault();
+      //   return;
+      // }
 
       if (e.key === "i" && (e.ctrlKey || e.metaKey)) {
         setInsert(true);
@@ -804,7 +787,7 @@ export default function Next() {
         if (!insert) {
           return;
         }
-        createLink();
+        LINK(editorview);
       }
 
       if (e.key === "n" && (e.ctrlKey || e.metaKey)) {
@@ -818,7 +801,7 @@ export default function Next() {
         if (!insert) {
           return;
         }
-        insertInTexarea(generateDate());
+        QUICKINSERT(editorview, GETDATE());
         e.preventDefault();
         return;
       }
@@ -835,22 +818,7 @@ export default function Next() {
         (e.key === "Backspace" || e.key === "Delete") &&
         (e.ctrlKey || e.metaKey)
       ) {
-        try {
-          if (!fs.existsSync(path)) {
-            return;
-          }
-          ipcRenderer.invoke("deleteFile", name, path).then(() => {
-            Update();
-            setStruct(files[0].structure.children);
-            const index = Math.floor(Math.random() * files.length);
-            setInsert(false);
-            setValue(files[index].body);
-            setName(files[index].name);
-            setPath(files[index].path);
-          });
-        } catch (e) {
-          console.log(e);
-        }
+        onDelete();
         e.preventDefault();
         return;
       }
@@ -859,7 +827,7 @@ export default function Next() {
         if (!insert) {
           return;
         }
-        insertInTexarea(clockState);
+        QUICKINSERT(editorview,clockState);
         e.preventDefault();
         return;
       }
@@ -867,9 +835,14 @@ export default function Next() {
         if (!insert) {
           return;
         }
-        addYaml();
+        ADDYAML(editorview);
         e.preventDefault();
         return;
+      }
+      if (e.metaKey && e.key === "z") {
+        if (!insert || !editorview) return;
+        undo(editorview)
+
       }
 
       if (e.metaKey && e.key === "k") {
@@ -909,33 +882,6 @@ export default function Next() {
     };
   });
 
-  const insertInTexarea = (s: string) => {
-    const area = ref.current;
-    const pos = area.selectionStart;
-    area.setSelectionRange(pos, pos);
-    document.execCommand("insertText", false, s);
-  };
-
-  function newChangeHandler(doc: string) {
-    setValue(doc);
-    if (doc === fs.readFileSync(path, "utf8")) {
-      setIsEdited(false);
-    } else {
-      setSaver("EDITED");
-      setIsEdited(true);
-    }
-
-  }
-
-  function handleChange(e) {
-    setValue(e.target.value);
-    if (e.target.value === fs.readFileSync(path, "utf8")) {
-      setIsEdited(false);
-    } else {
-      setSaver("EDITED");
-      setIsEdited(true);
-    }
-  }
   const openWindow = () => {
     ipcRenderer.invoke("app:on-fs-dialog-open").then(() => {
       ipcRenderer.invoke("getTheFile").then((files = []) => {
@@ -945,49 +891,10 @@ export default function Next() {
     });
   };
 
-  const addYaml = () => {
-    const area = ref.current;
-    const pos = area.selectionStart;
-    area.setSelectionRange(pos, pos);
-    document.execCommand(
-      "insertText",
-      false,
-      `---
- tags:
-  - programming
-  - computers
-  - conversations
- material:
-  - {github: 'https://github.com/'} 
-  - {mala: 'https://github.com/'}
-  - {xala: 'https://github.com/'}   
----`
-    );
-    area.setSelectionRange(pos + 4, pos + 4);
-  };
 
   const checkObject = (obj) => {
-    // if (Object.keys(obj).length === 0) {
-    //   return false;
-    // }
-    // return true;
     return typeof obj === 'object' && obj !== null;
 
-  };
-
-  
-
-  const cursorUpdate = (e) => {
-    if (e.target.selectionStart !== e.target.selectionEnd) {
-      setCursor(`[${e.target.selectionStart}, ${e.target.selectionEnd}]`);
-    } else {
-      var textLines = e.target.value
-        .substr(0, e.target.selectionEnd)
-        .split("\n");
-      var lineNo = textLines.length - 1;
-      var colNo = textLines[lineNo].length;
-      setCursor(`${lineNo}L ${colNo}C`);
-    }
   };
 
   const onFileTreeClick = (path: string, name: string) => {
@@ -1454,6 +1361,7 @@ export default function Next() {
                 /> */}
                 
                   <CodeMirror
+                        ref={refs}
                         value={value}
                         height="100%"
                         width="100%"
@@ -1461,6 +1369,8 @@ export default function Next() {
                         basicSetup={false}
                         extensions={[ 
                           indentOnInput(),
+                          codeFolding(),
+                          foldGutter(),
                         markdown({
                           base: markdownLanguage,
                           codeLanguages: languages,

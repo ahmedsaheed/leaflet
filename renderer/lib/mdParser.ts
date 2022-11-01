@@ -1,5 +1,6 @@
 import hljs from "highlight.js";
 const meta = require('markdown-it-meta')
+import todo from "markdown-it-task-lists"
 
 export const getMarkdown = (value: string) => { 
 
@@ -21,6 +22,7 @@ export const getMarkdown = (value: string) => {
       });
       require('markdown-it-pandoc')(md);
       md.use(meta)
+      md.use(todo, {enabled: true});
       try{
           const result = md.render(value)
           return {

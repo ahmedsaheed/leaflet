@@ -32,7 +32,7 @@ h3{
     color: white;
     font-family: "iA Writer Mono", monospace;
     -webkit-font-smoothing: antialiased;
-    font-size: 13px;
+    font-size: 14px;
     letter-spacing: 0.055em;
     line-height: 1.6;
 
@@ -158,7 +158,7 @@ strong{
     background: #fff;
     color: rgb(55, 53, 47);
     font-family: "iA Writer Mono", monospace;
-    font-size: 13px;
+    font-size: 14px;
     -webkit-font-smoothing: auto;
     letter-spacing: 0.055em;
     line-height: 1.6;
@@ -415,7 +415,7 @@ details[open] summary::before {
   background-color: transparent !important;
 }
 .cm-line{
-  font : 13px "iA Writer Mono", monospace;
+  font : 14px "iA Writer Mono", monospace;
   letter-spacing: 0.055em;
   line-height: 1.6;
 }
@@ -434,7 +434,32 @@ a{
   text-decoration: underline;
 }
 
-a::after{
+/* a::after{
   content: url("https://api.iconify.design/ri:arrow-right-up-line.svg?color=%23888888");
   padding: none
+} */
+
+.cm-gutters{
+  background-color: transparent !important;
+  border: none !important;
 }
+
+ .cm-foldPlaceholder{
+  background-color: transparent !important;
+  border: none !important;
+  
+ }
+
+  .cm-foldPlaceholder-folded{
+    background-color: transparent !important;
+    border: none !important;
+    
+  }
+
+/* 
+  span[title="Unfold line"] {
+    font-size: 2em;
+  } */
+  /* span[title="Unfold line"]::before{
+    content: url("https://api.iconify.design/ri:arrow-down-s-line.svg?color=%23888888");
+  } */
