@@ -1617,6 +1617,13 @@
   dependencies:
     "@uiw/codemirror-themes" "4.12.4"
 
+"@uiw/codemirror-theme-xcode@^4.12.4":
+  "integrity" "sha512-f0pnL+wqfBS7UyMzctAXnVPSLnrUYz8n9rNWEwB5moCKvd7KbeiMM4TudxRMX63xbrIm+cGMVNgZDm/ypAp4hw=="
+  "resolved" "https://registry.npmjs.org/@uiw/codemirror-theme-xcode/-/codemirror-theme-xcode-4.12.4.tgz"
+  "version" "4.12.4"
+  dependencies:
+    "@uiw/codemirror-themes" "4.12.4"
+
 "@uiw/codemirror-themes@4.12.4":
   "integrity" "sha512-ekySMFlXaJ4u0TCz/caHG8HqJPT0+viUA2ZQ4yZ+F1z2Lk9HgMS/1YfRj8vHuEUPNXc9Fsy5qxwTp7I1hEanEg=="
   "resolved" "https://registry.npmjs.org/@uiw/codemirror-themes/-/codemirror-themes-4.12.4.tgz"

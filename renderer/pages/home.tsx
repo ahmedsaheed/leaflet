@@ -33,6 +33,7 @@ import {getStatistics} from "@uiw/react-codemirror"
 import { EditorView } from "@codemirror/view";
 import { indentOnInput } from "@codemirror/language";
 import { usePrefersColorScheme } from "../lib/theme";
+import { xcodeLight } from "@uiw/codemirror-theme-xcode";
 
 
 
@@ -1456,7 +1457,7 @@ export default function Next() {
                         value={value}
                         height="100%"
                         width="100%"
-                        theme={isDarkMode ? githubDark : githubLight}
+                        theme={isDarkMode ? githubDark : xcodeLight}
                         basicSetup={false}
                         extensions={[ 
                           indentOnInput(),

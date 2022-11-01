@@ -6,20 +6,20 @@ h1{
   font-weight: 600;
   line-height: 1.2 !important;
   font-size: 24px;
-  margin: 0.8em 0;
+  margin: 15px 0;
 }
 
 h2 {
   font-weight: 600;
   font-size: 20px;
   line-height: 1.2 !important;
-  margin: 0.8em 0;
+  margin: 15px 0;
 }
 h3{
   font-weight: 600;
   line-height: 1.2 !important;  
   font-size: 18px;
-  margin: 0.8em 0;
+  margin: 15px 0;
 }
 .command-palette .command-palette-content{
   font-family: "iA Writer Mono", monospace !important;
@@ -36,6 +36,11 @@ h3{
     letter-spacing: 0.055em;
     line-height: 1.6;
 
+  }
+  blockquote {
+    border-left: 2px solid #ff9a9e;
+    padding-left: 0.7em;
+    margin-inline-end: 0;
   }
   .ButtomBar {
     background-color: #100f11;
@@ -81,11 +86,13 @@ h3{
 
   pre {
     font-family: "iA Writer Mono", monospace;
-    background-color: #232223;
+    background-color: #252525;
     border-radius: 5px;
   }
   code{
-    background-color: #232223;
+    background-color: #252525;
+    border-radius: 3px;
+
   }
 
     hr{
@@ -155,9 +162,6 @@ strong{
     -webkit-font-smoothing: auto;
     letter-spacing: 0.055em;
     line-height: 1.6;
-
-
-
   }
 
   .util{
@@ -170,6 +174,11 @@ strong{
     justify-content: space-between;
     align-items: center;
 
+}
+blockquote {
+  border-left: 2px solid #b3d4fc;
+  padding-left: 0.7em;
+  margin-inline-end: 0;
 }
 
 .files:hover {
@@ -208,8 +217,6 @@ strong{
   .ButtomBar {
     background-color: #fbfbfb;
     border-top: 1px solid #ddd; 
-
-
   }
 
   pre {
@@ -220,6 +227,7 @@ strong{
 
   code{
     background-color: rgb(222, 226, 230);
+    border-radius: 3px;
   }
 
   .fs {
@@ -233,7 +241,6 @@ strong{
   }
   .fileBody{
      padding: 0 10px 10px 10px; 
-
   }
 
   b {
@@ -255,8 +262,7 @@ strong{
   
   }
   hr{
-    border: 1px solid #7c7c7c;
-  
+    border: 1px solid #e0e0e0;
   }
 
   ::selection {
@@ -265,9 +271,8 @@ strong{
 }
 
 li { 
-   list-style: disc; 
-   margin-bottom: 10px; 
-  padding: 3px, 2px;
+  padding-top: 0.075em;
+  padding-bottom: 0.075em;
 
  } 
 ul, ol {
@@ -280,16 +285,15 @@ ul, ol {
 }
 
 hr {
-  margin-bottom: 2em;
-  margin-top: 2em;
+  margin: 1.5em 0;
 }
 
 img, video, iframe {
   margin-top: 1em;
   margin-bottom: 1em;
   animation: cool-fadein 1s;
-    object-fit: cover;
-    border-radius:4px;
+  object-fit: cover;
+  border-radius:4px;
 }
 @keyframes cool-fadein {
   0% {
@@ -304,11 +308,7 @@ img, video, iframe {
   }
 }
 
-blockquote {
-  border-left: 2px solid grey;
-  padding-left: 0.7em;
-  margin-inline-end: 0;
-}
+
 textarea{
   -webkit-app-region: no-drag;
   -webkit-writing-mode: horizontal-tb !important;
@@ -339,9 +339,6 @@ pre code {
 
 p {
   margin: 0.8em 0;
-}
-a {
-  border-bottom: 1px solid #7c7c7c;;
 }
 
 .mainer {
@@ -385,11 +382,6 @@ th,td {
   display:none;
 }
 
-hr{
-  margin-left: 6em;
-  margin-right:6em; 
-  }
-
 .Closed:before{
   content: '\203A'; /* chevron */
   text-align: center;
@@ -426,4 +418,23 @@ details[open] summary::before {
   font : 13px "iA Writer Mono", monospace;
   letter-spacing: 0.055em;
   line-height: 1.6;
+}
+
+ul > li {
+  list-style: disc;
+}
+ol > li {
+  list-style: list-number;
+}
+u{
+  text-decoration: underline;
+}
+
+a{
+  text-decoration: underline;
+}
+
+a::after{
+  content: url("https://api.iconify.design/ri:arrow-right-up-line.svg?color=%23888888");
+  padding: none
 }
