@@ -34,10 +34,11 @@ A minimal distractionless markdown editor designed to quickly navigate between m
 <details style="padding: 10px">
 <summary style="cursor: pointer;color:#ff9100 !important;font-weight: 600;"> Why Leafet ? </summary>
 <p style="margin: 1em 1em;">
-We use software because we have goals to achieve and things to do. These software are coded by programmers who have their own goals, sometimes these goals overlap with ours, over time they diverge, introducing features we don't use or understand. I created this software to simplify my note taking process. There are many outstanding markdown editor but leaflet is mine and it's crafted to soothe my need. This application is made available as a free and <a href="https://github.com/ahmedsaheed/Leaflet" target="_blank" rel="noreferrer" class="external ">open sourced</a> software.</p>
+We use software because we have goals to achieve and things to do. These softwares are prefabricated units developed by professionals for the masses, with few opportunities for customization. Sometimes the goals of these software overlap with ours, over time they diverge, introducing features we don't use or understand. I've  deeply tailor leaflet to meet my minimal unique
+note taking needs. This application is made available as a free and <a href="https://github.com/ahmedsaheed/Leaflet" target="_blank" rel="noreferrer" class="external ">open sourced</a> software.
+</p>
 </details>
 </div>
-<br>
 
 ---
 ## Features
