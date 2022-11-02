@@ -10,22 +10,19 @@ I created this <a href="http://github.com/ahmedsaheed/Leaflet" target="_blank" r
 
 ## Features
 
-- **🖋 Editing**: Switch between editing and preview mode seemlessly
+- **Editing**: Switch between editing and preview mode seemlessly
 
-- **⚛️ Maths & Chemical Equation Typesetting**: Leaflet renders mathematical, physics and chemical equation out of the box.
+- **Maths & Chemical Equation Typesetting**: Leaflet renders mathematical, physics and chemical equation out of the box.
 
 - **Pandoc Support**: Easily export your `.md` files to `.pdf` and `.docx` files
 
-- **📄 Uses Files**: Leaflet works with users file system directly instead of an external database.
+- **Offline First**: Leaflet works with users file system directly instead of an external database.
 
-- **🌙 Dark / Light Mode**: Supports your system specified theme.
+- **Dark / Light Mode**: Supports your system specified theme.
 
-- **✨ Simplicity**: Leaflet focuses on simplicity and provides only necessary features needed.
+- **Simplicity**: Leaflet focuses on simplicity and provides only necessary features needed.
 
-- **Dictionary**: Contains an indexed dictionary of almost 5K words suggestions.
-
-- **🕉 Bidirectional Text**: Automatically detect BIDI - text and displays logiaclly.
-
+- **Bidirectional Text**: Automatically detect BIDI - text and displays logiaclly.
 ## Installation
 
 You'd have to install [pandoc](https://github.com/jgm/pandoc/blob/master/INSTALL.md) to export `.md` to other formats.
@@ -77,8 +74,7 @@ $ yarn build
 
 
 ## Demo
-
-![leaflet](https://user-images.githubusercontent.com/87912847/195345060-a966ecf4-f2ed-47df-8beb-0058db38fe4f.png)
+![Screenshot 2022-11-02 at 02 35 14](https://user-images.githubusercontent.com/87912847/199382083-01350207-b576-4501-ba20-82de98428dbc.png)
 
 
 ![Screenshot 2022-10-12 at 13 47 12](https://user-images.githubusercontent.com/87912847/195346382-0b29051c-5f10-4c3b-865c-942398108aa7.png)
