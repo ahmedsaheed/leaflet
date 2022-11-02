@@ -87,6 +87,7 @@ export default function Next() {
   let synonyms = {};
   const prefersColorScheme = usePrefersColorScheme()
   const isDarkMode = prefersColorScheme === 'dark'
+  const onboardingDIR = mainPath.resolve(os.homedir(), "leaflet", "onboarding.md");
 
   useEffect(() => {
     openExternalInDefaultBrowser();
@@ -767,10 +768,21 @@ export default function Next() {
       //   return;
       // }
 
+      const toggle = (e) => {
+
+      }
+
       if (e.key === "i" && (e.ctrlKey || e.metaKey)) {
-        setInsert(true);
-        e.preventDefault();
-        return;
+        if(path != onboardingDIR){
+          setInsert(true);
+          e.preventDefault();
+          return;
+        }else{
+          setInsert(true);
+          e.preventDefault();
+          return;
+        }
+        
       } else if (e.key === "p" && (e.ctrlKey || e.metaKey)) {
         setInsert(false);
         e.preventDefault();

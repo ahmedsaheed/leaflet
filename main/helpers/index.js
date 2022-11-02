@@ -7,15 +7,37 @@ export {
 };
 
 
-const markdown = `
+const markdown = `---
+title: Your Title
+author: 
+ - John Doe
+ - Jane Doe
+date: ${new Date().toLocaleDateString()}
+tags:
+ - programming
+ - computers
+ - conversations
+material:
+ - {github: 'https://github.com/'} 
+ - {mala: 'https://github.com/'}
+ - {xala: 'https://github.com/'}   
+---
 
-<img src="https://raw.githubusercontent.com/ahmedsaheed/Leaflet/master/renderer/public/images/test.png" align="left" width="220"/>
+---
 
 <br>
 
 ## LEAFLET
 A minimal distractionless markdown editor designed to quickly navigate between multiple \`.md\` files in a directory and its sub directories. It features a clean mathematical typesetting, chemical equation rendering, code blocks highlighting, writing statistics and a scroll indicator.
 
+<div style="background-color:rgba(255,145,0,0.1); vertical-align: middle; margin:1em 0;border:1px color: inherit; border-radius: 5px;">
+<details style="padding: 10px">
+<summary style="cursor: pointer;color:#ff9100 !important;font-weight: 600;"> Hello World </summary>
+<p style="margin: 1em 1em;">
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer in nibh eleifend, sollicitudin sem ac, tincidunt est. Nunc sodales elit id massa ornare, tincidunt rutrum massa consectetur. Nullam sodales aliquam mi, ac elementum lectus ultrices eu. Nunc aliquam scelerisque nibh, bibendum dapibus nulla ultrices ut.
+</p>
+</details>
+</div>
 <br>
 
 ---

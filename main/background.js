@@ -25,7 +25,7 @@ if (isDev) {
 
   const mainWindow = createWindow("main", {
     width: 960,
-    height: 644, 
+    height: 700, 
     minWidth: 900, 
     minHeight: 600, 
     // resizable: false,
