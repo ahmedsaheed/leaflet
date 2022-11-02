@@ -14,12 +14,12 @@ author:
  - Jane Doe
 date: ${new Date().toLocaleDateString()}
 tags:
- - programming
- - computers
- - conversations
+ - note
+ - markdown
+ - minimal
 material:
- - {github: 'https://github.com/'} 
- - {mala: 'https://github.com/'}
+ - {source: 'https://github.com/ahmedsaheed/leaflet'} 
+ - {shortcuts: 'https://github.com/ahmedsaheed/Leaflet#shortcuts-and-controls'}
  - {xala: 'https://github.com/'}   
 ---
 
@@ -32,20 +32,12 @@ A minimal distractionless markdown editor designed to quickly navigate between m
 
 <div style="background-color:rgba(255,145,0,0.1); vertical-align: middle; margin:1em 0;border:1px color: inherit; border-radius: 5px;">
 <details style="padding: 10px">
-<summary style="cursor: pointer;color:#ff9100 !important;font-weight: 600;"> Hello World </summary>
+<summary style="cursor: pointer;color:#ff9100 !important;font-weight: 600;"> Why Leafet ? </summary>
 <p style="margin: 1em 1em;">
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer in nibh eleifend, sollicitudin sem ac, tincidunt est. Nunc sodales elit id massa ornare, tincidunt rutrum massa consectetur. Nullam sodales aliquam mi, ac elementum lectus ultrices eu. Nunc aliquam scelerisque nibh, bibendum dapibus nulla ultrices ut.
-</p>
+We use software because we have goals to achieve and things to do. These software are coded by programmers who have their own goals, sometimes these goals overlap with ours, over time they diverge, introducing features we don't use or understand. I created this software to simplify my note taking process. There are many outstanding markdown editor but leaflet is mine and it's crafted to soothe my need. This application is made available as a free and <a href="https://github.com/ahmedsaheed/Leaflet" target="_blank" rel="noreferrer" class="external ">open sourced</a> software.</p>
 </details>
 </div>
 <br>
-
----
-<br>
-I created this <a href="http://github.com/ahmedsaheed/Leaflet" target="_blank" rel="noreferrer" class="external">application</a> to help me cope with note taking during school lectures as most of my lecturers spoke too fast. This application is made available as a free and <a href="https://github.com/ahmedsaheed/Leaflet" target="_blank" rel="noreferrer" class="external ">open source</a> software.
-
-
->You'd have to install <a href="https://github.com/jgm/pandoc/blob/master/INSTALL.md" target="_blank" rel="noreferrer" class="external">pandoc</a> to export \`.md\` to other formats.
 
 ---
 ## Features
@@ -58,9 +50,9 @@ I created this <a href="http://github.com/ahmedsaheed/Leaflet" target="_blank" r
 
 - **Suggested Words**: Leaflet has a dictionary of about 5000 words and recommends synonyms.
 
-- **Uses Files**: Leaflet works with users file system directly instead of an external database.
+- **Offline First**: Leaflet works with your local file system directly instead of any external server.
 
-- **Dark / Light Mode**: Supports your system specified theme.
+- **Dark & Light Mode**: Supports your system specified theme.
 
 - **Simplicity**: Leaflet focuses on simplicity and provides only necessary features needed.
 
@@ -68,24 +60,27 @@ I created this <a href="http://github.com/ahmedsaheed/Leaflet" target="_blank" r
 - **Bidirectional Text**: Automatically detect BIDI - text and displays logiaclly.
 ---
 ## Shortcuts and Controls
-
 ### General
-- <kbd>⌘ | Ctrl</kbd> + <kbd>n</kbd> : New
-- <kbd>⌘ | Ctrl</kbd> + <kbd>s</kbd> : Save
-- <kbd>⌘ | Ctrl</kbd> + <kbd>o</kbd> : Open
-- <kbd>⌘ | Ctrl</kbd> + <kbd>i</kbd> : Insert
-- <kbd>⌘ | Ctrl</kbd> + <kbd>p</kbd> : Preview
-- <kbd>⌘ | Ctrl</kbd> + <kbd>d</kbd> : Convert to Docx
-- <kbd>⌘ | Ctrl</kbd> + <kbd>e</kbd> : Convert to PDF
-- <kbd>Shift</kbd> + <kbd>Tab</kbd> : Toggle Suggested Word
+| Keys   |      Events      |
+|----------|:-------------:|
+| <kbd>⌘ / Ctrl</kbd> + <kbd>n</kbd> |  New File |
+| <kbd>⌘ / Ctrl</kbd> + <kbd>s</kbd> |  Save File |
+| <kbd>⌘ / Ctrl</kbd> + <kbd>o</kbd> |  Open File |
+| <kbd>⌘ / Ctrl</kbd> + <kbd>i</kbd> |  Insert Mode |
+| <kbd>⌘ / Ctrl</kbd> + <kbd>p</kbd> |  Preview Mode |
+| <kbd>⌘ / Ctrl</kbd> + <kbd>d</kbd> |  Convert to Docx |
+| <kbd>⌘ / Ctrl</kbd> + <kbd>e</kbd> |  Convert to PDF  |
 
 
 
 ### Quick Insert
-- <kbd>⌘ | Ctrl</kbd> + <kbd>y</kbd> : Date
-- <kbd>⌘ | Ctrl</kbd> + <kbd>t</kbd> : Time
-- <kbd>⌘ | Ctrl</kbd> + <kbd>f</kbd> : Finder
-- <kbd>⌘ | Ctrl</kbd> + <kbd>/</kbd> : Comment
+| Keys   |      Events      |
+|----------|:-------------:|
+| <kbd>⌘ / Ctrl</kbd> + <kbd>[</kbd> |  Insert URL |
+| <kbd>⌘ / Ctrl</kbd> + <kbd>y</kbd> |  Insert Date |
+| <kbd>⌘ / Ctrl</kbd> + <kbd>t</kbd> |  Insert Time |
+| <kbd>⌘ / Ctrl</kbd> + <kbd>/</kbd> |  Comment Selected |
+
 
 ---
 ## Examples
@@ -98,53 +93,31 @@ $$\\left( \\sum_{k=1}^n a_k b_k \\right)^2 \\leq \\left( \\sum_{k=1}^n a_k^2 \\r
 $$H_2 + O_2 = H_2O$$
 
 - Code Blocks:
-\`\`\`go\n
-func threeSum(nums []int) [][]int {
-  res := [][]int{}
-  sort.Ints(nums)
-  for i := range nums {
-      if i > 0 && nums[i] == nums[i-1] {
-          continue
-      }
-      j, k := i+1, len(nums)-1
-      for j < k {
-          sum := nums[i] + nums[j] + nums[k]
-          switch {
-          case sum < 0:
-              j++
-          case sum > 0:
-              k--
-          default:
-              res = append(res, []int{nums[i], nums[j], nums[k]})
-              j, k = next(nums, j, k)
-          }
-      }
-  }
-  return res
+\`\`\`rust\n
+use std::collections::HashMap;
+
+fn two_sum( arr: &[i32], target_sum: i32 ) -> Vec<i32> {
+    let mut hash = HashMap::new();
+
+    for i in 0..arr.len() {
+        let j = target_sum - arr[i];
+        if hash.contains_key(&j) {
+            return vec![arr[i],j];
+        }
+        hash.insert(arr[i],1);
+    }
+    vec![]
 }
-func next(nums []int, i, j int) (int, int) {
-  for i < j {
-      switch {
-      case nums[i] == nums[i+1]:
-          i++
-      case nums[j] == nums[j-1]:
-          j--
-      default:
-          i++
-          j--
-      }
-  }
+
+fn main() {
+    let arr = vec![ -1, 4, 5, 7, 2];
+    let target_sum: i32 = 7;
+    
+    let result: Vec<i32> = two_sum(&arr, target_sum);
+    println!("Result : {:?}", result);
+}
   
 \n\`\`\`
-
-
-- Tables:
-
-| Tables   |      Are      |  Cool |
-|----------|:-------------:|------:|
-| col 1 is |  left-aligned | $1600 |
-| col 2 is |    centered   |   $12 |
-| col 3 is | right-aligned |    $1 |
 
 
 ## More Features
@@ -157,8 +130,8 @@ func next(nums []int, i, j int) (int, int) {
 ## Extras
 
 - Leaflet is strongly inspired by [Left](https://github.com/hundredrabbits/left) and [Opus](https://github.com/pacocoursey/Opus).
-- Leaflet source code  licensed under [BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
-- Pull Requests are welcome!
+- Leaflet source code  licensed under [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+- [Pull Requests](https://github.com/ahmedsaheed/Leaflet/compare) are welcomed!
 
 
 `;
