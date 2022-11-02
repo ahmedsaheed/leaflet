@@ -778,7 +778,7 @@ export default function Next() {
           e.preventDefault();
           return;
         }else{
-          setInsert(true);
+          setInsert(false);
           e.preventDefault();
           return;
         }
