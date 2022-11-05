@@ -7,18 +7,21 @@ import {
   LINK,
   BOLD,
   QUICKINSERT,
-  ADDYAML,
+  ADDYAML
+} from "../lib/util";
+
+import {
   PDFIcon,
   DOCXIcon,
   MARKDOWNIcon,
   COMMANDPALLETEOPENIcon,
   COMMANDPALLETESELECTIcon,
-} from "../lib/util";
+} from "../components/icons";
 import { 
   METADATE,
   METATAGS,
   METAMATERIAL,
-} from "../lib/metadata";
+} from "../components/metadata";
 import CommandPalette, { filterItems, getItemIndex } from "react-cmdk";
 import { progress } from "../components/progress";
 import { getMarkdown } from "../lib/mdParser";
@@ -122,7 +125,6 @@ export default function Next() {
     }
   }, [files]);
 
-  useEffect(() => {
   const handleScroll = () => {
     let ScrollPercent = 0;
     const Scrolled = document.documentElement.scrollTop;
@@ -132,6 +134,7 @@ export default function Next() {
     ScrollPercent = (Scrolled / MaxHeight) * 100;
     setScroll(ScrollPercent);
   };
+  useEffect(() => {
   window.addEventListener("scroll", handleScroll);
   return () => window.removeEventListener("scroll", handleScroll);
 }, []);
@@ -505,13 +508,6 @@ export default function Next() {
     return (-c / 2) * (t * (t - 2) - 1) + b;
   }
 
-
-
-
-
-<symbol viewBox="0 0 32 32" id="carbon-arrow-up-right"><path fill="#888888" d="M10 6v2h12.59L6 24.59L7.41 26L24 9.41V22h2V6H10z"></path></symbol>
-
-
   const openExternalInDefaultBrowser = () => {
     document.addEventListener("click", (event) => {
       const element = event.target as HTMLAnchorElement | null;
@@ -768,9 +764,6 @@ export default function Next() {
       //   return;
       // }
 
-      const toggle = (e) => {
-
-      }
 
       if (e.key === "i" && (e.ctrlKey || e.metaKey)) {
         if(path != onboardingDIR){
@@ -993,7 +986,7 @@ export default function Next() {
                           !fs.existsSync(file.path) ? null : !fs.readdirSync(
                               file.path
                             ).length ? null : (
-                            <details key={index} tabIndex={-1}>
+                            <details key={index} tabIndex={-1} open>
                               <summary
                                 className="files"
                                 style={{
@@ -1023,7 +1016,7 @@ export default function Next() {
                                         marginLeft: "1.8em",
                                       }}
                                     >
-                                      <details key={index} tabIndex={-1}>
+                                      <details key={index} tabIndex={-1} open>
                                         <summary
                                           className="files"
                                           style={{
@@ -1331,46 +1324,6 @@ export default function Next() {
           {insert ? (
             <div className="markdown-content">
               <div style={{ overflow: "hidden" }}>
-                {/* <textarea
-                  ref={ref}
-                  autoFocus
-                  id="markdown-content"
-                  value={value}
-                  onScroll={() => {
-                    displayThesaurus ? setDisplayThesaurus(false) : null;
-                    finder ? toogleFinder(false) : null;
-                  }}
-                  onChange={handleChange}
-                  onKeyDown={(e) => {
-                    cursorUpdate(e);
-                  }}
-                  onKeyUp={(e) => {
-                    cursorUpdate(e);
-                    getSynonyms();
-                  }}
-                  onMouseUp={(e) => {
-                    cursorUpdate(e);
-                    getSynonyms();
-                  }}
-                  onMouseDown={(e) => {
-                    cursorUpdate(e);
-                    toogleFinder(false);
-                    setDisplayThesaurus(false);
-                    setWhichIsActive(0);
-                  }}
-                  spellCheck="false"
-                  className="h-full w-full"
-                  autoComplete="false"
-                  autoCorrect="false"
-                  style={{
-                    marginTop: "2em",
-                    height: "calc(100vh - 80px)",
-                    backgroundColor: "transparent",
-                    marginBottom: "5em",
-                    overflow: "auto",
-                    display: "block",
-                  }}
-                /> */}
                 
                   <CodeMirror
                         ref={refs}
@@ -1398,29 +1351,6 @@ export default function Next() {
           ) : (
             <>
               <div style={{ overflow: "hidden" }}>
-                {/* <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    lineHeight: "1.2",
-                    fontWeight: "700",
-                    userSelect: "none",
-                  }}
-                >
-                  <h1
-                    style={{
-                      width: "100%",
-                      fontSize: "40px",
-                      whiteSpace: "pre-wrap",
-                      wordBreak: "break-word",
-                      padding: "3px 2px",
-                    }}
-                  >
-                    {name?.endsWith(".md")
-                      ? capitalize(name.slice(0, -3).replace(/-/g, " "))
-                      : capitalize(name.replace(/-/g, " ").replace(/_/g, " "))}
-                  </h1>
-                </div> */}
                 <div style={{ paddingTop: "1em", userSelect: "none" }}>
                   {checkObject(getMarkdown(value).metadata) ? (
                     <>

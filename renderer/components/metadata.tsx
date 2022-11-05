@@ -1,6 +1,4 @@
-import React from 'react';
-import fs from 'fs';
-import {getBG, TAGIcon, MATERIALIcon, CLOCKIcon} from './util';
+import {getBG, TAGIcon, MATERIALIcon, CLOCKIcon} from './icons';
 const checkIfIncomingIsObject = (incoming) => {
     return typeof incoming === 'object' && incoming !== null;
 }
