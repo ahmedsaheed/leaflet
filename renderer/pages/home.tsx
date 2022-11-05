@@ -1314,11 +1314,11 @@ export default function Next() {
 
         <div
           style={{
-            padding: "40px",
             width: "calc(100vw - 18.5em)",
             minWidth: "calc(100vw - 18.5em)",
             maxWidth: "calc(100vw - 18.5em)",
             paddingTop: "10vh",
+            padding: "40px",
           }}
         >
           {insert ? (
