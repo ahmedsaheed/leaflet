@@ -1060,7 +1060,7 @@ if (!detailIsOpen) {
                             ).length ? null : (
                             <details key={index} tabIndex={-1}>
                               <summary
-                                className="files"
+                                className="files greys"
                                 style={{
                                   outline: "none",
                                   cursor: "pointer",
@@ -1088,7 +1088,7 @@ if (!detailIsOpen) {
                                     >
                                       <details key={index} tabIndex={-1}>
                                         <summary
-                                          className="files"
+                                          className="files greys"
                                           style={{
                                             cursor: "pointer",
                                             whiteSpace: "nowrap",
