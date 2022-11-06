@@ -11,10 +11,14 @@ import {
 } from "../lib/util";
 
 import {
+  COLLAPSEIcon, 
   PDFIcon,
   DOCXIcon,
   MARKDOWNIcon,
   COMMANDPALLETEOPENIcon,
+  NEWFOLDERIcon,
+  NEWNOTEIcon,
+  EXPANDIcon, 
   COMMANDPALLETESELECTIcon,
 } from "../components/icons";
 import { 
@@ -84,6 +88,7 @@ export default function Next() {
   const [isCreatingFolder, setIsCreatingFolder] = useState<boolean>(false);
   const [parentDir, setParentDir] = useState<string>(appDir);
   const Desktop = require("os").homedir() + "/Desktop";
+  const [detailIsOpen, setDetailIsOpen] = useState<boolean>(false);
   const [editorview, setEditorView] = useState<EditorView>();
   const ref = useRef<HTMLTextAreaElement>(null);
   const refs = React.useRef<ReactCodeMirrorRef>({});
@@ -917,6 +922,29 @@ export default function Next() {
     }
   };
 
+
+  const addOpenToAllDetailTags = () => {
+
+ const searchArea =  document.getElementById("fileTree") as HTMLDivElement | null;
+const allDetailTags = searchArea.getElementsByTagName("details");
+if (!detailIsOpen) {
+
+    if (searchArea) {
+
+    for (let i = 0; i < allDetailTags.length; i++) {
+        allDetailTags[i].setAttribute("open", "");
+    }
+    setDetailIsOpen(true);
+    }}else{
+    if (searchArea) {
+    for (let i = 0; i < allDetailTags.length; i++) {
+        allDetailTags[i].removeAttribute("open");
+
+    }
+    setDetailIsOpen(false);
+
+    }}}
+
   return (
     <>
       <Head>
@@ -950,14 +978,72 @@ export default function Next() {
               <div
                 style={{
                   height: "100vh",
-                  marginTop: "10vh",
+                  marginTop: "5vh",
                   paddingTop: "2em",
                 }}
               >
+              <div className="flex"
+                style={{
+                    marginBottom: "5vh",
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                    width: "100%",
+                    maxWidth: "18.5em",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    }}
+              >
+
+
+                
+                <button
+
+                    onClick={() => {
+                        setFileNameBox(true);
+                    }}
+
+                    style={{marginRight: "1em", cursor: "default"}}
+                    className="items-center"
+                >
+                <div><NEWNOTEIcon/></div>
+                </button>
+
+                <button 
+
+                 onClick={() => {
+
+              try {
+                setIsCreatingFolder(true);
+                setFileNameBox(true);
+              } catch (e) {
+                console.log(e);
+              }
+              }}
+
+                    style={{marginRight: "1em", cursor: "default"}}
+                    className="items-center"
+                >
+                <div><NEWFOLDERIcon/></div>
+                </button>
+
+                <button
+                 title="New File"
+
+                    onClick={() => {
+                         addOpenToAllDetailTags() 
+                        }} 
+
+                    style={{marginRight: "1em", cursor: "default"}}
+                    className="items-center"
+                >
+                <div>{ detailIsOpen ?<COLLAPSEIcon/> :  < EXPANDIcon/>   }</div>
+                </button>
+              </div>
                 <div
+                  id = "fileTree"
                   className="fileBody"
                   style={{
-                    marginTop: "2vh",
+                    marginTop: "0.2vh",
                     marginBottom: "2vh",
                     maxHeight: "70vh",
                     overflow: "hidden",
@@ -966,27 +1052,13 @@ export default function Next() {
                     textOverflow: "ellipsis",
                   }}
                 >
-                  <details tabIndex={-1} open>
-                    <summary
-                      style={{
-                        outline: "none",
-                        cursor: "pointer",
-                        fontSize: "16px",
-                        fontWeight: "bold",
-                        fontFamily:
-                          "--apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
-                      }}
-                    >
-                      {" "}
-                      Leaflet
-                    </summary>
                     {struct
                       .map((file, index) =>
                         file.children ? (
                           !fs.existsSync(file.path) ? null : !fs.readdirSync(
                               file.path
                             ).length ? null : (
-                            <details key={index} tabIndex={-1} open>
+                            <details key={index} tabIndex={-1}>
                               <summary
                                 className="files"
                                 style={{
@@ -994,8 +1066,6 @@ export default function Next() {
                                   cursor: "pointer",
                                   fontSize: "12px",
                                   fontWeight: "bold",
-                                  fontFamily:
-                                    "--apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
                                   marginLeft: "1em",
                                 }}
                                 onClick={() => {
@@ -1016,7 +1086,7 @@ export default function Next() {
                                         marginLeft: "1.8em",
                                       }}
                                     >
-                                      <details key={index} tabIndex={-1} open>
+                                      <details key={index} tabIndex={-1}>
                                         <summary
                                           className="files"
                                           style={{
@@ -1033,51 +1103,50 @@ export default function Next() {
                                         >
                                           {" "}
                                           {child.name.charAt(0).toUpperCase() +
-                                            child.name.slice(1)}
+                                            child.name.slice(1) }
                                         </summary>
                                         {child.children
                                           .map((child, index) => (
-                                            <ol
-                                              className="files"
-                                              style={{
-                                                cursor: "pointer",
-                                              }}
-                                              onClick={() => {
-                                                onFileTreeClick(
-                                                  child.path,
-                                                  child.name
-                                                );
-                                              }}
-                                            >
-                                              <button
-                                                style={{
-                                                  whiteSpace: "nowrap",
-                                                  overflow: "hidden",
-                                                  outline: "none",
-                                                  maxWidth: "100%",
-                                                  textOverflow: "ellipsis",
-                                                }}
-                                                tabIndex={-1}
-                                                className={
-                                                  path === child.path
-                                                    ? "selected"
-                                                    : "greys"
-                                                }
-                                              >
-                                                <p
-                                                  style={{
-                                                    display: "inline",
-                                                    width: "100%",
-                                                    whiteSpace: "nowrap",
-                                                    overflow: "hidden",
-                                                    textOverflow: "ellipsis",
-                                                  }}
-                                                >
-                                                  <MARKDOWNIcon />{" "}
-                                                  {child.name.slice(0, -3)}
-                                                </p>
-                                              </button>
-                                            </ol>
+                                  <ol
+
+                                      className={
+                                        path === child.path && !fileNameBox
+                                          ? "selected files"
+                                          : "greys files"
+                                      }
+                                    onClick={(e) => {
+                                      onFileTreeClick(child.path, child.name);
+                                    }}
+                                    style={{
+                                      cursor: "pointer",
+                                    }}
+                                  >
+                                    <button
+                                      style={{
+                                         marginLeft: "0.2em",
+                                        whiteSpace: "nowrap",
+                                        overflow: "hidden",
+                                        maxWidth: "100%",
+                                        outline: "none",
+                                      }}
+                                      tabIndex={-1}
+                                    >
+                                      <p
+                                        style={{
+                                          display: "inline",
+                                          width: "100%",
+                                          whiteSpace: "nowrap",
+                                          overflow: "hidden",
+                                          textOverflow: "ellipsis",
+                                          outline: "none",
+                                        }}
+                                      >
+                                        <MARKDOWNIcon />{" "}
+                                        {child.name.slice(0, -3)}
+                                      </p>
+                                    </button>
+                                  </ol>
+
                                           ))
                                           .sort((a, b) => {
                                             if (
@@ -1094,7 +1163,12 @@ export default function Next() {
                                   )
                                 ) : (
                                   <ol
-                                    className="files"
+
+                                      className={
+                                        path === child.path && !fileNameBox
+                                          ? "selected files"
+                                          : "greys files"
+                                      }
                                     onClick={(e) => {
                                       onFileTreeClick(child.path, child.name);
                                     }}
@@ -1111,11 +1185,6 @@ export default function Next() {
                                         outline: "none",
                                       }}
                                       tabIndex={-1}
-                                      className={
-                                        path === child.path
-                                          ? "selected"
-                                          : "greys"
-                                      }
                                     >
                                       <p
                                         style={{
@@ -1139,7 +1208,10 @@ export default function Next() {
                         ) : (
                           <>
                             <ol
-                              className="files"
+
+                                className={
+                                  path === file.path && !fileNameBox ? "files selected" : "files greys"
+                                }
                               onClick={() => {
                                 onFileTreeClick(file.path, file.name);
                               }}
@@ -1150,9 +1222,6 @@ export default function Next() {
                               <button
                                 tabIndex={-1}
                                 style={{outline: "none"}}
-                                className={
-                                  path === file.path ? "selected" : "greys"
-                                }
                               >
                                 <p
                                   style={{
@@ -1181,6 +1250,7 @@ export default function Next() {
 
                     {fileNameBox ? (
                       <form
+                        className="files greys selected"
                         onSubmit={() => {
                           if (fileName.length < 1) {
                             setFileNameBox(false);
@@ -1206,7 +1276,6 @@ export default function Next() {
                         />
                       </form>
                     ) : null}
-                  </details>
                 </div>
                 <div
                   className={"fixed util"}
@@ -1311,20 +1380,26 @@ export default function Next() {
             </div>
           </div>
         </div>
+       
 
         <div
           style={{
+           
             width: "calc(100vw - 18.5em)",
             minWidth: "calc(100vw - 18.5em)",
             maxWidth: "calc(100vw - 18.5em)",
-            paddingTop: "10vh",
-            padding: "40px",
+           
           }}
         >
+       <div 
+       style= {{
+        paddingTop: "13vh",
+        padding: "40px",
+       }}>
           {insert ? (
             <div className="markdown-content">
               <div style={{ overflow: "hidden" }}>
-                
+          
                   <CodeMirror
                         ref={refs}
                         value={value}
@@ -1351,7 +1426,7 @@ export default function Next() {
           ) : (
             <>
               <div style={{ overflow: "hidden" }}>
-                <div style={{ paddingTop: "1em", userSelect: "none" }}>
+                           <div style={{ paddingTop: "1em", userSelect: "none" }}>
                   {checkObject(getMarkdown(value).metadata) ? (
                     <>
                     <METADATE incoming={getMarkdown(value).metadata.date} />
@@ -1536,6 +1611,7 @@ export default function Next() {
             )}
           </div>
         </div>
+      </div>
       </div>
     </>
   );

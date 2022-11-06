@@ -135,3 +135,50 @@ export const CLOCKIcon = () => {
     </svg>
   );
 };
+
+
+export const NEWFOLDERIcon = () => {
+    return (
+<svg
+
+      style={{ display: "inline" }}
+      width="19"
+      height="21"
+      viewBox="0 0 24 24"
+><path fill="#888888" d="M14 16h2v-2h2v-2h-2v-2h-2v2h-2v2h2ZM4 20q-.825 0-1.412-.587Q2 18.825 2 18V6q0-.825.588-1.412Q3.175 4 4 4h6l2 2h8q.825 0 1.413.588Q22 7.175 22 8v10q0 .825-.587 1.413Q20.825 20 20 20ZM4 6v12h16V8h-8.825l-2-2H4Zm0 0v12Z"/></svg>
+    )
+
+}
+
+
+export const NEWNOTEIcon = () => {
+    return (
+<svg
+
+      style={{ display: "inline" }}
+width="16" height="16" viewBox="0 0 16 16"><path fill="#888888" fill-rule="evenodd" d="m9.5 1.1l3.4 3.5l.1.4v2h-1V6H8V2H3v11h4v1H2.5l-.5-.5v-12l.5-.5h6.7l.3.1zM9 2v3h2.9L9 2zm4 14h-1v-3H9v-1h3V9h1v3h3v1h-3v3z" clip-rule="evenodd"/></svg>
+    )
+}
+
+
+export const EXPANDIcon = () => {
+    
+    return (
+
+    <svg
+
+      style={{ display: "inline" }}
+    width="18" height="16" viewBox="0 0 24 24"><path fill="#888888" d="m12 19.24l-4.95-4.95l-1.41 1.42L12 22.07l6.36-6.36l-1.41-1.42L12 19.24zM5.64 8.29l1.41 1.42L12 4.76l4.95 4.95l1.41-1.42L12 1.93L5.64 8.29z"/></svg>
+    )
+
+}
+
+
+export const COLLAPSEIcon = () => {
+
+    return(
+<svg
+    style={{ display: "inline" }}
+width="18" height="16" viewBox="0 0 24 24"><path fill="#888888" d="M12 7.59L7.05 2.64L5.64 4.05L12 10.41l6.36-6.36l-1.41-1.41L12 7.59zM5.64 19.95l1.41 1.41L12 16.41l4.95 4.95l1.41-1.41L12 13.59l-6.36 6.36z"/></svg>
+    )
+}

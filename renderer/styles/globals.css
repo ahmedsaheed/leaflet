@@ -65,9 +65,12 @@ h3{
 }
 
 .files:hover {
-  background-color: #2d2d2d;
-  border-radius: 3px;
+
+  background-color: rgb(255,255,255, 0.075);
+  border-radius: 4px;
+  color: white;
 }
+
 
 
   kbd {
@@ -120,9 +123,11 @@ h3{
   .greys {
     color: grey;
   }
-  .selected::before{
-    content: "• ";
-  
+
+  .selected{
+  background-color: rgba(255,225,225, 0.075);
+  border-radius: 4px;
+  color: white; 
   }
   table, th, td {
     margin-bottom: 2em;
@@ -182,8 +187,9 @@ blockquote {
 }
 
 .files:hover {
-  background-color: rgba(0,0,0,0.04);
-  border-radius: 3px;
+
+  background-color: rgba(0,0,0, 0.075);
+  border-radius: 4px;
 }
 
   mark{
@@ -255,11 +261,9 @@ blockquote {
   .greys {
     color: grey;
   }
-  .selected::before{
-    content: "• ";
-    color: rbg(73, 80, 87) !important;
-    ;
-  
+  .selected{
+  background-color: rgba(0,0,0, 0.075);
+  border-radius: 4px;
   }
   hr{
     border: 1px solid #e0e0e0;
@@ -280,7 +284,7 @@ ul, ol {
   margin-top: 1em;
 }
 .fileBody ol{
-  margin-left: 2em;
+  margin-left: 1em;
   margin-top: 0;
 }
 
@@ -430,15 +434,6 @@ u{
   text-decoration: underline;
 }
 
-a{
-  text-decoration: underline;
-}
-
-/* a::after{
-  content: url("https://api.iconify.design/ri:arrow-right-up-line.svg?color=%23888888");
-  padding: none
-} */
-
 .cm-gutters{
   background-color: transparent !important;
   border: none !important;
@@ -456,10 +451,10 @@ a{
     
   }
 
-/* 
-  span[title="Unfold line"] {
-    font-size: 2em;
-  } */
-  /* span[title="Unfold line"]::before{
-    content: url("https://api.iconify.design/ri:arrow-down-s-line.svg?color=%23888888");
-  } */
+
+
+.fileBody p, summary{
+        font-size: 13px;
+        line-height: 1.5;
+    /* font-weight: bold; */
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";}
