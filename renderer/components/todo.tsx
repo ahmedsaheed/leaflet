@@ -69,7 +69,9 @@ export default function Todo() {
       </div>
 
       {todos.map((todo) => (
-        <div>
+        <div
+         style={{borderBottom: "1px solid gray", padding: "1em"}}
+        >
           <div style={{ display: "inline" }}>
             <input type="radio" onClick={() => console.log("hi mom")}></input>
           </div>
@@ -81,7 +83,7 @@ export default function Todo() {
             }}
           >
             <p style={{ color: "white", display: "inline" }}>
-              Add Education Stack
+              Add Education Stack {todo.task}
             </p>
             <div style={{ float: "right", color: "grey" }}>
               <span style={{ marginRight: "1rem" }}>a</span>
@@ -94,12 +96,15 @@ export default function Todo() {
             >
               <p style={{ color: "grey" }}>
                 This call must be made as sooon as possible. Thanks for your
-                help
+                help {todo.description}
               </p>
 
               <p style={{ color: "grey" }}>
                 This call must be made as sooon as possible. Thanks for your
                 help
+                {todo.tags.map((tag) => (
+                    <span style={{ color: "grey" }}>{tag}</span>
+                    ))}
               </p>
             </div>
           </div>
