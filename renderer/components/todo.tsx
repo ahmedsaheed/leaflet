@@ -132,12 +132,23 @@ export default function Todo() {
                   marginLeft: "2em",
                 }}
               >
-                <p style={{ color: "grey" }}>
+                <p style={{ color: "grey",
+                    textOverflow: "ellipsis",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    width: "90%",
+                }}>
                   This call must be made as sooon as possible. Thanks for your
                   help {todo.description}
                 </p>
 
-                <p style={{ color: "grey" }}>
+                <p style={{ color: "grey", 
+
+                    textOverflow: "ellipsis",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    width: "90%",
+                }}>
                   This call must be made as sooon as possible. Thanks for your
                   help
                   {todo.tags.map((tag) => (
