@@ -1,31 +1,23 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ipcRenderer } from "electron";
-import { undo } from '@codemirror/commands';
+import { undo } from "@codemirror/commands";
 import "react-cmdk/dist/cmdk.css";
-import {
-  GETDATE,
-  LINK,
-  BOLD,
-  QUICKINSERT,
-  ADDYAML
-} from "../lib/util";
+import { GETDATE, LINK, BOLD, QUICKINSERT, ADDYAML } from "../lib/util";
+
+import Todo from "../components/todo";
 
 import {
-  COLLAPSEIcon, 
+  COLLAPSEIcon,
   PDFIcon,
   DOCXIcon,
   MARKDOWNIcon,
   COMMANDPALLETEOPENIcon,
   NEWFOLDERIcon,
   NEWNOTEIcon,
-  EXPANDIcon, 
+  EXPANDIcon,
   COMMANDPALLETESELECTIcon,
 } from "../components/icons";
-import { 
-  METADATE,
-  METATAGS,
-  METAMATERIAL,
-} from "../components/metadata";
+import { METADATE, METATAGS, METAMATERIAL } from "../components/metadata";
 import CommandPalette, { filterItems, getItemIndex } from "react-cmdk";
 import { progress } from "../components/progress";
 import { getMarkdown } from "../lib/mdParser";
@@ -39,18 +31,15 @@ import mainPath from "path";
 import open from "open";
 import os from "os";
 import { languages } from "@codemirror/language-data";
-import { githubDark } from '@uiw/codemirror-theme-github';
-import CodeMirror from '@uiw/react-codemirror';
+import { githubDark } from "@uiw/codemirror-theme-github";
+import CodeMirror from "@uiw/react-codemirror";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
-import {getStatistics, ReactCodeMirrorRef} from "@uiw/react-codemirror"
+import { getStatistics, ReactCodeMirrorRef } from "@uiw/react-codemirror";
 import { EditorView } from "@codemirror/view";
 import { codeFolding, foldGutter, indentOnInput } from "@codemirror/language";
 import { usePrefersColorScheme } from "../lib/theme";
 import { xcodeLight } from "@uiw/codemirror-theme-xcode";
 import { EditorSelection } from "@codemirror/state";
-
-
-
 
 export default function Next() {
   type file = {
@@ -93,9 +82,13 @@ export default function Next() {
   const ref = useRef<HTMLTextAreaElement>(null);
   const refs = React.useRef<ReactCodeMirrorRef>({});
   let synonyms = {};
-  const prefersColorScheme = usePrefersColorScheme()
-  const isDarkMode = prefersColorScheme === 'dark'
-  const onboardingDIR = mainPath.resolve(os.homedir(), "leaflet", "onboarding.md");
+  const prefersColorScheme = usePrefersColorScheme();
+  const isDarkMode = prefersColorScheme === "dark";
+  const onboardingDIR = mainPath.resolve(
+    os.homedir(),
+    "leaflet",
+    "onboarding.md"
+  );
 
   useEffect(() => {
     openExternalInDefaultBrowser();
@@ -106,7 +99,6 @@ export default function Next() {
       setName(files[0] ? `${files[0].name}` : "");
       setPath(files[0] ? `${files[0].path}` : "");
     });
-
   }, []);
 
   // useEffect(() => {
@@ -120,8 +112,7 @@ export default function Next() {
   // }, []);
 
   useEffect(() => {
-    if (refs.current?.view)
-    setEditorView(refs.current?.view)
+    if (refs.current?.view) setEditorView(refs.current?.view);
   }, [refs.current]);
 
   useEffect(() => {
@@ -140,34 +131,34 @@ export default function Next() {
     setScroll(ScrollPercent);
   };
   useEffect(() => {
-  window.addEventListener("scroll", handleScroll);
-  return () => window.removeEventListener("scroll", handleScroll);
-}, []);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-  const updateCursor = (a,b) => {
-    const line = a.number
-    const column = b - a.from
-    setCursor(`${line}L:${column}C`)
-
-  }
+  const updateCursor = (a, b) => {
+    const line = a.number;
+    const column = b - a.from;
+    setCursor(`${line}L:${column}C`);
+  };
 
   const checkEdit = (doc) => {
     if (!path) return;
-     doc.toString() === fs.readFileSync(path, "utf8") ? 
-     setIsEdited(false)
-    :
-      setSaver("EDITED");
-      setIsEdited(true);
-    
-  }
+    doc.toString() === fs.readFileSync(path, "utf8")
+      ? setIsEdited(false)
+      : setSaver("EDITED");
+    setIsEdited(true);
+  };
 
-  const onChange = useCallback((doc, viewUpdate) => {
-    setValue(doc.toString())
-    let offset = getStatistics(viewUpdate).selection.main.head
-    let line = viewUpdate.state.doc.lineAt(offset);
-    updateCursor(line, offset)
-    checkEdit(doc)
-  },[path])
+  const onChange = useCallback(
+    (doc, viewUpdate) => {
+      setValue(doc.toString());
+      let offset = getStatistics(viewUpdate).selection.main.head;
+      let line = viewUpdate.state.doc.lineAt(offset);
+      updateCursor(line, offset);
+      checkEdit(doc);
+    },
+    [path]
+  );
   const capitalize = (s: string) => {
     if (typeof s !== "string") return "";
     const words = s.split(" ");
@@ -517,8 +508,8 @@ export default function Next() {
     document.addEventListener("click", (event) => {
       const element = event.target as HTMLAnchorElement | null;
       if (
-         element?.tagName === "A" &&
-        (element?.href.indexOf(window.location.href) > -1 === false) 
+        element?.tagName === "A" &&
+        element?.href.indexOf(window.location.href) > -1 === false
       ) {
         event.preventDefault();
         open(element?.href);
@@ -656,12 +647,15 @@ export default function Next() {
   }, []);
 
   const commentOut = () => {
-    if(!insert || !editorview) return;
+    if (!insert || !editorview) return;
     const main = editorview.state.selection.main;
-    const txt = editorview.state.sliceDoc(editorview.state.selection.main.from, editorview.state.selection.main.to);
+    const txt = editorview.state.sliceDoc(
+      editorview.state.selection.main.from,
+      editorview.state.selection.main.to
+    );
     if (txt.length === 0) return;
     if (txt.startsWith("<!--") && txt.endsWith("-->")) {
-      const newText = txt.slice(4, -3)
+      const newText = txt.slice(4, -3);
       editorview.dispatch({
         changes: {
           from: main.from,
@@ -669,20 +663,19 @@ export default function Next() {
           insert: newText,
         },
         selection: EditorSelection.cursor(main.from + newText.length),
-      })
-    }else{
-    const comment = `<!-- ${txt} -->`;
-    editorview.dispatch({
-      changes: {
-        from: main.from,
-        to: main.to,
-        insert: comment,
-      },
-      selection: EditorSelection.cursor(main.from + comment.length),
-    })
+      });
+    } else {
+      const comment = `<!-- ${txt} -->`;
+      editorview.dispatch({
+        changes: {
+          from: main.from,
+          to: main.to,
+          insert: comment,
+        },
+        selection: EditorSelection.cursor(main.from + comment.length),
+      });
     }
-  }
-
+  };
 
   const onDelete = () => {
     try {
@@ -701,7 +694,7 @@ export default function Next() {
     } catch (e) {
       console.log(e);
     }
-  }
+  };
 
   const createNewFile = () => {
     fileName != ""
@@ -769,18 +762,16 @@ export default function Next() {
       //   return;
       // }
 
-
       if (e.key === "i" && (e.ctrlKey || e.metaKey)) {
-        if(path != onboardingDIR){
+        if (path != onboardingDIR) {
           setInsert(true);
           e.preventDefault();
           return;
-        }else{
+        } else {
           setInsert(false);
           e.preventDefault();
           return;
         }
-        
       } else if (e.key === "p" && (e.ctrlKey || e.metaKey)) {
         setInsert(false);
         e.preventDefault();
@@ -837,7 +828,7 @@ export default function Next() {
         if (!insert) {
           return;
         }
-        QUICKINSERT(editorview,clockState);
+        QUICKINSERT(editorview, clockState);
         e.preventDefault();
         return;
       }
@@ -851,8 +842,7 @@ export default function Next() {
       }
       if (e.metaKey && e.key === "z") {
         if (!insert || !editorview) return;
-        undo(editorview)
-
+        undo(editorview);
       }
 
       if (e.metaKey && e.key === "k") {
@@ -901,10 +891,8 @@ export default function Next() {
     });
   };
 
-
   const checkObject = (obj) => {
-    return typeof obj === 'object' && obj !== null;
-
+    return typeof obj === "object" && obj !== null;
   };
 
   const onFileTreeClick = (path: string, name: string) => {
@@ -922,28 +910,27 @@ export default function Next() {
     }
   };
 
-
   const addOpenToAllDetailTags = () => {
-
- const searchArea =  document.getElementById("fileTree") as HTMLDivElement | null;
-const allDetailTags = searchArea.getElementsByTagName("details");
-if (!detailIsOpen) {
-
-    if (searchArea) {
-
-    for (let i = 0; i < allDetailTags.length; i++) {
-        allDetailTags[i].setAttribute("open", "");
+    const searchArea = document.getElementById(
+      "fileTree"
+    ) as HTMLDivElement | null;
+    const allDetailTags = searchArea.getElementsByTagName("details");
+    if (!detailIsOpen) {
+      if (searchArea) {
+        for (let i = 0; i < allDetailTags.length; i++) {
+          allDetailTags[i].setAttribute("open", "");
+        }
+        setDetailIsOpen(true);
+      }
+    } else {
+      if (searchArea) {
+        for (let i = 0; i < allDetailTags.length; i++) {
+          allDetailTags[i].removeAttribute("open");
+        }
+        setDetailIsOpen(false);
+      }
     }
-    setDetailIsOpen(true);
-    }}else{
-    if (searchArea) {
-    for (let i = 0; i < allDetailTags.length; i++) {
-        allDetailTags[i].removeAttribute("open");
-
-    }
-    setDetailIsOpen(false);
-
-    }}}
+  };
 
   return (
     <>
@@ -982,8 +969,9 @@ if (!detailIsOpen) {
                   paddingTop: "2em",
                 }}
               >
-              <div className="flex"
-                style={{
+                <div
+                  className="flex"
+                  style={{
                     marginBottom: "5vh",
                     marginLeft: "auto",
                     marginRight: "auto",
@@ -991,56 +979,52 @@ if (!detailIsOpen) {
                     maxWidth: "18.5em",
                     justifyContent: "center",
                     alignItems: "center",
-                    }}
-              >
-
-
-                
-                <button
-
+                  }}
+                >
+                  <button
                     onClick={() => {
+                      setFileNameBox(true);
+                    }}
+                    style={{ marginRight: "1em", cursor: "default" }}
+                    className="items-center"
+                  >
+                    <div>
+                      <NEWNOTEIcon />
+                    </div>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      try {
+                        setIsCreatingFolder(true);
                         setFileNameBox(true);
+                      } catch (e) {
+                        console.log(e);
+                      }
                     }}
-
-                    style={{marginRight: "1em", cursor: "default"}}
+                    style={{ marginRight: "1em", cursor: "default" }}
                     className="items-center"
-                >
-                <div><NEWNOTEIcon/></div>
-                </button>
+                  >
+                    <div>
+                      <NEWFOLDERIcon />
+                    </div>
+                  </button>
 
-                <button 
-
-                 onClick={() => {
-
-              try {
-                setIsCreatingFolder(true);
-                setFileNameBox(true);
-              } catch (e) {
-                console.log(e);
-              }
-              }}
-
-                    style={{marginRight: "1em", cursor: "default"}}
-                    className="items-center"
-                >
-                <div><NEWFOLDERIcon/></div>
-                </button>
-
-                <button
-                 title="New File"
-
+                  <button
+                    title="New File"
                     onClick={() => {
-                         addOpenToAllDetailTags() 
-                        }} 
-
-                    style={{marginRight: "1em", cursor: "default"}}
+                      addOpenToAllDetailTags();
+                    }}
+                    style={{ marginRight: "1em", cursor: "default" }}
                     className="items-center"
-                >
-                <div>{ detailIsOpen ?<COLLAPSEIcon/> :  < EXPANDIcon/>   }</div>
-                </button>
-              </div>
+                  >
+                    <div>
+                      {detailIsOpen ? <COLLAPSEIcon /> : <EXPANDIcon />}
+                    </div>
+                  </button>
+                </div>
                 <div
-                  id = "fileTree"
+                  id="fileTree"
                   className="fileBody"
                   style={{
                     marginTop: "0.2vh",
@@ -1052,232 +1036,230 @@ if (!detailIsOpen) {
                     textOverflow: "ellipsis",
                   }}
                 >
-                    {struct
-                      .map((file, index) =>
-                        file.children ? (
-                          !fs.existsSync(file.path) ? null : !fs.readdirSync(
-                              file.path
-                            ).length ? null : (
-                            <details key={index} tabIndex={-1}>
-                              <summary
-                                className="files greys"
-                                style={{
-                                  outline: "none",
-                                  cursor: "pointer",
-                                  fontSize: "12px",
-                                  fontWeight: "bold",
-                                  marginLeft: "1em",
-                                }}
-                                onClick={() => {
-                                  setParentDir(file.path);
-                                }}
-                              >
-                                {" "}
-                                {file.name.charAt(0).toUpperCase() +
-                                  file.name.slice(1)}
-                              </summary>
-                              {file.children.map((child, index) =>
-                                !fs.existsSync(child.path) ? null : fs
-                                    .statSync(child.path)
-                                    .isDirectory() ? (
-                                  !fs.readdirSync(child.path).length ? null : (
-                                    <div
-                                      style={{
-                                        marginLeft: "1.8em",
-                                      }}
-                                    >
-                                      <details key={index} tabIndex={-1}>
-                                        <summary
-                                          className="files greys"
-                                          style={{
-                                            cursor: "pointer",
-                                            whiteSpace: "nowrap",
-                                            overflow: "hidden",
-                                            maxWidth: "100%",
-                                            outline: "none",
-                                            textOverflow: "ellipsis",
-                                          }}
-                                          onClick={() => {
-                                            setParentDir(file.path);
-                                          }}
-                                        >
-                                          {" "}
-                                          {child.name.charAt(0).toUpperCase() +
-                                            child.name.slice(1) }
-                                        </summary>
-                                        {child.children
-                                          .map((child, index) => (
-                                  <ol
-
-                                      className={
-                                        path === child.path && !fileNameBox
-                                          ? "selected files"
-                                          : "greys files"
-                                      }
-                                    onClick={(e) => {
-                                      onFileTreeClick(child.path, child.name);
-                                    }}
-                                    style={{
-                                      cursor: "pointer",
-                                    }}
-                                  >
-                                    <button
-                                      style={{
-                                         marginLeft: "0.2em",
-                                        whiteSpace: "nowrap",
-                                        overflow: "hidden",
-                                        maxWidth: "100%",
-                                        outline: "none",
-                                      }}
-                                      tabIndex={-1}
-                                    >
-                                      <p
-                                        style={{
-                                          marginLeft: "0.7em",
-                                          display: "inline",
-                                          width: "100%",
-                                          whiteSpace: "nowrap",
-                                          overflow: "hidden",
-                                          textOverflow: "ellipsis",
-                                          outline: "none",
-                                        }}
-                                      >
-                                        <MARKDOWNIcon />{" "}
-                                        {child.name.slice(0, -3)}
-                                      </p>
-                                    </button>
-                                  </ol>
-
-                                          ))
-                                          .sort((a, b) => {
-                                            if (
-                                              a.props.children[0]?.props
-                                                .children[1]
-                                            ) {
-                                              return -1;
-                                            } else {
-                                              return 1;
-                                            }
-                                          })}
-                                      </details>
-                                    </div>
-                                  )
-                                ) : (
-                                  <ol
-
-                                      className={
-                                        path === child.path && !fileNameBox
-                                          ? "selected files"
-                                          : "greys files"
-                                      }
-                                    onClick={(e) => {
-                                      onFileTreeClick(child.path, child.name);
-                                    }}
-                                    style={{
-                                      cursor: "pointer",
-                                    }}
-                                  >
-                                    <button
-                                      style={{
-                                        marginLeft: "1.8em",
-                                        whiteSpace: "nowrap",
-                                        overflow: "hidden",
-                                        maxWidth: "100%",
-                                        outline: "none",
-                                      }}
-                                      tabIndex={-1}
-                                    >
-                                      <p
-                                        style={{
-                                          display: "inline",
-                                          width: "100%",
-                                          whiteSpace: "nowrap",
-                                          overflow: "hidden",
-                                          textOverflow: "ellipsis",
-                                          outline: "none",
-                                        }}
-                                      >
-                                        <MARKDOWNIcon />{" "}
-                                        {child.name.slice(0, -3)}
-                                      </p>
-                                    </button>
-                                  </ol>
-                                )
-                              )}
-                            </details>
-                          )
-                        ) : (
-                          <>
-                            <ol
-
-                                className={
-                                  path === file.path && !fileNameBox ? "files selected" : "files greys"
-                                }
-                              onClick={() => {
-                                onFileTreeClick(file.path, file.name);
-                              }}
+                  {struct
+                    .map((file, index) =>
+                      file.children ? (
+                        !fs.existsSync(file.path) ? null : !fs.readdirSync(
+                            file.path
+                          ).length ? null : (
+                          <details key={index} tabIndex={-1}>
+                            <summary
+                              className="files greys"
                               style={{
+                                outline: "none",
                                 cursor: "pointer",
+                                fontSize: "12px",
+                                fontWeight: "bold",
+                                marginLeft: "1em",
+                              }}
+                              onClick={() => {
+                                setParentDir(file.path);
                               }}
                             >
-                              <button
-                                tabIndex={-1}
-                                style={{outline: "none"}}
-                              >
-                                <p
+                              {" "}
+                              {file.name.charAt(0).toUpperCase() +
+                                file.name.slice(1)}
+                            </summary>
+                            {file.children.map((child, index) =>
+                              !fs.existsSync(child.path) ? null : fs
+                                  .statSync(child.path)
+                                  .isDirectory() ? (
+                                !fs.readdirSync(child.path).length ? null : (
+                                  <div
+                                    style={{
+                                      marginLeft: "1.8em",
+                                    }}
+                                  >
+                                    <details key={index} tabIndex={-1}>
+                                      <summary
+                                        className="files greys"
+                                        style={{
+                                          cursor: "pointer",
+                                          whiteSpace: "nowrap",
+                                          overflow: "hidden",
+                                          maxWidth: "100%",
+                                          outline: "none",
+                                          textOverflow: "ellipsis",
+                                        }}
+                                        onClick={() => {
+                                          setParentDir(file.path);
+                                        }}
+                                      >
+                                        {" "}
+                                        {child.name.charAt(0).toUpperCase() +
+                                          child.name.slice(1)}
+                                      </summary>
+                                      {child.children
+                                        .map((child, index) => (
+                                          <ol
+                                            className={
+                                              path === child.path &&
+                                              !fileNameBox
+                                                ? "selected files"
+                                                : "greys files"
+                                            }
+                                            onClick={(e) => {
+                                              onFileTreeClick(
+                                                child.path,
+                                                child.name
+                                              );
+                                            }}
+                                            style={{
+                                              cursor: "pointer",
+                                            }}
+                                          >
+                                            <button
+                                              style={{
+                                                marginLeft: "0.2em",
+                                                whiteSpace: "nowrap",
+                                                overflow: "hidden",
+                                                maxWidth: "100%",
+                                                outline: "none",
+                                              }}
+                                              tabIndex={-1}
+                                            >
+                                              <p
+                                                style={{
+                                                  marginLeft: "0.7em",
+                                                  display: "inline",
+                                                  width: "100%",
+                                                  whiteSpace: "nowrap",
+                                                  overflow: "hidden",
+                                                  textOverflow: "ellipsis",
+                                                  outline: "none",
+                                                }}
+                                              >
+                                                <MARKDOWNIcon />{" "}
+                                                {child.name.slice(0, -3)}
+                                              </p>
+                                            </button>
+                                          </ol>
+                                        ))
+                                        .sort((a, b) => {
+                                          if (
+                                            a.props.children[0]?.props
+                                              .children[1]
+                                          ) {
+                                            return -1;
+                                          } else {
+                                            return 1;
+                                          }
+                                        })}
+                                    </details>
+                                  </div>
+                                )
+                              ) : (
+                                <ol
+                                  className={
+                                    path === child.path && !fileNameBox
+                                      ? "selected files"
+                                      : "greys files"
+                                  }
+                                  onClick={(e) => {
+                                    onFileTreeClick(child.path, child.name);
+                                  }}
                                   style={{
-                                    marginLeft: "1em",
-                                    outline: "none",
-                                    display: "inline",
-                                    width: "100%",
-                                    whiteSpace: "nowrap",
-                                    overflow: "hidden",
-                                    textOverflow: "ellipsis",
+                                    cursor: "pointer",
                                   }}
                                 >
-                                  <MARKDOWNIcon /> {file.name.slice(0, -3)}
-                                </p>
-                              </button>
-                            </ol>
-                          </>
+                                  <button
+                                    style={{
+                                      marginLeft: "1.8em",
+                                      whiteSpace: "nowrap",
+                                      overflow: "hidden",
+                                      maxWidth: "100%",
+                                      outline: "none",
+                                    }}
+                                    tabIndex={-1}
+                                  >
+                                    <p
+                                      style={{
+                                        display: "inline",
+                                        width: "100%",
+                                        whiteSpace: "nowrap",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                        outline: "none",
+                                      }}
+                                    >
+                                      <MARKDOWNIcon /> {child.name.slice(0, -3)}
+                                    </p>
+                                  </button>
+                                </ol>
+                              )
+                            )}
+                          </details>
                         )
+                      ) : (
+                        <>
+                          <ol
+                            className={
+                              path === file.path && !fileNameBox
+                                ? "files selected"
+                                : "files greys"
+                            }
+                            onClick={() => {
+                              onFileTreeClick(file.path, file.name);
+                            }}
+                            style={{
+                              cursor: "pointer",
+                            }}
+                          >
+                            <button tabIndex={-1} style={{ outline: "none" }}>
+                              <p
+                                style={{
+                                  marginLeft: "1em",
+                                  outline: "none",
+                                  display: "inline",
+                                  width: "100%",
+                                  whiteSpace: "nowrap",
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                }}
+                              >
+                                <MARKDOWNIcon /> {file.name.slice(0, -3)}
+                              </p>
+                            </button>
+                          </ol>
+                        </>
                       )
-                      .sort((a, b) => {
-                        if (a?.props?.children[0]?.props?.children[1]) {
-                          return -1;
-                        } else {
-                          return 1;
-                        }
-                      })}
+                    )
+                    .sort((a, b) => {
+                      if (a?.props?.children[0]?.props?.children[1]) {
+                        return -1;
+                      } else {
+                        return 1;
+                      }
+                    })}
 
-                    {fileNameBox ? (
-                      <form
-                        className="files greys selected"
-                        onSubmit={() => {
-                          if (fileName.length < 1) {
-                            setFileNameBox(false);
-                            return;
-                          }
-                          isCreatingFolder
-                            ? createNewDir(fileName)
-                            : createNewFile();
+                  {fileNameBox ? (
+                    <form
+                      className="files greys selected"
+                      onSubmit={() => {
+                        if (fileName.length < 1) {
                           setFileNameBox(false);
-                          setTimeout(() => {
-                            setFileName("");
-                          }, 100);
-                        }}
-                      >
-                        <input
-                          autoFocus
-                          className="createFile"
-                          type="text"
-                          placeholder={
-                            isCreatingFolder ? "Folder Name" : "File Name"
-                          }
-                          onChange={(e) => setFileName(e.target.value)}
-                        />
-                      </form>
-                    ) : null}
+                          return;
+                        }
+                        isCreatingFolder
+                          ? createNewDir(fileName)
+                          : createNewFile();
+                        setFileNameBox(false);
+                        setTimeout(() => {
+                          setFileName("");
+                        }, 100);
+                      }}
+                    >
+                      <input
+                        autoFocus
+                        className="createFile"
+                        type="text"
+                        placeholder={
+                          isCreatingFolder ? "Folder Name" : "File Name"
+                        }
+                        onChange={(e) => setFileName(e.target.value)}
+                      />
+                    </form>
+                  ) : null}
                 </div>
                 <div
                   className={"fixed util"}
@@ -1372,8 +1354,7 @@ if (!detailIsOpen) {
                           )}
                         </CommandPalette.Page>
 
-                        <CommandPalette.Page id="projects">
-                        </CommandPalette.Page>
+                        <CommandPalette.Page id="projects"></CommandPalette.Page>
                       </CommandPalette>
                     )}
                   </div>
@@ -1382,238 +1363,243 @@ if (!detailIsOpen) {
             </div>
           </div>
         </div>
-       
 
         <div
           style={{
-           
             width: "calc(100vw - 18.5em)",
             minWidth: "calc(100vw - 18.5em)",
             maxWidth: "calc(100vw - 18.5em)",
-           
           }}
         >
-       <div 
-       style= {{
-        paddingTop: "13vh",
-        padding: "40px",
-       }}>
-          {insert ? (
-            <div className="markdown-content">
-              <div style={{ overflow: "hidden" }}>
-          
-                  <CodeMirror
-                        ref={refs}
-                        value={value}
-                        height="100%"
-                        width="100%"
-                        theme={isDarkMode ? githubDark : xcodeLight}
-                        basicSetup={false}
-                        extensions={[ 
-                          indentOnInput(),
-                          codeFolding(),
-                          foldGutter(),
-                        markdown({
-                          base: markdownLanguage,
-                          codeLanguages: languages,
-                          addKeymap: true
-                        }),
-                        [EditorView.lineWrapping],
-                        ]}
-                        onChange={onChange}
-                      />
-
-              </div>
-            </div>
-          ) : (
-            <>
-              <div style={{ overflow: "hidden" }}>
-                           <div style={{ paddingTop: "1em", userSelect: "none" }}>
-                  {checkObject(getMarkdown(value).metadata) ? (
-                    <>
-                    <METADATE incoming={getMarkdown(value).metadata.date} />
-                    <METATAGS incoming={getMarkdown(value).metadata.tags} />
-                    <METAMATERIAL incoming={getMarkdown(value).metadata.material} />
-
-                    </>
-                  ) : null}
-                </div>
-                <div
-                  id="previewArea"
-                  style={{
-                    marginTop: "2em",
-                    marginBottom: "5em",
-                    overflow: "scroll",
-                  }}
-                  className="third h-full w-full"
-                  dangerouslySetInnerHTML={getMarkdown(value).document}
-                />
-              </div>
-            </>
-          )}
           <div
-            className="fixed inset-x-0 bottom-0 ButtomBar"
             style={{
-              display: "inline",
-              userSelect: "none",
-              marginLeft: "18.55em",
-              maxHeight: "10vh",
-              marginTop: "20px",
+              paddingTop: "13vh",
+              padding: "40px",
             }}
           >
-            {displayThesaurus && insert ? (
-              <div
-                style={{
-                  paddingTop: "5px",
-                  paddingRight: "30px",
-                  paddingBottom: "5px",
-                  alignContent: "center",
-                  overflow: "hidden",
-                }}
-              >
-                <li
-                  id="thesaurusWords"
-                  style={{
-                    marginBottom: "5px",
-                    listStyleType: "none",
-                    marginRight: "10px",
-                    display: "inline",
-                  }}
-                >
-                  {thesaurus.map((item, index) => {
-                    return (
-                      <ul
-                        style={{
-                          display: "inline",
-                          overflowX: "scroll",
-                          color: "grey",
-                        }}
-                      >
-                        <span
-                          style={{
-                            textDecoration: `${
-                              index === whichIsActive ? "underline" : "none"
-                            }`,
-                          }}
-                        >
-                          {item}
-                        </span>
-                      </ul>
-                    );
-                  })}
-                </li>
-              </div>
-            ) : finder ? (
-              <>
-                <div
-                  className="Left"
-                  style={{
-                    float: "left",
-                    paddingLeft: "30px",
-                    paddingTop: "5px",
-                    paddingBottom: "5px",
-                  }}
-                >
-                  <span>
-                    <b>Find:</b>
-                    {found ? (
-                      <form
-                        style={{ display: "inline" }}
-                        onSubmit={() => {
-                          if (wordToFind.length < 1) {
-                            toogleFinder(false);
-                            return;
-                          }
-                          find(wordToFind);
-                        }}
-                      >
-                        <input
-                          id="finderInput"
-                          autoFocus
-                          className="createFile"
-                          type="text"
-                          placeholder="Search a word"
-                          onChange={(e) =>
-                            setWordToFind(e.target.value.toLowerCase())
-                          }
-                        />
-                      </form>
-                    ) : (
-                      <span style={{ display: "inline" }}> Not Found</span>
-                    )}
-                  </span>
+            {insert ? (
+              <div className="markdown-content">
+                <div style={{ overflow: "hidden" }}>
+                  <CodeMirror
+                    ref={refs}
+                    value={value}
+                    height="100%"
+                    width="100%"
+                    theme={isDarkMode ? githubDark : xcodeLight}
+                    basicSetup={false}
+                    extensions={[
+                      indentOnInput(),
+                      codeFolding(),
+                      foldGutter(),
+                      markdown({
+                        base: markdownLanguage,
+                        codeLanguages: languages,
+                        addKeymap: true,
+                      }),
+                      [EditorView.lineWrapping],
+                    ]}
+                    onChange={onChange}
+                  />
                 </div>
-              </>
+              </div>
             ) : (
               <>
-                <div
-                  className="Left"
-                  style={{
-                    float: "left",
-                    paddingLeft: "30px",
-                    paddingTop: "5px",
-                    paddingBottom: "5px",
-                  }}
-                >
-                  <span>{`${insert ? "INSERT" : "PREVIEW"}`}</span>
-                  <div style={{ display: "inline", marginRight: "30px" }}></div>
-                  <span>{`${value.toString().split(" ").length}W ${
-                    value.toString().length
-                  }C `}</span>
-                  <div style={{ display: "inline", marginRight: "30px" }}></div>
+                <div style={{ overflow: "hidden" }}>
+                  <div style={{ paddingTop: "1em", userSelect: "none" }}>
+                    {checkObject(getMarkdown(value).metadata) ? (
+                      <>
+                        <METADATE incoming={getMarkdown(value).metadata.date} />
+                        <METATAGS incoming={getMarkdown(value).metadata.tags} />
+                        <METAMATERIAL
+                          incoming={getMarkdown(value).metadata.material}
+                        />
+                      </>
+                    ) : null}
+                  </div>
                   <div
+                    id="previewArea"
                     style={{
-                      display: "inline",
-                      color: "grey",
-                      overflow: "hidden",
+                      marginTop: "2em",
+                      marginBottom: "5em",
+                      overflow: "scroll",
                     }}
-                    dangerouslySetInnerHTML={{
-                      __html: insert ? cursor : progress(scroll),
-                    }}
+                    className="third h-full w-full"
+                    // dangerouslySetInnerHTML={getMarkdown(value).document}
                   />
-                  {isEdited && insert ? (
-                    <>
-                      <div
-                        style={{ display: "inline", marginRight: "30px" }}
-                      ></div>
-                      <button
-                        style={{
-                          display: "inline",
-                          color: "grey",
-                          overflow: "hidden",
-                        }}
-                        id="save"
-                        tabIndex={-1}
-                        onClick={() => {
-                          try {
-                            saveFile();
-                          } catch {
-                            console.log("error");
-                          }
-                        }}
-                      >
-                        {saver}
-                      </button>
-                    </>
-                  ) : null}
-                </div>
-                <div
-                  className="Right"
-                  style={{
-                    float: "right",
-                    paddingRight: "40px",
-                    paddingTop: "5px",
-                    paddingBottom: "5px",
-                  }}
-                >
-                  <div style={{ display: "inline", marginLeft: "20px" }}></div>
-                  {clockState}
+
+                  <Todo />
                 </div>
               </>
             )}
+            <div
+              className="fixed inset-x-0 bottom-0 ButtomBar"
+              style={{
+                display: "inline",
+                userSelect: "none",
+                marginLeft: "18.55em",
+                maxHeight: "10vh",
+                marginTop: "20px",
+              }}
+            >
+              {displayThesaurus && insert ? (
+                <div
+                  style={{
+                    paddingTop: "5px",
+                    paddingRight: "30px",
+                    paddingBottom: "5px",
+                    alignContent: "center",
+                    overflow: "hidden",
+                  }}
+                >
+                  <li
+                    id="thesaurusWords"
+                    style={{
+                      marginBottom: "5px",
+                      listStyleType: "none",
+                      marginRight: "10px",
+                      display: "inline",
+                    }}
+                  >
+                    {thesaurus.map((item, index) => {
+                      return (
+                        <ul
+                          style={{
+                            display: "inline",
+                            overflowX: "scroll",
+                            color: "grey",
+                          }}
+                        >
+                          <span
+                            style={{
+                              textDecoration: `${
+                                index === whichIsActive ? "underline" : "none"
+                              }`,
+                            }}
+                          >
+                            {item}
+                          </span>
+                        </ul>
+                      );
+                    })}
+                  </li>
+                </div>
+              ) : finder ? (
+                <>
+                  <div
+                    className="Left"
+                    style={{
+                      float: "left",
+                      paddingLeft: "30px",
+                      paddingTop: "5px",
+                      paddingBottom: "5px",
+                    }}
+                  >
+                    <span>
+                      <b>Find:</b>
+                      {found ? (
+                        <form
+                          style={{ display: "inline" }}
+                          onSubmit={() => {
+                            if (wordToFind.length < 1) {
+                              toogleFinder(false);
+                              return;
+                            }
+                            find(wordToFind);
+                          }}
+                        >
+                          <input
+                            id="finderInput"
+                            autoFocus
+                            className="createFile"
+                            type="text"
+                            placeholder="Search a word"
+                            onChange={(e) =>
+                              setWordToFind(e.target.value.toLowerCase())
+                            }
+                          />
+                        </form>
+                      ) : (
+                        <span style={{ display: "inline" }}> Not Found</span>
+                      )}
+                    </span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div
+                    className="Left"
+                    style={{
+                      float: "left",
+                      paddingLeft: "30px",
+                      paddingTop: "5px",
+                      paddingBottom: "5px",
+                    }}
+                  >
+                    <span>{`${insert ? "INSERT" : "PREVIEW"}`}</span>
+                    <div
+                      style={{ display: "inline", marginRight: "30px" }}
+                    ></div>
+                    <span>{`${value.toString().split(" ").length}W ${
+                      value.toString().length
+                    }C `}</span>
+                    <div
+                      style={{ display: "inline", marginRight: "30px" }}
+                    ></div>
+                    <div
+                      style={{
+                        display: "inline",
+                        color: "grey",
+                        overflow: "hidden",
+                      }}
+                      dangerouslySetInnerHTML={{
+                        __html: insert ? cursor : progress(scroll),
+                      }}
+                    />
+                    {isEdited && insert ? (
+                      <>
+                        <div
+                          style={{ display: "inline", marginRight: "30px" }}
+                        ></div>
+                        <button
+                          style={{
+                            display: "inline",
+                            color: "grey",
+                            overflow: "hidden",
+                          }}
+                          id="save"
+                          tabIndex={-1}
+                          onClick={() => {
+                            try {
+                              saveFile();
+                            } catch {
+                              console.log("error");
+                            }
+                          }}
+                        >
+                          {saver}
+                        </button>
+                      </>
+                    ) : null}
+                  </div>
+                  <div
+                    className="Right"
+                    style={{
+                      float: "right",
+                      paddingRight: "40px",
+                      paddingTop: "5px",
+                      paddingBottom: "5px",
+                    }}
+                  >
+                    <div
+                      style={{ display: "inline", marginLeft: "20px" }}
+                    ></div>
+                    {clockState}
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </div>
-      </div>
       </div>
     </>
   );
