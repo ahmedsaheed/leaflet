@@ -1133,6 +1133,7 @@ if (!detailIsOpen) {
                                     >
                                       <p
                                         style={{
+                                          marginLeft: "0.7em",
                                           display: "inline",
                                           width: "100%",
                                           whiteSpace: "nowrap",
@@ -1225,6 +1226,7 @@ if (!detailIsOpen) {
                               >
                                 <p
                                   style={{
+                                    marginLeft: "1em",
                                     outline: "none",
                                     display: "inline",
                                     width: "100%",
