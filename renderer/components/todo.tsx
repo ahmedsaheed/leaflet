@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import "react-day-picker/dist/style.css";
 import { format } from "date-fns";
 import { DayPicker } from "react-day-picker";
-
+import {ADDIcon} from "./icons"
 export default function Todo() {
   const [todos, setTodos] = React.useState([]);
   const [task, setTask] = React.useState<string>("");
@@ -23,8 +23,7 @@ export default function Todo() {
 
   function handleAddTodoClick() {
     setIsAddingTodo(true);
-  }
-
+}
   function clearLocalStorage() {
     localStorage.clear();
   }
@@ -109,7 +108,7 @@ export default function Todo() {
               lineHeight: "10px",
             }}
           >
-            <p style={{ color: "white", display: "inline" }}>
+            <p style={{display: "inline" }}>
               Add Education Stack
             </p>
             <div style={{ float: "right", color: "grey" }}>
@@ -175,7 +174,6 @@ export default function Todo() {
                     overflow: "hidden",
                     whiteSpace: "nowrap",
                     width: "90%",
-                    color: "white",
                     display: "inline",
                   }}
                 >
@@ -194,6 +192,8 @@ export default function Todo() {
                   {todo.description ? (
                     <p
                       style={{
+                        margin: "0",
+                        paddingLeft: "6px",
                         color: "grey",
                         textOverflow: "ellipsis",
                         overflow: "hidden",
@@ -208,7 +208,8 @@ export default function Todo() {
                     <p
                       style={{
                         color: "grey",
-
+                        margin: "0",
+                        paddingLeft: "6px",
                         textOverflow: "ellipsis",
                         overflow: "hidden",
                         whiteSpace: "nowrap",
@@ -216,7 +217,7 @@ export default function Todo() {
                       }}
                     >
                       {todo.tags.map((tag) => (
-                        <span style={{ color: "grey" }}>{tag}</span>
+                        <span style={{ display : "inline", color: "grey" , marginLeft: "2px"}}>{tag}</span>
                       ))}
                     </p>
                   ) : null}
@@ -232,16 +233,17 @@ export default function Todo() {
           <button
             onClick={handleAddTodoClick}
             style={{
+              alignItems: "center",
               color: "grey",
             }}
           >
-            Add Task
+            <ADDIcon/>&nbsp;Add Task
           </button>
         </div>
       )}
 
       {isAddingTodo && (
-        <div style={{ paddingTop: "0.6em" }}>
+        <div id="todo-container" style={{ paddingTop: "0.6em" }}>
           <div
             style={{
               border: "1px solid grey",
@@ -275,6 +277,8 @@ export default function Todo() {
                 ></textarea>
 
                 {isOpeningCalendar && (
+                <>
+                <hr/>
                   <DayPicker
                     styles={{
                       table: {
@@ -285,12 +289,14 @@ export default function Todo() {
                     selected={selectedDate}
                     onSelect={setSelectedDate}
                   />
+                  </>
                 )}
                 <div>
                   <div
                     role="button"
                     onClick={() => setIsOpeningCalendar(!isOpeningCalendar)}
                     style={{
+                      userSelect: "none",
                       display: "inline",
                       border: "1px solid grey",
                       borderRadius: "5px",
@@ -330,11 +336,30 @@ export default function Todo() {
               }}
               style={{
                 marginRight: "1em",
+                border: "1px somid transparent",
+                borderRadius: "5px",
+                outline: "none",
+                padding: "0 12px",
+                height: "32px",
+
               }}
+              className="cancel"
             >
               Cancel
             </button>
-            <button disabled={!task} onClick={addTask}>
+            <button 
+
+              style={{
+                marginRight: "1em",
+                border: "1px somid transparent",
+                borderRadius: "5px",
+                outline: "none",
+                padding: "0 12px",
+                height: "32px",
+
+              }}
+              className="cancel"
+            disabled={!task} onClick={addTask}>
               Add Task
             </button>
           </div>
