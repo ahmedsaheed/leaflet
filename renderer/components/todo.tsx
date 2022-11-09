@@ -2,7 +2,10 @@ import React, { useEffect } from "react";
 import "react-day-picker/dist/style.css";
 import { format } from "date-fns";
 import { DayPicker } from "react-day-picker";
-import {ADDIcon} from "./icons"
+import {
+ADDIcon,
+TAGIcon
+} from "./icons"
 export default function Todo() {
   const [todos, setTodos] = React.useState([]);
   const [task, setTask] = React.useState<string>("");
@@ -317,7 +320,8 @@ export default function Todo() {
                       float: "right",
                     }}
                   >
-                    tags
+                  <button><TAGIcon/>&nbsp;tags</button>
+                    
                   </div>
                 </div>
               </div>
