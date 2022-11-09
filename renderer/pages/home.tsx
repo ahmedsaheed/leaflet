@@ -8,17 +8,12 @@ import Todo from "../components/todo";
 
 import {
   COLLAPSEIcon,
-  PDFIcon,
-  DOCXIcon,
   MARKDOWNIcon,
-  COMMANDPALLETEOPENIcon,
   NEWFOLDERIcon,
   NEWNOTEIcon,
   EXPANDIcon,
-  COMMANDPALLETESELECTIcon,
 } from "../components/icons";
 import { METADATE, METATAGS, METAMATERIAL } from "../components/metadata";
-import CommandPalette, { filterItems, getItemIndex } from "react-cmdk";
 import { progress } from "../components/progress";
 import { getMarkdown } from "../lib/mdParser";
 import commandExists from "command-exists";
@@ -30,6 +25,7 @@ import pandoc from "node-pandoc";
 import mainPath from "path";
 import open from "open";
 import os from "os";
+import { CMDK } from "../components/cmdk";
 import { languages } from "@codemirror/language-data";
 import { githubDark } from "@uiw/codemirror-theme-github";
 import CodeMirror from "@uiw/react-codemirror";
@@ -158,151 +154,6 @@ export default function Next() {
       checkEdit(doc);
     },
     [path]
-  );
-  const capitalize = (s: string) => {
-    if (typeof s !== "string") return "";
-    const words = s.split(" ");
-
-    for (let i = 0; i < words.length; i++) {
-      words[i] = words[i][0].toUpperCase() + words[i].substr(1) + " ";
-    }
-    words.join(" ");
-
-    return words;
-  };
-
-  const filteredItems = filterItems(
-    [
-      {
-        heading: "General",
-        id: "general",
-        items: [
-          {
-            id: "new",
-            children: "New File",
-            icon: "NewspaperIcon",
-            showType: false,
-            onClick: () => {
-              setFileNameBox(true);
-            },
-          },
-          {
-            id: "folder",
-            children: "New Folder",
-            icon: "FolderOpenIcon",
-            showType: false,
-            onClick: () => {
-              try {
-                setIsCreatingFolder(true);
-                setFileNameBox(true);
-              } catch (e) {
-                console.log(e);
-              }
-            },
-          },
-          {
-            id: "export",
-            showType: false,
-            disabled: pandocAvailable ? false : true,
-            children: `Export ${
-              name.endsWith(".md")
-                ? name.charAt(0).toUpperCase() + name.slice(1, -3)
-                : name.charAt(0).toUpperCase() + name.slice(1)
-            } to PDF`,
-            icon: () => <PDFIcon />,
-            onClick: () => {
-              try {
-                convertToPDF();
-              } catch (e) {
-                console.log(e);
-              }
-            },
-          },
-          {
-            disabled: pandocAvailable ? false : true,
-            id: "export",
-            showType: false,
-            children: `Export ${
-              name.endsWith(".md")
-                ? name.charAt(0).toUpperCase() + name.slice(1, -3)
-                : name.charAt(0).toUpperCase() + name.slice(1)
-            } to Docx`,
-            icon: () => <DOCXIcon />,
-            onClick: () => {
-              try {
-                converToDocx();
-              } catch (e) {
-                console.log(e);
-              }
-            },
-          },
-        ],
-      },
-      {
-        heading: "Files",
-        id: "files",
-        // @ts-ignore
-        items: [
-          ...files.map((file) => ({
-            id: file.name,
-            showType: false,
-            //children: file.name,
-            children: (
-              <p>
-                {file.name} —{" "}
-                <span style={{ fontSize: "12px", color: "#888888" }}>
-                  {capitalize(
-                    mainPath.basename(mainPath.dirname(file.path)).toLowerCase()
-                  )}
-                </span>
-              </p>
-            ),
-            icon: "DocumentTextIcon",
-            onClick: () => {
-              try {
-                saveFile();
-                setValue(file.body);
-                setName(file.name);
-                setPath(file.path);
-                setInsert(false);
-                document.documentElement.scrollTop = 0;
-              } catch (err) {
-                console.log(err);
-              }
-            },
-          })),
-        ],
-      },
-      {
-        heading: "Help",
-        id: "advanced",
-        items: [
-          {
-            id: "help",
-            showType: false,
-            children: "Help & Documentation",
-            icon: "QuestionMarkCircleIcon",
-            onClick: (event) => {
-              event.preventDefault();
-              open("https://github.com/ahmedsaheed/Leaflet");
-            },
-          },
-          {
-            id: "keys",
-            showType: false,
-            children: "Keyboard Shortcuts",
-            icon: "KeyIcon",
-            onClick: (event) => {
-              event.preventDefault();
-              open(
-                "https://github.com/ahmedsaheed/Leaflet#shortcuts-and-controls"
-              );
-            },
-          },
-        ],
-      },
-    ],
-    search
   );
   const createNewDir = (name: string) => {
     if (fs.existsSync(mainPath.join(parentDir, name)) || name === "") {
@@ -1290,72 +1141,41 @@ export default function Next() {
                       <code style={{ borderRadius: "2px" }}>k</code>
                     </span>
                     {click && (
-                      <CommandPalette
-                        onChangeSearch={setSearch}
-                        onChangeOpen={setClick}
-                        search={search}
-                        isOpen={menuOpen}
-                        page={page}
-                        placeholder="Select a command..."
-                        footer={
-                          <div
-                            style={{
-                              fontSize: "12px",
-                              display: "flex",
-                              justifyContent: "space-between",
-                              alignItems: "center",
-                              width: "100%",
-                              userSelect: "none",
-                            }}
-                          >
-                            <div
-                              style={{
-                                marginLeft: "2em",
-                                display: "flex",
-                                alignItems: "center",
-                                paddingTop: "5px",
-                                paddingBottom: "5px",
-                              }}
-                            >
-                              <span
-                                style={{ marginRight: "2em", color: "#888888" }}
-                              >
-                                <COMMANDPALLETESELECTIcon />
-                                &nbsp;Select
-                              </span>
-
-                              <span style={{ color: "#888888" }}>
-                                <COMMANDPALLETEOPENIcon />
-                                &nbsp;Open
-                              </span>
-                            </div>
-                          </div>
+                      <CMDK 
+                      onNewFile={()=> {
+                        setFileNameBox(true);
+                      }}
+                      onCreatingFolder={()=> {
+                          try {
+                            setIsCreatingFolder(true);
+                            setFileNameBox(true);
+                          } catch (e) {
+                            console.log(e);
+                          }
+                        }}                  
+                      setSearch={setSearch}
+                      files={files}
+                      pandocAvailable={pandocAvailable}
+                      setClick={setClick}
+                      page={page}
+                      search={search}
+                      onDocxConversion={converToDocx}
+                      onPdfConversion={convertToPDF}
+                      menuOpen={menuOpen}
+                      onFileSelect={(file)=>{
+                        try {
+                          saveFile();
+                          setValue(file.body);
+                          setName(file.name);
+                          setPath(file.path);
+                          setInsert(false);
+                          document.documentElement.scrollTop = 0;
+                        } catch (err) {
+                          console.log(err);
                         }
-                      >
-                        <CommandPalette.Page id="root">
-                          {filteredItems.length ? (
-                            filteredItems.map((list) => (
-                              <CommandPalette.List
-                                key={list.id}
-                                heading={list.heading}
-                              >
-                                {list.items.map(({ id, ...rest }) => (
-                                  <CommandPalette.ListItem
-                                    showType={true}
-                                    key={id}
-                                    index={getItemIndex(filteredItems, id)}
-                                    {...rest}
-                                  />
-                                ))}
-                              </CommandPalette.List>
-                            ))
-                          ) : (
-                            <CommandPalette.FreeSearchAction />
-                          )}
-                        </CommandPalette.Page>
-
-                        <CommandPalette.Page id="projects"></CommandPalette.Page>
-                      </CommandPalette>
+                      }}
+                      name={name}
+                      />
                     )}
                   </div>
                 </div>
@@ -1424,7 +1244,7 @@ export default function Next() {
                       overflow: "scroll",
                     }}
                     className="third h-full w-full"
-                    // dangerouslySetInnerHTML={getMarkdown(value).document}
+                    dangerouslySetInnerHTML={getMarkdown(value).document}
                   />
 
                   <Todo />

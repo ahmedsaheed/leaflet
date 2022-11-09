@@ -4,9 +4,11 @@ import { format } from "date-fns";
 import { DayPicker } from "react-day-picker";
 import {
 ADDIcon,
-TAGIcon
+TAGIcon,
+CALENDARIcon,
 } from "./icons"
 export default function Todo() {
+  const [overDue, setOverDue] = React.useState([]);
   const [todos, setTodos] = React.useState([]);
   const [task, setTask] = React.useState<string>("");
   const [description, setDescription] = React.useState<string>("");
@@ -31,20 +33,10 @@ export default function Todo() {
     localStorage.clear();
   }
 
-  function addDate() {
-    return (
-      <DayPicker
-        mode="single"
-        selected={selectedDate}
-        onSelect={setSelectedDate}
-      />
-    );
-  }
-
   function taskCompleted(id: string) {
     const newArray = todos.filter((todo) => todo.id !== id);
-    setTodos(newArray);
     localStorage.setItem("todos", JSON.stringify(newArray));
+    handleTodoState();
   }
   function addTask() {
     const todo: Todo = {
@@ -63,7 +55,7 @@ export default function Todo() {
     localStorage.setItem("todos", JSON.stringify(todos));
     setIsAddingTodo(false);
     setAllToDefault();
-    setTodos(JSON.parse(localStorage.getItem("todos") || "[]"));
+    handleTodoState();
   }
 
   function setAllToDefault() {
@@ -75,9 +67,22 @@ export default function Todo() {
     setIsAddingTodo(false);
   }
 
-  useEffect(() => {
+  function handleTodoState(){
     const todos = JSON.parse(localStorage.getItem("todos") || "[]");
-    setTodos(todos);
+    const overDue = todos.filter((todo: Todo) => {
+        return new Date(todo.date) < new Date();
+    });
+    setOverDue(overDue);
+    const notOverDue = todos.filter((todo: Todo) => {
+        return new Date(todo.date) >= new Date();
+    }
+    );
+    setTodos(notOverDue);
+
+  }
+
+  useEffect(() => {
+    handleTodoState();
   }, []);
 
   function formatDate(date: Date) {
@@ -99,7 +104,7 @@ export default function Todo() {
         </h1>
       </div>
 
-      {!todos.length ? (
+      {!todos.length && (
         <div style={{ borderBottom: "1px solid gray", padding: "1em" }}>
           <div style={{ display: "inline" }}>
             <input type="radio" onClick={() => console.log("hi mom")}></input>
@@ -154,8 +159,94 @@ export default function Todo() {
             </div>
           </div>
         </div>
-      ) : (
-        todos.map((todo) =>
+      ) }
+
+    {
+      overDue.length && 
+      overDue.map((todo) =>
+      <>
+         <p
+          style={{ borderBottom: "1px solid gray"}}
+         >Overdue</p>
+        <div style={{ borderBottom: "1px solid gray", padding: "1em", marginBottom: "1em" }}>
+         
+         
+          <div style={{ display: "inline" }}>
+            <input
+              type="radio"
+              onClick={() => taskCompleted(todo.id)}
+            ></input>
+          </div>
+          <div
+            style={{
+              display: "inline",
+              marginLeft: "1.2em",
+              lineHeight: "10px",
+            }}
+          >
+            <p
+              style={{
+                textOverflow: "ellipsis",
+                overflow: "hidden",
+                whiteSpace: "nowrap",
+                width: "90%",
+                display: "inline",
+              }}
+            >
+              {todo.task}
+            </p>
+            <div style={{ float: "right", color: "grey" }}>
+              <span style={{ marginRight: "1rem" }}>a</span>
+              <span>b</span>
+            </div>
+            <div
+              style={{
+                fontSize: "12px",
+                marginLeft: "2em",
+              }}
+            >
+              {todo.description ? (
+                <p
+                  style={{
+                    margin: "0",
+                    paddingLeft: "6px",
+                    color: "grey",
+                    textOverflow: "ellipsis",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    width: "90%",
+                  }}
+                >
+                  {todo.description}
+                </p>
+              ) : null}
+              {todo.tags.length ? (
+                <p
+                  style={{
+                    color: "grey",
+                    margin: "0",
+                    paddingLeft: "6px",
+                    textOverflow: "ellipsis",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    width: "90%",
+                  }}
+                >
+                  {todo.tags.map((tag) => (
+                    <span style={{ display : "inline", color: "grey" , marginLeft: "2px"}}>{tag}</span>
+                  ))}
+                </p>
+              ) : null}
+            </div>
+          </div>
+        </div>
+        </>
+      
+    )}
+      
+
+      {  todos.length &&
+      todos.map((todo) =>
           todo.completed ? null : (
             <div style={{ borderBottom: "1px solid gray", padding: "1em" }}>
               <div style={{ display: "inline" }}>
@@ -228,8 +319,7 @@ export default function Todo() {
               </div>
             </div>
           )
-        )
-      )}
+        )}
 
       {!isAddingTodo && (
         <div style={{ padding: "1em" }}>
@@ -309,8 +399,8 @@ export default function Todo() {
                       alignItems: "center",
                     }}
                   >
-                    {selectedDate ? formatDate(selectedDate) : "Today"}
-                  </div>
+                  <CALENDARIcon/>      {selectedDate ? formatDate(selectedDate) : "Today"}
+                </div>
                   <div
                     style={{
                       display: "inline",
