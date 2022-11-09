@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
+import "react-day-picker/dist/style.css";
 import { format } from "date-fns";
+import { DayPicker } from "react-day-picker";
 
 export default function Todo() {
   const [todos, setTodos] = React.useState([]);
@@ -7,6 +9,9 @@ export default function Todo() {
   const [description, setDescription] = React.useState<string>("");
   const [tags, setTags] = React.useState([]);
   const [isAddingTodo, setIsAddingTodo] = React.useState(false);
+  const [selectedDate, setSelectedDate] = React.useState<Date | null>(null);
+  const [isOpeningCalendar, setIsOpeningCalendar] =
+    React.useState<boolean>(false);
   type Todo = {
     id: string;
     task: string;
@@ -24,6 +29,16 @@ export default function Todo() {
     localStorage.clear();
   }
 
+  function addDate() {
+    return (
+      <DayPicker
+        mode="single"
+        selected={selectedDate}
+        onSelect={setSelectedDate}
+      />
+    );
+  }
+
   function taskCompleted(id: string) {
     const newArray = todos.filter((todo) => todo.id !== id);
     setTodos(newArray);
@@ -34,7 +49,7 @@ export default function Todo() {
       id: Math.random().toString(36).substr(2, 9).toString(),
       task: task,
       description: description,
-      date: new Date(),
+      date: selectedDate ? selectedDate : new Date(),
       tags: tags,
       completed: false,
     };
@@ -53,6 +68,9 @@ export default function Todo() {
     setTask("");
     setDescription("");
     setTags([]);
+    setSelectedDate(null);
+    setIsOpeningCalendar(false);
+    setIsAddingTodo(false);
   }
 
   useEffect(() => {
@@ -61,13 +79,13 @@ export default function Todo() {
   }, []);
 
   function formatDate(date: Date) {
-    console.log(date);
     return format(date, "EEE MMM d");
   }
 
   return (
     <div>
-    <button onClick={clearLocalStorage}>Clear Local Storage</button>
+      <style>{`.rdp-cell { border: none }`}</style>
+      <style>{`.rdp-head_cell{ border: none }`}</style>
       <div>
         <h1>
           Today&nbsp;
@@ -135,77 +153,78 @@ export default function Todo() {
           </div>
         </div>
       ) : (
-        todos.map((todo) => (
-        todo.completed ? null : 
-          <div style={{ borderBottom: "1px solid gray", padding: "1em" }}>
-            <div style={{ display: "inline" }}>
-              <input
-                type="radio"
-                onClick={() => taskCompleted(todo.id)}
-              ></input>
-            </div>
-            <div
-              style={{
-                display: "inline",
-                marginLeft: "1.2em",
-                lineHeight: "10px",
-              }}
-            >
-              <p
-                style={{
-                  textOverflow: "ellipsis",
-                  overflow: "hidden",
-                  whiteSpace: "nowrap",
-                  width: "90%",
-                  color: "white",
-                  display: "inline",
-                }}
-              >
-                {todo.task}
-              </p>
-              <div style={{ float: "right", color: "grey" }}>
-                <span style={{ marginRight: "1rem" }}>a</span>
-                <span>b</span>
+        todos.map((todo) =>
+          todo.completed ? null : (
+            <div style={{ borderBottom: "1px solid gray", padding: "1em" }}>
+              <div style={{ display: "inline" }}>
+                <input
+                  type="radio"
+                  onClick={() => taskCompleted(todo.id)}
+                ></input>
               </div>
               <div
                 style={{
-                  fontSize: "12px",
-                  marginLeft: "2em",
+                  display: "inline",
+                  marginLeft: "1.2em",
+                  lineHeight: "10px",
                 }}
               >
-                {todo.description ? (
-                  <p
-                    style={{
-                      color: "grey",
-                      textOverflow: "ellipsis",
-                      overflow: "hidden",
-                      whiteSpace: "nowrap",
-                      width: "90%",
-                    }}
-                  >
-                    {todo.description}
-                  </p>
-                ) : null}
-                {todo.tags.length ? (
-                  <p
-                    style={{
-                      color: "grey",
+                <p
+                  style={{
+                    textOverflow: "ellipsis",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    width: "90%",
+                    color: "white",
+                    display: "inline",
+                  }}
+                >
+                  {todo.task}
+                </p>
+                <div style={{ float: "right", color: "grey" }}>
+                  <span style={{ marginRight: "1rem" }}>a</span>
+                  <span>b</span>
+                </div>
+                <div
+                  style={{
+                    fontSize: "12px",
+                    marginLeft: "2em",
+                  }}
+                >
+                  {todo.description ? (
+                    <p
+                      style={{
+                        color: "grey",
+                        textOverflow: "ellipsis",
+                        overflow: "hidden",
+                        whiteSpace: "nowrap",
+                        width: "90%",
+                      }}
+                    >
+                      {todo.description}
+                    </p>
+                  ) : null}
+                  {todo.tags.length ? (
+                    <p
+                      style={{
+                        color: "grey",
 
-                      textOverflow: "ellipsis",
-                      overflow: "hidden",
-                      whiteSpace: "nowrap",
-                      width: "90%",
-                    }}
-                  >
-                    {todo.tags.map((tag) => (
-                      <span style={{ color: "grey" }}>{tag}</span>
-                    ))}
-                  </p>
-                ) : null}
+                        textOverflow: "ellipsis",
+                        overflow: "hidden",
+                        whiteSpace: "nowrap",
+                        width: "90%",
+                      }}
+                    >
+                      {todo.tags.map((tag) => (
+                        <span style={{ color: "grey" }}>{tag}</span>
+                      ))}
+                    </p>
+                  ) : null}
+                </div>
               </div>
             </div>
-          </div>
-        ))
+          )
+        )
       )}
 
       {!isAddingTodo && (
@@ -255,8 +274,22 @@ export default function Todo() {
                   }}
                 ></textarea>
 
+                {isOpeningCalendar && (
+                  <DayPicker
+                    styles={{
+                      table: {
+                        border: "none",
+                      },
+                    }}
+                    mode="single"
+                    selected={selectedDate}
+                    onSelect={setSelectedDate}
+                  />
+                )}
                 <div>
                   <div
+                    role="button"
+                    onClick={() => setIsOpeningCalendar(!isOpeningCalendar)}
                     style={{
                       display: "inline",
                       border: "1px solid grey",
@@ -267,7 +300,7 @@ export default function Todo() {
                       alignItems: "center",
                     }}
                   >
-                    Today
+                    {selectedDate ? formatDate(selectedDate) : "Today"}
                   </div>
                   <div
                     style={{
