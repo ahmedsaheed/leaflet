@@ -8,10 +8,12 @@ export default function Todo() {
   const [tags, setTags] = React.useState([]);
   const [isAddingTodo, setIsAddingTodo] = React.useState(false);
   type Todo = {
+    id: string;
     task: string;
     description: string;
     date: Date;
     tags: string[];
+    completed: boolean;
   };
 
   function handleAddTodoClick() {
@@ -21,12 +23,20 @@ export default function Todo() {
   function clearLocalStorage() {
     localStorage.clear();
   }
+
+  function taskCompleted(id: string) {
+    const newArray = todos.filter((todo) => todo.id !== id);
+    setTodos(newArray);
+    localStorage.setItem("todos", JSON.stringify(newArray));
+  }
   function addTask() {
     const todo: Todo = {
+      id: Math.random().toString(36).substr(2, 9).toString(),
       task: task,
       description: description,
       date: new Date(),
       tags: tags,
+      completed: false,
     };
     let todos = JSON.parse(localStorage.getItem("todos") || "[]");
     if (todos == null) {
@@ -36,7 +46,6 @@ export default function Todo() {
     localStorage.setItem("todos", JSON.stringify(todos));
     setIsAddingTodo(false);
     setAllToDefault();
-    // refresh todos
     setTodos(JSON.parse(localStorage.getItem("todos") || "[]"));
   }
 
@@ -58,6 +67,7 @@ export default function Todo() {
 
   return (
     <div>
+    <button onClick={clearLocalStorage}>Clear Local Storage</button>
       <div>
         <h1>
           Today&nbsp;
@@ -94,12 +104,30 @@ export default function Todo() {
                 marginLeft: "2em",
               }}
             >
-              <p style={{ color: "grey" }}>
+              <p
+                style={{
+                  color: "grey",
+
+                  textOverflow: "ellipsis",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  width: "90%",
+                }}
+              >
                 This call must be made as sooon as possible. Thanks for your
                 help
               </p>
 
-              <p style={{ color: "grey" }}>
+              <p
+                style={{
+                  color: "grey",
+
+                  textOverflow: "ellipsis",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  width: "90%",
+                }}
+              >
                 This call must be made as sooon as possible. Thanks for your
                 help
               </p>
@@ -108,9 +136,13 @@ export default function Todo() {
         </div>
       ) : (
         todos.map((todo) => (
+        todo.completed ? null : 
           <div style={{ borderBottom: "1px solid gray", padding: "1em" }}>
             <div style={{ display: "inline" }}>
-              <input type="radio" onClick={() => console.log("hi mom")}></input>
+              <input
+                type="radio"
+                onClick={() => taskCompleted(todo.id)}
+              ></input>
             </div>
             <div
               style={{
@@ -119,8 +151,17 @@ export default function Todo() {
                 lineHeight: "10px",
               }}
             >
-              <p style={{ color: "white", display: "inline" }}>
-                Add Education Stack {todo.task}
+              <p
+                style={{
+                  textOverflow: "ellipsis",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  width: "90%",
+                  color: "white",
+                  display: "inline",
+                }}
+              >
+                {todo.task}
               </p>
               <div style={{ float: "right", color: "grey" }}>
                 <span style={{ marginRight: "1rem" }}>a</span>
@@ -132,29 +173,35 @@ export default function Todo() {
                   marginLeft: "2em",
                 }}
               >
-                <p style={{ color: "grey",
-                    textOverflow: "ellipsis",
-                    overflow: "hidden",
-                    whiteSpace: "nowrap",
-                    width: "90%",
-                }}>
-                  This call must be made as sooon as possible. Thanks for your
-                  help {todo.description}
-                </p>
+                {todo.description ? (
+                  <p
+                    style={{
+                      color: "grey",
+                      textOverflow: "ellipsis",
+                      overflow: "hidden",
+                      whiteSpace: "nowrap",
+                      width: "90%",
+                    }}
+                  >
+                    {todo.description}
+                  </p>
+                ) : null}
+                {todo.tags.length ? (
+                  <p
+                    style={{
+                      color: "grey",
 
-                <p style={{ color: "grey", 
-
-                    textOverflow: "ellipsis",
-                    overflow: "hidden",
-                    whiteSpace: "nowrap",
-                    width: "90%",
-                }}>
-                  This call must be made as sooon as possible. Thanks for your
-                  help
-                  {todo.tags.map((tag) => (
-                    <span style={{ color: "grey" }}>{tag}</span>
-                  ))}
-                </p>
+                      textOverflow: "ellipsis",
+                      overflow: "hidden",
+                      whiteSpace: "nowrap",
+                      width: "90%",
+                    }}
+                  >
+                    {todo.tags.map((tag) => (
+                      <span style={{ color: "grey" }}>{tag}</span>
+                    ))}
+                  </p>
+                ) : null}
               </div>
             </div>
           </div>
@@ -237,26 +284,28 @@ export default function Todo() {
               </div>
             </form>
           </div>
-<div
-    style={{
-        float: "right",
-        paddingTop: "1em",
-    }}
->
-     <button
-        onClick={() =>{ 
-        setIsAddingTodo(false);
-        setAllToDefault();
-        }}
-        style={{
-            marginRight: "1em"}}
-     >Cancel</button>
-     <button
-        disabled={!task}
-        onClick={addTask}
-     >Add Task</button>
-     </div>
-     </div>
+          <div
+            style={{
+              float: "right",
+              paddingTop: "1em",
+            }}
+          >
+            <button
+              onClick={() => {
+                setIsAddingTodo(false);
+                setAllToDefault();
+              }}
+              style={{
+                marginRight: "1em",
+              }}
+            >
+              Cancel
+            </button>
+            <button disabled={!task} onClick={addTask}>
+              Add Task
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );
