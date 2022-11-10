@@ -384,9 +384,6 @@ ipcMain.handle("app:on-fs-dialog-open", (event) => {
   );
 });
 
-ipcMain.on("app:on-file-delete", (event, file) => {
-  deleteFile(file.filepath);
-});
 
 ipcMain.on("app:on-file-open", (event, file) => {
   openFile(file.filepath);

@@ -1,18 +1,23 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { ipcRenderer } from "electron";
+import { ipcRenderer, shell } from "electron";
 import { undo } from "@codemirror/commands";
 import "react-cmdk/dist/cmdk.css";
-import { GETDATE, LINK, BOLD, QUICKINSERT, ADDYAML } from "../lib/util";
-
+import {
+  deleteFile,
+  GETDATE,
+  LINK,
+  BOLD,
+  QUICKINSERT,
+  ADDYAML,
+} from "../lib/util";
 import Todo from "../components/todo";
-import  { FileTree } from "../components/filetree";
+import { FileTree } from "../components/filetree";
 
 import {
   COLLAPSEIcon,
-  MARKDOWNIcon,
   NEWFOLDERIcon,
-  NEWNOTEIcon,
   EXPANDIcon,
+  NEWNOTEIcon,
 } from "../components/icons";
 import { METADATE, METATAGS, METAMATERIAL } from "../components/metadata";
 import { progress } from "../components/progress";
@@ -529,7 +534,7 @@ export default function Next() {
     }
   };
 
-  const onDelete = () => {
+  const onDelete = (path, name) => {
     try {
       if (!fs.existsSync(path)) {
         return;
@@ -667,14 +672,14 @@ export default function Next() {
         return;
       }
 
-      if (
-        (e.key === "Backspace" || e.key === "Delete") &&
-        (e.ctrlKey || e.metaKey)
-      ) {
-        onDelete();
-        e.preventDefault();
-        return;
-      }
+      // if (
+      //   (e.key === "Backspace" || e.key === "Delete") &&
+      //   (e.ctrlKey || e.metaKey)
+      // ) {
+      //   onDelete();
+      //   e.preventDefault();
+      //   return;
+      // }
 
       if (e.key === "t" && (e.ctrlKey || e.metaKey)) {
         if (!insert) {
@@ -734,20 +739,17 @@ export default function Next() {
     };
   });
 
-
   const creatingFileOrFolder = () => {
     if (fileName.length < 1) {
       setFileNameBox(false);
       return;
     }
-    isCreatingFolder
-      ? createNewDir(fileName)
-      : createNewFile();
+    isCreatingFolder ? createNewDir(fileName) : createNewFile();
     setFileNameBox(false);
     setTimeout(() => {
       setFileName("");
     }, 100);
-  }
+  };
 
   const openWindow = () => {
     ipcRenderer.invoke("app:on-fs-dialog-open").then(() => {
@@ -903,7 +905,6 @@ export default function Next() {
                     textOverflow: "ellipsis",
                   }}
                 >
-
                   <FileTree
                     struct={struct}
                     onFileTreeClick={(path, name) => {
@@ -911,15 +912,15 @@ export default function Next() {
                     }}
                     path={path}
                     fileNameBox={fileNameBox}
-                    parentDirClick={(path)=>{
-                      setParentDir(path)
+                    parentDirClick={(path) => {
+                      setParentDir(path);
                     }}
                     creatingFileOrFolder={creatingFileOrFolder}
                     setFileName={(name) => {
-                      setFileName(name)
+                      setFileName(name);
                     }}
                     isCreatingFolder={isCreatingFolder}
-
+                    onDelete={(path, name) => onDelete(path, name)}
                   />
                 </div>
                 <div
@@ -951,40 +952,40 @@ export default function Next() {
                       <code style={{ borderRadius: "2px" }}>k</code>
                     </span>
                     {click && (
-                      <CMDK 
-                      onNewFile={()=> {
-                        setFileNameBox(true);
-                      }}
-                      onCreatingFolder={()=> {
+                      <CMDK
+                        onNewFile={() => {
+                          setFileNameBox(true);
+                        }}
+                        onCreatingFolder={() => {
                           try {
                             setIsCreatingFolder(true);
                             setFileNameBox(true);
                           } catch (e) {
                             console.log(e);
                           }
-                        }}                  
-                      setSearch={setSearch}
-                      files={files}
-                      pandocAvailable={pandocAvailable}
-                      setClick={setClick}
-                      page={page}
-                      search={search}
-                      onDocxConversion={converToDocx}
-                      onPdfConversion={convertToPDF}
-                      menuOpen={menuOpen}
-                      onFileSelect={(file)=>{
-                        try {
-                          saveFile();
-                          setValue(file.body);
-                          setName(file.name);
-                          setPath(file.path);
-                          setInsert(false);
-                          document.documentElement.scrollTop = 0;
-                        } catch (err) {
-                          console.log(err);
-                        }
-                      }}
-                      name={name}
+                        }}
+                        setSearch={setSearch}
+                        files={files}
+                        pandocAvailable={pandocAvailable}
+                        setClick={setClick}
+                        page={page}
+                        search={search}
+                        onDocxConversion={converToDocx}
+                        onPdfConversion={convertToPDF}
+                        menuOpen={menuOpen}
+                        onFileSelect={(file) => {
+                          try {
+                            saveFile();
+                            setValue(file.body);
+                            setName(file.name);
+                            setPath(file.path);
+                            setInsert(false);
+                            document.documentElement.scrollTop = 0;
+                          } catch (err) {
+                            console.log(err);
+                          }
+                        }}
+                        name={name}
                       />
                     )}
                   </div>

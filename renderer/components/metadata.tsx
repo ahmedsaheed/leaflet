@@ -6,7 +6,7 @@ const checkIfIncomingIsObject = (incoming) => {
 
 export const METATAGS = ({incoming}) => {
   if(!checkIfIncomingIsObject(incoming) || incoming === undefined) return null;
-  console.log(incoming);
+  // console.log(incoming);
   return(
     incoming ? (
       <div style={{ display: "flex" }}>
@@ -64,7 +64,7 @@ export const METATAGS = ({incoming}) => {
 }
 
 export const METAMATERIAL = ({incoming}) => {
-  console.log(incoming);
+  // console.log(incoming);
   if(!checkIfIncomingIsObject(incoming) || incoming === undefined) return null;
   return(
     incoming ? (

@@ -1,6 +1,7 @@
 import { EditorSelection } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
-
+import {shell} from 'electron'
+import fs from "fs";
 
 
 export const BOLD = (view : EditorView ) => {
@@ -100,4 +101,16 @@ export const QUICKINSERT = (view : EditorView, txt : string) => {
     },
     selection: EditorSelection.range(main.from + txt.length, main.to + txt.length)
   });
+}
+
+
+export const saveFile = (path : string, content : string) => {
+  fs.writeFileSync(path, content);
+}
+
+export const deleteFile = (name: string, path : string) => {
+    
+    if (fs.existsSync(path)) {
+      shell.trashItem(path);
+    }
 }

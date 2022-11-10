@@ -222,3 +222,12 @@ export const CALENDARIcon = () => {
 width="16" height="16" viewBox="0 0 32 32"><path fill="#888888" d="M30 22h-6v-6h-2v6h-6v2h6v6h2v-6h6z"/><path fill="currentColor" d="M28 6c0-1.1-.9-2-2-2h-4V2h-2v2h-8V2h-2v2H6c-1.1 0-2 .9-2 2v20c0 1.1.9 2 2 2h8v-2H6V6h4v2h2V6h8v2h2V6h4v8h2V6z"/></svg>
     )
 }
+
+
+export const BINIcon = () => {
+    return (
+<svg
+    style={{ display: "inline" }}
+width="18" height="15" viewBox="0 0 32 32"><path fill="#888888" d="M12 12h2v12h-2zm6 0h2v12h-2z"/><path fill="currentColor" d="M4 6v2h2v20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8h2V6zm4 22V8h16v20zm4-26h8v2h-8z"/></svg>
+    )
+} 
