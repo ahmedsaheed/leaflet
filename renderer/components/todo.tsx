@@ -174,7 +174,9 @@ export default function Todo() {
       )}
 
       {todos.map((todo) => (
-        <div style={{ }}>
+        <div 
+          className="todo"
+        >
           {Object.keys(todo)
             .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
             .map((key) => {

@@ -1055,7 +1055,7 @@ export default function Next() {
               <>
                 <div style={{ overflow: "hidden" }}>
                   <div style={{ paddingTop: "1em", userSelect: "none" }}>
-                    {checkObject(getMarkdown(value).metadata) ? (
+                    {checkObject(getMarkdown(value).metadata) && !isViewingTodo ? (
                       <>
                         <METADATE incoming={getMarkdown(value).metadata.date} />
                         <METATAGS incoming={getMarkdown(value).metadata.tags} />
