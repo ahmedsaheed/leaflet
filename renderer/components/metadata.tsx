@@ -6,7 +6,6 @@ const checkIfIncomingIsObject = (incoming) => {
 
 export const METATAGS = ({incoming}) => {
   if(!checkIfIncomingIsObject(incoming) || incoming === undefined) return null;
-  // console.log(incoming);
   return(
     incoming ? (
       <div style={{ display: "flex" }}>
@@ -41,12 +40,11 @@ export const METATAGS = ({incoming}) => {
             }}
           >
             {incoming?.map((tag) =>
-              // typeof tag === "string" ? (
                 <code
                   style={{
                     borderRadius: "4px",
                     marginRight: "1em",
-                    display: "inline-block",
+                    display: "inline",
                     overflow: "hidden",
                     color: "#000",
                     backgroundColor: getBG(),
@@ -54,7 +52,6 @@ export const METATAGS = ({incoming}) => {
                 >
                   {tag.toLowerCase()}
                 </code>
-              // ) : null
             )}
           </span>
         </div>
@@ -84,7 +81,7 @@ export const METAMATERIAL = ({incoming}) => {
         </div>
         <div
           style={{
-            display: "flex",
+            // display: "flex",
             flex: "1 1 auto",
             alignItems: "center",
             minWidth: "0",
@@ -109,7 +106,7 @@ export const METAMATERIAL = ({incoming}) => {
                     style={{
                       borderRadius: "4px",
                       marginRight: "1em",
-                      display: "inline-block",
+                      display: "inline",
                       overflow: "hidden",
                       color: "#000",
                       backgroundColor: getBG(),

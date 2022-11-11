@@ -168,6 +168,13 @@ h3 {
     align-items: center;
   }
 
+
+pre > code {
+  font-family: "iA Writer Mono", monospace !important;
+
+}
+
+
   .files:hover {
     background-color: rgb(255, 255, 255, 0.075);
     border-radius: 4px;
@@ -259,8 +266,11 @@ strong {
     -webkit-app-region: drag;
     fill: currentColor;
     background: #fff;
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji",
+    "Segoe UI Symbol" !important;
     color: rgb(55, 53, 47);
-    font-family: "iA Writer Mono", monospace;
+    /* font-family: "iA Writer Mono", monospace; */
     font-size: 14px;
     -webkit-font-smoothing: auto;
     letter-spacing: 0.055em;
@@ -442,7 +452,10 @@ textarea:focus-visible {
 }
 
 code {
-  font-family: "iA Writer Mono", monospace;
+
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji",
+    "Segoe UI Symbol" !important;
   padding: 0.2em 0.4em;
   white-space: pre-wrap;
 }
@@ -526,7 +539,8 @@ details[open] summary::before {
   background-color: transparent !important;
 }
 .cm-line {
-  font: 14px "iA Writer Mono", monospace;
+
+font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
   letter-spacing: 0.055em;
   line-height: 1.6;
 }
@@ -561,10 +575,7 @@ summary {
   font-size: 13px;
   line-height: 1.5;
   font-weight: 500;
-  /* letter-spacing: 0.055em; */
-  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji",
-    "Segoe UI Symbol";
+  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
 
