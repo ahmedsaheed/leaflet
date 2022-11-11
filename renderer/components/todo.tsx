@@ -2,11 +2,8 @@ import React, { useEffect } from "react";
 import "react-day-picker/dist/style.css";
 import { format } from "date-fns";
 import { DayPicker } from "react-day-picker";
-import {
-ADDIcon,
-TAGIcon,
-CALENDARIcon,
-} from "./icons"
+import { ADDIcon, TAGIcon, CALENDARIcon } from "./icons";
+import { tomatoDark } from "@radix-ui/colors";
 export default function Todo() {
   const [overDue, setOverDue] = React.useState([]);
   const [todos, setTodos] = React.useState([]);
@@ -26,35 +23,34 @@ export default function Todo() {
     completed: boolean;
   };
 
+  type newTodo = {
+    [key: string]: Todo[];
+  };
+
   function handleAddTodoClick() {
     setIsAddingTodo(true);
-}
+  }
   function clearLocalStorage() {
     localStorage.clear();
   }
 
-  function taskCompleted(id: string) {
-    const newArray = todos.filter((todo) => todo.id !== id);
-    localStorage.setItem("todos", JSON.stringify(newArray));
-    handleTodoState();
-  }
-  function addTask() {
-    const todo: Todo = {
-      id: Math.random().toString(36).substr(2, 9).toString(),
-      task: task,
-      description: description,
-      date: selectedDate ? selectedDate : new Date(),
-      tags: tags,
-      completed: false,
-    };
+  function taskCompleted(date:Date,id: string) {
     let todos = JSON.parse(localStorage.getItem("todos") || "[]");
-    if (todos == null) {
-      todos = [];
-    }
-    todos.push(todo);
+    todos.forEach((todos) => {
+      Object.keys(todos).forEach((key) => {
+        todos[key].forEach((todo) => {
+          if (todo.id === id) {
+            const index = todos[key].indexOf(todo);
+            todos[key].splice(index, 1);
+            if (todos[key].length === 0) {
+              delete todos[key];
+            }
+          }
+        });
+      }
+      );
+    });
     localStorage.setItem("todos", JSON.stringify(todos));
-    setIsAddingTodo(false);
-    setAllToDefault();
     handleTodoState();
   }
 
@@ -66,19 +62,45 @@ export default function Todo() {
     setIsOpeningCalendar(false);
     setIsAddingTodo(false);
   }
+  const addNewTodo = () => {
+    const todo: Todo = {
+      id: Math.random().toString(36).substr(2, 9),
+      task,
+      description,
+      date: selectedDate ? selectedDate : new Date(),
+      tags,
+      completed: false,
+    };
 
-  function handleTodoState(){
-    const todos = JSON.parse(localStorage.getItem("todos") || "[]");
-    const overDue = todos.filter((todo: Todo) => {
-        return new Date(todo.date) < new Date();
-    });
-    setOverDue(overDue);
-    const notOverDue = todos.filter((todo: Todo) => {
-        return new Date(todo.date) >= new Date();
+    const newTodo: newTodo = {
+      [ selectedDate ? selectedDate.toString() : (new Date()).toString()]: [todo],
+    };
+
+    let todos = JSON.parse(localStorage.getItem("todos") || "[]");
+    if (todos == null) {
+      todos = [];
     }
+    const dateExists = todos.find((todo) => todo[selectedDate ? selectedDate.toString() : (new Date()).toString()]);
+    if (dateExists) {
+      dateExists[selectedDate.toString()].push(todo);
+    } else {
+      todos.push(newTodo);
+    }
+    localStorage.setItem("todos", JSON.stringify(todos));
+    setIsAddingTodo(false);
+    setAllToDefault();
+    handleTodoState();
+  };
+  function handleTodoState() {
+    const todos = JSON.parse(localStorage.getItem("todos") || "[]");
+    const overdue = todos.filter(
+      (todo) => new Date(Object.keys(todo).toString()) < new Date()
     );
-    setTodos(notOverDue);
-
+    setOverDue(overdue);
+    const notOverdue = todos.filter(
+      (todo) => new Date(Object.keys(todo).toString()) >= new Date()
+    );
+    setTodos(notOverdue);
   }
 
   useEffect(() => {
@@ -94,14 +116,6 @@ export default function Todo() {
       <style>{`.rdp-cell { border: none }`}</style>
       <style>{`.rdp-head_cell{ border: none }`}</style>
       <div>
-        <h1>
-          Today&nbsp;
-          <span
-            style={{ display: "inline", fontSize: "0.8rem", color: "gray" }}
-          >
-            {formatDate(new Date())}
-          </span>
-        </h1>
       </div>
 
       {!todos.length && (
@@ -116,9 +130,7 @@ export default function Todo() {
               lineHeight: "10px",
             }}
           >
-            <p style={{display: "inline" }}>
-              Add Education Stack
-            </p>
+            <p style={{ display: "inline" }}>Add Education Stack</p>
             <div style={{ float: "right", color: "grey" }}>
               <span style={{ marginRight: "1rem" }}>a</span>
               <span>b</span>
@@ -159,167 +171,110 @@ export default function Todo() {
             </div>
           </div>
         </div>
-      ) }
+      )}
 
-    {
-      overDue.length && 
-      overDue.map((todo) =>
-      <>
-         <p
-          style={{ borderBottom: "1px solid gray"}}
-         >Overdue</p>
-        <div style={{ borderBottom: "1px solid gray", padding: "1em", marginBottom: "1em" }}>
-         
-         
-          <div style={{ display: "inline" }}>
-            <input
-              type="radio"
-              onClick={() => taskCompleted(todo.id)}
-            ></input>
-          </div>
-          <div
-            style={{
-              display: "inline",
-              marginLeft: "1.2em",
-              lineHeight: "10px",
-            }}
-          >
-            <p
-              style={{
-                textOverflow: "ellipsis",
-                overflow: "hidden",
-                whiteSpace: "nowrap",
-                width: "90%",
-                display: "inline",
-              }}
-            >
-              {todo.task}
-            </p>
-            <div style={{ float: "right", color: "grey" }}>
-              <span style={{ marginRight: "1rem" }}>a</span>
-              <span>b</span>
-            </div>
-            <div
-              style={{
-                fontSize: "12px",
-                marginLeft: "2em",
-              }}
-            >
-              {todo.description ? (
-                <p
-                  style={{
-                    margin: "0",
-                    paddingLeft: "6px",
-                    color: "grey",
-                    textOverflow: "ellipsis",
-                    overflow: "hidden",
-                    whiteSpace: "nowrap",
-                    width: "90%",
-                  }}
-                >
-                  {todo.description}
-                </p>
-              ) : null}
-              {todo.tags.length ? (
-                <p
-                  style={{
-                    color: "grey",
-                    margin: "0",
-                    paddingLeft: "6px",
-                    textOverflow: "ellipsis",
-                    overflow: "hidden",
-                    whiteSpace: "nowrap",
-                    width: "90%",
-                  }}
-                >
-                  {todo.tags.map((tag) => (
-                    <span style={{ display : "inline", color: "grey" , marginLeft: "2px"}}>{tag}</span>
-                  ))}
-                </p>
-              ) : null}
-            </div>
-          </div>
-        </div>
-        </>
-      
-    )}
-      
+      {todos.map((todo) => (
+        <div style={{ }}>
+          {Object.keys(todo)
+            .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
+            .map((key) => {
 
-      {  todos.length &&
-      todos.map((todo) =>
-          todo.completed ? null : (
-            <div style={{ borderBottom: "1px solid gray", padding: "1em" }}>
-              <div style={{ display: "inline" }}>
-                <input
-                  type="radio"
-                  onClick={() => taskCompleted(todo.id)}
-                ></input>
-              </div>
-              <div
-                style={{
-                  display: "inline",
-                  marginLeft: "1.2em",
-                  lineHeight: "10px",
-                }}
-              >
-                <p
-                  style={{
-                    textOverflow: "ellipsis",
-                    overflow: "hidden",
-                    whiteSpace: "nowrap",
-                    width: "90%",
-                    display: "inline",
-                  }}
-                >
-                  {todo.task}
-                </p>
-                <div style={{ float: "right", color: "grey" }}>
-                  <span style={{ marginRight: "1rem" }}>a</span>
-                  <span>b</span>
-                </div>
+              return (
                 <div
-                  style={{
-                    fontSize: "12px",
-                    marginLeft: "2em",
-                  }}
-                >
-                  {todo.description ? (
-                    <p
-                      style={{
-                        margin: "0",
-                        paddingLeft: "6px",
-                        color: "grey",
-                        textOverflow: "ellipsis",
-                        overflow: "hidden",
-                        whiteSpace: "nowrap",
-                        width: "90%",
-                      }}
-                    >
-                      {todo.description}
-                    </p>
-                  ) : null}
-                  {todo.tags.length ? (
-                    <p
-                      style={{
-                        color: "grey",
-                        margin: "0",
-                        paddingLeft: "6px",
-                        textOverflow: "ellipsis",
-                        overflow: "hidden",
-                        whiteSpace: "nowrap",
-                        width: "90%",
-                      }}
-                    >
-                      {todo.tags.map((tag) => (
-                        <span style={{ display : "inline", color: "grey" , marginLeft: "2px"}}>{tag}</span>
-                      ))}
-                    </p>
-                  ) : null}
+                style={{  }}
+                ><h3>{formatDate(new Date(key))}</h3>
+                  {todo[key].map((todo) => {
+                    return (
+                      <div
+                      className="taskRuler"
+                      style={{ padding: "1em" }}
+                      >
+                        <div style={{ display: "inline",  }}>
+                          <input
+                            type="radio"
+                            onClick={() => taskCompleted(todo.date, todo.id)}
+                          ></input>
+                        </div>
+                        <div
+                          style={{
+                            display: "inline",
+                            marginLeft: "1.2em",
+                            lineHeight: "10px",
+                          }}
+                        >
+                          <p
+                            style={{
+                              textOverflow: "ellipsis",
+                              overflow: "hidden",
+                              whiteSpace: "nowrap",
+                              width: "90%",
+                              display: "inline",
+                            }}
+                          >
+                            {todo.task}
+                          </p>
+                          <div style={{ float: "right", color: "grey" }}>
+                            <span style={{ marginRight: "1rem" }}>a</span>
+                            <span>b</span>
+                          </div>
+                          <div
+                            style={{
+                              fontSize: "12px",
+                              marginLeft: "2em",
+                            }}
+                          >
+                            {todo.description ? (
+                              <p
+                                style={{
+                                  margin: "0",
+                                  paddingLeft: "6px",
+                                  color: "grey",
+                                  textOverflow: "ellipsis",
+                                  overflow: "hidden",
+                                  whiteSpace: "nowrap",
+                                  width: "90%",
+                                }}
+                              >
+                                {todo.description}
+                              </p>
+                            ) : null}
+                            {todo.tags?.length ? (
+                              <p
+                                style={{
+                                  color: "grey",
+                                  margin: "0",
+                                  paddingLeft: "6px",
+                                  textOverflow: "ellipsis",
+                                  overflow: "hidden",
+                                  whiteSpace: "nowrap",
+                                  width: "90%",
+                                }}
+                              >
+                                {todo.tags.map((tag) => (
+                                  <span
+                                    style={{
+                                      display: "inline",
+                                      color: "grey",
+                                      marginLeft: "2px",
+                                    }}
+                                  >
+                                    {tag}
+                                  </span>
+                                ))}
+                              </p>
+                            ) : null}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
-              </div>
-            </div>
-          )
-        )}
+              );
+            })
+            //@ts-ignore
+}
+        </div>
+      ))}
 
       {!isAddingTodo && (
         <div style={{ padding: "1em" }}>
@@ -330,7 +285,8 @@ export default function Todo() {
               color: "grey",
             }}
           >
-            <ADDIcon/>&nbsp;Add Task
+            <ADDIcon />
+            &nbsp;Add Task
           </button>
         </div>
       )}
@@ -370,18 +326,18 @@ export default function Todo() {
                 ></textarea>
 
                 {isOpeningCalendar && (
-                <>
-                <hr/>
-                  <DayPicker
-                    styles={{
-                      table: {
-                        border: "none",
-                      },
-                    }}
-                    mode="single"
-                    selected={selectedDate}
-                    onSelect={setSelectedDate}
-                  />
+                  <>
+                    <hr />
+                    <DayPicker
+                      styles={{
+                        table: {
+                          border: "none",
+                        },
+                      }}
+                      mode="single"
+                      selected={selectedDate}
+                      onSelect={setSelectedDate}
+                    />
                   </>
                 )}
                 <div>
@@ -399,8 +355,9 @@ export default function Todo() {
                       alignItems: "center",
                     }}
                   >
-                  <CALENDARIcon/>      {selectedDate ? formatDate(selectedDate) : "Today"}
-                </div>
+                    <CALENDARIcon />{" "}
+                    {selectedDate ? formatDate(selectedDate) : "Today"}
+                  </div>
                   <div
                     style={{
                       display: "inline",
@@ -410,8 +367,10 @@ export default function Todo() {
                       float: "right",
                     }}
                   >
-                  <button><TAGIcon/>&nbsp;tags</button>
-                    
+                    <button>
+                      <TAGIcon />
+                      &nbsp;tags
+                    </button>
                   </div>
                 </div>
               </div>
@@ -435,14 +394,12 @@ export default function Todo() {
                 outline: "none",
                 padding: "0 12px",
                 height: "32px",
-
               }}
               className="cancel"
             >
               Cancel
             </button>
-            <button 
-
+            <button
               style={{
                 marginRight: "1em",
                 border: "1px somid transparent",
@@ -450,10 +407,11 @@ export default function Todo() {
                 outline: "none",
                 padding: "0 12px",
                 height: "32px",
-
               }}
               className="cancel"
-            disabled={!task} onClick={addTask}>
+              disabled={!task}
+              onClick={addNewTodo}
+            >
               Add Task
             </button>
           </div>
@@ -462,3 +420,4 @@ export default function Todo() {
     </div>
   );
 }
+

@@ -116,6 +116,7 @@ h3 {
     font-size: 14px;
     letter-spacing: 0.055em;
     line-height: 1.6;
+    text-rendering: optimizeLegibility;
   }
 
   .ContextMenuContent,
@@ -191,7 +192,10 @@ h3 {
   }
 
   hr {
-    border: 1px solid #252525;
+    border: 1px solid hsla(0,0%,100%,0.1);
+  }
+  .taskRuler{
+    border-bottom: 1px solid hsla(0,0%,100%,0.1);
   }
   .fs {
     background-color: #100f11;
@@ -226,7 +230,7 @@ h3 {
     margin-top: 2em;
     margin-left: auto;
     margin-right: auto;
-    border: 1px solid grey;
+    border: 1px solid hsla(0,0%,100%,0.1);
   }
 
   ::selection {
@@ -317,7 +321,7 @@ strong {
     margin-top: 2em;
     margin-left: auto;
     margin-right: auto;
-    border: 1px solid black;
+    border: 1px solid #f0f0f0;
   }
   .ButtomBar {
     background-color: #fbfbfb;
@@ -365,7 +369,7 @@ strong {
     border-radius: 4px;
   }
   hr {
-    border: 1px solid #e0e0e0;
+    border: 1px solid #f0f0f0;
   }
 
   ::selection {
@@ -376,6 +380,9 @@ strong {
 li {
   padding-top: 0.075em;
   padding-bottom: 0.075em;
+}
+.taskRuler{
+  border-bottom: 1px solid #f0f0f0;
 }
 ul,
 ol {

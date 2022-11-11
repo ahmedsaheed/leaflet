@@ -14,6 +14,7 @@ import Todo from "../components/todo";
 import { FileTree } from "../components/filetree";
 
 import {
+  CALENDARIcon,
   COLLAPSEIcon,
   NEWFOLDERIcon,
   EXPANDIcon,
@@ -50,15 +51,16 @@ export default function Next() {
     body: string;
     structure: { [key: string]: any };
   };
+  const [isViewingTodo, setViewingTodo] = useState(false);
   const [value, setValue] = useState<string>("");
   const [insert, setInsert] = useState<boolean>(false);
   const [files, setFiles] = useState<file[]>([]);
   const [scroll, setScroll] = useState<number>(0);
   const [name, setName] = useState<string>("");
   const [path, setPath] = useState<string>("");
+  const [search, setSearch] = useState("");
   const [page, setPage] = useState<"root" | "projects">("root");
   const [menuOpen, setMenuOpen] = useState<boolean>(true);
-  const [search, setSearch] = useState("");
   const [click, setClick] = useState<boolean>(false);
   const [isEdited, setIsEdited] = useState<boolean>(false);
   const [fileNameBox, setFileNameBox] = useState<boolean>(false);
@@ -771,6 +773,7 @@ export default function Next() {
       setValue(fs.readFileSync(path, "utf8"));
       setName(name);
       setPath(path);
+      setViewingTodo(false)
       setInsert(false);
 
       document.documentElement.scrollTop = 0;
@@ -871,7 +874,7 @@ export default function Next() {
                         console.log(e);
                       }
                     }}
-                    style={{ marginRight: "1em", cursor: "default" }}
+                    style={{ marginRight: "1em", cursor: "default", outline: "none" }}
                     className="items-center"
                   >
                     <div>
@@ -884,11 +887,25 @@ export default function Next() {
                     onClick={() => {
                       addOpenToAllDetailTags();
                     }}
-                    style={{ marginRight: "1em", cursor: "default" }}
+                    style={{ marginRight: "1em", outline: "none", cursor: "default" }}
                     className="items-center"
                   >
                     <div>
                       {detailIsOpen ? <COLLAPSEIcon /> : <EXPANDIcon />}
+                    </div>
+                  </button>
+
+
+                  <button
+                    title="New File"
+                    onClick={() => {
+                      setViewingTodo(true);
+                    }}
+                    style={{outline:"none", marginRight: "1em", cursor: "default" }}
+                    className="items-center"
+                  >
+                    <div>
+                    <CALENDARIcon />
                     </div>
                   </button>
                 </div>
@@ -980,6 +997,7 @@ export default function Next() {
                             setName(file.name);
                             setPath(file.path);
                             setInsert(false);
+                            setViewingTodo(false)
                             document.documentElement.scrollTop = 0;
                           } catch (err) {
                             console.log(err);
@@ -1055,10 +1073,15 @@ export default function Next() {
                       overflow: "scroll",
                     }}
                     className="third h-full w-full"
-                    dangerouslySetInnerHTML={getMarkdown(value).document}
+
+
+                    dangerouslySetInnerHTML={
+                    !isViewingTodo ? getMarkdown(value).document
+                    : null
+                    }
                   />
 
-                  <Todo />
+                  {isViewingTodo && (<Todo />)}
                 </div>
               </>
             )}

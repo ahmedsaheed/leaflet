@@ -36,10 +36,10 @@ const ContextMenuDemo = ({ nameToDisplay, handleDelete }) => {
             <ContextMenu.Item className="ContextMenuItem"
                 onClick={handleDelete}
             >
-             <BINIcon/>&nbsp;Delete<div className="RightSlot">⌘+⌫</div>
+             Delete<div className="RightSlot"><BINIcon/></div>
             </ContextMenu.Item>
             <ContextMenu.Item className="ContextMenuItem" disabled>
-              Foward <div className="RightSlot">⌘+]</div>
+              Rename <div className="RightSlot">⌘+]</div>
             </ContextMenu.Item>
             <ContextMenu.Item className="ContextMenuItem">
               Reload <div className="RightSlot">⌘+R</div>
