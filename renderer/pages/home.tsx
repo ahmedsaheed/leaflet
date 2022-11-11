@@ -773,7 +773,7 @@ export default function Next() {
       setValue(fs.readFileSync(path, "utf8"));
       setName(name);
       setPath(path);
-      setViewingTodo(false)
+      setViewingTodo(false);
       setInsert(false);
 
       document.documentElement.scrollTop = 0;
@@ -831,7 +831,7 @@ export default function Next() {
         <div>
           <div
             className="fs fixed"
-            style={{ width: "18.5em", maxWidth: "18.5em", minHeight: "100vh" }}
+            style={{ width: "17.5em", maxWidth: "18.5em", minHeight: "100vh" }}
           >
             <div>
               <div
@@ -848,7 +848,7 @@ export default function Next() {
                     marginLeft: "auto",
                     marginRight: "auto",
                     width: "100%",
-                    maxWidth: "18.5em",
+                    maxWidth: "17.5em",
                     justifyContent: "center",
                     alignItems: "center",
                   }}
@@ -874,7 +874,11 @@ export default function Next() {
                         console.log(e);
                       }
                     }}
-                    style={{ marginRight: "1em", cursor: "default", outline: "none" }}
+                    style={{
+                      marginRight: "1em",
+                      cursor: "default",
+                      outline: "none",
+                    }}
                     className="items-center"
                   >
                     <div>
@@ -883,29 +887,33 @@ export default function Next() {
                   </button>
 
                   <button
-                    title="New File"
+                    onClick={() => {
+                      setViewingTodo(true);
+                    }}
+                    style={{
+                      outline: "none",
+                      marginRight: "1em",
+                      cursor: "default",
+                    }}
+                    className="items-center"
+                  >
+                    <div>
+                      <CALENDARIcon />
+                    </div>
+                  </button>
+                  <button
                     onClick={() => {
                       addOpenToAllDetailTags();
                     }}
-                    style={{ marginRight: "1em", outline: "none", cursor: "default" }}
+                    style={{
+                      marginRight: "1em",
+                      outline: "none",
+                      cursor: "default",
+                    }}
                     className="items-center"
                   >
                     <div>
                       {detailIsOpen ? <COLLAPSEIcon /> : <EXPANDIcon />}
-                    </div>
-                  </button>
-
-
-                  <button
-                    title="New File"
-                    onClick={() => {
-                      setViewingTodo(true);
-                    }}
-                    style={{outline:"none", marginRight: "1em", cursor: "default" }}
-                    className="items-center"
-                  >
-                    <div>
-                    <CALENDARIcon />
                     </div>
                   </button>
                 </div>
@@ -949,8 +957,8 @@ export default function Next() {
                   <div
                     style={{
                       paddingLeft: "10px",
-                      width: "18.5em",
-                      maxWidth: "18.5em",
+                      width: "17.5em",
+                      maxWidth: "17.5em",
                     }}
                     className="menu"
                     role="button"
@@ -997,7 +1005,7 @@ export default function Next() {
                             setName(file.name);
                             setPath(file.path);
                             setInsert(false);
-                            setViewingTodo(false)
+                            setViewingTodo(false);
                             document.documentElement.scrollTop = 0;
                           } catch (err) {
                             console.log(err);
@@ -1015,9 +1023,9 @@ export default function Next() {
 
         <div
           style={{
-            width: "calc(100vw - 18.5em)",
-            minWidth: "calc(100vw - 18.5em)",
-            maxWidth: "calc(100vw - 18.5em)",
+            width: "calc(100vw - 17.5em)",
+            minWidth: "calc(100vw - 17.5em)",
+            maxWidth: "calc(100vw - 17.5em)",
           }}
         >
           <div
@@ -1055,7 +1063,8 @@ export default function Next() {
               <>
                 <div style={{ overflow: "hidden" }}>
                   <div style={{ paddingTop: "1em", userSelect: "none" }}>
-                    {checkObject(getMarkdown(value).metadata) && !isViewingTodo ? (
+                    {checkObject(getMarkdown(value).metadata) &&
+                    !isViewingTodo ? (
                       <>
                         <METADATE incoming={getMarkdown(value).metadata.date} />
                         <METATAGS incoming={getMarkdown(value).metadata.tags} />
@@ -1068,20 +1077,17 @@ export default function Next() {
                   <div
                     id="previewArea"
                     style={{
-                      marginTop: "2em",
+                      marginTop: isViewingTodo ? "":  "2em",
                       marginBottom: "5em",
                       overflow: "scroll",
                     }}
                     className="third h-full w-full"
-
-
                     dangerouslySetInnerHTML={
-                    !isViewingTodo ? getMarkdown(value).document
-                    : null
+                      !isViewingTodo ? getMarkdown(value).document : null
                     }
                   />
 
-                  {isViewingTodo && (<Todo />)}
+                  {isViewingTodo && <Todo />}
                 </div>
               </>
             )}
@@ -1090,7 +1096,7 @@ export default function Next() {
               style={{
                 display: "inline",
                 userSelect: "none",
-                marginLeft: "18.55em",
+                marginLeft: "17.55em",
                 maxHeight: "10vh",
                 marginTop: "20px",
               }}

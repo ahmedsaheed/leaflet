@@ -3,7 +3,6 @@ import "react-day-picker/dist/style.css";
 import { format } from "date-fns";
 import { DayPicker } from "react-day-picker";
 import { ADDIcon, TAGIcon, CALENDARIcon } from "./icons";
-import { tomatoDark } from "@radix-ui/colors";
 export default function Todo() {
   const [overDue, setOverDue] = React.useState([]);
   const [todos, setTodos] = React.useState([]);
@@ -118,7 +117,7 @@ export default function Todo() {
       <div>
       </div>
 
-      {!todos.length && (
+      {!todos.length && !overDue.length && (
         <div style={{ borderBottom: "1px solid gray", padding: "1em" }}>
           <div style={{ display: "inline" }}>
             <input type="radio" onClick={() => console.log("hi mom")}></input>
@@ -172,6 +171,112 @@ export default function Todo() {
           </div>
         </div>
       )}
+
+      
+      {overDue.map((todo) => (
+        <div 
+          className="todo"
+        >
+          {Object.keys(todo)
+            .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
+            .map((key) => {
+
+              return (
+                <div
+                style={{  }}
+                ><h3>{formatDate(new Date(key))}</h3>
+                  {todo[key].map((todo) => {
+                    return (
+                      <div
+                      className="taskRuler"
+                      style={{ padding: "1em" }}
+                      >
+                        <div style={{ display: "inline",  }}>
+                          <input
+                            type="radio"
+                            onClick={() => taskCompleted(todo.date, todo.id)}
+                          ></input>
+                        </div>
+                        <div
+                          style={{
+                            display: "inline",
+                            marginLeft: "1.2em",
+                            lineHeight: "10px",
+                          }}
+                        >
+                          <p
+                            style={{
+                              textOverflow: "ellipsis",
+                              overflow: "hidden",
+                              whiteSpace: "nowrap",
+                              width: "90%",
+                              display: "inline",
+                            }}
+                          >
+                            {todo.task}
+                          </p>
+                          <div style={{ float: "right", color: "grey" }}>
+                            <span style={{ marginRight: "1rem" }}>a</span>
+                            <span>b</span>
+                          </div>
+                          <div
+                            style={{
+                              fontSize: "12px",
+                              marginLeft: "2em",
+                            }}
+                          >
+                            {todo.description ? (
+                              <p
+                                style={{
+                                  margin: "0",
+                                  paddingLeft: "6px",
+                                  color: "grey",
+                                  textOverflow: "ellipsis",
+                                  overflow: "hidden",
+                                  whiteSpace: "nowrap",
+                                  width: "90%",
+                                }}
+                              >
+                                {todo.description}
+                              </p>
+                            ) : null}
+                            {todo.tags?.length ? (
+                              <p
+                                style={{
+                                  color: "grey",
+                                  margin: "0",
+                                  paddingLeft: "6px",
+                                  textOverflow: "ellipsis",
+                                  overflow: "hidden",
+                                  whiteSpace: "nowrap",
+                                  width: "90%",
+                                }}
+                              >
+                                {todo.tags.map((tag) => (
+                                  <span
+                                    style={{
+                                      display: "inline",
+                                      color: "grey",
+                                      marginLeft: "2px",
+                                    }}
+                                  >
+                                    {tag}
+                                  </span>
+                                ))}
+                              </p>
+                            ) : null}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })
+            //@ts-ignore
+}
+        </div>
+      ))}
 
       {todos.map((todo) => (
         <div 

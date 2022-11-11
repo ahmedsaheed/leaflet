@@ -217,11 +217,12 @@ export const ADDIcon = () => {
 
 export const CALENDARIcon = () => {
     return (
+
 <svg
-    style={{ display: "inline" }}
-width="16" height="16" viewBox="0 0 32 32"><path fill="#888888" d="M30 22h-6v-6h-2v6h-6v2h6v6h2v-6h6z"/><path fill="currentColor" d="M28 6c0-1.1-.9-2-2-2h-4V2h-2v2h-8V2h-2v2H6c-1.1 0-2 .9-2 2v20c0 1.1.9 2 2 2h8v-2H6V6h4v2h2V6h8v2h2V6h4v8h2V6z"/></svg>
-    )
-}
+style={{ display: "inline" }}
+ width="16" height="16" viewBox="0 0 24 24"><path fill="#888888" d="M7 11h2v2H7v-2m14-6v14c0 1.11-.89 2-2 2H5a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2h1V1h2v2h8V1h2v2h1a2 2 0 0 1 2 2M5 7h14V5H5v2m14 12V9H5v10h14m-4-6v-2h2v2h-2m-4 0v-2h2v2h-2m-4 2h2v2H7v-2m8 2v-2h2v2h-2m-4 0v-2h2v2h-2Z"/></svg>
+
+)}
 
 
 export const BINIcon = () => {
