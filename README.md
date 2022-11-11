@@ -1,10 +1,6 @@
-<img src="https://raw.githubusercontent.com/ahmedsaheed/Leaflet/master/renderer/public/images/test.png" align="left" width="220"/>
-
 # LEAFLET
-A minimal distractionless markdown editor designed to quickly navigate between multiple \`.md\` files in a directory and its sub directories. It features a clean mathematical typesetting, chemical equation rendering, code blocks highlighting and writing statistics and
+A minimal distractionless markdown editor designed to quickly navigate between multiple `.md` files in a directory and its sub directories. It features a clean mathematical typesetting, chemical equation rendering, code blocks highlighting and writing statistics and
 
-
----
 
 I created this <a href="http://github.com/ahmedsaheed/Leaflet" target="_blank" rel="noreferrer" class="external">application</a> to help me cope with note taking during school lectures as most of my lecturers spoke too fast. This application is made available as a free and <a href="https://github.com/ahmedsaheed/Leaflet" target="_blank" rel="noreferrer" class="external ">open source</a> software.
 
@@ -53,9 +49,8 @@ You'd have to install [pandoc](https://github.com/jgm/pandoc/blob/master/INSTALL
 </div>
 
   
-
-
-You can also run Leaflet locally from the command line:
+<details>
+<summary> You can also build or run from source  </summary>
 
 ```bash
 $ git clone https://github.com/ahmedsaheed/Leaflet.git && cd Leaflet
@@ -71,13 +66,15 @@ $ yarn install
 $ yarn build
 ```
 
+</details>
 
 
 ## Demo
-![Screenshot 2022-11-02 at 02 35 14](https://user-images.githubusercontent.com/87912847/199382083-01350207-b576-4501-ba20-82de98428dbc.png)
+![Screenshot 2022-11-11 at 21 34 28](https://user-images.githubusercontent.com/87912847/201434097-5be8c011-6bd5-4849-acc7-a316d0ca1e6e.png)
+
+![Screenshot 2022-11-11 at 21 31 44](https://user-images.githubusercontent.com/87912847/201433804-36f71c73-21b0-4b8d-9ba0-4131431e0b8f.png)
 
 
-![Screenshot 2022-10-12 at 13 47 12](https://user-images.githubusercontent.com/87912847/195346382-0b29051c-5f10-4c3b-865c-942398108aa7.png)
 
 
 
@@ -115,4 +112,6 @@ $ yarn build
 - Leaflet is strongly inspired by [Left](https://github.com/hundredrabbits/left) and [Opus](https://github.com/pacocoursey/Opus).
 - Leaflet source code  licensed under [BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 - Pull Requests are welcome!
+
+
 
