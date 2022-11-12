@@ -113,5 +113,4 @@ $ yarn build
 - Leaflet source code  licensed under [BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 - Pull Requests are welcome!
 
-
-
+![](https://api.codiga.io/project/34974/status/svg)
