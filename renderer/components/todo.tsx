@@ -93,7 +93,7 @@ export default function Todo() {
   function handleTodoState() {
     const todos = JSON.parse(localStorage.getItem("todos") || "[]");
     const overdue = todos.filter(
-      (todo) => new Date(Object.keys(todo).toString()) < new Date()
+      (todo) => new Date(Object.keys(todo).toString()) < new Date() && new Date(Object.keys(todo).toString()) != new Date()
     );
     setOverDue(overdue);
     const notOverdue = todos.filter(

@@ -231,4 +231,22 @@ export const BINIcon = () => {
     style={{ display: "inline" }}
 width="18" height="15" viewBox="0 0 32 32"><path fill="#888888" d="M12 12h2v12h-2zm6 0h2v12h-2z"/><path fill="currentColor" d="M4 6v2h2v20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8h2V6zm4 22V8h16v20zm4-26h8v2h-8z"/></svg>
     )
-} 
+}
+
+export const RENAMEIcon = () => {
+    
+    return(
+<svg
+style={{ display: "inline" }}
+
+width="14" height="16" viewBox="0 0 18 14"><path fill="#888888" fill-rule="evenodd" d="M14.287.303a1 1 0 1 1 1.415 1.414l-.707.708L13.58 1.01l.707-.707Zm0 2.829l-6.873 6.873H6V8.59l6.873-6.874l1.415 1.415ZM3 13.5a.5.5 0 0 1-.5-.5V3a.5.5 0 0 1 .5-.5h6.25a.75.75 0 0 0 0-1.5H3a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6.75a.75.75 0 0 0-1.5 0V13a.5.5 0 0 1-.5.5H3Z" clip-rule="evenodd"/></svg>
+    )
+}
+
+export const MOVEIcon = () => {
+    return(
+<svg
+style={{ display: "inline" }}
+width="16" height="16" viewBox="0 0 24 24"><path fill="#888888" d="M10.5 18H18v2h-7.5a6.5 6.5 0 1 1 0-13h5.67l-3.09-3.09L14.5 2.5L20 8l-5.5 5.5l-1.41-1.41L16.17 9H10.5C8 9 6 11 6 13.5S8 18 10.5 18Z"/></svg>
+    )
+}
