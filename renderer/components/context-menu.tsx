@@ -21,8 +21,6 @@ const ContextMenuDemo = ({ nameToDisplay, handleDelete, toPDF, toDOCX }) => {
               overflow: "hidden",
               textOverflow: "ellipsis",
               outline: "none",
-              // occupy the whole width of the parent
-              minWidth: "100vw",
 
             }}
           >

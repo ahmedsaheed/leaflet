@@ -88,7 +88,6 @@ export function FileTree({
                                     marginLeft: "0.2em",
                                     whiteSpace: "nowrap",
                                     overflow: "hidden",
-                                    minWidth: "100%",
                                     outline: "none",
                                   }}
                                   tabIndex={-1}
@@ -131,7 +130,7 @@ export function FileTree({
                           ? "selected files"
                           : "greys files"
                       }
-                      onClick={(e) => {
+                      onClick={() => {
                         onFileTreeClick(child.path, child.name);
                       }}
                       style={{
