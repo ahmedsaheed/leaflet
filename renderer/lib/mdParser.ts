@@ -1,6 +1,7 @@
 import hljs from "highlight.js";
-const meta = require('markdown-it-meta')
+import meta from 'markdown-it-meta'
 import todo from "markdown-it-task-lists"
+import markdownIt from "markdown-it"
 
 export const getMarkdown = (value: string) => { 
 
@@ -12,12 +13,12 @@ export const getMarkdown = (value: string) => {
           if (lang && hljs.getLanguage(lang)) {
             try {
               return hljs.highlight(lang, str).value;
-            } catch (err) {}
+            } catch (err) {console.log(err)}
           }
     
           try {
             return hljs.highlightAuto(str).value;
-          } catch (err) {}
+          } catch (err) {console.log(err)}
         },
       });
       require('markdown-it-pandoc')(md);
