@@ -3,7 +3,6 @@ import { ipcRenderer, shell } from "electron";
 import { undo } from "@codemirror/commands";
 import "react-cmdk/dist/cmdk.css";
 import {
-  deleteFile,
   GETDATE,
   LINK,
   BOLD,

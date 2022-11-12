@@ -1,8 +1,5 @@
 import { EditorSelection } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
-import {shell} from 'electron'
-import fs from "fs";
-
 
 export const BOLD = (view : EditorView ) => {
   if(!view) return;
@@ -104,13 +101,3 @@ export const QUICKINSERT = (view : EditorView, txt : string) => {
 }
 
 
-export const saveFile = (path : string, content : string) => {
-  fs.writeFileSync(path, content);
-}
-
-export const deleteFile = (name: string, path : string) => {
-    
-    if (fs.existsSync(path)) {
-      shell.trashItem(path);
-    }
-}

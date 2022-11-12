@@ -100,7 +100,6 @@ return (
                           )}
                         </CommandPalette.Page>
 
-                        {/* <CommandPalette.Page id="projects"></CommandPalette.Page> */}
                       </CommandPalette>
     )
 
@@ -123,15 +122,15 @@ const capitalize = (s: string) => {
   };
 
 function items(
-    onFileSelect, 
-    onNewFile, 
-    onCreatingFolder,
-    files,
-    pandocAvailable,
-    name,
-    onDocxConversion,
-    onPdfConversion,
-    search
+    onFileSelect: (file:any) => any, 
+    onNewFile: () => any,
+    onCreatingFolder: () => any,
+    files: any,
+    pandocAvailable: Boolean,
+    name: string,
+    onDocxConversion: () => any,
+    onPdfConversion: () => any,
+    search: string
 
 ){
 
