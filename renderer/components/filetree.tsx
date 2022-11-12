@@ -12,6 +12,8 @@ export function FileTree({
   isCreatingFolder,
   setFileName,
   onDelete,
+  toPDF,
+  toDOCX,
 }) {
   return (
     <>
@@ -86,7 +88,7 @@ export function FileTree({
                                     marginLeft: "0.2em",
                                     whiteSpace: "nowrap",
                                     overflow: "hidden",
-                                    maxWidth: "100%",
+                                    minWidth: "100%",
                                     outline: "none",
                                   }}
                                   tabIndex={-1}
@@ -95,6 +97,18 @@ export function FileTree({
                                     nameToDisplay={child.name.slice(0, -3)}
                                     handleDelete={() => {
                                       onDelete(child.path, child.name);
+                                    }}
+                                    toPDF={() => {
+                                      toPDF(
+                                        fs.readFileSync(child.path, "utf8"),
+                                        file.name
+                                      );
+                                    }}
+                                    toDOCX={() => {
+                                      toDOCX(
+                                        fs.readFileSync(child.path, "utf8"),
+                                        file.name
+                                      );
                                     }}
                                   />
                                 </button>
@@ -139,6 +153,18 @@ export function FileTree({
                           handleDelete={() => {
                             onDelete(child.path, child.name);
                           }}
+                          toPDF={() => {
+                            toPDF(
+                              fs.readFileSync(child.path, "utf8"),
+                              file.name
+                            );
+                          }}
+                          toDOCX={() => {
+                            toDOCX(
+                              fs.readFileSync(child.path, "utf8"),
+                              file.name
+                            );
+                          }}
                         />
                       </button>
                     </ol>
@@ -166,6 +192,12 @@ export function FileTree({
                     nameToDisplay={file.name.slice(0, -3)}
                     handleDelete={() => {
                       onDelete(file.path, file.name);
+                    }}
+                    toPDF={() => {
+                      toPDF(fs.readFileSync(file.path, "utf8"), file.name);
+                    }}
+                    toDOCX={() => {
+                      toDOCX(fs.readFileSync(file.path, "utf8"), file.name);
                     }}
                   />
                 </button>

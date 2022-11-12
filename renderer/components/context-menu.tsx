@@ -6,8 +6,7 @@ import {
   ChevronRightIcon,
 } from "@radix-ui/react-icons";
 import {BINIcon , RENAMEIcon, MOVEIcon, MARKDOWNIcon } from "./icons";
-const ContextMenuDemo = ({ nameToDisplay, handleDelete }) => {
-  const [bookmarksChecked, setBookmarksChecked] = React.useState(true);
+const ContextMenuDemo = ({ nameToDisplay, handleDelete, toPDF, toDOCX }) => {
   const [isRenaming, setIsRenaming] = React.useState(false);
   return (
     <>
@@ -22,6 +21,9 @@ const ContextMenuDemo = ({ nameToDisplay, handleDelete }) => {
               overflow: "hidden",
               textOverflow: "ellipsis",
               outline: "none",
+              // occupy the whole width of the parent
+              minWidth: "100vw",
+
             }}
           >
             <MARKDOWNIcon />
@@ -60,10 +62,14 @@ const ContextMenuDemo = ({ nameToDisplay, handleDelete }) => {
                   sideOffset={2}
                   alignOffset={-5}
                 >
-                  <ContextMenu.Item className="ContextMenuItem">
+                  <ContextMenu.Item className="ContextMenuItem"
+                    onClick={toPDF}
+                  >
                     Export to PDF <div className="RightSlot">⌘+S</div>
                   </ContextMenu.Item>
-                  <ContextMenu.Item className="ContextMenuItem">
+                  <ContextMenu.Item className="ContextMenuItem"
+                    onClick={toDOCX}
+                  >
                    Export to DOCX 
                   </ContextMenu.Item>
                 </ContextMenu.SubContent>

@@ -1,6 +1,6 @@
 import { COMMANDPALLETEOPENIcon, COMMANDPALLETESELECTIcon, DOCXIcon, PDFIcon } from "./icons";
 import CommandPalette, { filterItems, getItemIndex } from "react-cmdk";
-
+import { shell } from "electron";
 import path from "path";
 
 
@@ -189,7 +189,6 @@ function items(
               ...files.map((file) => ({
                 id: file.name,
                 showType: false,
-                //children: file.name,
                 children: (
                   <p>
                     {file.name} —{" "}
@@ -217,7 +216,7 @@ function items(
                 icon: "QuestionMarkCircleIcon",
                 onClick: (event) => {
                   event.preventDefault();
-                  open("https://github.com/ahmedsaheed/Leaflet");
+                  shell.openExternal("https://github.com/ahmedsaheed/Leaflet");
                 },
               },
               {
@@ -227,9 +226,9 @@ function items(
                 icon: "KeyIcon",
                 onClick: (event) => {
                   event.preventDefault();
-                  open(
+                  shell.openExternal(
                     "https://github.com/ahmedsaheed/Leaflet#shortcuts-and-controls"
-                  );
+                    );
                 },
               },
             ],

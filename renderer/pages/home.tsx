@@ -415,6 +415,35 @@ useEffect(() => {
     }
   };
 
+
+const toPDF = (body:string, name:string) => {
+    try{
+        const path = `${Desktop}/${name.replace(/\.md$/, "")}.pdf`;
+        pandoc(body, `-f markdown -t pdf -o ${path}`, function (err, result) {
+            if (err) console.log(err);
+            if (fs.existsSync(path)) {
+            open(path);
+            }
+        });
+    }catch(e){
+        console.log(e)    
+    }
+}
+
+
+const toDOCX = (body:string, name:string) => {
+    try{
+        const path = `${Desktop}/${name.replace(/\.md$/, "")}.docx`;
+        pandoc(body, `-f markdown -t docx -o ${path}`, function (err, result) {
+            if (err) console.log(err);
+            if (fs.existsSync(path)) {
+            open(path);
+            }
+        });
+    }catch(e){
+        console.log(e)    
+    }
+}
   useEffect(() => {
     ipcRenderer.on("save", function () {
       saveFile();
@@ -968,6 +997,9 @@ useEffect(() => {
                     }}
                     isCreatingFolder={isCreatingFolder}
                     onDelete={(path, name) => onDelete(path, name)}
+
+                    toPDF={(body, name) => toPDF(body, name)}
+                    toDOCX={(body, name) => toDOCX(body, name)}
                   />
                 </div>
                 <div
