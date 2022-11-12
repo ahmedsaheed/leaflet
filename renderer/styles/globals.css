@@ -170,6 +170,11 @@ h3 {
     color: white;
   }
 
+
+.quickAction:hover {
+    background-color: rgb(255, 255, 255, 0.075);
+}
+
   kbd {
     display: inline-block;
     padding: 3px 5px;
@@ -297,6 +302,9 @@ strong {
     border-radius: 4px;
   }
 
+.quickAction:hover {
+    background-color: rgba(0, 0, 0, 0.075);
+}
 .ContextMenuSeparator {
   height: 1px;
   background-color: #f0f0f0;

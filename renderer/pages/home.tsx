@@ -44,6 +44,8 @@ import { usePrefersColorScheme } from "../lib/theme";
 import { xcodeLight } from "@uiw/codemirror-theme-xcode";
 import { EditorSelection } from "@codemirror/state";
 
+let initialised = false;
+
 export default function Next() {
   type file = {
     path: string;
@@ -55,8 +57,8 @@ export default function Next() {
   const [value, setValue] = useState<string>("");
   const [insert, setInsert] = useState<boolean>(false);
   const [files, setFiles] = useState<file[]>([]);
-  const [scroll, setScroll] = useState<number>(0);
   const [name, setName] = useState<string>("");
+  const [scroll, setScroll] = useState<number>(0);
   const [path, setPath] = useState<string>("");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState<"root" | "projects">("root");
@@ -95,16 +97,18 @@ export default function Next() {
   );
 
   useEffect(() => {
-    openExternalInDefaultBrowser();
-    checkForPandoc();
-    ipcRenderer.invoke("getTheFile").then((files = []) => {
-      setFiles(files);
-      setValue(files[0] ? `${files[0].body}` : "");
-      setName(files[0] ? `${files[0].name}` : "");
-      setPath(files[0] ? `${files[0].path}` : "");
-    });
+    if (!initialised) {
+      initialised = true;
+      openExternalInDefaultBrowser();
+      checkForPandoc();
+      ipcRenderer.invoke("getTheFile").then((files = []) => {
+        setFiles(files);
+        setValue(files[0] ? `${files[0].body}` : "");
+        setName(files[0] ? `${files[0].name}` : "");
+        setPath(files[0] ? `${files[0].path}` : "");
+      });
+    }
   }, []);
-
   // useEffect(() => {
   //   let clock = setInterval(() => {
   //     const date = new Date();
@@ -125,7 +129,7 @@ export default function Next() {
     }
   }, [files]);
 
-  const handleScroll = () => {
+  const handleScroll = event => {
     let ScrollPercent = 0;
     const Scrolled = document.documentElement.scrollTop;
     const MaxHeight =
@@ -134,7 +138,9 @@ export default function Next() {
     ScrollPercent = (Scrolled / MaxHeight) * 100;
     setScroll(ScrollPercent);
   };
-  useEffect(() => {
+
+
+useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -827,7 +833,8 @@ export default function Next() {
           crossOrigin="anonymous"
         ></script>
       </Head>
-      <div className="mainer" style={{ minHeight: "100vh" }}>
+      <div 
+      className="mainer" style={{ minHeight: "100vh" }}>
         <div>
           <div
             className="fs fixed"
@@ -854,11 +861,17 @@ export default function Next() {
                   }}
                 >
                   <button
+                    className="quickAction"
                     onClick={() => {
                       setFileNameBox(true);
                     }}
-                    style={{ marginRight: "1em", cursor: "default" }}
-                    className="items-center"
+                    style={{
+                      border: "1px solid transparent",
+                      padding: "1px",
+                      marginRight: "1em",
+                      cursor: "default",
+                      borderRadius: "4px",
+                    }}
                   >
                     <div>
                       <NEWNOTEIcon />
@@ -866,6 +879,7 @@ export default function Next() {
                   </button>
 
                   <button
+                    className="quickAction"
                     onClick={() => {
                       try {
                         setIsCreatingFolder(true);
@@ -875,11 +889,14 @@ export default function Next() {
                       }
                     }}
                     style={{
+                      border: "1px solid transparent",
+                      padding: "1px",
+
+                      borderRadius: "4px",
                       marginRight: "1em",
                       cursor: "default",
                       outline: "none",
                     }}
-                    className="items-center"
                   >
                     <div>
                       <NEWFOLDERIcon />
@@ -887,30 +904,36 @@ export default function Next() {
                   </button>
 
                   <button
+                    className="quickAction"
                     onClick={() => {
                       setViewingTodo(true);
                     }}
                     style={{
+                      border: "1px solid transparent",
+                      padding: "1px",
                       outline: "none",
+                      borderRadius: "4px",
                       marginRight: "1em",
                       cursor: "default",
                     }}
-                    className="items-center"
                   >
                     <div>
                       <CALENDARIcon />
                     </div>
                   </button>
                   <button
+                    className="quickAction"
                     onClick={() => {
                       addOpenToAllDetailTags();
                     }}
                     style={{
+                      border: "1px solid transparent",
+                      padding: "1px",
+                      borderRadius: "4px",
                       marginRight: "1em",
                       outline: "none",
                       cursor: "default",
                     }}
-                    className="items-center"
                   >
                     <div>
                       {detailIsOpen ? <COLLAPSEIcon /> : <EXPANDIcon />}
@@ -1077,7 +1100,7 @@ export default function Next() {
                   <div
                     id="previewArea"
                     style={{
-                      marginTop: isViewingTodo ? "":  "2em",
+                      marginTop: isViewingTodo ? "" : "2em",
                       marginBottom: "5em",
                       overflow: "scroll",
                     }}
