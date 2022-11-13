@@ -1,6 +1,4 @@
 import {
-  COMMANDPALLETEOPENIcon,
-  COMMANDPALLETESELECTIcon,
   DOCXIcon,
   PDFIcon,
 } from "./icons";
@@ -22,6 +20,7 @@ export function CMDK({
   setClick,
   menuOpen,
   page,
+  value
 }) {
   const filteredItems = items(
     onFileSelect,
@@ -32,7 +31,8 @@ export function CMDK({
     name,
     onDocxConversion,
     onPdfConversion,
-    search
+    search,
+    value
   );
 
   return (
@@ -89,9 +89,10 @@ function items(
   files: any,
   pandocAvailable: Boolean,
   name: string,
-  onDocxConversion: () => any,
-  onPdfConversion: () => any,
-  search: string
+  onDocxConversion: (value:string, name:string) => void,
+  onPdfConversion: (value: string, name: string) => void,
+  search: string,
+  value: string
 ) {
   const filteredItems = filterItems(
     [
@@ -125,7 +126,7 @@ function items(
             children: `Export current file to pdf`,
             icon: () => <PDFIcon />,
             onClick: () => {
-              onPdfConversion;
+              onPdfConversion(value, name);
             },
           },
           {
@@ -135,7 +136,7 @@ function items(
             children: `Export current file to docx`,
             icon: () => <DOCXIcon />,
             onClick: () => {
-              onDocxConversion;
+              onDocxConversion(value, name)
             },
           },
         ],
