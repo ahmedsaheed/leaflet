@@ -203,6 +203,10 @@ h3 {
     border: 1px solid hsla(0,0%,100%,0.1);
   }
 
+  a {
+    border-bottom: 1px solid hsla(0,0%,100%,0.1);
+  }
+
   .menu{
     color: grey !important;
     font-weight: bold;
@@ -412,6 +416,11 @@ strong {
   }
   hr {
     border: 1px solid #f0f0f0;
+  }
+
+
+  a {
+    border-bottom: 1px solid #f0f0f0;
   }
 
   ::selection {

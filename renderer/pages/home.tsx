@@ -164,6 +164,12 @@ useEffect(() => {
       let offset = getStatistics(viewUpdate).selection.main.head;
       let line = viewUpdate.state.doc.lineAt(offset);
       updateCursor(line, offset);
+      // allow scroll into view when in last line
+        if (line.number === viewUpdate.state.doc.length) {
+            viewUpdate.state.doc.lineAt(offset).to = offset;
+            viewUpdate.state.scrollIntoView = true;
+        }
+
       checkEdit(doc);
     },
     [path]
@@ -387,34 +393,6 @@ useEffect(() => {
       setStruct(files[0].structure.children);
     });
   };
-  const convertToPDF = () => {
-    try {
-      const path = `${Desktop}/${name.replace(/\.md$/, "")}.pdf`;
-      pandoc(value, `-f markdown -t pdf -o ${path}`, function (err, result) {
-        if (err) console.log(err);
-        if (fs.existsSync(path)) {
-          open(path);
-        }
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const converToDocx = () => {
-    try {
-      const path = `${Desktop}/${name.replace(/\.md$/, "")}.docx`;
-      pandoc(value, `-f markdown -t docx -o ${path}`, function (err, result) {
-        if (err) console.log(err);
-        if (fs.existsSync(path)) {
-          open(path);
-        }
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
 
 const toPDF = (body:string, name:string) => {
     try{
@@ -634,13 +612,13 @@ const toDOCX = (body:string, name:string) => {
       }
 
       if ((e.ctrlKey || e.metaKey) && e.key === "e") {
-        convertToPDF();
+        toPDF(value, name);
         e.preventDefault();
         return;
       }
 
       if ((e.ctrlKey || e.metaKey) && e.key === "d") {
-        converToDocx();
+        toDOCX(value, name)
         e.preventDefault();
         return;
       }
@@ -1032,6 +1010,7 @@ const toDOCX = (body:string, name:string) => {
                     </span>
                     {click && (
                       <CMDK
+                        value= {value}
                         onNewFile={() => {
                           setFileNameBox(true);
                         }}
@@ -1049,8 +1028,9 @@ const toDOCX = (body:string, name:string) => {
                         setClick={setClick}
                         page={page}
                         search={search}
-                        onDocxConversion={converToDocx}
-                        onPdfConversion={convertToPDF}
+                        onDocxConversion={(value:string,  name:string) => toDOCX(value, name)}
+                        onPdfConversion={(value:string, name:string) => toPDF(value, name)
+                            }
                         menuOpen={menuOpen}
                         onFileSelect={(file) => {
                           try {
