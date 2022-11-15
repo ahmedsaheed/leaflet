@@ -286,7 +286,7 @@ const getFiles = () => {
 };
 
 
-const addFiles = (files = []) => {
+const addFilesOnDragOrDialog = (files = []) => {
   fs.ensureDirSync(appDir);
   files.forEach((file) => {
     const filePath = path.resolve(appDir, file.name);
@@ -362,7 +362,7 @@ ipcMain.handle("getTheFile", () => {
   return getFiles();
 });
 ipcMain.handle("app:on-file-add", (event, files = []) => {
-  addFiles(files);
+  addFilesOnDragOrDialog(files);
 });
 
 ipcMain.handle("app:on-fs-dialog-open", (event) => {
@@ -374,7 +374,7 @@ ipcMain.handle("app:on-fs-dialog-open", (event) => {
     return;
   }
 
-  addFiles(
+  addFilesOnDragOrDialog(
     files.map((filepath) => {
       return {
         name: path.parse(filepath).base,

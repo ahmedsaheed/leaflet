@@ -16,7 +16,19 @@ export function FileTree({
   toDOCX,
 }) {
   return (
-    <>
+    <div
+                  id="fileTree"
+                  className="fileBody"
+                  style={{
+                    marginTop: "0.2vh",
+                    marginBottom: "2vh",
+                    maxHeight: "70vh",
+                    overflow: "hidden",
+                    outline: "none",
+                    overflowY: "scroll",
+                    textOverflow: "ellipsis",
+                  }}
+                  >
       {struct
         .map((file, index) =>
           file.children ? (
@@ -228,6 +240,6 @@ export function FileTree({
           />
         </form>
       ) : null}
-    </>
+    </div>
   );
 }

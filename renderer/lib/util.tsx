@@ -101,3 +101,33 @@ export const QUICKINSERT = (view : EditorView, txt : string) => {
 }
 
 
+ export const COMMENTOUT = (view: EditorView) => {
+    if (!view) return;
+    const main = view.state.selection.main;
+    const txt = view.state.sliceDoc(
+      view.state.selection.main.from,
+      view.state.selection.main.to
+    );
+    if (txt.length === 0) return;
+    if (txt.startsWith("<!--") && txt.endsWith("-->")) {
+      const newText = txt.slice(4, -3);
+      view.dispatch({
+        changes: {
+          from: main.from,
+          to: main.to,
+          insert: newText,
+        },
+        selection: EditorSelection.cursor(main.from + newText.length),
+      });
+    } else {
+      const comment = `<!-- ${txt} -->`;
+      view.dispatch({
+        changes: {
+          from: main.from,
+          to: main.to,
+          insert: comment,
+        },
+        selection: EditorSelection.cursor(main.from + comment.length),
+      });
+    }
+  };

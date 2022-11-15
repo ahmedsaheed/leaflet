@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { ipcRenderer, shell } from "electron";
+import { ipcRenderer } from "electron";
 import { undo } from "@codemirror/commands";
 import "react-cmdk/dist/cmdk.css";
 import {
@@ -8,17 +8,11 @@ import {
   BOLD,
   QUICKINSERT,
   ADDYAML,
+  COMMENTOUT,
 } from "../lib/util";
 import Todo from "../components/todo";
 import { FileTree } from "../components/filetree";
-
-import {
-  CALENDARIcon,
-  COLLAPSEIcon,
-  NEWFOLDERIcon,
-  EXPANDIcon,
-  NEWNOTEIcon,
-} from "../components/icons";
+import { QuickActions } from "../components/quickactions";
 import { METADATE, METATAGS, METAMATERIAL } from "../components/metadata";
 import { progress } from "../components/progress";
 import { getMarkdown } from "../lib/mdParser";
@@ -41,7 +35,6 @@ import { EditorView } from "@codemirror/view";
 import { codeFolding, foldGutter, indentOnInput } from "@codemirror/language";
 import { usePrefersColorScheme } from "../lib/theme";
 import { xcodeLight } from "@uiw/codemirror-theme-xcode";
-import { EditorSelection } from "@codemirror/state";
 
 let initialised = false;
 
@@ -128,7 +121,7 @@ export default function Next() {
     }
   }, [files]);
 
-  const handleScroll = event => {
+  const handleScroll = (event) => {
     let ScrollPercent = 0;
     const Scrolled = document.documentElement.scrollTop;
     const MaxHeight =
@@ -138,8 +131,7 @@ export default function Next() {
     setScroll(ScrollPercent);
   };
 
-
-useEffect(() => {
+  useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -165,10 +157,10 @@ useEffect(() => {
       let line = viewUpdate.state.doc.lineAt(offset);
       updateCursor(line, offset);
       // allow scroll into view when in last line
-        if (line.number === viewUpdate.state.doc.length) {
-            viewUpdate.state.doc.lineAt(offset).to = offset;
-            viewUpdate.state.scrollIntoView = true;
-        }
+      if (line.number === viewUpdate.state.doc.length) {
+        viewUpdate.state.doc.lineAt(offset).to = offset;
+        viewUpdate.state.scrollIntoView = true;
+      }
 
       checkEdit(doc);
     },
@@ -394,34 +386,33 @@ useEffect(() => {
     });
   };
 
-const toPDF = (body:string, name:string) => {
-    try{
-        const path = `${Desktop}/${name.replace(/\.md$/, "")}.pdf`;
-        pandoc(body, `-f markdown -t pdf -o ${path}`, function (err, result) {
-            if (err) console.log(err);
-            if (fs.existsSync(path)) {
-            open(path);
-            }
-        });
-    }catch(e){
-        console.log(e)    
+  const toPDF = (body: string, name: string) => {
+    try {
+      const path = `${Desktop}/${name.replace(/\.md$/, "")}.pdf`;
+      pandoc(body, `-f markdown -t pdf -o ${path}`, function (err, result) {
+        if (err) console.log(err);
+        if (fs.existsSync(path)) {
+          open(path);
+        }
+      });
+    } catch (e) {
+      console.log(e);
     }
-}
+  };
 
-
-const toDOCX = (body:string, name:string) => {
-    try{
-        const path = `${Desktop}/${name.replace(/\.md$/, "")}.docx`;
-        pandoc(body, `-f markdown -t docx -o ${path}`, function (err, result) {
-            if (err) console.log(err);
-            if (fs.existsSync(path)) {
-            open(path);
-            }
-        });
-    }catch(e){
-        console.log(e)    
+  const toDOCX = (body: string, name: string) => {
+    try {
+      const path = `${Desktop}/${name.replace(/\.md$/, "")}.docx`;
+      pandoc(body, `-f markdown -t docx -o ${path}`, function (err, result) {
+        if (err) console.log(err);
+        if (fs.existsSync(path)) {
+          open(path);
+        }
+      });
+    } catch (e) {
+      console.log(e);
     }
-}
+  };
   useEffect(() => {
     ipcRenderer.on("save", function () {
       saveFile();
@@ -474,11 +465,9 @@ const toDOCX = (body:string, name:string) => {
 
   useEffect(() => {
     dragDrop("body", (files) => {
-      const checkIndexNameValue = files[files.length - 1].name;
-      console.log(checkIndexNameValue);
+      const nameOfFileAtLastIndex = files[files.length - 1].name;
       const _files = files.map((file) => {
         let fileName = file.name;
-        console.log("maddddd", fileName);
         let filePath = file.path;
         const extension = file.path.split(".").pop();
         if (extension != "md" && extension === "docx") {
@@ -496,9 +485,8 @@ const toDOCX = (body:string, name:string) => {
         ipcRenderer.invoke("getTheFile").then((files = []) => {
           setFiles(files);
           setInsert(false);
-          // set the value to currently added file
           const index = files.findIndex(
-            (file) => file.name === checkIndexNameValue.split(".")[0]
+            (file) => file.name === nameOfFileAtLastIndex.split(".")[0]
           );
           index !== -1
             ? () => {
@@ -517,35 +505,16 @@ const toDOCX = (body:string, name:string) => {
     });
   }, []);
 
-  const commentOut = () => {
-    if (!insert || !editorview) return;
-    const main = editorview.state.selection.main;
-    const txt = editorview.state.sliceDoc(
-      editorview.state.selection.main.from,
-      editorview.state.selection.main.to
-    );
-    if (txt.length === 0) return;
-    if (txt.startsWith("<!--") && txt.endsWith("-->")) {
-      const newText = txt.slice(4, -3);
-      editorview.dispatch({
-        changes: {
-          from: main.from,
-          to: main.to,
-          insert: newText,
-        },
-        selection: EditorSelection.cursor(main.from + newText.length),
-      });
-    } else {
-      const comment = `<!-- ${txt} -->`;
-      editorview.dispatch({
-        changes: {
-          from: main.from,
-          to: main.to,
-          insert: comment,
-        },
-        selection: EditorSelection.cursor(main.from + comment.length),
-      });
-    }
+  const createNewFile = () => {
+    fileName != ""
+      ? ipcRenderer
+          .invoke("createNewFile", parentDir, fileName.replace(/\.md$/, ""))
+          .then(() => {
+            setFiles(files);
+            setInsert(false);
+            Update();
+          })
+      : null;
   };
 
   const onDelete = (path, name) => {
@@ -565,17 +534,6 @@ const toDOCX = (body:string, name:string) => {
     } catch (e) {
       console.log(e);
     }
-  };
-
-  const createNewFile = () => {
-    fileName != ""
-      ? ipcRenderer
-          .invoke("createNewFile", parentDir, fileName.replace(/\.md$/, ""))
-          .then(() => {
-            setFiles(files);
-            Update();
-          })
-      : null;
   };
 
   const saveFile = () => {
@@ -618,7 +576,7 @@ const toDOCX = (body:string, name:string) => {
       }
 
       if ((e.ctrlKey || e.metaKey) && e.key === "d") {
-        toDOCX(value, name)
+        toDOCX(value, name);
         e.preventDefault();
         return;
       }
@@ -681,19 +639,10 @@ const toDOCX = (body:string, name:string) => {
         if (!insert) {
           return;
         }
-        commentOut();
+        COMMENTOUT(editorview);
         e.preventDefault();
         return;
       }
-
-      // if (
-      //   (e.key === "Backspace" || e.key === "Delete") &&
-      //   (e.ctrlKey || e.metaKey)
-      // ) {
-      //   onDelete();
-      //   e.preventDefault();
-      //   return;
-      // }
 
       if (e.key === "t" && (e.ctrlKey || e.metaKey)) {
         if (!insert) {
@@ -839,8 +788,7 @@ const toDOCX = (body:string, name:string) => {
           crossOrigin="anonymous"
         ></script>
       </Head>
-      <div 
-      className="mainer" style={{ minHeight: "100vh" }}>
+      <div className="mainer" style={{ minHeight: "100vh" }}>
         <div>
           <div
             className="fs fixed"
@@ -854,132 +802,36 @@ const toDOCX = (body:string, name:string) => {
                   paddingTop: "2em",
                 }}
               >
-                <div
-                  className="flex"
-                  style={{
-                    marginBottom: "5vh",
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                    width: "100%",
-                    maxWidth: "17.5em",
-                    justifyContent: "center",
-                    alignItems: "center",
+                <QuickActions
+                  createNewFile={() => setFileNameBox(true)}
+                  viewingTodo={() => setViewingTodo(true)}
+                  addOpenToAllDetailTags={() => addOpenToAllDetailTags()}
+                  detailIsOpen={detailIsOpen}
+                  createNewFolder={() => {
+                    setFileNameBox(true);
+                    setIsCreatingFolder(true);
                   }}
-                >
-                  <button
-                    className="quickAction"
-                    onClick={() => {
-                      setFileNameBox(true);
-                    }}
-                    style={{
-                      border: "1px solid transparent",
-                      padding: "1px",
-                      marginRight: "1em",
-                      cursor: "default",
-                      borderRadius: "4px",
-                    }}
-                  >
-                    <div>
-                      <NEWNOTEIcon />
-                    </div>
-                  </button>
+                />
 
-                  <button
-                    className="quickAction"
-                    onClick={() => {
-                      try {
-                        setIsCreatingFolder(true);
-                        setFileNameBox(true);
-                      } catch (e) {
-                        console.log(e);
-                      }
-                    }}
-                    style={{
-                      border: "1px solid transparent",
-                      padding: "1px",
-
-                      borderRadius: "4px",
-                      marginRight: "1em",
-                      cursor: "default",
-                      outline: "none",
-                    }}
-                  >
-                    <div>
-                      <NEWFOLDERIcon />
-                    </div>
-                  </button>
-
-                  <button
-                    className="quickAction"
-                    onClick={() => {
-                      setViewingTodo(true);
-                    }}
-                    style={{
-                      border: "1px solid transparent",
-                      padding: "1px",
-                      outline: "none",
-                      borderRadius: "4px",
-                      marginRight: "1em",
-                      cursor: "default",
-                    }}
-                  >
-                    <div>
-                      <CALENDARIcon />
-                    </div>
-                  </button>
-                  <button
-                    className="quickAction"
-                    onClick={() => {
-                      addOpenToAllDetailTags();
-                    }}
-                    style={{
-                      border: "1px solid transparent",
-                      padding: "1px",
-                      borderRadius: "4px",
-                      marginRight: "1em",
-                      outline: "none",
-                      cursor: "default",
-                    }}
-                  >
-                    <div>
-                      {detailIsOpen ? <COLLAPSEIcon /> : <EXPANDIcon />}
-                    </div>
-                  </button>
-                </div>
-                <div
-                  id="fileTree"
-                  className="fileBody"
-                  style={{
-                    marginTop: "0.2vh",
-                    marginBottom: "2vh",
-                    maxHeight: "70vh",
-                    overflow: "hidden",
-                    outline: "none",
-                    overflowY: "scroll",
-                    textOverflow: "ellipsis",
+                <FileTree
+                  struct={struct}
+                  onFileTreeClick={(path, name) => {
+                    onFileTreeClick(path, name);
                   }}
-                >
-                  <FileTree
-                    struct={struct}
-                    onFileTreeClick={(path, name) => {
-                      onFileTreeClick(path, name);
-                    }}
-                    path={path}
-                    fileNameBox={fileNameBox}
-                    parentDirClick={(path) => {
-                      setParentDir(path);
-                    }}
-                    creatingFileOrFolder={creatingFileOrFolder}
-                    setFileName={(name) => {
-                      setFileName(name);
-                    }}
-                    isCreatingFolder={isCreatingFolder}
-                    onDelete={(path, name) => onDelete(path, name)}
-
-                    toPDF={(body, name) => toPDF(body, name)}
-                    toDOCX={(body, name) => toDOCX(body, name)}
-                  />
-                </div>
+                  path={path}
+                  fileNameBox={fileNameBox}
+                  parentDirClick={(path) => {
+                    setParentDir(path);
+                  }}
+                  creatingFileOrFolder={creatingFileOrFolder}
+                  setFileName={(name) => {
+                    setFileName(name);
+                  }}
+                  isCreatingFolder={isCreatingFolder}
+                  onDelete={(path, name) => onDelete(path, name)}
+                  toPDF={(body, name) => toPDF(body, name)}
+                  toDOCX={(body, name) => toDOCX(body, name)}
+                />
                 <div
                   className={"fixed util"}
                   style={{
@@ -1010,7 +862,7 @@ const toDOCX = (body:string, name:string) => {
                     </span>
                     {click && (
                       <CMDK
-                        value= {value}
+                        value={value}
                         onNewFile={() => {
                           setFileNameBox(true);
                         }}
@@ -1028,9 +880,12 @@ const toDOCX = (body:string, name:string) => {
                         setClick={setClick}
                         page={page}
                         search={search}
-                        onDocxConversion={(value:string,  name:string) => toDOCX(value, name)}
-                        onPdfConversion={(value:string, name:string) => toPDF(value, name)
-                            }
+                        onDocxConversion={(value: string, name: string) =>
+                          toDOCX(value, name)
+                        }
+                        onPdfConversion={(value: string, name: string) =>
+                          toPDF(value, name)
+                        }
                         menuOpen={menuOpen}
                         onFileSelect={(file) => {
                           try {
