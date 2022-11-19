@@ -1,8 +1,9 @@
 import * as React from 'react'
 
 /**
- * 
+ * Helper function to retrieve a theme context.
  * FROM: https://github.com/rfoel/use-prefers-color-scheme/blob/main/src/index.ts
+ * 
  * 
  */
 export const usePrefersColorScheme = () => {
