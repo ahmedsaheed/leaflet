@@ -38,7 +38,6 @@ import { EditorView } from "@codemirror/view";
 import { codeFolding, foldGutter, indentOnInput } from "@codemirror/language";
 import { usePrefersColorScheme } from "../lib/theme";
 import { xcodeLight } from "@uiw/codemirror-theme-xcode";
-import { COLLAPSEIcon } from "../components/icons";
 
 let initialised = false;
 
@@ -540,7 +539,6 @@ export default function Next() {
     }
   };
 
-    const HEADING = (e) => {()=>alert(e.target.value)}
   const saveFile = () => {
     try {
       setSaver("SAVING...");
@@ -1181,7 +1179,7 @@ export default function Next() {
                             <option value="black">Heading 3</option>
                           </select>
                         </div>
-                        <EditorUtils view={editorview} />
+                        {EditorUtils(editorview)}
                       </div>
                     </div>
                   ) : null}

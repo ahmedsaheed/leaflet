@@ -1,4 +1,4 @@
-export const PDFIcon: React.FC<{}> = () => {
+export const PDFIcon = () => {
   return (
     <svg
       style={{ display: "inline" }}
@@ -18,7 +18,7 @@ export const PDFIcon: React.FC<{}> = () => {
   );
 };
 
-export const DOCXIcon: React.FC<{}> = () => {
+export const DOCXIcon= () => {
   return (
     <svg
       style={{ display: "inline" }}
@@ -281,5 +281,3 @@ export const MOVEIcon = () => {
     </svg>
   );
 };
-
-

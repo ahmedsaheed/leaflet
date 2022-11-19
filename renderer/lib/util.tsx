@@ -1,6 +1,12 @@
 import { EditorSelection } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
 import { format } from "date-fns";
+
+
+/**
+ * Bold a text in editor view
+ * @param view EditorView
+ */
 export const BOLD = (view: EditorView) => {
   if (!view) return;
   view.dispatch(
@@ -14,6 +20,12 @@ export const BOLD = (view: EditorView) => {
   );
 };
 
+
+/**
+ * Adds an italic in editor view
+ * @param view EditorView
+ */
+
 export const ITALIC = (view: EditorView) => {
   if (!view) return;
   view.dispatch(
@@ -26,6 +38,11 @@ export const ITALIC = (view: EditorView) => {
     }))
   );
 };
+
+/**
+ * Adds a yaml metadata at top of editor view
+ * @param view EditorView
+ */
 
 export const ADDYAML = (view: EditorView) => {
   if (!view) return;
@@ -57,33 +74,17 @@ material:
   });
 };
 
+/**
+ * Generates todays date in format: EEE d MMM
+ */
 export const GETDATE = () => {
-  const date = new Date();
-  const strArray = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-  const s =
-    "" +
-    (date.getDate() <= 9 ? "0" + date.getDate() : date.getDate()) +
-    "-" +
-    strArray[date.getMonth()] +
-    "-" +
-    date.getFullYear() +
-    " ";
-  return s;
+    return format(new Date(), "EEE d MMM");
 };
 
+/**
+ * Insert a link in editor view
+ * @param view EditorView
+ */
 export const LINK = (view: EditorView) => {
   if (!view) return;
   const main = view.state.selection.main;
@@ -102,6 +103,12 @@ export const LINK = (view: EditorView) => {
   });
 };
 
+
+/**
+ * Insert given text at cursor position in editor view
+ * @param view EditorView
+ * @param txt Text to be added at cursor
+ */
 export const QUICKINSERT = (view: EditorView, txt: string) => {
   if (!view) return;
   const main = view.state.selection.main;
@@ -118,6 +125,10 @@ export const QUICKINSERT = (view: EditorView, txt: string) => {
   });
 };
 
+/**
+ * Inserts a code block in editor view
+ * @param view EditorView
+ */
 export const ADDCODE = (view: EditorView) => {
   if (!view) return;
   view.dispatch(
@@ -131,6 +142,10 @@ export const ADDCODE = (view: EditorView) => {
   );
 };
 
+/**
+ * Comment out selected text in editor view
+ * @param view EditorView
+ */
 export const COMMENTOUT = (view: EditorView) => {
   if (!view) return;
   const main = view.state.selection.main;
@@ -162,6 +177,10 @@ export const COMMENTOUT = (view: EditorView) => {
   }
 };
 
+/**
+ * Adds a table in editor view
+ * @param view EditorView
+ */
 export const TABLE = (view: EditorView) => {
     if (!view) return;
     const main = view.state.selection.main;
@@ -186,9 +205,12 @@ export const TABLE = (view: EditorView) => {
     });
 };
  
+/**
+ * Adds a strike-through in editor view
+ * @param view EditorView
+ */
 export const STRIKETHROUGH = (view: EditorView) => {
     if (!view) return;
-    // if selectionrange already has strikethrough, remove it
     const main = view.state.selection.main;
     const txt = view.state.sliceDoc(
         view.state.selection.main.from,

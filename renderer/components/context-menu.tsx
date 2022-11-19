@@ -1,8 +1,6 @@
 import React from "react";
 import * as ContextMenu from "@radix-ui/react-context-menu";
 import {
-  DotFilledIcon,
-  CheckIcon,
   ChevronRightIcon,
 } from "@radix-ui/react-icons";
 import {BINIcon , RENAMEIcon, MOVEIcon, MARKDOWNIcon } from "./icons";

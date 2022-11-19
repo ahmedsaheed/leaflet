@@ -1,4 +1,11 @@
-export const QUICKBUTTONS = ({view, title, icon, onclick}) => {
+import { EditorView } from "@codemirror/view";
+import { ReactNode } from "react";
+export const QUICKBUTTONS = (
+view:EditorView,
+title:string,
+icon: string | ReactNode,
+onclick:() => any
+) => {
     return (
         <button
         disabled={!view}

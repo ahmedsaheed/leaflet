@@ -1,45 +1,106 @@
-import {getBG, TAGIcon, MATERIALIcon, CLOCKIcon} from './icons';
-const checkIfIncomingIsObject = (incoming) => {
-    return typeof incoming === 'object' && incoming !== null;
-}
+import { getBG, TAGIcon, MATERIALIcon, CLOCKIcon } from "./icons";
 
+type IncomingProps = {
+  [key: string]: any;
+};
 
-export const METATAGS = ({incoming}) => {
-  if(!checkIfIncomingIsObject(incoming) || incoming === undefined) return null;
-  return(
-    incoming ? (
-      <div style={{ display: "flex" }}>
-        <div
+const checkIfIncomingIsObject = (incoming: IncomingProps) => {
+  return typeof incoming === "object" && incoming !== null;
+};
+
+export const METATAGS = ({ incoming }) => {
+  if (!checkIfIncomingIsObject(incoming) || incoming === undefined) return null;
+  return incoming ? (
+    <div style={{ display: "flex" }}>
+      <div
+        style={{
+          alignItems: "center",
+          padding: "0px 6px 10px",
+          color: "#888888",
+          display: "flex",
+          width: "130px",
+          flex: "0 0 auto",
+        }}
+      >
+        <TAGIcon />
+        &nbsp;Tags&nbsp;
+      </div>
+      <div
+        style={{
+          display: "flex",
+          flex: "1 1 auto",
+          alignItems: "center",
+          minWidth: "0",
+          paddingBottom: "10px",
+        }}
+      >
+        <span
           style={{
-            alignItems: "center",
-            padding: "0px 6px 10px",
+            width: "100%",
             color: "#888888",
-            display: "flex",
-            width: "130px",
-            flex: "0 0 auto",
+            whiteSpace: "nowrap",
+            overflowX: "scroll",
           }}
         >
-          <TAGIcon />
-          &nbsp;Tags&nbsp;
-        </div>
-        <div
+          {incoming?.map((tag) => (
+            <code
+              style={{
+                borderRadius: "4px",
+                marginRight: "1em",
+                display: "inline",
+                overflow: "hidden",
+                color: "#000",
+                backgroundColor: getBG(),
+              }}
+            >
+              {tag.toLowerCase()}
+            </code>
+          ))}
+        </span>
+      </div>
+    </div>
+  ) : null;
+};
+
+export const METAMATERIAL = ({ incoming }) => {
+  // console.log(incoming);
+  if (!checkIfIncomingIsObject(incoming) || incoming === undefined) return null;
+  return incoming ? (
+    <div style={{ display: "flex" }}>
+      <div
+        style={{
+          alignItems: "center",
+          padding: "0px 6px 10px",
+          color: "#888888",
+          display: "flex",
+          width: "130px",
+          flex: "0 0 auto",
+        }}
+      >
+        <MATERIALIcon />
+        &nbsp;Materials&nbsp;
+      </div>
+      <div
+        style={{
+          // display: "flex",
+          flex: "1 1 auto",
+          alignItems: "center",
+          minWidth: "0",
+          paddingBottom: "10px",
+        }}
+      >
+        <span
           style={{
-            display: "flex",
-            flex: "1 1 auto",
-            alignItems: "center",
-            minWidth: "0",
-            paddingBottom: "10px",
+            width: "100%",
+            color: "#888888",
+            whiteSpace: "nowrap",
+            overflowX: "scroll",
           }}
         >
-          <span
-            style={{
-              width: "100%",
-              color: "#888888",
-              whiteSpace: "nowrap",
-              overflowX: "scroll",
-            }}
-          >
-            {incoming?.map((tag) =>
+          {incoming?.map((materials) =>
+            Object.entries(materials).map(([key, value]) =>
+              //TODO: Look for a better way to do this
+              value.toString().startsWith("http") && key != value ? (
                 <code
                   style={{
                     borderRadius: "4px",
@@ -50,122 +111,53 @@ export const METATAGS = ({incoming}) => {
                     backgroundColor: getBG(),
                   }}
                 >
-                  {tag.toLowerCase()}
-                </code>
-            )}
-          </span>
-        </div>
-      </div>
-    ) : null
-  )
-}
-
-export const METAMATERIAL = ({incoming}) => {
-  // console.log(incoming);
-  if(!checkIfIncomingIsObject(incoming) || incoming === undefined) return null;
-  return(
-    incoming ? (
-      <div style={{ display: "flex" }}>
-        <div
-          style={{
-            alignItems: "center",
-            padding: "0px 6px 10px",
-            color: "#888888",
-            display: "flex",
-            width: "130px",
-            flex: "0 0 auto",
-          }}
-        >
-          <MATERIALIcon />
-          &nbsp;Materials&nbsp;
-        </div>
-        <div
-          style={{
-            // display: "flex",
-            flex: "1 1 auto",
-            alignItems: "center",
-            minWidth: "0",
-            paddingBottom: "10px",
-          }}
-        >
-          <span
-            style={{
-              width: "100%",
-              color: "#888888",
-              whiteSpace: "nowrap",
-              overflowX: "scroll",
-            }}
-          >
-            {incoming?.map((materials) =>
-             Object.entries(materials).map(
-              ([key, value]) =>
-                //TODO: Look for a better way to do this
-                value.toString().startsWith("http") &&
-                key != value ? (
-                  <code
-                    style={{
-                      borderRadius: "4px",
-                      marginRight: "1em",
-                      display: "inline",
-                      overflow: "hidden",
-                      color: "#000",
-                      backgroundColor: getBG(),
-                    }}
+                  <a
+                    target="_blank"
+                    style={{ textDecoration: "none", border: "none" }}
+                    href={value.toString()}
                   >
-                    <a
-                      target="_blank"
-                      style={{ textDecoration: "none" , border: "none"}}
-                      href={value.toString()}
-                    >
-                      {key.toLowerCase()}
-                    </a>
-                  </code>
-                ) : null
+                    {key.toLowerCase()}
+                  </a>
+                </code>
+              ) : null
             )
-        )}
-      </span>
+          )}
+        </span>
+      </div>
     </div>
-  </div>
-) : null
-)
+  ) : null;
+};
 
-
-}
-
-export const METADATE = ({incoming}) => {
-  if(incoming === undefined){
+export const METADATE = ({ incoming }) => {
+  if (incoming === undefined) {
     return null;
   }
-  return(
+  return (
     <div style={{ display: "flex" }}>
-                    <div
-                      style={{
-                        alignItems: "center",
-                        padding: "0px 6px 10px",
-                        color: "#888888",
-                        display: "flex",
-                        width: "130px",
-                        flex: "0 0 auto",
-                      }}
-                    >
-                      <CLOCKIcon/>
-                      &nbsp;Created&nbsp;{" "}
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        flex: "1 1 auto",
-                        alignItems: "center",
-                        minWidth: "0",
-                        paddingBottom: "10px",
-                      }}
-                    >
-                      <span style={{ color: "#888888" }}>
-                         {incoming}
-                      </span>
-                    </div>
-                  </div>
-  )
-}
-
-
+      <div
+        style={{
+          alignItems: "center",
+          padding: "0px 6px 10px",
+          color: "#888888",
+          display: "flex",
+          width: "130px",
+          flex: "0 0 auto",
+        }}
+      >
+        <CLOCKIcon />
+        &nbsp;Created&nbsp;{" "}
+      </div>
+      <div
+        style={{
+          display: "flex",
+          flex: "1 1 auto",
+          alignItems: "center",
+          minWidth: "0",
+          paddingBottom: "10px",
+        }}
+      >
+        <span style={{ color: "#888888" }}>{incoming}</span>
+      </div>
+    </div>
+  );
+};

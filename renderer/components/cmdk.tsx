@@ -75,18 +75,23 @@ const capitalize = (s: string) => {
   const words = s.split(" "); 
 
   for (let i = 0; i < words.length; i++) {
-    words[i] = words[i][0].toUpperCase() + words[i].substr(1) + " ";
+    words[i] = words[i][0].toUpperCase() + words[i].substring(1) + " ";
   }
   words.join(" ");
 
   return words;
 };
 
+type FileType ={
+    name: string;
+    path: string;
+}
+
 function items(
   onFileSelect: (file: any) => any,
   onNewFile: () => any,
   onCreatingFolder: () => any,
-  files: any,
+  files: Array<FileType>,
   pandocAvailable: Boolean,
   name: string,
   onDocxConversion: (value:string, name:string) => void,
@@ -94,6 +99,28 @@ function items(
   search: string,
   value: string
 ) {
+
+
+function mapItems (files: Array<FileType>): JsonStructureItem[] {
+  return  [...files.map((file) => ({
+            id: file.name,
+            showType: false,
+            children: (
+              <p>
+                {file.name} —{" "}
+                <span style={{ fontSize: "12px", color: "#888888" }}>
+                  {capitalize(
+                    path.basename(path.dirname(file.path)).toLowerCase()
+                  )}
+                </span>
+              </p>
+            ),
+            icon: "DocumentTextIcon",
+            onClick: () => {
+              onFileSelect(file);
+            },
+          }))]
+}
   const filteredItems = filterItems(
     [
       {
@@ -144,27 +171,7 @@ function items(
       {
         heading: "Files",
         id: "files",
-        // @ts-ignore
-        items: [
-          ...files.map((file) => ({
-            id: file.name,
-            showType: false,
-            children: (
-              <p>
-                {file.name} —{" "}
-                <span style={{ fontSize: "12px", color: "#888888" }}>
-                  {capitalize(
-                    path.basename(path.dirname(file.path)).toLowerCase()
-                  )}
-                </span>
-              </p>
-            ),
-            icon: "DocumentTextIcon",
-            onClick: () => {
-              onFileSelect(file);
-            },
-          })),
-        ],
+        items: mapItems(files),
       },
       {
         heading: "Help",
@@ -175,7 +182,7 @@ function items(
             showType: false,
             children: "Help & Documentation",
             icon: "QuestionMarkCircleIcon",
-            onClick: (event) => {
+            onClick: (event: React.MouseEvent<HTMLElement>) => {
               event.preventDefault();
               shell.openExternal("https://github.com/ahmedsaheed/Leaflet");
             },
@@ -185,7 +192,7 @@ function items(
             showType: false,
             children: "Keyboard Shortcuts",
             icon: "KeyIcon",
-            onClick: (event) => {
+            onClick: (event: React.MouseEvent<HTMLElement>) => {
               event.preventDefault();
               shell.openExternal(
                 "https://github.com/ahmedsaheed/Leaflet#shortcuts-and-controls"
