@@ -27,7 +27,7 @@ export const getMarkdown = (value: string) => {
       try{
           const result = md.render(value)
           return {
-            document: {__html: result},
+            document: {__html: `<div>${result}</div>`},
             metadata: md.meta
           }
       }catch(err){

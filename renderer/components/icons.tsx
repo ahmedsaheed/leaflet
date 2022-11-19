@@ -216,37 +216,138 @@ export const ADDIcon = () => {
 };
 
 export const CALENDARIcon = () => {
-    return (
-
-<svg
-style={{ display: "inline" }}
- width="16" height="16" viewBox="0 0 24 24"><path fill="#888888" d="M7 11h2v2H7v-2m14-6v14c0 1.11-.89 2-2 2H5a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2h1V1h2v2h8V1h2v2h1a2 2 0 0 1 2 2M5 7h14V5H5v2m14 12V9H5v10h14m-4-6v-2h2v2h-2m-4 0v-2h2v2h-2m-4 2h2v2H7v-2m8 2v-2h2v2h-2m-4 0v-2h2v2h-2Z"/></svg>
-
-)}
-
+  return (
+    <svg
+      style={{ display: "inline" }}
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+    >
+      <path
+        fill="#888888"
+        d="M7 11h2v2H7v-2m14-6v14c0 1.11-.89 2-2 2H5a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2h1V1h2v2h8V1h2v2h1a2 2 0 0 1 2 2M5 7h14V5H5v2m14 12V9H5v10h14m-4-6v-2h2v2h-2m-4 0v-2h2v2h-2m-4 2h2v2H7v-2m8 2v-2h2v2h-2m-4 0v-2h2v2h-2Z"
+      />
+    </svg>
+  );
+};
 
 export const BINIcon = () => {
-    return (
-<svg
-    style={{ display: "inline" }}
-width="18" height="15" viewBox="0 0 32 32"><path fill="#888888" d="M12 12h2v12h-2zm6 0h2v12h-2z"/><path fill="currentColor" d="M4 6v2h2v20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8h2V6zm4 22V8h16v20zm4-26h8v2h-8z"/></svg>
-    )
-}
+  return (
+    <svg
+      style={{ display: "inline" }}
+      width="18"
+      height="15"
+      viewBox="0 0 32 32"
+    >
+      <path fill="#888888" d="M12 12h2v12h-2zm6 0h2v12h-2z" />
+      <path
+        fill="currentColor"
+        d="M4 6v2h2v20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8h2V6zm4 22V8h16v20zm4-26h8v2h-8z"
+      />
+    </svg>
+  );
+};
 
 export const RENAMEIcon = () => {
-    
-    return(
-<svg
-style={{ display: "inline" }}
-
-width="14" height="16" viewBox="0 0 18 14"><path fill="#888888" fill-rule="evenodd" d="M14.287.303a1 1 0 1 1 1.415 1.414l-.707.708L13.58 1.01l.707-.707Zm0 2.829l-6.873 6.873H6V8.59l6.873-6.874l1.415 1.415ZM3 13.5a.5.5 0 0 1-.5-.5V3a.5.5 0 0 1 .5-.5h6.25a.75.75 0 0 0 0-1.5H3a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6.75a.75.75 0 0 0-1.5 0V13a.5.5 0 0 1-.5.5H3Z" clip-rule="evenodd"/></svg>
-    )
-}
+  return (
+    <svg
+      style={{ display: "inline" }}
+      width="14"
+      height="16"
+      viewBox="0 0 18 14"
+    >
+      <path
+        fill="#888888"
+        fill-rule="evenodd"
+        d="M14.287.303a1 1 0 1 1 1.415 1.414l-.707.708L13.58 1.01l.707-.707Zm0 2.829l-6.873 6.873H6V8.59l6.873-6.874l1.415 1.415ZM3 13.5a.5.5 0 0 1-.5-.5V3a.5.5 0 0 1 .5-.5h6.25a.75.75 0 0 0 0-1.5H3a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6.75a.75.75 0 0 0-1.5 0V13a.5.5 0 0 1-.5.5H3Z"
+        clip-rule="evenodd"
+      />
+    </svg>
+  );
+};
 
 export const MOVEIcon = () => {
+  return (
+    <svg
+      style={{ display: "inline" }}
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+    >
+      <path
+        fill="#888888"
+        d="M10.5 18H18v2h-7.5a6.5 6.5 0 1 1 0-13h5.67l-3.09-3.09L14.5 2.5L20 8l-5.5 5.5l-1.41-1.41L16.17 9H10.5C8 9 6 11 6 13.5S8 18 10.5 18Z"
+      />
+    </svg>
+  );
+};
+
+export const BOLDIcon = () => {
+  return (
+    <svg
+      style={{ display: "inline" }}
+      width="16"
+      height="19"
+      viewBox="0 0 32 32"
+    >
+      <path
+        fill="#888888"
+        d="M18.25 25H9V7h8.5a5.25 5.25 0 0 1 4 8.65A5.25 5.25 0 0 1 18.25 25ZM12 22h6.23a2.25 2.25 0 1 0 0-4.5H12Zm0-7.5h5.5a2.25 2.25 0 1 0 0-4.5H12Z"
+      />
+    </svg>
+  );
+};
+
+export const ITALICIcon = () => {
+  return (
+    <svg
+      style={{ display: "inline" }}
+      width="16"
+      height="19"
+      viewBox="0 0 32 32"
+    >
+      <path
+        fill="#888888"
+        d="M25 9V7H12v2h5.14l-4.37 14H7v2h13v-2h-5.14l4.37-14H25z"
+      />
+    </svg>
+  );
+};
+
+export const LINKIcon = () => {
+  return (
+    <svg
+      style={{ display: "inline" }}
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+    >
+      <path
+        fill="#888888"
+        d="M10.6 13.4a1 1 0 0 1-1.4 1.4a4.8 4.8 0 0 1 0-7l3.5-3.6a5.1 5.1 0 0 1 7.1 0a5.1 5.1 0 0 1 0 7.1l-1.5 1.5a6.4 6.4 0 0 0-.4-2.4l.5-.5a3.2 3.2 0 0 0 0-4.3a3.2 3.2 0 0 0-4.3 0l-3.5 3.6a2.9 2.9 0 0 0 0 4.2M23 18v2h-3v3h-2v-3h-3v-2h3v-3h2v3m-3.8-4.3a4.8 4.8 0 0 0-1.4-4.5a1 1 0 0 0-1.4 1.4a2.9 2.9 0 0 1 0 4.2l-3.5 3.6a3.2 3.2 0 0 1-4.3 0a3.2 3.2 0 0 1 0-4.3l.5-.4a7.3 7.3 0 0 1-.4-2.5l-1.5 1.5a5.1 5.1 0 0 0 0 7.1a5.1 5.1 0 0 0 7.1 0l1.8-1.8a6 6 0 0 1 3.1-4.3Z"
+      />
+    </svg>
+  );
+};
+
+export const CODEIcon = () => {
+  return (
+    <svg
+      style={{ display: "inline" }}
+      width="16"
+      height="16"
+      viewBox="0 0 32 32"
+    >
+      <path
+        fill="#888888"
+        d="m31 16l-7 7l-1.41-1.41L28.17 16l-5.58-5.59L24 9l7 7zM1 16l7-7l1.41 1.41L3.83 16l5.58 5.59L8 23l-7-7zm11.42 9.484L17.64 6l1.932.517L14.352 26z"
+      />
+    </svg>
+  );
+};
+
+export const STRIKETHROUGHIcon = () => {
     return(
-<svg
-style={{ display: "inline" }}
-width="16" height="16" viewBox="0 0 24 24"><path fill="#888888" d="M10.5 18H18v2h-7.5a6.5 6.5 0 1 1 0-13h5.67l-3.09-3.09L14.5 2.5L20 8l-5.5 5.5l-1.41-1.41L16.17 9H10.5C8 9 6 11 6 13.5S8 18 10.5 18Z"/></svg>
+<svg style={{display: "inline"}} width="16" height="16" viewBox="0 0 24 24"><path fill="#888888" d="M12.15 20q-1.9 0-3.375-1.125T6.65 15.8l2.2-.95q.35 1.2 1.212 1.975q.863.775 2.138.775q1.05 0 1.9-.5q.85-.5.85-1.6q0-.45-.175-.825Q14.6 14.3 14.3 14h2.8q.125.35.188.712q.062.363.062.788q0 2.15-1.538 3.325Q14.275 20 12.15 20ZM2 12v-2h20v2Zm10.05-8.15q1.65 0 2.888.812q1.237.813 1.912 2.488l-2.2.975q-.225-.725-.838-1.3Q13.2 6.25 12.1 6.25q-1.025 0-1.7.463q-.675.462-.75 1.287h-2.4q.05-1.725 1.363-2.938Q9.925 3.85 12.05 3.85Z"/></svg>
     )
 }

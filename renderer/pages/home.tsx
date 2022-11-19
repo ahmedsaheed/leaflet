@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ipcRenderer } from "electron";
 import { undo } from "@codemirror/commands";
+import {EditorUtils} from "../components/editorutils"
 import "react-cmdk/dist/cmdk.css";
 import {
   GETDATE,
@@ -10,6 +11,7 @@ import {
   ADDYAML,
   COMMENTOUT,
 } from "../lib/util";
+import {TopBar} from "../components/topbar";
 import Todo from "../components/todo";
 import { FileTree } from "../components/filetree";
 import { QuickActions } from "../components/quickactions";
@@ -917,12 +919,23 @@ export default function Next() {
             maxWidth: "calc(100vw - 17.5em)",
           }}
         >
+
+        <div className="topBar fixed" style={{zIndex: "100", opacity:"1",  width: "100vw"}}>
+        <div>
+        <TopBar
+            name={name}
+            parentDir={parentDir}
+        />
+        </div>
+
+        </div>
           <div
             style={{
               paddingTop: "13vh",
               padding: "40px",
             }}
           >
+
             {insert ? (
               <div className="markdown-content">
                 <div style={{ overflow: "hidden" }}>
@@ -950,7 +963,7 @@ export default function Next() {
               </div>
             ) : (
               <>
-                <div style={{ overflow: "hidden" }}>
+                <div style={{ zIndex: "1", overflow: "hidden"}}>
                   <div style={{ paddingTop: "1em", userSelect: "none" }}>
                     {checkObject(getMarkdown(value).metadata) &&
                     !isViewingTodo ? (
@@ -963,12 +976,14 @@ export default function Next() {
                       </>
                     ) : null}
                   </div>
+
+                <div style={{ overflow: "hidden"}}>
                   <div
                     id="previewArea"
                     style={{
-                      marginTop: isViewingTodo ? "" : "2em",
                       marginBottom: "5em",
                       overflow: "scroll",
+                      // scroll beneath the fixed header
                     }}
                     className="third h-full w-full"
                     dangerouslySetInnerHTML={
@@ -976,7 +991,8 @@ export default function Next() {
                     }
                   />
 
-                  {isViewingTodo && <Todo />}
+                  {isViewingTodo ? <Todo /> : null}
+                </div>
                 </div>
               </>
             )}
@@ -1130,6 +1146,7 @@ export default function Next() {
                       </>
                     ) : null}
                   </div>
+                  { insert ?
                   <div
                     className="Right"
                     style={{
@@ -1140,10 +1157,11 @@ export default function Next() {
                     }}
                   >
                     <div
-                      style={{ display: "inline", marginLeft: "20px" }}
+                      style={{ display: "inline"}}
                     ></div>
-                    {clockState}
+                        <EditorUtils view={editorview}/>
                   </div>
+                  : null}
                 </>
               )}
             </div>

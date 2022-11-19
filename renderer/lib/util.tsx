@@ -14,6 +14,18 @@ export const BOLD = (view : EditorView ) => {
   );
 }
 
+export const ITALIC = (view : EditorView ) => {
+  if(!view) return;
+  view.dispatch(
+    view.state.changeByRange((range) => ({
+      changes: [
+        { from: range.from, insert: '*' },
+        { from: range.to, insert: '*' },
+      ],
+      range: EditorSelection.range(range.from + 1, range.to + 1),
+    })),
+  );
+}
 
 export const ADDYAML = (view : EditorView) => {
   if(!view) return;
@@ -82,7 +94,7 @@ export const LINK = (view : EditorView) => {
       to: main.to,
       insert: `[${txt}](url)`,
     },
-    selection: EditorSelection.range(main.from + 3 + txt.length, main.to + 3),
+    selection: EditorSelection.range(main.from + 3 + txt.length, main.to + 6),
   });
 }
 
@@ -99,6 +111,20 @@ export const QUICKINSERT = (view : EditorView, txt : string) => {
     selection: EditorSelection.range(main.from + txt.length, main.to + txt.length)
   });
 }
+
+export const ADDCODE = (view : EditorView) => {
+    if(!view) return;
+     view.dispatch(
+    view.state.changeByRange((range) => ({
+      changes: [
+        { from: range.from, insert: '```\n' },
+        { from: range.to, insert: '\n```' },
+      ],
+      range: EditorSelection.range(range.from + 4, range.to + 4),
+    })),
+  );
+}
+
 
 
  export const COMMENTOUT = (view: EditorView) => {
