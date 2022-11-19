@@ -1,5 +1,5 @@
 import { BOLDIcon, ITALICIcon, LINKIcon, CODEIcon } from "./icons";
-import { BOLD, ITALIC, LINK, ADDCODE } from "../lib/util";
+import { BOLD, ITALIC, LINK, ADDCODE, TABLE, STRIKETHROUGH, ADDYAML } from "../lib/util";
 import { QUICKBUTTONS } from "./quickies";
 
 export const EditorUtils = ({ view }) => {
@@ -9,42 +9,85 @@ export const EditorUtils = ({ view }) => {
 const HandleUtils = ({ view }) => {
   return (
     <div
-      className="flex"
       style={{
         width: "100%",
-        maxWidth: "17.5em",
         justifyContent: "center",
         alignItems: "center",
+        fontSize: "12px",
       }}
     >
-    <QUICKBUTTONS 
+      <div
+        style={{
+          display: "inline",
+          borderRight: "1px solid grey",
+          marginRight: "15px",
+        }}
+      ></div>
+      <QUICKBUTTONS
         view={view}
         title={"Add Bold"}
-        icon={<BOLDIcon/>}
+        icon={<strong>Bold</strong>}
         onclick={() => BOLD(view)}
-        />
+      />
 
-
-    <QUICKBUTTONS 
+      <QUICKBUTTONS
         view={view}
         title={"Add Italic"}
-        icon={<ITALICIcon/>}
+        icon={<em>Italic</em>}
         onclick={() => ITALIC(view)}
-        />
+      />
 
-    <QUICKBUTTONS 
+      <QUICKBUTTONS
         view={view}
         title={"Add Code"}
-        icon={<LINKIcon/>}
+        icon={<strike>Strikethrough</strike>}
+        onclick={() => STRIKETHROUGH(view)}
+      />
+
+      {/* Create a vertical divider*/}
+      <div
+        style={{
+          display: "inline",
+          borderRight: "1px solid grey",
+          marginRight: "15px",
+        }}
+      ></div>
+
+      <QUICKBUTTONS
+        view={view}
+        title={"Add Code"}
+        icon={"Link"}
         onclick={() => LINK(view)}
-        />
-      
-    <QUICKBUTTONS 
+      />
+
+      <QUICKBUTTONS
         view={view}
         title={"Add Link"}
-        icon={<CODEIcon/>}
+        icon={"Code"}
         onclick={() => ADDCODE(view)}
-        />
+      />
+
+      <QUICKBUTTONS
+        view={view}
+        title={"Add Table"}
+        icon={"Table"}
+        onclick={() => TABLE(view)}
+      />
+
+      <QUICKBUTTONS
+        view={view}
+        title={"Add Footnote"}
+        icon={"Footnote"}
+        onclick={() => ADDCODE(view)}
+      />
+
+
+      <QUICKBUTTONS
+        view={view}
+        title={"Add Metadata"}
+        icon={"Metadata"}
+        onclick={() => ADDYAML(view)}
+      />
     </div>
   );
 };

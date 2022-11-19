@@ -24,9 +24,9 @@ if (isDev) {
   await app.whenReady();
 
   const mainWindow = createWindow("main", {
-    width: 960,
-    height: 700, 
-    minWidth: 900, 
+    width: 990,
+    height: 800, 
+    minWidth: 950, 
     minHeight: 600, 
     // resizable: false,
     // fullscreen: false,

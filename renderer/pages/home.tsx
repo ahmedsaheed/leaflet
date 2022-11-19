@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ipcRenderer } from "electron";
 import { undo } from "@codemirror/commands";
-import {EditorUtils} from "../components/editorutils"
+import { EditorUtils } from "../components/editorutils";
 import "react-cmdk/dist/cmdk.css";
 import {
   GETDATE,
@@ -10,8 +10,9 @@ import {
   QUICKINSERT,
   ADDYAML,
   COMMENTOUT,
+  HEADINGS
 } from "../lib/util";
-import {TopBar} from "../components/topbar";
+import { TopBar } from "../components/topBar";
 import Todo from "../components/todo";
 import { FileTree } from "../components/filetree";
 import { QuickActions } from "../components/quickactions";
@@ -37,6 +38,7 @@ import { EditorView } from "@codemirror/view";
 import { codeFolding, foldGutter, indentOnInput } from "@codemirror/language";
 import { usePrefersColorScheme } from "../lib/theme";
 import { xcodeLight } from "@uiw/codemirror-theme-xcode";
+import { COLLAPSEIcon } from "../components/icons";
 
 let initialised = false;
 
@@ -538,6 +540,7 @@ export default function Next() {
     }
   };
 
+    const HEADING = (e) => {()=>alert(e.target.value)}
   const saveFile = () => {
     try {
       setSaver("SAVING...");
@@ -919,23 +922,20 @@ export default function Next() {
             maxWidth: "calc(100vw - 17.5em)",
           }}
         >
-
-        <div className="topBar fixed" style={{zIndex: "100", opacity:"1",  width: "100vw"}}>
-        <div>
-        <TopBar
-            name={name}
-            parentDir={parentDir}
-        />
-        </div>
-
-        </div>
+          <div
+            className="topBar fixed"
+            style={{ zIndex: "100", opacity: "1", width: "100vw" }}
+          >
+            <div>
+              <TopBar name={name} parentDir={parentDir} />
+            </div>
+          </div>
           <div
             style={{
               paddingTop: "13vh",
               padding: "40px",
             }}
           >
-
             {insert ? (
               <div className="markdown-content">
                 <div style={{ overflow: "hidden" }}>
@@ -963,7 +963,7 @@ export default function Next() {
               </div>
             ) : (
               <>
-                <div style={{ zIndex: "1", overflow: "hidden"}}>
+                <div style={{ zIndex: "1", overflow: "hidden" }}>
                   <div style={{ paddingTop: "1em", userSelect: "none" }}>
                     {checkObject(getMarkdown(value).metadata) &&
                     !isViewingTodo ? (
@@ -977,22 +977,22 @@ export default function Next() {
                     ) : null}
                   </div>
 
-                <div style={{ overflow: "hidden"}}>
-                  <div
-                    id="previewArea"
-                    style={{
-                      marginBottom: "5em",
-                      overflow: "scroll",
-                      // scroll beneath the fixed header
-                    }}
-                    className="third h-full w-full"
-                    dangerouslySetInnerHTML={
-                      !isViewingTodo ? getMarkdown(value).document : null
-                    }
-                  />
+                  <div style={{ overflow: "hidden" }}>
+                    <div
+                      id="previewArea"
+                      style={{
+                        marginBottom: "5em",
+                        overflow: "scroll",
+                        // scroll beneath the fixed header
+                      }}
+                      className="third h-full w-full"
+                      dangerouslySetInnerHTML={
+                        !isViewingTodo ? getMarkdown(value).document : null
+                      }
+                    />
 
-                  {isViewingTodo ? <Todo /> : null}
-                </div>
+                    {isViewingTodo ? <Todo /> : null}
+                  </div>
                 </div>
               </>
             )}
@@ -1095,24 +1095,54 @@ export default function Next() {
                     className="Left"
                     style={{
                       float: "left",
-                      paddingLeft: "30px",
+                      paddingLeft: "10px",
                       paddingTop: "5px",
                       paddingBottom: "5px",
                     }}
                   >
-                    <span>{`${insert ? "INSERT" : "PREVIEW"}`}</span>
-                    <div
-                      style={{ display: "inline", marginRight: "30px" }}
-                    ></div>
-                    <span>{`${value.toString().split(" ").length}W ${
-                      value.toString().length
-                    }C `}</span>
-                    <div
-                      style={{ display: "inline", marginRight: "30px" }}
-                    ></div>
+                    <span>
+                      {insert ? (
+                      <>
+                        <select
+                          style={{
+                            backgroundColor: "transparent",
+                            border: "none",
+                            outline: "none",
+                            cursor: "pointer",
+                            marginRight: "0.5em",
+                            fontSize: "12px",
+                            appearance: "none"
+                          }}
+                            onChange={(e) => {
+                           
+                            }}
+                        >
+                          <option className="bgbgb" value="1">Heading 1 </option>
+                          <option className="bgbgb" value="2">Heading 2</option>
+                          <option className="bgbgb" value="3">Heading 3</option>
+                        </select>
+
+                      </>
+                      ) : (
+                        "PREVIEW"
+                      )}
+                    </span>
+                    {!insert ? (
+                      <>
+                        <div
+                          style={{ display: "inline", marginRight: "30px" }}
+                        ></div>
+                        <span>{`${value.toString().split(" ").length}W ${
+                          value.toString().length
+                        }C `}</span>
+                        <div
+                          style={{ display: "inline", marginRight: "30px" }}
+                        ></div>
+                      </>
+                    ) : null}
                     <div
                       style={{
-                        display: "inline",
+                        display: insert ? "none" : "inline",
                         color: "grey",
                         overflow: "hidden",
                       }}
@@ -1120,48 +1150,41 @@ export default function Next() {
                         __html: insert ? cursor : progress(scroll),
                       }}
                     />
-                    {isEdited && insert ? (
-                      <>
-                        <div
-                          style={{ display: "inline", marginRight: "30px" }}
-                        ></div>
-                        <button
-                          style={{
-                            display: "inline",
-                            color: "grey",
-                            overflow: "hidden",
-                          }}
-                          id="save"
-                          tabIndex={-1}
-                          onClick={() => {
-                            try {
-                              saveFile();
-                            } catch {
-                              console.log("error");
-                            }
-                          }}
-                        >
-                          {saver}
-                        </button>
-                      </>
-                    ) : null}
                   </div>
-                  { insert ?
-                  <div
-                    className="Right"
-                    style={{
-                      float: "right",
-                      paddingRight: "40px",
-                      paddingTop: "5px",
-                      paddingBottom: "5px",
-                    }}
-                  >
+                  {insert ? (
                     <div
-                      style={{ display: "inline"}}
-                    ></div>
-                        <EditorUtils view={editorview}/>
-                  </div>
-                  : null}
+                      className="Right"
+                      style={{
+                        paddingRight: "30px",
+                        paddingBottom: "2px",
+                        paddingTop: "5px",
+                      }}
+                    >
+                      <div style={{ display: "inline" }}>
+                        <div>
+                          <select
+                            style={{
+                              float: "right",
+                              backgroundColor: "transparent",
+                              paddingBottom: "2px",
+                              paddingTop: "3px",
+                              border: "none",
+                            appearance: "none",
+                              outline: "none",
+                              cursor: "pointer",
+                              fontSize: "12px",
+                            }}
+                          >
+                            <option value="">{value.toString().split(" ").length} Words</option>
+                            <option value="dark">{ value.toString().length
+} Character</option>
+                            <option value="black">Heading 3</option>
+                          </select>
+                        </div>
+                        <EditorUtils view={editorview} />
+                      </div>
+                    </div>
+                  ) : null}
                 </>
               )}
             </div>
