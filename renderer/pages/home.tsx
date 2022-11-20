@@ -1111,26 +1111,24 @@ export default function Next() {
                       paddingBottom: "5px",
                     }}
                   >
-
                     <span>
                       {insert ? (
                         <>
-
-                    <button
-                      className="quickAction"
-                      onClick={() => toggleBetweenVimAndNormalMode()}
-                      style={{
-                        border: "1px solid transparent",
-                        padding: "1px",
-                        fontSize: "12px",
-                        borderRadius: "4px",
-                        marginRight: "1em",
-                        cursor: "default",
-                        outline: "none",
-                      }}
-                    >
-                      <div>{isVim ? "Vim" : "Normal"}</div>
-                    </button>
+                          <button
+                            className="quickAction"
+                            onClick={() => toggleBetweenVimAndNormalMode()}
+                            style={{
+                              border: "1px solid transparent",
+                              padding: "1px",
+                              fontSize: "12px",
+                              borderRadius: "4px",
+                              marginRight: "1em",
+                              cursor: "default",
+                              outline: "none",
+                            }}
+                          >
+                            <div>{isVim ? "Vim" : "Normal"}</div>
+                          </button>
                           <select
                             style={{
                               backgroundColor: "transparent",
