@@ -1,4 +1,7 @@
-import { EditorSelection } from "@codemirror/state";
+import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
+import { codeFolding, foldGutter, indentOnInput } from "@codemirror/language";
+import { languages } from "@codemirror/language-data";
+import { EditorSelection, Extension } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
 import { format } from "date-fns";
 
@@ -238,3 +241,16 @@ export const STRIKETHROUGH = (view: EditorView) => {
     );
     }
 }
+
+
+export const EXTENSIONS: Extension[] = [
+  indentOnInput(),
+ codeFolding(),
+ foldGutter(),
+ markdown({
+ base: markdownLanguage,
+ codeLanguages: languages,
+  addKeymap: true,
+  }),
+  [EditorView.lineWrapping],
+]

@@ -11,6 +11,7 @@ import {
   QUICKINSERT,
   ADDYAML,
   COMMENTOUT,
+  EXTENSIONS
 } from "../lib/util";
 import { TopBar } from "../components/topBar";
 import { FileTree } from "../components/filetree";
@@ -19,7 +20,6 @@ import { METADATE, METATAGS, METAMATERIAL } from "../components/metadata";
 import { progress } from "../components/progress";
 import { getMarkdown } from "../lib/mdParser";
 import commandExists from "command-exists";
-import { SYNONYMS } from "../lib/synonyms";
 import fs from "fs-extra";
 import dragDrop from "drag-drop";
 import Head from "next/head";
@@ -28,13 +28,10 @@ import mainPath from "path";
 import open from "open";
 import os from "os";
 import { CMDK } from "../components/cmdk";
-import { languages } from "@codemirror/language-data";
 import { githubDark } from "@uiw/codemirror-theme-github";
 import CodeMirror from "@uiw/react-codemirror";
-import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import { getStatistics, ReactCodeMirrorRef } from "@uiw/react-codemirror";
 import { EditorView } from "@codemirror/view";
-import { codeFolding, foldGutter, indentOnInput } from "@codemirror/language";
 import { usePrefersColorScheme } from "../lib/theme";
 import { basicLight } from "cm6-theme-basic-light";
 let initialised = false;
@@ -62,14 +59,7 @@ export default function Next() {
   const [fileName, setFileName] = useState<string>("");
   const [pandocAvailable, setPandocAvailable] = useState<boolean>(false);
   const [cursor, setCursor] = useState<string>("1L:1C");
-  const [thesaurus, setThesaurus] = useState<string[]>([]);
-  const [displayThesaurus, setDisplayThesaurus] = useState<boolean>(false);
-  const [whichIsActive, setWhichIsActive] = useState<number>(0);
-  const [count, setCount] = useState<number>(0);
-  const [finder, toogleFinder] = useState<boolean>(false);
-  const [found, setFound] = useState<boolean>(true);
   const [saver, setSaver] = useState<string>("");
-  const [wordToFind, setWordToFind] = useState<string>("");
   const appDir = mainPath.resolve(os.homedir(), "leaflet");
   const [struct, setStruct] = useState<{ [key: string]: any }>([]);
   const [isCreatingFolder, setIsCreatingFolder] = useState<boolean>(false);
@@ -78,9 +68,7 @@ export default function Next() {
   const [detailIsOpen, setDetailIsOpen] = useState<boolean>(false);
   const [editorview, setEditorView] = useState<EditorView>();
   const [isVim, setIsVim] = useState<boolean>(false);
-  const ref = useRef<HTMLTextAreaElement>(null);
   const refs = React.useRef<ReactCodeMirrorRef>({});
-  let synonyms = {};
   const prefersColorScheme = usePrefersColorScheme();
   const isDarkMode = prefersColorScheme === "dark";
   const onboardingDIR = mainPath.resolve(
@@ -88,6 +76,8 @@ export default function Next() {
     "leaflet",
     "onboarding.md"
   );
+
+  
 
   useEffect(() => {
     if (!initialised) {
@@ -103,6 +93,7 @@ export default function Next() {
       });
     }
   }, []);
+  
   useEffect(() => {
     if (refs.current?.view) setEditorView(refs.current?.view);
   }, [refs.current]);
@@ -134,6 +125,7 @@ export default function Next() {
     setCursor(`${line}L:${column}C`);
   };
 
+
   const checkEdit = (doc) => {
     if (!path) return;
     doc.toString() === fs.readFileSync(path, "utf8")
@@ -142,6 +134,9 @@ export default function Next() {
     setIsEdited(true);
   };
 
+/**
+ * @description Function updates cm state on change
+ */
   const onChange = useCallback(
     (doc, viewUpdate) => {
       setValue(doc.toString());
@@ -157,7 +152,13 @@ export default function Next() {
     },
     [path]
   );
-  const createNewDir = (name: string) => {
+
+/**
+ * @description Function creates a new directory with a single file
+ * @param {string} name - name of the directory
+ */
+
+const createNewDir = (name: string) => {
     if (fs.existsSync(mainPath.join(parentDir, name)) || name === "") {
       return;
     }
@@ -172,6 +173,12 @@ export default function Next() {
     setIsCreatingFolder(false);
   };
 
+/**
+ * @description Function checks if pandoc is installed
+ * @returns {boolean} - true if pandoc is installed
+ * @deprecated
+ * @todo remove this function
+ */
   const checkForPandoc = () => {
     commandExists("pandoc", (err, exists) => {
       if (err) {
@@ -183,6 +190,10 @@ export default function Next() {
     });
   };
 
+/**
+ * @description Function toggles and updates between vim and normal mode
+ * @returns {void}
+ */
   const toggleBetweenVimAndNormalMode = () => {
     const whatMode = localStorage.getItem("writingMode");
     if (whatMode == undefined) {
@@ -199,180 +210,10 @@ export default function Next() {
     }
   };
 
-  const getSynonyms = () => {
-    const answer: string[] = new Array();
-    let response = find_synonym(activeWord());
-    if (!response) {
-      return;
-    }
-
-    for (let i = 0; i < response.length; i++) {
-      answer.push(response[i]);
-    }
-    setThesaurus(answer);
-    setDisplayThesaurus(true);
-  };
-
-  const find_synonym = (str: string) => {
-    if (str.trim().length < 4) {
-      return;
-    }
-
-    const target = str.toLowerCase();
-    synonyms = SYNONYMS;
-
-    if (synonyms[target]) {
-      console.log(typeof synonyms[target]);
-      return uniq(synonyms[target]);
-    }
-
-    if (target[target.length - 1] === "s") {
-      const singular = synonyms[target.substr(0, target.length - 1)];
-      if (synonyms[singular]) {
-        return uniq(synonyms[singular]);
-      }
-    }
-  };
-
-  const activeWord = () => {
-    const area = ref.current;
-    const l = activeWordLocation();
-    return area?.value.substr(l.from, l.to - l.from);
-  };
-
-  function uniq(a1: string[]) {
-    var a2: string[] = new Array();
-    for (const id in a1) {
-      if (a2.indexOf(a1[id]) === -1) {
-        a2[a2.length] = a1[id];
-      }
-    }
-    return a2;
-  }
-
-  const activeWordLocation = () => {
-    const area = ref.current;
-    const position = area!.selectionStart;
-    var from = position - 1;
-
-    // Find beginning of word
-    while (from > -1) {
-      const char = area?.value[from];
-      if (!char || !char.match(/[a-z]/i)) {
-        break;
-      }
-      from -= 1;
-    }
-
-    // Find end of word
-    let to = from + 1;
-    while (to < from + 30) {
-      const char = area?.value[to];
-      if (!char || !char.match(/[a-z]/i)) {
-        break;
-      }
-      to += 1;
-    }
-
-    from += 1;
-    return { from: from, to: to, word: area?.value.substring(from, to) };
-  };
-
-  const replaceActiveWord = (word) => {
-    try {
-      if (!word) {
-        return;
-      }
-
-      const area = ref.current;
-
-      const l = activeWordLocation();
-      const w = area?.value.substr(l.from, l.to - l.from);
-
-      if (w?.substr(0, 1) === w?.substr(0, 1)?.toUpperCase()) {
-        word = word.substr(0, 1).toUpperCase() + word.substr(1, word.length);
-      }
-      area?.setSelectionRange(l.from, l.to);
-      document.execCommand("insertText", false, word);
-      area?.focus();
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const nextSynonym = () => {
-    setWhichIsActive(0);
-    const element = document.getElementById("thesaurusWords");
-    var previousWord = element!.children[whichIsActive] as HTMLElement;
-    setWhichIsActive((whichIsActive + 1) % thesaurus.length);
-    setCount(count + 1);
-    const currentWord = element?.children[whichIsActive];
-    if (previousWord) {
-      previousWord.style.display = "none";
-    }
-    if (currentWord) {
-      currentWord.classList.add("active");
-      currentWord.scrollIntoView({
-        behavior: "smooth",
-      });
-    }
-  };
-
-  function find(word: string) {
-    if (word.trim().length < 4) {
-      toogleFinder(false);
-      setFound(true);
-      setWordToFind("");
-      return;
-    }
-
-    const area = ref.current;
-    const startPos = area?.value.toLowerCase().indexOf(word) as number | null;
-    const endPos = startPos + word.length;
-
-    if (typeof area?.selectionStart != "undefined") {
-      area?.focus();
-      if (startPos !== -1) {
-        scrollAnimate(area, endPos - 100, 200);
-        area.setSelectionRange(startPos, endPos);
-        toogleFinder(false);
-      } else {
-        area.setSelectionRange(area.selectionStart, area.selectionStart);
-        setFound(false);
-        setTimeout(() => {
-          toogleFinder(false);
-          setFound(true);
-          setWordToFind("");
-        }, 2000);
-      }
-      return startPos;
-    }
-    return startPos;
-  }
-
-  function scrollAnimate(element: HTMLElement, to: number, duration: number) {
-    const start = element.scrollTop;
-    const change = to - start;
-    let currentTime = 0;
-    const increment = 20;
-    const animate = function () {
-      currentTime += increment;
-      const val = easeInOutQuad(currentTime, start, change, duration);
-      element.scrollTop = val;
-      if (currentTime < duration) {
-        requestAnimationFrame(animate);
-      }
-    };
-    requestAnimationFrame(animate);
-  }
-
-  function easeInOutQuad(t: number, b: number, c: number, d: number) {
-    t /= d / 2;
-    if (t < 1) return (c / 2) * t * t + b;
-    t--;
-    return (-c / 2) * (t * (t - 2) - 1) + b;
-  }
-
+/**
+ * @description Function opens external links in default browser
+ * @returns {void}
+ */
   const openExternalInDefaultBrowser = () => {
     document.addEventListener("click", (event) => {
       const element = event.target as HTMLAnchorElement | null;
@@ -393,6 +234,12 @@ export default function Next() {
     });
   };
 
+  /**
+   * @description Function Convert specified file to pdf
+   * @param {string} body - content to be converted
+   * @param {string} name - name of the file
+   * @returns {void}
+   */
   const toPDF = (body: string, name: string) => {
     try {
       const path = `${Desktop}/${name.replace(/\.md$/, "")}.pdf`;
@@ -407,6 +254,12 @@ export default function Next() {
     }
   };
 
+  /**
+   * @description Function Convert specified file to docx
+   * @param {string} body - content to be converted
+   * @param {string} name - name of the file
+   * @returns {void}
+   */
   const toDOCX = (body: string, name: string) => {
     try {
       const path = `${Desktop}/${name.replace(/\.md$/, "")}.docx`;
@@ -420,6 +273,8 @@ export default function Next() {
       console.log(e);
     }
   };
+
+
   useEffect(() => {
     ipcRenderer.on("save", function () {
       saveFile();
@@ -449,6 +304,13 @@ export default function Next() {
     });
   }, [fileNameBox]);
 
+  
+
+  /**
+   * @description Function Convert docx file to markdown
+   * @param {string} filePath - path of the file to be converted
+   * @returns {void}
+   */
   const docxToMd = (filePath) => {
     let destination = `${appDir}/${filePath.name.split(".")[0]}.md`;
     destination = destination.replace(/\s/g, "");
@@ -470,6 +332,10 @@ export default function Next() {
     return destination;
   };
 
+
+/**
+ * Listen and handle drags and drops events
+ */
   useEffect(() => {
     dragDrop("body", (files) => {
       const nameOfFileAtLastIndex = files[files.length - 1].name;
@@ -512,7 +378,12 @@ export default function Next() {
     });
   }, []);
 
-  const createNewFile = () => {
+
+  /**
+   *
+   * Creates a new file
+   */
+    const createNewFile = () => {
     fileName != ""
       ? ipcRenderer
           .invoke("createNewFile", parentDir, fileName.replace(/\.md$/, ""))
@@ -524,7 +395,13 @@ export default function Next() {
       : null;
   };
 
-  const onDelete = (path, name) => {
+/**
+ * @description Function to delete a file
+ * @param {string} path - path of the file to be deleted
+ * @param {string} name - name of the file to be deleted
+ * @returns {void}
+ */
+  const onDelete = (path:string, name:string) => {
     try {
       if (!fs.existsSync(path)) {
         return;
@@ -587,17 +464,6 @@ export default function Next() {
         e.preventDefault();
         return;
       }
-
-      // if ((e.ctrlKey || e.metaKey) && e.key === "f") {
-      //   if (!insert) {
-      //     return;
-      //   }
-      //   toogleFinder(true);
-      //   document.getElementById("finderInput")?.focus();
-      //   e.preventDefault();
-      //   return;
-      // }
-
       if (e.key === "i" && (e.ctrlKey || e.metaKey)) {
         if (path != onboardingDIR) {
           setInsert(true);
@@ -632,8 +498,6 @@ export default function Next() {
         e.preventDefault();
         return;
       }
-
-      // I need new key for this
       if (e.key === "y" && (e.ctrlKey || e.metaKey)) {
         if (!insert) {
           return;
@@ -687,24 +551,6 @@ export default function Next() {
         if (!insert) {
           e.preventDefault();
           return;
-        }
-      }
-      if (displayThesaurus) {
-        if (e.key === "Tab") {
-          if (e.shiftKey) {
-            nextSynonym();
-            replaceActiveWord(thesaurus[whichIsActive]);
-            e.preventDefault();
-            return;
-          } else {
-            replaceActiveWord(thesaurus[0]);
-            setTimeout(() => {
-              setDisplayThesaurus(false);
-            }, 100);
-            saveFile();
-            e.preventDefault();
-            return;
-          }
         }
       }
     };
@@ -948,30 +794,7 @@ export default function Next() {
                     theme={isDarkMode ? githubDark : basicLight}
                     basicSetup={false}
                     extensions={
-                      isVim
-                        ? [
-                            vim(),
-                            indentOnInput(),
-                            codeFolding(),
-                            foldGutter(),
-                            markdown({
-                              base: markdownLanguage,
-                              codeLanguages: languages,
-                              addKeymap: true,
-                            }),
-                            [EditorView.lineWrapping],
-                          ]
-                        : [
-                            indentOnInput(),
-                            codeFolding(),
-                            foldGutter(),
-                            markdown({
-                              base: markdownLanguage,
-                              codeLanguages: languages,
-                              addKeymap: true,
-                            }),
-                            [EditorView.lineWrapping],
-                          ]
+                      isVim ? [vim(),EXTENSIONS]: EXTENSIONS
                     }
                     onChange={onChange}
                   />
@@ -1016,90 +839,7 @@ export default function Next() {
                 marginTop: "20px",
               }}
             >
-              {displayThesaurus && insert ? (
-                <div
-                  style={{
-                    paddingTop: "5px",
-                    paddingRight: "30px",
-                    paddingBottom: "5px",
-                    alignContent: "center",
-                    overflow: "hidden",
-                  }}
-                >
-                  <li
-                    id="thesaurusWords"
-                    style={{
-                      marginBottom: "5px",
-                      listStyleType: "none",
-                      marginRight: "10px",
-                      display: "inline",
-                    }}
-                  >
-                    {thesaurus.map((item, index) => {
-                      return (
-                        <ul
-                          style={{
-                            display: "inline",
-                            overflowX: "scroll",
-                            color: "grey",
-                          }}
-                        >
-                          <span
-                            style={{
-                              textDecoration: `${
-                                index === whichIsActive ? "underline" : "none"
-                              }`,
-                            }}
-                          >
-                            {item}
-                          </span>
-                        </ul>
-                      );
-                    })}
-                  </li>
-                </div>
-              ) : finder ? (
-                <>
-                  <div
-                    className="Left"
-                    style={{
-                      float: "left",
-                      paddingLeft: "30px",
-                      paddingTop: "5px",
-                      paddingBottom: "5px",
-                    }}
-                  >
-                    <span>
-                      <b>Find:</b>
-                      {found ? (
-                        <form
-                          style={{ display: "inline" }}
-                          onSubmit={() => {
-                            if (wordToFind.length < 1) {
-                              toogleFinder(false);
-                              return;
-                            }
-                            find(wordToFind);
-                          }}
-                        >
-                          <input
-                            id="finderInput"
-                            autoFocus
-                            className="createFile"
-                            type="text"
-                            placeholder="Search a word"
-                            onChange={(e) =>
-                              setWordToFind(e.target.value.toLowerCase())
-                            }
-                          />
-                        </form>
-                      ) : (
-                        <span style={{ display: "inline" }}> Not Found</span>
-                      )}
-                    </span>
-                  </div>
-                </>
-              ) : (
+              
                 <>
                   <div
                     className="Left"
@@ -1217,7 +957,6 @@ export default function Next() {
                     </div>
                   ) : null}
                 </>
-              )}
             </div>
           </div>
         </div>
