@@ -587,13 +587,6 @@ pre > code {
   -webkit-app-region: drag;
 }
 
-input[type="radio" i] {
-  background-color: transparent !important;
-}
-
-input[type=""radio]:checked {
-}
-
 .topBar {
   user-select: none;
   -webkit-app-region: drag;
