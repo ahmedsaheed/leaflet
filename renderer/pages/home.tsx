@@ -3,6 +3,7 @@ import { ipcRenderer } from "electron";
 import { undo } from "@codemirror/commands";
 import { EditorUtils } from "../components/editorutils";
 import "react-cmdk/dist/cmdk.css";
+import { vim } from "@replit/codemirror-vim"
 import {
   GETDATE,
   LINK,
@@ -10,10 +11,8 @@ import {
   QUICKINSERT,
   ADDYAML,
   COMMENTOUT,
-  HEADINGS
 } from "../lib/util";
 import { TopBar } from "../components/topBar";
-import Todo from "../components/todo";
 import { FileTree } from "../components/filetree";
 import { QuickActions } from "../components/quickactions";
 import { METADATE, METATAGS, METAMATERIAL } from "../components/metadata";
@@ -37,8 +36,7 @@ import { getStatistics, ReactCodeMirrorRef } from "@uiw/react-codemirror";
 import { EditorView } from "@codemirror/view";
 import { codeFolding, foldGutter, indentOnInput } from "@codemirror/language";
 import { usePrefersColorScheme } from "../lib/theme";
-import { xcodeLight } from "@uiw/codemirror-theme-xcode";
-
+import { basicLight } from 'cm6-theme-basic-light'
 let initialised = false;
 
 export default function Next() {
@@ -48,7 +46,7 @@ export default function Next() {
     body: string;
     structure: { [key: string]: any };
   };
-  const [isViewingTodo, setViewingTodo] = useState(false);
+  const date  = new Date();
   const [value, setValue] = useState<string>("");
   const [insert, setInsert] = useState<boolean>(false);
   const [files, setFiles] = useState<file[]>([]);
@@ -104,16 +102,6 @@ export default function Next() {
       });
     }
   }, []);
-  // useEffect(() => {
-  //   let clock = setInterval(() => {
-  //     const date = new Date();
-  //     setClockState(date.toLocaleTimeString());
-  //   }, 1000);
-  //   return () => {
-  //     clearInterval(clock);
-  //   }
-  // }, []);
-
   useEffect(() => {
     if (refs.current?.view) setEditorView(refs.current?.view);
   }, [refs.current]);
@@ -159,7 +147,6 @@ export default function Next() {
       let offset = getStatistics(viewUpdate).selection.main.head;
       let line = viewUpdate.state.doc.lineAt(offset);
       updateCursor(line, offset);
-      // allow scroll into view when in last line
       if (line.number === viewUpdate.state.doc.length) {
         viewUpdate.state.doc.lineAt(offset).to = offset;
         viewUpdate.state.scrollIntoView = true;
@@ -177,7 +164,7 @@ export default function Next() {
       fs.mkdirSync(`${parentDir}/${name}`);
       fs.writeFileSync(
         `${parentDir}/${name}/new.md`,
-        `${name} created on ${GETDATE()} at ${clockState}`
+        `${name} created on ${GETDATE()} at ${date.toLocaleTimeString()}`
       );
       Update();
     }
@@ -194,6 +181,7 @@ export default function Next() {
       }
     });
   };
+
 
   const getSynonyms = () => {
     const answer: string[] = new Array();
@@ -651,7 +639,8 @@ export default function Next() {
         if (!insert) {
           return;
         }
-        QUICKINSERT(editorview, clockState);
+
+        QUICKINSERT(editorview, date.toLocaleTimeString());
         e.preventDefault();
         return;
       }
@@ -737,7 +726,6 @@ export default function Next() {
       setValue(fs.readFileSync(path, "utf8"));
       setName(name);
       setPath(path);
-      setViewingTodo(false);
       setInsert(false);
 
       document.documentElement.scrollTop = 0;
@@ -807,7 +795,6 @@ export default function Next() {
               >
                 <QuickActions
                   createNewFile={() => setFileNameBox(true)}
-                  viewingTodo={() => setViewingTodo(true)}
                   addOpenToAllDetailTags={() => addOpenToAllDetailTags()}
                   detailIsOpen={detailIsOpen}
                   createNewFolder={() => {
@@ -897,7 +884,6 @@ export default function Next() {
                             setName(file.name);
                             setPath(file.path);
                             setInsert(false);
-                            setViewingTodo(false);
                             document.documentElement.scrollTop = 0;
                           } catch (err) {
                             console.log(err);
@@ -942,12 +928,14 @@ export default function Next() {
                     value={value}
                     height="100%"
                     width="100%"
-                    theme={isDarkMode ? githubDark : xcodeLight}
+                    autoFocus={true}
+                    theme={isDarkMode ? githubDark : basicLight}
                     basicSetup={false}
                     extensions={[
                       indentOnInput(),
                       codeFolding(),
                       foldGutter(),
+                      vim(),
                       markdown({
                         base: markdownLanguage,
                         codeLanguages: languages,
@@ -963,8 +951,7 @@ export default function Next() {
               <>
                 <div style={{ zIndex: "1", overflow: "hidden" }}>
                   <div style={{ paddingTop: "1em", userSelect: "none" }}>
-                    {checkObject(getMarkdown(value).metadata) &&
-                    !isViewingTodo ? (
+                    {checkObject(getMarkdown(value).metadata)  ? (
                       <>
                         <METADATE incoming={getMarkdown(value).metadata.date} />
                         <METATAGS incoming={getMarkdown(value).metadata.tags} />
@@ -981,15 +968,12 @@ export default function Next() {
                       style={{
                         marginBottom: "5em",
                         overflow: "scroll",
-                        // scroll beneath the fixed header
                       }}
                       className="third h-full w-full"
                       dangerouslySetInnerHTML={
-                        !isViewingTodo ? getMarkdown(value).document : null
-                      }
+                        getMarkdown(value).document  }
                     />
 
-                    {isViewingTodo ? <Todo /> : null}
                   </div>
                 </div>
               </>
@@ -1173,10 +1157,11 @@ export default function Next() {
                               fontSize: "12px",
                             }}
                           >
+
+                            <option value="black">{cursor}</option>
                             <option value="">{value.toString().split(" ").length} Words</option>
                             <option value="dark">{ value.toString().length
 } Character</option>
-                            <option value="black">Heading 3</option>
                           </select>
                         </div>
                         {EditorUtils(editorview)}

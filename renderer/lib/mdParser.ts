@@ -1,7 +1,6 @@
 import hljs from "highlight.js";
 import meta from "markdown-it-meta";
 import todo from "markdown-it-task-lists";
-
 /**
  * @param {string} value
  * @returns {string} html
@@ -10,6 +9,7 @@ import todo from "markdown-it-task-lists";
  * This function is used to convert markdown to html
  */
 export const getMarkdown = (value: string) => {
+
   const md = require("markdown-it")({
     html: true,
     typographer: true,
@@ -42,3 +42,5 @@ export const getMarkdown = (value: string) => {
     return { __html: "Couldn't render page, Something not right!" };
   }
 };
+
+
