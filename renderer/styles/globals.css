@@ -104,6 +104,12 @@ h3 {
   }
 
 
+.ͼo .cm-vimMode .cm-line ::selection {
+    background-color: #f0f0f0 !important;
+    color: black !important;
+}
+
+
 .ͼo .cm-vimMode .cm-line::selection {
     background-color: #f0f0f0 !important;
     color: black !important;
@@ -292,6 +298,9 @@ strong {
     background-color: #b3d4fc !important;
 }
 
+.ͼo .cm-vimMode .cm-line ::selection {
+    background-color: #b3d4fc !important;
+}
   .topBar{
     background-color: #fff !important;
   }
