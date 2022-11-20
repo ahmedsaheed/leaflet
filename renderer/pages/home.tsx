@@ -774,14 +774,7 @@ const createNewDir = (name: string) => {
             maxWidth: "calc(100vw - 17.5em)",
           }}
         >
-          <div
-            className="topBar fixed"
-            style={{ zIndex: "100", opacity: "1", width: "100vw" }}
-          >
-            <div>
-              <TopBar name={name} parentDir={parentDir} />
-            </div>
-          </div>
+        
           <div
             style={{
               paddingTop: "13vh",

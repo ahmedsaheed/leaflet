@@ -5,6 +5,7 @@ export const TopBar = ({parentDir, name}) => {
   <div
     style={{
       // display: "flex",
+      display: "none",
       justifyContent: "space-between",
       alignItems: "center",
       fontSize: "13.5px",

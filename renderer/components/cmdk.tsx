@@ -2,7 +2,7 @@ import {
   DOCXIcon,
   PDFIcon,
 } from "./icons";
-import CommandPalette, { filterItems, getItemIndex } from "react-cmdk";
+import CommandPalette, { filterItems, getItemIndex, JsonStructureItem } from "react-cmdk";
 import { shell } from "electron";
 import path from "path";
 import {Cmdkfooter}  from "./cmdk-footer";
@@ -101,7 +101,7 @@ function items(
 ) {
 
 
-function mapItems (files: Array<FileType>): JsonStructureItem[] {
+function mapItems (files: Array<FileType>) {
   return  [...files.map((file) => ({
             id: file.name,
             showType: false,
@@ -171,6 +171,7 @@ function mapItems (files: Array<FileType>): JsonStructureItem[] {
       {
         heading: "Files",
         id: "files",
+        //@ts-ignore
         items: mapItems(files),
       },
       {
