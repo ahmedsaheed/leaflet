@@ -3,7 +3,7 @@ import { ipcRenderer } from "electron";
 import { undo } from "@codemirror/commands";
 import { EditorUtils } from "../components/editorutils";
 import "react-cmdk/dist/cmdk.css";
-import { vim } from "@replit/codemirror-vim"
+import { vim } from "@replit/codemirror-vim";
 import {
   GETDATE,
   LINK,
@@ -36,7 +36,7 @@ import { getStatistics, ReactCodeMirrorRef } from "@uiw/react-codemirror";
 import { EditorView } from "@codemirror/view";
 import { codeFolding, foldGutter, indentOnInput } from "@codemirror/language";
 import { usePrefersColorScheme } from "../lib/theme";
-import { basicLight } from 'cm6-theme-basic-light'
+import { basicLight } from "cm6-theme-basic-light";
 let initialised = false;
 
 export default function Next() {
@@ -46,7 +46,7 @@ export default function Next() {
     body: string;
     structure: { [key: string]: any };
   };
-  const date  = new Date();
+  const date = new Date();
   const [value, setValue] = useState<string>("");
   const [insert, setInsert] = useState<boolean>(false);
   const [files, setFiles] = useState<file[]>([]);
@@ -64,7 +64,6 @@ export default function Next() {
   const [cursor, setCursor] = useState<string>("1L:1C");
   const [thesaurus, setThesaurus] = useState<string[]>([]);
   const [displayThesaurus, setDisplayThesaurus] = useState<boolean>(false);
-  const [clockState, setClockState] = useState<string>();
   const [whichIsActive, setWhichIsActive] = useState<number>(0);
   const [count, setCount] = useState<number>(0);
   const [finder, toogleFinder] = useState<boolean>(false);
@@ -78,6 +77,7 @@ export default function Next() {
   const Desktop = require("os").homedir() + "/Desktop";
   const [detailIsOpen, setDetailIsOpen] = useState<boolean>(false);
   const [editorview, setEditorView] = useState<EditorView>();
+  const [isVim, setIsVim] = useState<boolean>(false);
   const ref = useRef<HTMLTextAreaElement>(null);
   const refs = React.useRef<ReactCodeMirrorRef>({});
   let synonyms = {};
@@ -94,6 +94,7 @@ export default function Next() {
       initialised = true;
       openExternalInDefaultBrowser();
       checkForPandoc();
+      toggleBetweenVimAndNormalMode();
       ipcRenderer.invoke("getTheFile").then((files = []) => {
         setFiles(files);
         setValue(files[0] ? `${files[0].body}` : "");
@@ -182,6 +183,21 @@ export default function Next() {
     });
   };
 
+  const toggleBetweenVimAndNormalMode = () => {
+    const whatMode = localStorage.getItem("writingMode");
+    if (whatMode == undefined) {
+      localStorage.setItem("writingMode", "normal");
+      setIsVim(false);
+    } else {
+      if (whatMode === "normal") {
+        localStorage.setItem("writingMode", "vim");
+        setIsVim(true);
+      } else {
+        localStorage.setItem("writingMode", "normal");
+        setIsVim(false);
+      }
+    }
+  };
 
   const getSynonyms = () => {
     const answer: string[] = new Array();
@@ -931,18 +947,33 @@ export default function Next() {
                     autoFocus={true}
                     theme={isDarkMode ? githubDark : basicLight}
                     basicSetup={false}
-                    extensions={[
-                      indentOnInput(),
-                      codeFolding(),
-                      foldGutter(),
-                      vim(),
-                      markdown({
-                        base: markdownLanguage,
-                        codeLanguages: languages,
-                        addKeymap: true,
-                      }),
-                      [EditorView.lineWrapping],
-                    ]}
+                    extensions={
+                      isVim
+                        ? [
+                            vim(),
+
+                            indentOnInput(),
+                            codeFolding(),
+                            foldGutter(),
+                            markdown({
+                              base: markdownLanguage,
+                              codeLanguages: languages,
+                              addKeymap: true,
+                            }),
+                            [EditorView.lineWrapping],
+                          ]
+                        : [
+                            indentOnInput(),
+                            codeFolding(),
+                            foldGutter(),
+                            markdown({
+                              base: markdownLanguage,
+                              codeLanguages: languages,
+                              addKeymap: true,
+                            }),
+                            [EditorView.lineWrapping],
+                          ]
+                    }
                     onChange={onChange}
                   />
                 </div>
@@ -951,7 +982,7 @@ export default function Next() {
               <>
                 <div style={{ zIndex: "1", overflow: "hidden" }}>
                   <div style={{ paddingTop: "1em", userSelect: "none" }}>
-                    {checkObject(getMarkdown(value).metadata)  ? (
+                    {checkObject(getMarkdown(value).metadata) ? (
                       <>
                         <METADATE incoming={getMarkdown(value).metadata.date} />
                         <METATAGS incoming={getMarkdown(value).metadata.tags} />
@@ -970,10 +1001,8 @@ export default function Next() {
                         overflow: "scroll",
                       }}
                       className="third h-full w-full"
-                      dangerouslySetInnerHTML={
-                        getMarkdown(value).document  }
+                      dangerouslySetInnerHTML={getMarkdown(value).document}
                     />
-
                   </div>
                 </div>
               </>
@@ -1082,29 +1111,49 @@ export default function Next() {
                       paddingBottom: "5px",
                     }}
                   >
+
                     <span>
                       {insert ? (
-                      <>
-                        <select
-                          style={{
-                            backgroundColor: "transparent",
-                            border: "none",
-                            outline: "none",
-                            cursor: "pointer",
-                            marginRight: "0.5em",
-                            fontSize: "12px",
-                            appearance: "none"
-                          }}
-                            onChange={(e) => {
-                           
-                            }}
-                        >
-                          <option className="bgbgb" value="1">Heading 1 </option>
-                          <option className="bgbgb" value="2">Heading 2</option>
-                          <option className="bgbgb" value="3">Heading 3</option>
-                        </select>
+                        <>
 
-                      </>
+                    <button
+                      className="quickAction"
+                      onClick={() => toggleBetweenVimAndNormalMode()}
+                      style={{
+                        border: "1px solid transparent",
+                        padding: "1px",
+                        fontSize: "12px",
+                        borderRadius: "4px",
+                        marginRight: "1em",
+                        cursor: "default",
+                        outline: "none",
+                      }}
+                    >
+                      <div>{isVim ? "Vim" : "Normal"}</div>
+                    </button>
+                          <select
+                            style={{
+                              backgroundColor: "transparent",
+                              border: "none",
+                              outline: "none",
+                              cursor: "pointer",
+                              marginRight: "0.5em",
+                              fontSize: "12px",
+                              appearance: "none",
+                            }}
+                            onChange={(e) => {}}
+                          >
+                            <option className="bgbgb" value="1">
+                              Heading 1{" "}
+                            </option>
+                            <option className="bgbgb" value="2">
+                              Heading 2
+                            </option>
+                            <option className="bgbgb" value="3">
+                              Heading 3
+                            </option>
+                          </select>
+                        </>
                       ) : (
                         "PREVIEW"
                       )}
@@ -1151,17 +1200,19 @@ export default function Next() {
                               paddingBottom: "2px",
                               paddingTop: "3px",
                               border: "none",
-                            appearance: "none",
+                              appearance: "none",
                               outline: "none",
                               cursor: "pointer",
                               fontSize: "12px",
                             }}
                           >
-
                             <option value="black">{cursor}</option>
-                            <option value="">{value.toString().split(" ").length} Words</option>
-                            <option value="dark">{ value.toString().length
-} Character</option>
+                            <option value="">
+                              {value.toString().split(" ").length} Words
+                            </option>
+                            <option value="dark">
+                              {value.toString().length} Character
+                            </option>
                           </select>
                         </div>
                         {EditorUtils(editorview)}

@@ -1,72 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import "@radix-ui/colors/blackA.css";
+@import "@radix-ui/colors/mauve.css";
+@import "@radix-ui/colors/violet.css";
+@import url("https://fonts.googleapis.com/css2?family=Sono&display=swap");
 
-@import url('https://fonts.googleapis.com/css2?family=Sono&display=swap');
-
-@import '@radix-ui/colors/blackA.css';
-@import '@radix-ui/colors/mauve.css';
-@import '@radix-ui/colors/violet.css';
-
-
-
-
-.ContextMenuItem,
-.ContextMenuCheckboxItem,
-.ContextMenuRadioItem,
-.ContextMenuSubTrigger {
-  font-size: 13px;
-  line-height: 1;
-  border-radius: 3px;
-  display: flex;
-  align-items: center;
-  height: 25px;
-  padding: 0 5px;
-  position: relative;
-  padding-left: 25px;
-  user-select: none;
-  outline: none;
-}
-.ContextMenuSubTrigger[data-state='open'] {
-  background-color: var(--violet4);
-  color: var(--violet11);
-}
-.ContextMenuItem[data-disabled],
-.ContextMenuCheckboxItem[data-disabled],
-.ContextMenuRadioItem[data-disabled],
-.ContextMenuSubTrigger[data-disabled] {
-  pointer-events: 'none';
-}
-
-.ContextMenuLabel {
-  padding-left: 25px;
-  font-size: 12px;
-  line-height: 25px;
-  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji";
-}
-
-
-
-.ContextMenuItemIndicator {
-  position: absolute;
-  left: 0;
-  width: 25px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.RightSlot {
-  margin-left: auto;
-  padding-left: 20px;
-  color: var(--mauve11);
-}
-[data-highlighted] > .RightSlot {
-  color: white;
-}
-[data-disabled] .RightSlot {
-  color: var(--mauve8);
-}
 h1 {
   font-weight: 600;
   line-height: 1.2 !important;
@@ -88,14 +27,12 @@ h3 {
 }
 @media (prefers-color-scheme: dark) {
   body {
-    /* -webkit-app-region: drag; */
     background: #191919;
-    font-family: 'Sono', cursive;
+    font-family: "Sono", cursive;
     color: white;
     font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji",
-    "Segoe UI Symbol" !important;
-    /* font-family: "iA Writer Mono", monospace; */
+      Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji",
+      "Segoe UI Symbol" !important;
     -webkit-font-smoothing: antialiased;
     font-size: 14px;
     letter-spacing: 0.055em;
@@ -103,48 +40,43 @@ h3 {
     text-rendering: optimizeLegibility;
   }
 
-
-.ͼo .cm-vimMode .cm-line ::selection {
+  .ͼo .cm-vimMode .cm-line ::selection {
     background-color: #f0f0f0 !important;
     color: black !important;
-}
-
-
-.ͼo .cm-vimMode .cm-line::selection {
-    background-color: #f0f0f0 !important;
-    color: black !important;
-}
-
-  .taskRuler{
-    border-bottom: 1px solid hsla(0,0%,100%,0.1) !important;
   }
 
-  .topBar{
+  .ͼo .cm-vimMode .cm-line::selection {
+    background-color: #f0f0f0 !important;
+    color: black !important;
+  }
+
+  .taskRuler {
+    border-bottom: 1px solid hsla(0, 0%, 100%, 0.1) !important;
+  }
+
+  .topBar {
     background-color: #191919 !important;
   }
 
-
-
-.ContextMenuSeparator {
-  height: 1px;
-  background-color: hsla(0,0%,100%,0.1);
-  margin: 5px;
-}
+  .ContextMenuSeparator {
+    height: 1px;
+    background-color: hsla(0, 0%, 100%, 0.1);
+    margin: 5px;
+  }
 
   .ContextMenuContent,
-.ContextMenuSubContent {
-  min-width: 220px;
-  background-color: #100f11;
-  border-radius: 6px;
-  overflow: hidden;
-  padding: 5px;
-  /* box-shadow: 0px 10px 38px -10px rgba(22, 23, 24, 0.35), 0px 10px 20px -15px rgba(22, 23, 24, 0.2); */
-}
+  .ContextMenuSubContent {
+    min-width: 220px;
+    background-color: #100f11;
+    border-radius: 6px;
+    overflow: hidden;
+    padding: 5px;
+  }
 
   .cancel {
     background-color: #2d2d2d;
     user-select: none;
-}
+  }
   .cancel:hover:enabled {
     background-color: #3d3d3d !important;
   }
@@ -173,14 +105,12 @@ h3 {
     align-items: center;
   }
 
-
-.ContextMenuItem[data-highlighted],
-.ContextMenuCheckboxItem[data-highlighted],
-.ContextMenuRadioItem[data-highlighted],
-.ContextMenuSubTrigger[data-highlighted] {
+  .ContextMenuItem[data-highlighted],
+  .ContextMenuCheckboxItem[data-highlighted],
+  .ContextMenuRadioItem[data-highlighted],
+  .ContextMenuSubTrigger[data-highlighted] {
     background-color: rgb(255, 255, 255, 0.075);
-}
-
+  }
 
   .files:hover {
     background-color: rgb(255, 255, 255, 0.075);
@@ -188,10 +118,9 @@ h3 {
     color: white;
   }
 
-
-.quickAction:hover {
+  .quickAction:hover {
     background-color: rgb(255, 255, 255, 0.075);
-}
+  }
 
   kbd {
     display: inline-block;
@@ -218,14 +147,14 @@ h3 {
   }
 
   hr {
-    border: 1px solid hsla(0,0%,100%,0.1);
+    border: 1px solid hsla(0, 0%, 100%, 0.1);
   }
 
   a {
-    border-bottom: 1px solid hsla(0,0%,100%,0.1);
+    border-bottom: 1px solid hsla(0, 0%, 100%, 0.1);
   }
 
-  .menu{
+  .menu {
     color: grey !important;
     font-weight: bold;
     user-select: none;
@@ -263,7 +192,7 @@ h3 {
     margin-top: 2em;
     margin-left: auto;
     margin-right: auto;
-    border: 1px solid hsla(0,0%,100%,0.1);
+    border: 1px solid hsla(0, 0%, 100%, 0.1);
   }
 
   ::selection {
@@ -278,15 +207,15 @@ h3 {
 }
 
 strong {
-    font-weight: 600 !important;
+  font-weight: 600 !important;
 }
 @media (prefers-color-scheme: light) {
   body {
     fill: currentColor;
     background: #fff;
     font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji",
-    "Segoe UI Symbol" !important;
+      Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji",
+      "Segoe UI Symbol" !important;
     color: rgb(55, 53, 47);
     font-size: 14px;
     -webkit-font-smoothing: auto;
@@ -294,26 +223,27 @@ strong {
     line-height: 1.6;
   }
 
-.ͼo .cm-vimMode .cm-line::selection {
+  .ͼo .cm-vimMode .cm-line::selection {
     background-color: #b3d4fc !important;
-}
+  }
 
-.ͼo .cm-vimMode .cm-line ::selection {
+  .ͼo .cm-vimMode .cm-line ::selection {
     background-color: #b3d4fc !important;
-}
-  .topBar{
+  }
+  .topBar {
     background-color: #fff !important;
   }
 
   .ContextMenuContent,
-.ContextMenuSubContent {
-  min-width: 220px;
-  background-color: #fff;
-  border-radius: 6px;
-  overflow: hidden;
-  padding: 5px;
-  box-shadow: 0px 10px 38px -10px rgba(22, 23, 24, 0.35), 0px 10px 20px -15px rgba(22, 23, 24, 0.2);
-}
+  .ContextMenuSubContent {
+    min-width: 220px;
+    background-color: #fff;
+    border-radius: 6px;
+    overflow: hidden;
+    padding: 5px;
+    box-shadow: 0px 10px 38px -10px rgba(22, 23, 24, 0.35),
+      0px 10px 20px -15px rgba(22, 23, 24, 0.2);
+  }
   .util {
     border-top: 1px solid #ddd;
     min-width: 18.5em;
@@ -334,24 +264,23 @@ strong {
     background-color: rgba(0, 0, 0, 0.075);
     border-radius: 4px;
   }
-.quickAction:hover {
+  .quickAction:hover {
     background-color: rgba(0, 0, 0, 0.075);
-}
-.ContextMenuSeparator {
-  height: 1px;
-  background-color: #f0f0f0;
-  margin: 5px;
-}
+  }
+  .ContextMenuSeparator {
+    height: 1px;
+    background-color: #f0f0f0;
+    margin: 5px;
+  }
 
-.ContextMenuItem[data-highlighted],
-.ContextMenuCheckboxItem[data-highlighted],
-.ContextMenuRadioItem[data-highlighted],
-.ContextMenuSubTrigger[data-highlighted] {
-
+  .ContextMenuItem[data-highlighted],
+  .ContextMenuCheckboxItem[data-highlighted],
+  .ContextMenuRadioItem[data-highlighted],
+  .ContextMenuSubTrigger[data-highlighted] {
     background-color: rgba(0, 0, 0, 0.075);
-}
+  }
 
-  .menu{
+  .menu {
     color: grey !important;
     font-weight: bold;
     user-select: none;
@@ -446,7 +375,6 @@ strong {
     border: 1px solid #f0f0f0;
   }
 
-
   a {
     border-bottom: 1px solid #f0f0f0;
   }
@@ -460,10 +388,9 @@ li {
   padding-top: 0.075em;
   padding-bottom: 0.075em;
 }
-.taskRuler{
+.taskRuler {
   border-bottom: 1px solid #f0f0f0;
 }
-
 
 ul,
 ol {
@@ -518,8 +445,7 @@ textarea:focus-visible {
 }
 
 code {
-
-    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
     Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji",
     "Segoe UI Symbol" !important;
   padding: 0.2em 0.4em;
@@ -605,8 +531,9 @@ details[open] summary::before {
   background-color: transparent !important;
 }
 .cm-line {
-
-font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji",
+    "Segoe UI Symbol";
   letter-spacing: 0.055em;
   line-height: 1.6;
 }
@@ -641,10 +568,12 @@ summary {
   font-size: 13px;
   line-height: 1.5;
   font-weight: 500;
-  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji",
+    "Segoe UI Symbol";
 }
 
-.todo{
+.todo {
   font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
     Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji",
     "Segoe UI Symbol" !important;
@@ -652,36 +581,85 @@ summary {
 
 pre > code {
   font-family: "iA Writer Mono", monospace !important;
-
 }
 
-.fs{
-    -webkit-app-region: drag;
+.fs {
+  -webkit-app-region: drag;
 }
 
-input[type="radio" i]{ 
-    background-color: transparent !important;
-
+input[type="radio" i] {
+  background-color: transparent !important;
 }
 
 input[type=""radio]:checked {
-    
 }
 
-
-.topBar{
-    user-select: none;
-    -webkit-app-region: drag;
-    min-height: 37px;
+.topBar {
+  user-select: none;
+  -webkit-app-region: drag;
+  min-height: 37px;
 }
 
 .quickAction {
-    outline: none;
+  outline: none;
 }
 .cm-fat-cursor {
-    outline: solid 1px grey !important;
-    background-color: grey !important;
+  outline: solid 1px grey !important;
+  background-color: grey !important;
 }
 
+.ContextMenuItem,
+.ContextMenuCheckboxItem,
+.ContextMenuRadioItem,
+.ContextMenuSubTrigger {
+  font-size: 13px;
+  line-height: 1;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  height: 25px;
+  padding: 0 5px;
+  position: relative;
+  padding-left: 25px;
+  user-select: none;
+  outline: none;
+}
+.ContextMenuSubTrigger[data-state="open"] {
+  background-color: var(--violet4);
+  color: var(--violet11);
+}
+.ContextMenuItem[data-disabled],
+.ContextMenuCheckboxItem[data-disabled],
+.ContextMenuRadioItem[data-disabled],
+.ContextMenuSubTrigger[data-disabled] {
+  pointer-events: "none";
+}
 
+.ContextMenuLabel {
+  padding-left: 25px;
+  font-size: 12px;
+  line-height: 25px;
+  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji";
+}
 
+.ContextMenuItemIndicator {
+  position: absolute;
+  left: 0;
+  width: 25px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.RightSlot {
+  margin-left: auto;
+  padding-left: 20px;
+  color: var(--mauve11);
+}
+[data-highlighted] > .RightSlot {
+  color: white;
+}
+[data-disabled] .RightSlot {
+  color: var(--mauve8);
+}
