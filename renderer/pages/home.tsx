@@ -951,7 +951,6 @@ export default function Next() {
                       isVim
                         ? [
                             vim(),
-
                             indentOnInput(),
                             codeFolding(),
                             foldGutter(),
@@ -1125,9 +1124,9 @@ export default function Next() {
                               marginRight: "1em",
                               cursor: "default",
                               outline: "none",
-                            }}
+                          }}
                           >
-                            <div>{isVim ? "Vim" : "Normal"}</div>
+                            <div>{isVim ? "Vim Mode" : "Normal"}</div>
                           </button>
                           <select
                             style={{
