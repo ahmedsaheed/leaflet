@@ -103,6 +103,12 @@ h3 {
     text-rendering: optimizeLegibility;
   }
 
+
+.ͼo .cm-vimMode .cm-line::selection {
+    background-color: #f0f0f0 !important;
+    color: black !important;
+}
+
   .taskRuler{
     border-bottom: 1px solid hsla(0,0%,100%,0.1) !important;
   }
@@ -282,6 +288,9 @@ strong {
     line-height: 1.6;
   }
 
+.ͼo .cm-vimMode .cm-line::selection {
+    background-color: #b3d4fc !important;
+}
 
   .topBar{
     background-color: #fff !important;
@@ -660,4 +669,10 @@ input[type=""radio]:checked {
 .quickAction {
     outline: none;
 }
+.cm-fat-cursor {
+    outline: solid 1px grey !important;
+    background-color: grey !important;
+}
+
+
 
