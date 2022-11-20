@@ -8,7 +8,6 @@ import {
 
 export const QuickActions = ({
   createNewFile,
-  viewingTodo,
   createNewFolder,
   addOpenToAllDetailTags,
   detailIsOpen,
