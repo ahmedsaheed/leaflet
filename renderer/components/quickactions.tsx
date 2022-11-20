@@ -59,23 +59,6 @@ export const QuickActions = ({
           <NEWFOLDERIcon />
         </div>
       </button>
-
-      <button
-        className="quickAction"
-        onClick={viewingTodo}
-        style={{
-          border: "1px solid transparent",
-          padding: "1px",
-          outline: "none",
-          borderRadius: "4px",
-          marginRight: "1em",
-          cursor: "default",
-        }}
-      >
-        <div>
-          <CALENDARIcon />
-        </div>
-      </button>
       <button
         className="quickAction"
         onClick={addOpenToAllDetailTags}
