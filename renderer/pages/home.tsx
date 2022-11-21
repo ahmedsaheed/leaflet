@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect,  useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ipcRenderer } from "electron";
 import { undo } from "@codemirror/commands";
 import "react-cmdk/dist/cmdk.css";
@@ -10,10 +10,9 @@ import {
   QUICKINSERT,
   ADDYAML,
   COMMENTOUT,
-  EXTENSIONS
+  EXTENSIONS,
 } from "../lib/util";
-import {ButtomBar} from "../components/bottomBar";
-import { TopBar } from "../components/topBar";
+import { ButtomBar } from "../components/bottomBar";
 import { FileTree } from "../components/filetree";
 import { QuickActions } from "../components/quickactions";
 import { METADATE, METATAGS, METAMATERIAL } from "../components/metadata";
@@ -76,8 +75,6 @@ export default function Next() {
     "onboarding.md"
   );
 
-  
-
   useEffect(() => {
     if (!initialised) {
       initialised = true;
@@ -92,7 +89,7 @@ export default function Next() {
       });
     }
   }, []);
-  
+
   useEffect(() => {
     if (refs.current?.view) setEditorView(refs.current?.view);
   }, [refs.current]);
@@ -124,7 +121,6 @@ export default function Next() {
     setCursor(`${line}L:${column}C`);
   };
 
-
   const checkEdit = (doc) => {
     if (!path) return;
     doc.toString() === fs.readFileSync(path, "utf8")
@@ -133,9 +129,9 @@ export default function Next() {
     setIsEdited(true);
   };
 
-/**
- * @description Function updates cm state on change
- */
+  /**
+   * @description Function updates cm state on change
+   */
   const onChange = useCallback(
     (doc, viewUpdate) => {
       setValue(doc.toString());
@@ -152,12 +148,12 @@ export default function Next() {
     [path]
   );
 
-/**
- * @description Function creates a new directory with a single file
- * @param {string} name - name of the directory
- */
+  /**
+   * @description Function creates a new directory with a single file
+   * @param {string} name - name of the directory
+   */
 
-const createNewDir = (name: string) => {
+  const createNewDir = (name: string) => {
     if (fs.existsSync(mainPath.join(parentDir, name)) || name === "") {
       return;
     }
@@ -172,12 +168,12 @@ const createNewDir = (name: string) => {
     setIsCreatingFolder(false);
   };
 
-/**
- * @description Function checks if pandoc is installed
- * @returns {boolean} - true if pandoc is installed
- * @deprecated
- * @todo remove this function
- */
+  /**
+   * @description Function checks if pandoc is installed
+   * @returns {boolean} - true if pandoc is installed
+   * @deprecated
+   * @todo remove this function
+   */
   const checkForPandoc = () => {
     commandExists("pandoc", (err, exists) => {
       if (err) {
@@ -189,10 +185,10 @@ const createNewDir = (name: string) => {
     });
   };
 
-/**
- * @description Function toggles and updates between vim and normal mode
- * @returns {void}
- */
+  /**
+   * @description Function toggles and updates between vim and normal mode
+   * @returns {void}
+   */
   const toggleBetweenVimAndNormalMode = () => {
     const whatMode = localStorage.getItem("writingMode");
     if (whatMode == undefined) {
@@ -209,10 +205,10 @@ const createNewDir = (name: string) => {
     }
   };
 
-/**
- * @description Function opens external links in default browser
- * @returns {void}
- */
+  /**
+   * @description Function opens external links in default browser
+   * @returns {void}
+   */
   const openExternalInDefaultBrowser = () => {
     document.addEventListener("click", (event) => {
       const element = event.target as HTMLAnchorElement | null;
@@ -273,7 +269,6 @@ const createNewDir = (name: string) => {
     }
   };
 
-
   useEffect(() => {
     ipcRenderer.on("save", function () {
       saveFile();
@@ -303,8 +298,6 @@ const createNewDir = (name: string) => {
     });
   }, [fileNameBox]);
 
-  
-
   /**
    * @description Function Convert docx file to markdown
    * @param {string} filePath - path of the file to be converted
@@ -331,10 +324,9 @@ const createNewDir = (name: string) => {
     return destination;
   };
 
-
-/**
- * Listen and handle drags and drops events
- */
+  /**
+   * Listen and handle drags and drops events
+   */
   useEffect(() => {
     dragDrop("body", (files) => {
       const nameOfFileAtLastIndex = files[files.length - 1].name;
@@ -377,12 +369,11 @@ const createNewDir = (name: string) => {
     });
   }, []);
 
-
   /**
    *
    * Creates a new file
    */
-    const createNewFile = () => {
+  const createNewFile = () => {
     fileName != ""
       ? ipcRenderer
           .invoke("createNewFile", parentDir, fileName.replace(/\.md$/, ""))
@@ -394,13 +385,13 @@ const createNewDir = (name: string) => {
       : null;
   };
 
-/**
- * @description Function to delete a file
- * @param {string} path - path of the file to be deleted
- * @param {string} name - name of the file to be deleted
- * @returns {void}
- */
-  const onDelete = (path:string, name:string) => {
+  /**
+   * @description Function to delete a file
+   * @param {string} path - path of the file to be deleted
+   * @param {string} name - name of the file to be deleted
+   * @returns {void}
+   */
+  const onDelete = (path: string, name: string) => {
     try {
       if (!fs.existsSync(path)) {
         return;
@@ -576,9 +567,27 @@ const createNewDir = (name: string) => {
     });
   };
 
-  const checkObject = (obj) => {
-    return typeof obj === "object" && obj !== null;
+/**
+ * @description Function validate and render yaml metadata
+ * @param {object} yaml - yaml object
+ * @returns {React.ReactNode}
+ * @todo - this function doesn't render the body, when yaml is not valid
+ *
+ */
+  const ValidateYaml = (yaml: object | undefined) => {
+    console.warn(typeof yaml);
+if (yaml === undefined) {
+      return <><p>Yaml is not valid</p><hr/></>;
+    }
+    return (
+      <>
+        <METADATE incoming={getMarkdown(value).metadata.date} />
+        <METATAGS incoming={getMarkdown(value).metadata.tags} />
+        <METAMATERIAL incoming={getMarkdown(value).metadata?.material} />
+      </>
+    );
   };
+
 
   /**
    * @description Function to handle file selection from the sidebar
@@ -600,7 +609,6 @@ const createNewDir = (name: string) => {
       console.log(err);
     }
   };
-
 
   const addOpenToAllDetailTags = () => {
     const searchArea = document.getElementById(
@@ -774,7 +782,6 @@ const createNewDir = (name: string) => {
             maxWidth: "calc(100vw - 17.5em)",
           }}
         >
-        
           <div
             style={{
               paddingTop: "13vh",
@@ -792,9 +799,7 @@ const createNewDir = (name: string) => {
                     autoFocus={true}
                     theme={isDarkMode ? githubDark : basicLight}
                     basicSetup={false}
-                    extensions={
-                      isVim ? [vim(),EXTENSIONS]: EXTENSIONS
-                    }
+                    extensions={isVim ? [vim(), EXTENSIONS] : EXTENSIONS}
                     onChange={onChange}
                   />
                 </div>
@@ -803,32 +808,24 @@ const createNewDir = (name: string) => {
               <>
                 <div style={{ zIndex: "1", overflow: "hidden" }}>
                   <div style={{ paddingTop: "1em", userSelect: "none" }}>
-                    {checkObject(getMarkdown(value).metadata) ? (
-                      <>
-                        <METADATE incoming={getMarkdown(value).metadata.date} />
-                        <METATAGS incoming={getMarkdown(value).metadata.tags} />
-                        <METAMATERIAL
-                          incoming={getMarkdown(value).metadata.material}
+                  {ValidateYaml(getMarkdown(value).metadata)}
+                      <div style={{ overflow: "hidden" }}>
+                        <div
+                          id="previewArea"
+                          style={{
+                            marginBottom: "5em",
+                            overflow: "scroll",
+                          }}
+                          className="third h-full w-full"
+                          dangerouslySetInnerHTML={getMarkdown(value).document}
                         />
-                      </>
-                    ) : null}
-                  </div>
-
-                  <div style={{ overflow: "hidden" }}>
-                    <div
-                      id="previewArea"
-                      style={{
-                        marginBottom: "5em",
-                        overflow: "scroll",
-                      }}
-                      className="third h-full w-full"
-                      dangerouslySetInnerHTML={getMarkdown(value).document}
-                    />
+                      </div>
                   </div>
                 </div>
               </>
             )}
-           {ButtomBar(insert, 
+            {ButtomBar(
+              insert,
               () => toggleBetweenVimAndNormalMode(),
               isVim,
               value,

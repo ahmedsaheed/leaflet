@@ -5,7 +5,7 @@ type IncomingProps = {
 };
 
 const checkIfIncomingIsObject = (incoming: IncomingProps) => {
-  return typeof incoming === "object" && incoming !== null;
+  return typeof incoming != undefined 
 };
 
 export const METATAGS = ({ incoming }) => {

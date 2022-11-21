@@ -1,6 +1,7 @@
 import hljs from "highlight.js";
-import meta from "markdown-it-meta";
 import todo from "markdown-it-task-lists";
+import yaml from 'yaml'
+import metadata_block from 'markdown-it-metadata-block'
 /**
  * @param {string} value
  * @returns {string} html
@@ -9,7 +10,14 @@ import todo from "markdown-it-task-lists";
  * This function is used to convert markdown to html
  */
 export const getMarkdown = (value: string) => {
+    type Metadata = {
+        title: string,
+        date: string,
+        tags: string[],
+        material: {}
 
+    }
+  const meta:Metadata = {};
   const md = require("markdown-it")({
     html: true,
     typographer: true,
@@ -30,13 +38,16 @@ export const getMarkdown = (value: string) => {
     },
   });
   require("markdown-it-pandoc")(md);
-  md.use(meta);
+  md.use(metadata_block,{
+    parseMetadata: yaml.parse,
+    meta
+})
   md.use(todo, { enabled: true });
   try {
     const result = md.render(value);
     return {
       document: { __html: result },
-      metadata: md.meta,
+      metadata: meta,
     };
   } catch (err) {
     return { __html: "Couldn't render page, Something not right!" };
