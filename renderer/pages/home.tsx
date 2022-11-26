@@ -64,6 +64,7 @@ export default function Next() {
   const [parentDir, setParentDir] = useState<string>(appDir);
   const Desktop = require("os").homedir() + "/Desktop";
   const [detailIsOpen, setDetailIsOpen] = useState<boolean>(false);
+  const [fileTreeIsOpen, setFileTreeIsOpen] = useState<boolean>(true);
   const [editorview, setEditorView] = useState<EditorView>();
   const [isVim, setIsVim] = useState<boolean>(false);
   const refs = React.useRef<ReactCodeMirrorRef>({});
@@ -410,6 +411,14 @@ export default function Next() {
     }
   };
 
+  const fileTreeDrawer = () => {
+    if (fileTreeIsOpen) {
+      setFileTreeIsOpen(false);
+    } else {
+      setFileTreeIsOpen(true);
+    }
+  };
+
   const saveFile = () => {
     try {
       setSaver("SAVING...");
@@ -527,6 +536,9 @@ export default function Next() {
         undo(editorview);
       }
 
+      if (e.metaKey && e.key === "\\") {
+        fileTreeDrawer();
+      }
       if (e.metaKey && e.key === "k") {
         e.preventDefault();
         e.stopPropagation();
@@ -567,18 +579,39 @@ export default function Next() {
     });
   };
 
-/**
- * @description Function validate and render yaml metadata
- * @param {object} yaml - yaml object
- * @returns {React.ReactNode}
- * @todo - this function doesn't render the body, when yaml is not valid
- *
- */
-  const ValidateYaml = (yaml: object | undefined) => {
-    console.warn(typeof yaml);
-if (yaml === undefined) {
-      return <><p>Yaml is not valid</p><hr/></>;
+  function isEmpty(obj: object) {
+    for (var prop in obj) {
+      if (obj.hasOwnProperty(prop)) return false;
     }
+
+    return true;
+  }
+
+  /**
+   * @description Function validate and render yaml metadata
+   * @param {object} yaml - yaml object
+   * @returns {React.ReactNode}
+   * @todo - this function doesn't render the body, when yaml is not valid
+   *
+   */
+  const ValidateYaml = (yaml: object | undefined) => {
+    console.log(yaml);
+    if (yaml === undefined) {
+      return (
+        <>
+          <p>yaml is not valid</p>
+          <hr />
+        </>
+      );
+    }
+    // }else if(isEmpty(yaml)){
+    //   return (
+    //     <>
+    //       <p>yaml is not valid</p>
+    //       <hr />
+    //     </>
+    //   );
+    // }else{
     return (
       <>
         <METADATE incoming={getMarkdown(value).metadata.date} />
@@ -587,7 +620,6 @@ if (yaml === undefined) {
       </>
     );
   };
-
 
   /**
    * @description Function to handle file selection from the sidebar
@@ -659,7 +691,12 @@ if (yaml === undefined) {
         <div>
           <div
             className="fs fixed"
-            style={{ width: "17.5em", maxWidth: "18.5em", minHeight: "100vh" }}
+            style={{
+              width: "17.5em",
+              maxWidth: "18.5em",
+              minHeight: "100vh",
+              display: fileTreeIsOpen ? "block" : "none",
+            }}
           >
             <div>
               <div
@@ -777,9 +814,9 @@ if (yaml === undefined) {
 
         <div
           style={{
-            width: "calc(100vw - 17.5em)",
-            minWidth: "calc(100vw - 17.5em)",
-            maxWidth: "calc(100vw - 17.5em)",
+            width: fileTreeIsOpen ?  "calc(100vw - 17.5em)" : "100vw",
+            minWidth:fileTreeIsOpen ?  "calc(100vw - 17.5em)" : "100vw", 
+            maxWidth: fileTreeIsOpen ?  "calc(100vw - 17.5em)" : "100vw",  
           }}
         >
           <div
@@ -808,18 +845,18 @@ if (yaml === undefined) {
               <>
                 <div style={{ zIndex: "1", overflow: "hidden" }}>
                   <div style={{ paddingTop: "1em", userSelect: "none" }}>
-                  {ValidateYaml(getMarkdown(value).metadata)}
-                      <div style={{ overflow: "hidden" }}>
-                        <div
-                          id="previewArea"
-                          style={{
-                            marginBottom: "5em",
-                            overflow: "scroll",
-                          }}
-                          className="third h-full w-full"
-                          dangerouslySetInnerHTML={getMarkdown(value).document}
-                        />
-                      </div>
+                    {ValidateYaml(getMarkdown(value).metadata)}
+                    <div style={{ overflow: "hidden" }}>
+                      <div
+                        id="previewArea"
+                        style={{
+                          marginBottom: "5em",
+                          overflow: "scroll",
+                        }}
+                        className="third h-full w-full"
+                        dangerouslySetInnerHTML={getMarkdown(value).document}
+                      />
+                    </div>
                   </div>
                 </div>
               </>
@@ -831,7 +868,8 @@ if (yaml === undefined) {
               value,
               cursor,
               scroll,
-              editorview
+              editorview,
+              fileTreeIsOpen,
             )}
           </div>
         </div>

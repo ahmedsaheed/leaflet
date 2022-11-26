@@ -9,6 +9,7 @@ export const ButtomBar = (insert: boolean,
     cursor : string,
     scroll: number,
     editorview: EditorView,
+    fileTreeIsOpen : boolean,
     ) => {
 
     return (
@@ -18,7 +19,7 @@ export const ButtomBar = (insert: boolean,
         style={{
           display: "inline",
           userSelect: "none",
-          marginLeft: "17.55em",
+          marginLeft: fileTreeIsOpen ?  "17.55em" : "0em",
           maxHeight: "10vh",
           marginTop: "20px",
         }}
