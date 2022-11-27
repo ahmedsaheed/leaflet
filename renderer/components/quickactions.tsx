@@ -1,13 +1,14 @@
 import {
   NEWNOTEIcon,
-  CALENDARIcon,
   NEWFOLDERIcon,
   COLLAPSEIcon,
   EXPANDIcon,
+  SIDEBARCOLLAPSEIcon,
 } from "./icons";
 
 export const QuickActions = ({
   createNewFile,
+sidebarCollapse,
   createNewFolder,
   addOpenToAllDetailTags,
   detailIsOpen,
@@ -71,6 +72,21 @@ export const QuickActions = ({
         }}
       >
         <div>{detailIsOpen ? <COLLAPSEIcon /> : <EXPANDIcon />}</div>
+      </button>
+
+      <button
+        className="quickAction"
+        onClick={sidebarCollapse}
+        style={{
+          border: "1px solid transparent",
+          padding: "1px",
+          borderRadius: "4px",
+          marginRight: "1em",
+          outline: "none",
+          cursor: "default",
+        }}
+      >
+        <div><SIDEBARCOLLAPSEIcon/></div>
       </button>
     </div>
   );

@@ -697,7 +697,8 @@ export default function Next() {
 
               display: fileTreeIsOpen ? "block" : "none",
             }}
-          ></div>
+          >
+          </div>
         </div>
         <div>
           <div
@@ -725,6 +726,8 @@ export default function Next() {
                     setFileNameBox(true);
                     setIsCreatingFolder(true);
                   }}
+                  sidebarCollapse={fileTreeDrawer}
+
                 />
 
                 <FileTree
