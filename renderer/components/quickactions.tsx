@@ -37,7 +37,9 @@ sidebarCollapse,
           borderRadius: "4px",
         }}
       >
-        <div>
+        <div
+            title="New Note"
+        >
           <NEWNOTEIcon />
         </div>
       </button>
@@ -55,7 +57,10 @@ sidebarCollapse,
           outline: "none",
         }}
       >
-        <div>
+        <div
+
+            title="New Folder"
+        >
           <NEWFOLDERIcon />
         </div>
       </button>
@@ -71,7 +76,9 @@ sidebarCollapse,
           cursor: "default",
         }}
       >
-        <div>{detailIsOpen ? <COLLAPSEIcon /> : <EXPANDIcon />}</div>
+        <div
+            title={detailIsOpen ? "Collapse Files" : "Expand Files"}
+        >{detailIsOpen ? <COLLAPSEIcon /> : <EXPANDIcon />}</div>
       </button>
 
       <button
@@ -86,7 +93,9 @@ sidebarCollapse,
           cursor: "default",
         }}
       >
-        <div><SIDEBARCOLLAPSEIcon/></div>
+        <div
+            title="Collapse Sidebar"
+        ><SIDEBARCOLLAPSEIcon/></div>
       </button>
     </div>
   );
