@@ -2,7 +2,7 @@ import {
   DOCXIcon,
   PDFIcon,
 } from "./icons";
-import CommandPalette, { filterItems, getItemIndex, JsonStructureItem } from "react-cmdk";
+import CommandPalette, { filterItems, getItemIndex, } from "react-cmdk";
 import { shell } from "electron";
 import path from "path";
 import {Cmdkfooter}  from "./cmdk-footer";
@@ -178,16 +178,7 @@ function mapItems (files: Array<FileType>) {
         heading: "Help",
         id: "advanced",
         items: [
-          {
-            id: "help",
-            showType: false,
-            children: "Help & Documentation",
-            icon: "QuestionMarkCircleIcon",
-            onClick: (event: React.MouseEvent<HTMLElement>) => {
-              event.preventDefault();
-              shell.openExternal("https://github.com/ahmedsaheed/Leaflet");
-            },
-          },
+         
           {
             id: "keys",
             showType: false,
@@ -198,6 +189,16 @@ function mapItems (files: Array<FileType>) {
               shell.openExternal(
                 "https://github.com/ahmedsaheed/Leaflet#shortcuts-and-controls"
               );
+            },
+          },
+         {
+            id: "help",
+            showType: false,
+            children: "Help & Documentation",
+            icon: "QuestionMarkCircleIcon",
+            onClick: (event: React.MouseEvent<HTMLElement>) => {
+              event.preventDefault();
+              shell.openExternal("https://github.com/ahmedsaheed/Leaflet");
             },
           },
         ],

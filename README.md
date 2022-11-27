@@ -87,9 +87,9 @@ $ yarn build
 - <kbd>⌘ | Ctrl</kbd> + <kbd>o</kbd> : Open
 - <kbd>⌘ | Ctrl</kbd> + <kbd>i</kbd> : Insert
 - <kbd>⌘ | Ctrl</kbd> + <kbd>p</kbd> : Preview
+- <kbd>⌘ | Ctrl</kbd> + <kbd>/</kbd> : Toggle Side Bar
 - <kbd>⌘ | Ctrl</kbd> + <kbd>d</kbd> : Convert to Docx
 - <kbd>⌘ | Ctrl</kbd> + <kbd>e</kbd> : Convert to PDF
-- <kbd>Shift</kbd> + <kbd>Tab</kbd> : Toggle Suggested Word
 - <kbd>⌘ | Ctrl</kbd> + <kbd>k</kbd> : Toggle Command Palette
 
 
@@ -98,7 +98,6 @@ $ yarn build
 ### Quick Insert
 - <kbd>⌘ | Ctrl</kbd> + <kbd>y</kbd> : Date
 - <kbd>⌘ | Ctrl</kbd> + <kbd>t</kbd> : Time
-- <kbd>⌘ | Ctrl</kbd> + <kbd>f</kbd> : Finder
 - <kbd>⌘ | Ctrl</kbd> + <kbd>/</kbd> : Comment
 
 ---

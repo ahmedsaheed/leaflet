@@ -49,6 +49,11 @@ h3 {
     color: black !important;
   }
 
+.ͼz.cm-focused .cm-selectionBackground .cm-selectionBackground, .ͼz .cm-selectionLayer .cm-selectionBackground, .ͼz ::selection {
+    background-color: #f0f0f0 !important;
+    color: black !important;
+}
+
   .taskRuler {
     border-bottom: 1px solid hsla(0, 0%, 100%, 0.1) !important;
   }
@@ -85,7 +90,8 @@ h3 {
     margin-inline-end: 0;
   }
   .ButtomBar {
-    background-color: #100f11;
+    -webkit-app-region: drag;
+      background-color: #100f11;
   }
   mark {
     background-color: #ff9a9e;
@@ -233,6 +239,11 @@ strong {
     background-color: #fff !important;
   }
 
+
+.ͼz.cm-focused .cm-selectionBackground .cm-selectionBackground, .ͼz .cm-selectionLayer .cm-selectionBackground, .ͼz ::selection {
+    background-color: #fff !important;
+}
+
   .ContextMenuContent,
   .ContextMenuSubContent {
     min-width: 220px;
@@ -328,7 +339,8 @@ strong {
   .ButtomBar {
     background-color: #fbfbfb;
     border-top: 1px solid #ddd;
-  }
+    -webkit-app-region: drag;
+}
 
   pre {
     font-family: "iA Writer Mono", monospace;
@@ -654,4 +666,11 @@ pre > code {
 }
 [data-disabled] .RightSlot {
   color: var(--mauve8);
+}
+
+figcaption{
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    font-size: 10px;
 }

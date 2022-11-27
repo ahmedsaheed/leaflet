@@ -604,14 +604,6 @@ export default function Next() {
         </>
       );
     }
-    // }else if(isEmpty(yaml)){
-    //   return (
-    //     <>
-    //       <p>yaml is not valid</p>
-    //       <hr />
-    //     </>
-    //   );
-    // }else{
     return (
       <>
         <METADATE incoming={getMarkdown(value).metadata.date} />
@@ -688,6 +680,15 @@ export default function Next() {
         ></script>
       </Head>
       <div className="mainer" style={{ minHeight: "100vh" }}>
+      <div
+        className="topBar"
+        style={{
+           position: "fixed",
+            width: "100%",
+            height: "40px",
+            zIndex: click ? 0 : 100,
+            }}
+      ></div>
         <div>
           <div
             className="fs fixed"
