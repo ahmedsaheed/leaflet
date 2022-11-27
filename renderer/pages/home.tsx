@@ -680,15 +680,25 @@ export default function Next() {
         ></script>
       </Head>
       <div className="mainer" style={{ minHeight: "100vh" }}>
-      <div
-        className="topBar"
-        style={{
-           position: "fixed",
+        <div
+          className="topBar"
+          style={{
+            position: "fixed",
             width: "100%",
             height: "40px",
             zIndex: click ? 0 : 100,
+          }}
+        >
+          <div
+            className="topBarLeft"
+            style={{
+              width: "17.5em",
+              height: "40px",
+
+              display: fileTreeIsOpen ? "block" : "none",
             }}
-      ></div>
+          ></div>
+        </div>
         <div>
           <div
             className="fs fixed"
@@ -815,9 +825,9 @@ export default function Next() {
 
         <div
           style={{
-            width: fileTreeIsOpen ?  "calc(100vw - 17.5em)" : "100vw",
-            minWidth:fileTreeIsOpen ?  "calc(100vw - 17.5em)" : "100vw", 
-            maxWidth: fileTreeIsOpen ?  "calc(100vw - 17.5em)" : "100vw",  
+            width: fileTreeIsOpen ? "calc(100vw - 17.5em)" : "100vw",
+            minWidth: fileTreeIsOpen ? "calc(100vw - 17.5em)" : "100vw",
+            maxWidth: fileTreeIsOpen ? "calc(100vw - 17.5em)" : "100vw",
           }}
         >
           <div
@@ -870,7 +880,7 @@ export default function Next() {
               cursor,
               scroll,
               editorview,
-              fileTreeIsOpen,
+              fileTreeIsOpen
             )}
           </div>
         </div>

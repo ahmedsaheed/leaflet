@@ -169,6 +169,11 @@ h3 {
     border-right: 1px solid #2d2d2d;
     user-select: none;
   }
+  .topBarLeft{
+    background-color: #100f11;
+    border-right: 1px solid #2d2d2d;
+    user-select: none;
+  }
   .fileBody {
     padding: 0 10px 10px 10px;
   }
@@ -358,6 +363,11 @@ strong {
     border-right: 1px solid #ddd;
     color: rgb(73, 80, 87);
     user-select: none;
+  }
+
+  .topBarLeft{
+    background-color: #fbfbfb;
+    border-right: 1px solid #ddd;
   }
   .fs p {
     color: rbg(73, 80, 87) !important;
