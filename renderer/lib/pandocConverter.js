@@ -1,6 +1,9 @@
 var stat = require('fs').stat;
 var spawn = require('child_process').spawn;
 
+/**
+ * Converts a file or url to PDF or DOCX format using Pandoc
+ */
 module.exports = function() {
 
   var src;
