@@ -3,7 +3,6 @@ import { codeFolding, foldGutter, indentOnInput } from "@codemirror/language";
 import { languages } from "@codemirror/language-data";
 import { EditorSelection, Extension } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
-import { format } from "date-fns";
 
 
 /**
@@ -54,7 +53,7 @@ title: Your Title
 author: 
  - John Doe
  - Jane Doe
-date: ${format(new Date(), "EEE d MMM")}
+date: ${GETDATE()}
 tags:
  - programming
  - computers
@@ -78,10 +77,35 @@ material:
 };
 
 /**
- * Generates todays date in format: EEE d MMM
+ * Generates todays date in format: EEE d MMM YYYY
  */
 export const GETDATE = () => {
-    return format(new Date(), "EEE d MMM");
+  const date = new Date();
+  const strArray = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+const weekday = ["Sun","Mon","Tue","Wed","Thur","Fri","Sat"];
+  const s = weekday[date.getDay()] +
+    " " +
+    (date.getDate() <= 9 ? "0" + date.getDate() : date.getDate()) +
+    " " +
+    strArray[date.getMonth()] +
+    " " +
+    date.getFullYear() +
+    " ";
+  return s;
 };
 
 /**

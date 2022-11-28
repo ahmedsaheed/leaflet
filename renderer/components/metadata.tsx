@@ -64,8 +64,6 @@ if (!checkIfIncomingIsObject(incoming) || incoming === undefined) return null;
 
 export const METAMATERIAL = ({ incoming }) => {
   
-  console.log("incoming is", typeof incoming)
-  // console.log(incoming);
   if (!checkIfIncomingIsObject(incoming) || incoming === undefined) return null;
   return incoming ? (
     <div style={{ display: "flex" }}>
@@ -84,7 +82,6 @@ export const METAMATERIAL = ({ incoming }) => {
       </div>
       <div
         style={{
-          // display: "flex",
           flex: "1 1 auto",
           alignItems: "center",
           minWidth: "0",

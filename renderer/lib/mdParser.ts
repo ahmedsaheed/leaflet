@@ -17,7 +17,7 @@ export const getMarkdown = (value: string) => {
         material: {}
 
     }
-  const meta:Metadata = {};
+  const meta = {} as Metadata
   const md = require("markdown-it")({
     html: true,
     typographer: true,
