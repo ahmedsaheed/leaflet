@@ -53,7 +53,7 @@ if (!checkIfIncomingIsObject(incoming) || incoming === undefined) return null;
                 backgroundColor: getBG(),
               }}
             >
-              {tag.toLowerCase()}
+              {tag?.toLowerCase()}
             </code>
           ))}
         </span>
@@ -102,7 +102,7 @@ export const METAMATERIAL = ({ incoming }) => {
           {incoming?.map((materials) =>
             Object.entries(materials).map(([key, value]) =>
               //TODO: Look for a better way to do this
-              value.toString().startsWith("http") && key != value ? (
+              value?.toString().startsWith("http") && key != value ? (
                 <code
                   style={{
                     borderRadius: "4px",

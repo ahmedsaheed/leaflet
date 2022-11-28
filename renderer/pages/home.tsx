@@ -605,11 +605,11 @@ export default function Next() {
       );
     }
     return (
-      <>
+      <div style={{userSelect : "none"}}>
         <METADATE incoming={getMarkdown(value).metadata.date} />
         <METATAGS incoming={getMarkdown(value).metadata.tags} />
         <METAMATERIAL incoming={getMarkdown(value).metadata?.material} />
-      </>
+      </div>
     );
   };
 
@@ -858,7 +858,7 @@ export default function Next() {
             ) : (
               <>
                 <div style={{ zIndex: "1", overflow: "hidden" }}>
-                  <div style={{ paddingTop: "1em", userSelect: "none" }}>
+                  <div style={{ paddingTop: "1em"}}>
                     {ValidateYaml(getMarkdown(value).metadata)}
                     <div style={{ overflow: "hidden" }}>
                       <div
