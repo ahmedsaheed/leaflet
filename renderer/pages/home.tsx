@@ -41,6 +41,7 @@ export default function Next() {
     body: string;
     structure: { [key: string]: any };
   };
+  
   const date = new Date();
   const [value, setValue] = useState<string>("");
   const [insert, setInsert] = useState<boolean>(false);
