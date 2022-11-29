@@ -1,8 +1,5 @@
 import React from "react";
 import * as ContextMenu from "@radix-ui/react-context-menu";
-import {
-  ChevronRightIcon,
-} from "@radix-ui/react-icons";
 import {BINIcon , RENAMEIcon, MOVEIcon, MARKDOWNIcon } from "./icons";
 const ContextMenuDemo = ({ nameToDisplay, handleDelete, toPDF, toDOCX }) => {
   return (
@@ -47,9 +44,6 @@ const ContextMenuDemo = ({ nameToDisplay, handleDelete, toPDF, toDOCX }) => {
             <ContextMenu.Sub>
               <ContextMenu.SubTrigger className="ContextMenuSubTrigger">
                 Export 
-                <div className="RightSlot">
-                  <ChevronRightIcon />
-                </div>
               </ContextMenu.SubTrigger>
               <ContextMenu.Portal>
                 <ContextMenu.SubContent
@@ -60,12 +54,12 @@ const ContextMenuDemo = ({ nameToDisplay, handleDelete, toPDF, toDOCX }) => {
                   <ContextMenu.Item className="ContextMenuItem"
                     onClick={toPDF}
                   >
-                    Export to PDF <div className="RightSlot">⌘+S</div>
+                    Export to PDF <div className="RightSlot">⌘+E</div>
                   </ContextMenu.Item>
                   <ContextMenu.Item className="ContextMenuItem"
                     onClick={toDOCX}
                   >
-                   Export to DOCX 
+                   Export to DOCX <div className="RightSlot">⌘+D</div>
                   </ContextMenu.Item>
                 </ContextMenu.SubContent>
               </ContextMenu.Portal>
