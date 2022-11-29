@@ -1,17 +1,25 @@
-import path from 'path';
-
-export const TopBar = ({parentDir, name}) => {
+export const TopBar = (click: boolean,fileTreeIsOpen: boolean) => {
   return (
-  <div
-    style={{
-      // display: "flex",
-      display: "none",
-      justifyContent: "space-between",
-      alignItems: "center",
-      fontSize: "13.5px",
-    }}
-  >
-</div>
+        <div
+          className="topBar"
+          style={{
+            position: "fixed",
+            width: "100%",
+            height: "40px",
+            zIndex: click ? 0 : 100,
+          }}
+        >
+          <div
+            className="topBarLeft"
+            style={{
+              width: "17.5em",
+              height: "40px",
+
+              display: fileTreeIsOpen ? "block" : "none",
+            }}
+          >
+          </div>
+        </div>
 
 
   )

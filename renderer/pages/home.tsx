@@ -12,6 +12,7 @@ import {
   COMMENTOUT,
   EXTENSIONS,
 } from "../lib/util";
+import {TopBar} from "../components/topBar";
 import { ButtomBar } from "../components/bottomBar";
 import { FileTree } from "../components/filetree";
 import { QuickActions } from "../components/quickactions";
@@ -681,27 +682,8 @@ export default function Next() {
         ></script>
       </Head>
       <div className="mainer" style={{ minHeight: "100vh" }}>
-        <div
-          className="topBar"
-          style={{
-            position: "fixed",
-            width: "100%",
-            height: "40px",
-            zIndex: click ? 0 : 100,
-          }}
-        >
-          <div
-            className="topBarLeft"
-            style={{
-              width: "17.5em",
-              height: "40px",
-
-              display: fileTreeIsOpen ? "block" : "none",
-            }}
-          >
-          </div>
-        </div>
         <div>
+            {TopBar(click, fileTreeIsOpen)}
           <div
             className="fs fixed"
             style={{

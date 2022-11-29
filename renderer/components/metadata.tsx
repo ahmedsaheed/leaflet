@@ -113,9 +113,9 @@ export const METAMATERIAL = ({ incoming }) => {
                   <a
                     target="_blank"
                     style={{ textDecoration: "none", border: "none" }}
-                    href={value.toString()}
+                    href={value?.toString()}
                   >
-                    {key.toLowerCase()}
+                    {key?.toLowerCase()}
                   </a>
                 </code>
               ) : null

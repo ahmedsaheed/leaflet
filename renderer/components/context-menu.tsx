@@ -5,7 +5,6 @@ import {
 } from "@radix-ui/react-icons";
 import {BINIcon , RENAMEIcon, MOVEIcon, MARKDOWNIcon } from "./icons";
 const ContextMenuDemo = ({ nameToDisplay, handleDelete, toPDF, toDOCX }) => {
-  const [isRenaming, setIsRenaming] = React.useState(false);
   return (
     <>
       <ContextMenu.Root>
@@ -35,7 +34,7 @@ const ContextMenuDemo = ({ nameToDisplay, handleDelete, toPDF, toDOCX }) => {
              Delete<div className="RightSlot"><BINIcon/></div>
             </ContextMenu.Item>
             <ContextMenu.Item className="ContextMenuItem"
-                onClick={() => setIsRenaming(true)}
+                onClick={null}
             >
             Rename
               <div className="RightSlot"><RENAMEIcon/></div>

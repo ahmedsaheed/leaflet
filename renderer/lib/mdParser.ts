@@ -15,7 +15,6 @@ export const getMarkdown = (value: string) => {
         date: string,
         tags: string[],
         material: {}
-
     }
   const meta = {} as Metadata
   const md = require("markdown-it")({
@@ -50,7 +49,7 @@ export const getMarkdown = (value: string) => {
       metadata: meta,
     };
   } catch (err) {
-    return { __html: "Couldn't render page, Something not right!" };
+    return { __html: "Couldn't render page, Something not right!"};
   }
 };
 
