@@ -206,7 +206,7 @@ if (isDev) {
    // mainWindow.webContents.openDevTools();
   } else {
     try{
-      await mainWindow.loadURL('app://./home.html');
+      await mainWindow.loadURL('app://dist/home.html');
     }catch(err){
       console.log(err);
     }

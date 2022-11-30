@@ -44,7 +44,7 @@
     "build:mac": "nextron build --mac --x64",
     "build:linux": "nextron build --linux",
     "postinstall": "electron-builder install-app-deps",
-    "release": " electron-builder -m -l -w --publish always",
+    "release": "electron-builder -m -l -w --publish always",
     "release:win32": "electron-builder --publish always --win --ia32",
     "release:win64": "electron-builder --publish always --win --x64",
     "release:mac": "electron-builder --publish always --mac --x64",
