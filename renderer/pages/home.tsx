@@ -596,7 +596,6 @@ export default function Next() {
    *
    */
   const ValidateYaml = (yaml: object | undefined) => {
-    console.log(yaml);
     if (yaml === undefined) {
       return (
         <>
