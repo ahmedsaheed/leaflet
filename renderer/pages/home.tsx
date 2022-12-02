@@ -533,15 +533,15 @@ export default function Next() {
         e.preventDefault();
         return;
       }
-      if (e.metaKey && e.key === "z") {
+      if ((e.ctrlKey || e.metaKey) && e.key === "z") {
         if (!insert || !editorview) return;
         undo(editorview);
       }
 
-      if (e.metaKey && e.key === "\\") {
+      if ((e.ctrlKey || e.metaKey) && e.key === "\\") {
         fileTreeDrawer();
       }
-      if (e.metaKey && e.key === "k") {
+      if ((e.ctrlKey || e.metaKey)&& e.key === "k") {
         e.preventDefault();
         e.stopPropagation();
         setSearch("");
@@ -585,7 +585,6 @@ export default function Next() {
     for (var prop in obj) {
       if (obj.hasOwnProperty(prop)) return false;
     }
-
     return true;
   }
 
