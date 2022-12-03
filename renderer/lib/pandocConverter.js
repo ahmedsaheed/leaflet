@@ -35,8 +35,10 @@ module.exports = function() {
     callback(new Error(err));
   };
 
+
   onStatCheck = function (err, stats) {
     // If src is a file or valid web URL, push the src back into args array
+  try {
     if ((stats && stats.isFile()) || isURL) {
       args.unshift(src);
     }
@@ -53,6 +55,9 @@ module.exports = function() {
     pdSpawn.stdout.on('data', onStdOutData);
     pdSpawn.stdout.on('end', onStdOutEnd);
     pdSpawn.stderr.on('data', onStdErrData);
+    } catch (e) {
+        callback(e);
+        }   
   };
 
   // Convert arguments to actual array.
