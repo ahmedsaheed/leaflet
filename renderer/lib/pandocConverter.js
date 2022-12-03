@@ -1,5 +1,5 @@
 var stat = require('fs').stat;
-var spawn = require('child_process').spawn;
+var spawn = require('node:child_process').spawn;
 
 /**
  * Converts a file or url to PDF or DOCX format using Pandoc

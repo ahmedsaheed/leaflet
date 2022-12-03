@@ -1,0 +1,14 @@
+appId: com.leaflet
+name: Leaflet
+productName: Leaflet
+copyright: Copyright © 2022 Ahmed Saheed
+directories:
+  output: dist
+  buildResources: resources
+files:
+  - from: .
+    filter:
+      - package.json
+      - app
+publish: 
+  - github
