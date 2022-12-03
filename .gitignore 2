@@ -1,7 +1,0 @@
-node_modules
-*.log
-.next
-app
-dist
-.DS_Store
-.env
