@@ -1,18 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { ipcRenderer } from "electron";
-import { undo } from "@codemirror/commands";
 import "react-cmdk/dist/cmdk.css";
 import { vim } from "@replit/codemirror-vim";
 import {
   GETDATE,
-  LINK,
-  BOLD,
-  QUICKINSERT,
-  ADDYAML,
-  COMMENTOUT,
   EXTENSIONS,
 } from "../lib/util";
-import {TopBar} from "../components/topBar";
+import { TopBar } from "../components/topBar";
 import { ButtomBar } from "../components/bottomBar";
 import { FileTree } from "../components/filetree";
 import { QuickActions } from "../components/quickactions";
@@ -33,6 +27,7 @@ import { getStatistics, ReactCodeMirrorRef } from "@uiw/react-codemirror";
 import { EditorView } from "@codemirror/view";
 import { usePrefersColorScheme } from "../lib/theme";
 import { basicLight } from "cm6-theme-basic-light";
+import { ListenToKeys } from "../lib/keyevents";
 let initialised = false;
 
 export default function Next() {
@@ -42,7 +37,7 @@ export default function Next() {
     body: string;
     structure: { [key: string]: any };
   };
-  
+
   const date = new Date();
   const [value, setValue] = useState<string>("");
   const [insert, setInsert] = useState<boolean>(false);
@@ -72,11 +67,6 @@ export default function Next() {
   const refs = React.useRef<ReactCodeMirrorRef>({});
   const prefersColorScheme = usePrefersColorScheme();
   const isDarkMode = prefersColorScheme === "dark";
-  const onboardingDIR = mainPath.resolve(
-    os.homedir(),
-    "leaflet",
-    "onboarding.md"
-  );
 
   useEffect(() => {
     if (!initialised) {
@@ -291,7 +281,7 @@ export default function Next() {
 
   useEffect(() => {
     ipcRenderer.on("open", function () {
-      openWindow();
+      fileDialog();
     });
   }, []);
 
@@ -438,126 +428,23 @@ export default function Next() {
   };
 
   useEffect(() => {
-    document.onkeydown = function ListenToKeys(e) {
-      if ((e.ctrlKey || e.metaKey) && e.key === "s") {
-        saveFile();
-        e.preventDefault();
-        return;
-      }
-
-      if ((e.ctrlKey || e.metaKey) && e.key === "b") {
-        if (!insert) {
-          return;
-        }
-        BOLD(editorview);
-        e.preventDefault();
-        return;
-      }
-
-      if ((e.ctrlKey || e.metaKey) && e.key === "e") {
-        toPDF(value, name);
-        e.preventDefault();
-        return;
-      }
-
-      if ((e.ctrlKey || e.metaKey) && e.key === "d") {
-        toDOCX(value, name);
-        e.preventDefault();
-        return;
-      }
-      if (e.key === "i" && (e.ctrlKey || e.metaKey)) {
-        if (path != onboardingDIR) {
-          setInsert(true);
-          e.preventDefault();
-          return;
-        } else {
-          setInsert(false);
-          e.preventDefault();
-          return;
-        }
-      } else if (e.key === "p" && (e.ctrlKey || e.metaKey)) {
-        setInsert(false);
-        e.preventDefault();
-        return;
-      }
-
-      if (e.key === "o" && (e.ctrlKey || e.metaKey)) {
-        openWindow();
-        e.preventDefault();
-        return;
-      }
-
-      if ((e.key === "[" || e.key === "]") && (e.ctrlKey || e.metaKey)) {
-        if (!insert) {
-          return;
-        }
-        LINK(editorview);
-      }
-
-      if (e.key === "n" && (e.ctrlKey || e.metaKey)) {
-        setFileNameBox(true);
-        e.preventDefault();
-        return;
-      }
-      if (e.key === "y" && (e.ctrlKey || e.metaKey)) {
-        if (!insert) {
-          return;
-        }
-        QUICKINSERT(editorview, GETDATE());
-        e.preventDefault();
-        return;
-      }
-      if (e.key === "/" && (e.ctrlKey || e.metaKey)) {
-        if (!insert) {
-          return;
-        }
-        COMMENTOUT(editorview);
-        e.preventDefault();
-        return;
-      }
-
-      if (e.key === "t" && (e.ctrlKey || e.metaKey)) {
-        if (!insert) {
-          return;
-        }
-
-        QUICKINSERT(editorview, date.toLocaleTimeString());
-        e.preventDefault();
-        return;
-      }
-      if (e.key === "j" && (e.ctrlKey || e.metaKey)) {
-        if (!insert) {
-          return;
-        }
-        ADDYAML(editorview);
-        e.preventDefault();
-        return;
-      }
-      if ((e.ctrlKey || e.metaKey) && e.key === "z") {
-        if (!insert || !editorview) return;
-        undo(editorview);
-      }
-
-      if ((e.ctrlKey || e.metaKey) && e.key === "\\") {
-        fileTreeDrawer();
-      }
-      if ((e.ctrlKey || e.metaKey)&& e.key === "k") {
-        e.preventDefault();
-        e.stopPropagation();
-        setSearch("");
-        setClick(!click);
-        return;
-      } else if (e.key === "Escape") {
-        setClick(false);
-        return;
-      }
-      if (e.key === "Tab") {
-        if (!insert) {
-          e.preventDefault();
-          return;
-        }
-      }
-    };
+    ListenToKeys(
+      saveFile,
+      editorview,
+      insert,
+      setInsert,
+      toPDF,
+      toDOCX,
+      value,
+      name,
+      path,
+      fileDialog,
+      fileTreeDrawer,
+      setFileNameBox,
+      setSearch,
+      setClick,
+      click
+    );
   });
 
   const creatingFileOrFolder = () => {
@@ -572,7 +459,7 @@ export default function Next() {
     }, 100);
   };
 
-  const openWindow = () => {
+  const fileDialog = () => {
     ipcRenderer.invoke("app:on-fs-dialog-open").then(() => {
       ipcRenderer.invoke("getTheFile").then((files = []) => {
         setFiles(files);
@@ -605,7 +492,7 @@ export default function Next() {
       );
     }
     return (
-      <div style={{userSelect : "none"}}>
+      <div style={{ userSelect: "none" }}>
         <METADATE incoming={getMarkdown(value).metadata.date} />
         <METATAGS incoming={getMarkdown(value).metadata.tags} />
         <METAMATERIAL incoming={getMarkdown(value).metadata?.material} />
@@ -681,7 +568,7 @@ export default function Next() {
       </Head>
       <div className="mainer" style={{ minHeight: "100vh" }}>
         <div>
-            {TopBar(click, fileTreeIsOpen)}
+          {TopBar(click, fileTreeIsOpen)}
           <div
             className="fs fixed"
             style={{
@@ -708,7 +595,6 @@ export default function Next() {
                     setIsCreatingFolder(true);
                   }}
                   sidebarCollapse={fileTreeDrawer}
-
                 />
 
                 <FileTree
@@ -839,7 +725,7 @@ export default function Next() {
             ) : (
               <>
                 <div style={{ zIndex: "1", overflow: "hidden" }}>
-                  <div style={{ paddingTop: "1em"}}>
+                  <div style={{ paddingTop: "1em" }}>
                     {ValidateYaml(getMarkdown(value).metadata)}
                     <div style={{ overflow: "hidden" }}>
                       <div
