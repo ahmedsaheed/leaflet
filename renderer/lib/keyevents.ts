@@ -27,10 +27,12 @@ export const ListenToKeys = (
   path: string,
   fileDialog: () => void,
   fileTreeDrawer: () => void,
+  fileTreeIsOpen: boolean,
+  setFileTreeIsOpen: Dispatcher<boolean>,
   setFileNameBox: Dispatcher<boolean>,
   setSearch: Dispatcher<string>,
   setClick: Dispatcher<boolean>,
-  click: boolean
+  click: boolean,
 ) => {
   document.onkeydown = function handleKeysEvent(e: KeyboardEvent) {
     if ((e.ctrlKey || e.metaKey) && e.key === "s") {

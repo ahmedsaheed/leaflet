@@ -4,7 +4,7 @@ export const QUICKBUTTONS = (
   view: EditorView,
   title: string,
   icon: string | ReactNode,
-  onclick: () => any
+  onclick: () => void
 ) => {
   return (
     <button

@@ -2,13 +2,14 @@ import React, { useCallback, useEffect, useState } from "react";
 import { ipcRenderer } from "electron";
 import "react-cmdk/dist/cmdk.css";
 import { vim } from "@replit/codemirror-vim";
-import { 
-GETDATE,
-EXTENSIONS,
- openExternalInDefaultBrowser,
-toggleBetweenVimAndNormalMode,
-checkForPandoc,
-toDOCX, toPDF
+import {
+  GETDATE,
+  EXTENSIONS,
+  openExternalInDefaultBrowser,
+  toggleBetweenVimAndNormalMode,
+  checkForPandoc,
+  toDOCX,
+  toPDF,
 } from "../lib/util";
 import { TopBar } from "../components/topBar";
 import { ButtomBar } from "../components/bottomBar";
@@ -18,9 +19,7 @@ import { METADATE, METATAGS, METAMATERIAL } from "../components/metadata";
 import { getMarkdown } from "../lib/mdParser";
 import fs from "fs-extra";
 import dragDrop from "drag-drop";
-import Head from "next/head";
 import mainPath from "path";
-import os from "os";
 import pandoc from "../lib/pandocConverter";
 import { CMDK } from "../components/cmdk";
 import { githubDark } from "@uiw/codemirror-theme-github";
@@ -57,7 +56,7 @@ export function Leaflet() {
   const [pandocAvailable, setPandocAvailable] = useState<boolean>(false);
   const [cursor, setCursor] = useState<string>("1L:1C");
   const [saver, setSaver] = useState<string>("");
-  const appDir = mainPath.resolve(os.homedir(), "leaflet");
+  const appDir = mainPath.resolve(require("os").homedir(), "leaflet");
   const [struct, setStruct] = useState<{ [key: string]: any }>([]);
   const [isCreatingFolder, setIsCreatingFolder] = useState<boolean>(false);
   const [parentDir, setParentDir] = useState<string>(appDir);
@@ -168,7 +167,6 @@ export function Leaflet() {
       setStruct(files[0].structure.children);
     });
   };
-
 
   useEffect(() => {
     ipcRenderer.on("save", function () {
@@ -311,13 +309,13 @@ export function Leaflet() {
     }
   };
 
-  const fileTreeDrawer = () => {
-    if (fileTreeIsOpen) {
-      setFileTreeIsOpen(false);
-    } else {
-      setFileTreeIsOpen(true);
-    }
-  };
+  // const fileTreeDrawer = () => {
+  //   if (fileTreeIsOpen) {
+  //     setFileTreeIsOpen(false);
+  //   } else {
+  //     setFileTreeIsOpen(true);
+  //   }
+  // };
 
   const saveFile = () => {
     try {
@@ -348,12 +346,22 @@ export function Leaflet() {
       path,
       fileDialog,
       fileTreeDrawer,
+      fileTreeIsOpen,
+      setFileTreeIsOpen,
       setFileNameBox,
       setSearch,
       setClick,
       click
     );
   });
+
+  const fileTreeDrawer = () => {
+    if (fileTreeIsOpen) {
+      setFileTreeIsOpen(false);
+    } else {
+      setFileTreeIsOpen(true);
+    }
+  };
 
   const creatingFileOrFolder = () => {
     if (fileName.length < 1) {
@@ -453,27 +461,6 @@ export function Leaflet() {
 
   return (
     <>
-      <Head>
-        <link
-          rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"
-          integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X"
-          crossOrigin="anonymous"
-        />
-
-        <script
-          defer
-          src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"
-          integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4"
-          crossOrigin="anonymous"
-        ></script>
-        <script
-          defer
-          src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js"
-          integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa"
-          crossOrigin="anonymous"
-        ></script>
-      </Head>
       <div className="mainer" style={{ minHeight: "100vh" }}>
         <div>
           {TopBar(click, fileTreeIsOpen)}

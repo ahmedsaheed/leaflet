@@ -3,7 +3,6 @@ module.exports = {
     if (!isServer) {
       config.target = 'electron-renderer';
     }
-
     return config;
   },
 };

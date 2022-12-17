@@ -7,7 +7,7 @@ import { languages } from "@codemirror/language-data";
 import { EditorSelection, Extension } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
 import open from "open";
-import { spawn, exec } from "child_process";
+import { spawn } from "child_process";
 const Desktop = require("os").homedir() + "/Desktop";
 type Dispatcher<S> = Dispatch<SetStateAction<S>>;
 
@@ -293,6 +293,17 @@ export const toggleBetweenVimAndNormalMode = (
   }
 };
 
+// export const fileTreeDrawer = (
+//   fileTreeIsOpen: boolean,
+//   setFileTreeIsOpen: Dispatcher<boolean>
+// ) => {
+//   if (fileTreeIsOpen) {
+//     setFileTreeIsOpen(false);
+//   } else {
+//     setFileTreeIsOpen(true);
+//   }
+// };
+
 /**
  * @description Function opens external links in default browser
  * @returns {void}
@@ -331,11 +342,9 @@ export const checkForPandoc = async (
       console.error(`Error: ${error}`);
     });
     setPandocAvailable(true);
-    console.log("Pandoc is installed");
   } catch (error) {
     setPandocAvailable(false);
     console.error(`Error: ${error}`);
-    console.log("Pandoc is not installed");
   }
 };
 

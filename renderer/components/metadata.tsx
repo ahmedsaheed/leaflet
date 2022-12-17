@@ -112,6 +112,7 @@ export const METAMATERIAL = ({ incoming }) => {
                 >
                   <a
                     target="_blank"
+                    rel="noreferrer"
                     style={{ textDecoration: "none", border: "none" }}
                     href={value?.toString()}
                   >
