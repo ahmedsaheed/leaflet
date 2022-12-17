@@ -2,19 +2,24 @@ import React, { useCallback, useEffect, useState } from "react";
 import { ipcRenderer } from "electron";
 import "react-cmdk/dist/cmdk.css";
 import { vim } from "@replit/codemirror-vim";
-import { GETDATE, EXTENSIONS } from "../lib/util";
+import { 
+GETDATE,
+EXTENSIONS,
+ openExternalInDefaultBrowser,
+toggleBetweenVimAndNormalMode,
+checkForPandoc,
+toDOCX, toPDF
+} from "../lib/util";
 import { TopBar } from "../components/topBar";
 import { ButtomBar } from "../components/bottomBar";
 import { FileTree } from "../components/filetree";
 import { QuickActions } from "../components/quickactions";
 import { METADATE, METATAGS, METAMATERIAL } from "../components/metadata";
 import { getMarkdown } from "../lib/mdParser";
-import commandExists from "command-exists";
 import fs from "fs-extra";
 import dragDrop from "drag-drop";
 import Head from "next/head";
 import mainPath from "path";
-import open from "open";
 import os from "os";
 import pandoc from "../lib/pandocConverter";
 import { CMDK } from "../components/cmdk";
@@ -56,7 +61,6 @@ export function Leaflet() {
   const [struct, setStruct] = useState<{ [key: string]: any }>([]);
   const [isCreatingFolder, setIsCreatingFolder] = useState<boolean>(false);
   const [parentDir, setParentDir] = useState<string>(appDir);
-  const Desktop = require("os").homedir() + "/Desktop";
   const [detailIsOpen, setDetailIsOpen] = useState<boolean>(false);
   const [fileTreeIsOpen, setFileTreeIsOpen] = useState<boolean>(true);
   const [editorview, setEditorView] = useState<EditorView>();
@@ -69,8 +73,8 @@ export function Leaflet() {
     if (!initialised) {
       initialised = true;
       openExternalInDefaultBrowser();
-      checkForPandoc();
-      toggleBetweenVimAndNormalMode();
+      checkForPandoc(setPandocAvailable);
+      toggleBetweenVimAndNormalMode(setIsVim);
       ipcRenderer.invoke("getTheFile").then((files = []) => {
         setFiles(files);
         setValue(files[0] ? `${files[0].body}` : "");
@@ -158,60 +162,6 @@ export function Leaflet() {
     setIsCreatingFolder(false);
   };
 
-  /**
-   * @description Function checks if pandoc is installed
-   * @returns {boolean} - true if pandoc is installed
-   * @deprecated
-   * @todo remove this function
-   */
-  const checkForPandoc = () => {
-    commandExists("pandoc", (err, exists) => {
-      if (err) {
-        console.log(err);
-      }
-      if (exists) {
-        setPandocAvailable(true);
-      }
-    });
-  };
-
-  /**
-   * @description Function toggles and updates between vim and normal mode
-   * @returns {void}
-   */
-  const toggleBetweenVimAndNormalMode = () => {
-    const whatMode = localStorage.getItem("writingMode");
-    if (whatMode == undefined) {
-      localStorage.setItem("writingMode", "normal");
-      setIsVim(false);
-    } else {
-      if (whatMode === "normal") {
-        localStorage.setItem("writingMode", "vim");
-        setIsVim(true);
-      } else {
-        localStorage.setItem("writingMode", "normal");
-        setIsVim(false);
-      }
-    }
-  };
-
-  /**
-   * @description Function opens external links in default browser
-   * @returns {void}
-   */
-  const openExternalInDefaultBrowser = () => {
-    document.addEventListener("click", (event) => {
-      const element = event.target as HTMLAnchorElement | null;
-      if (
-        element?.tagName === "A" &&
-        element?.href.indexOf(window.location.href) > -1 === false
-      ) {
-        event.preventDefault();
-        open(element?.href);
-      }
-    });
-  };
-
   const Update = () => {
     ipcRenderer.invoke("getTheFile").then((files = []) => {
       setFiles(files);
@@ -219,45 +169,6 @@ export function Leaflet() {
     });
   };
 
-  /**
-   * @description Function Convert specified file to pdf
-   * @param {string} body - content to be converted
-   * @param {string} name - name of the file
-   * @returns {void}
-   */
-  const toPDF = (body: string, name: string) => {
-    try {
-      const path = `${Desktop}/${name.replace(/\.md$/, "")}.pdf`;
-      pandoc(body, `-f markdown -t pdf -o ${path}`, function (err, result) {
-        if (err) console.log(err);
-        if (fs.existsSync(path)) {
-          open(path);
-        }
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  /**
-   * @description Function Convert specified file to docx
-   * @param {string} body - content to be converted
-   * @param {string} name - name of the file
-   * @returns {void}
-   */
-  const toDOCX = (body: string, name: string) => {
-    try {
-      const path = `${Desktop}/${name.replace(/\.md$/, "")}.docx`;
-      pandoc(body, `-f markdown -t docx -o ${path}`, function (err, result) {
-        if (err) console.log(err);
-        if (fs.existsSync(path)) {
-          open(path);
-        }
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  };
 
   useEffect(() => {
     ipcRenderer.on("save", function () {
@@ -741,7 +652,7 @@ export function Leaflet() {
             )}
             {ButtomBar(
               insert,
-              () => toggleBetweenVimAndNormalMode(),
+              () => toggleBetweenVimAndNormalMode(setIsVim),
               isVim,
               value,
               cursor,
