@@ -2,6 +2,44 @@ import hljs from "highlight.js";
 import todo from "markdown-it-task-lists";
 import yaml from 'yaml'
 import metadata_block from 'markdown-it-metadata-block'
+import mermaid from 'mermaid'
+
+
+
+let counter = 0;
+
+const getUniqueId = () => {
+  counter += 1;
+  return `mermaid-diagram-${counter}`;
+};
+
+const mermaidCodeRegex = /```mermaid([\s\S]*?)```/;
+
+//TODO: The below function isn't fault tolerant. It will break if the mermaid code is not valid.
+export const getMarkdownWithMermaid = (markdown: string) => {
+  // Extract mermaid code blocks from the markdown string
+  let html = markdown;
+  let match;
+  while ((match = html.match(mermaidCodeRegex))) {
+    const mermaidCode = match[1];
+    const mermaidId = getUniqueId();
+    mermaid.render(mermaidId, mermaidCode, (svgCode: string) => {
+      // Insert the rendered SVG code into the DOM
+      const element = document.createElement('div');
+      element.innerHTML = svgCode;
+      console.log(element);
+      const diagramElement = element.firstChild;
+      if (diagramElement) {
+        diagramElement.id = mermaidId;
+        html = html.replace(mermaidCodeRegex, diagramElement.outerHTML);
+      }
+    });
+  }
+
+  return html;
+};
+
+
 /**
  * @param {string} value
  * @returns {string} html
@@ -21,6 +59,9 @@ export const getMarkdown = (value: string) => {
     html: true,
     typographer: true,
     highlight: function (str: string, lang: string) {
+    if (lang === "mermaid") {
+        return str;
+      }
       if (lang && hljs.getLanguage(lang)) {
         try {
           return hljs.highlight(lang, str).value;
@@ -41,9 +82,11 @@ export const getMarkdown = (value: string) => {
     parseMetadata: yaml.parse,
     meta
 })
+
   md.use(todo, { enabled: true });
   try {
-    const result = md.render(value);
+    const diagram = getMarkdownWithMermaid(value);
+    let result = md.render(diagram);
     return {
       document: { __html: result },
       metadata: meta,
@@ -52,5 +95,6 @@ export const getMarkdown = (value: string) => {
     return { __html: "Couldn't render page, Something not right!"};
   }
 };
+
 
 
