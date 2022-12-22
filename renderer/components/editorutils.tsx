@@ -17,7 +17,7 @@ const HandleUtils = ({ view }) => {
   return (
     <div
       style={{
-        width: "100%",
+        // width: "100%",
         justifyContent: "center",
         alignItems: "center",
         fontSize: "12px",

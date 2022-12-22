@@ -12,7 +12,7 @@ import { spawn } from "child_process";
 import os from "os";
 const Desktop = os.homedir() + "/Desktop";
 type Dispatcher<S> = Dispatch<SetStateAction<S>>;
-
+import { ipcRenderer } from "electron";
 /**
  * Bold a text in editor view
  * @param view EditorView
@@ -368,32 +368,44 @@ const removeColumns = () => {
  * @returns {void}
  */
 export const toPDF = (body: string, name: string) => {
-  try {
-    createColumns();
-    const route = path.resolve(Desktop, "columns.lua");
-    const outputpath = `${Desktop}/${cleanInComingName(name, ".pdf")}`;
-    console.log(name, outputpath);
-    pandoc(
-      body,
-      fs.existsSync(route)
-        ? `-f markdown -t pdf --lua-filter=${Desktop}/columns.lua -o ${outputpath}`
-        : `-f markdown -t pdf -o ${outputpath}`,
-      function (err, result) {
-        if (err) {
-          console.log(err);
-          removeColumns();
-        }
-        if (fs.existsSync(outputpath)) {
-          open(outputpath);
-          removeColumns();
-        }
+  ipcRenderer.invoke("creatingPdf", cleanName(name)).then(() => {
+    ipcRenderer.on("pdfPath", function (event, response) {
+      try {
+        createColumns();
+        const route = path.resolve(Desktop, "columns.lua");
+        const outputpath = response;
+        console.log(name, outputpath);
+        pandoc(
+          body,
+          fs.existsSync(route)
+            ? `-f markdown -t pdf --lua-filter=${Desktop}/columns.lua -o ${outputpath}`
+            : `-f markdown -t pdf -o ${outputpath}`,
+          function (err, result) {
+            if (err) {
+              console.log(err);
+              removeColumns();
+            }
+            if (fs.existsSync(outputpath)) {
+              open(outputpath);
+              removeColumns();
+            }
+          }
+        );
+      } catch (e) {
+        console.log(e);
       }
-    );
-  } catch (e) {
-    console.log(e);
-  }
+    });
+  });
 };
 
+const cleanName = (name: string) => {
+  let value = name;
+  if (name.endsWith(".md")) {
+    value = name.substring(0, name.length - 3);
+  }
+  value = value.replace(/\s/g, "_");
+  return value;
+};
 const cleanInComingName = (name: string, newextension: string) => {
   let value = name;
   if (name.endsWith(".md")) {

@@ -29,8 +29,9 @@ export const ButtomBar = (
           style={{
             float: "left",
             paddingLeft: "10px",
-            paddingTop: "5px",
-            paddingBottom: "5px",
+            paddingTop:  "5px" ,
+            paddingBottom: insert ? "5px" : "8px",
+            fontSize: "12px !important",
           }}
         >
           <div
@@ -90,13 +91,11 @@ export const ButtomBar = (
                     style={{
                       float: "right",
                       backgroundColor: "transparent",
-                      paddingBottom: "2px",
-                      paddingTop: "3px",
                       border: "none",
                       appearance: "none",
                       outline: "none",
                       cursor: "pointer",
-                      fontSize: "12px",
+                      fontSize: "12px !important",
                     }}
                   >
                     <option value="black">{cursor}</option>
@@ -112,11 +111,10 @@ export const ButtomBar = (
             ) : (
               <span style={{ display: "inline" }}>
                 <div>
-                  Preview
-                  <div style={{ display: "inline", marginRight: "30px" }}></div>
-                  <span>{`${value.toString().split(" ").length}W ${
-                    value.toString().length
-                  }C `}</span>
+                  <p style={{padding: "1px", display: "inline"}}>Preview</p>
+                  <div style={{ display: "inline", marginRight: "20px" }}></div>
+                  <span>{`${value.toString().split(" ").length} words  ${value
+                    .toString().length} characters `}</span>
                   <div style={{ display: "inline", marginRight: "30px" }}></div>
                   <div
                     style={{

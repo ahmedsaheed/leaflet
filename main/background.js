@@ -11,7 +11,7 @@ const appDir = path.resolve(os.homedir(), "leaflet");
 const isMac = process.platform === "darwin";
 const isDev = require('electron-is-dev');
 const dirTree = require('directory-tree');
-
+const Desktop = os.homedir() + "/Desktop";
 
 if (isDev) {
   app.setPath("userData", `${app.getPath("userData")} (development)`);
@@ -368,6 +368,7 @@ ipcMain.handle("app:on-file-add", (event, files = []) => {
 ipcMain.handle("app:on-fs-dialog-open", (event) => {
   const files = dialog.showOpenDialogSync({
     properties: ["openFile", "multiSelections"],
+    filters: [{ name: "Markdown", extensions: ["md"] }],
   });
 
   if (!files) {
@@ -418,6 +419,23 @@ ipcMain.handle("deleteFile", (event, name, file) => {
 
 });
 
+ipcMain.handle("creatingPdf", (event, name) => {
+    const option = {
+       title: "Save PDF",
+        defaultPath: `${Desktop}/${name}.pdf`,
+        filters: [
+            { name: "PDF", extensions: ["pdf"] },
+            { name: "All Files", extensions: ["*"] },
+        ],
+    };
+
+    dialog.showSaveDialog(option).then((result) => {
+        // send the file path to the renderer
+        if (!result.canceled && result.filePath) {
+            event.sender.send("pdfPath", result.filePath);
+    }
+    });
+});
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit();
 });
