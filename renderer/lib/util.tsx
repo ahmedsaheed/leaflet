@@ -371,7 +371,8 @@ export const toPDF = (body: string, name: string) => {
   try {
     createColumns();
     const route = path.resolve(Desktop, "columns.lua");
-    const outputpath = `${Desktop}/${name.replace(/\.md$/, "")}.pdf`;
+    const outputpath = `${Desktop}/${cleanInComingName(name, ".pdf")}`;
+    console.log(name, outputpath);
     pandoc(
       body,
       fs.existsSync(route)
@@ -393,6 +394,16 @@ export const toPDF = (body: string, name: string) => {
   }
 };
 
+const cleanInComingName = (name: string, newextension: string) => {
+  let value = name;
+  if (name.endsWith(".md")) {
+    value = name.substring(0, name.length - 3);
+  }
+  value = value.replace(/\s/g, "_");
+  value += newextension;
+  return value;
+};
+
 /**
  * @description Function Convert specified file to docx
  * @param {string} body - content to be converted
@@ -401,7 +412,7 @@ export const toPDF = (body: string, name: string) => {
  */
 export const toDOCX = (body: string, name: string) => {
   try {
-    const path = `${Desktop}/${name.replace(/\.md$/, "")}.docx`;
+    const path = `${Desktop}/${cleanInComingName(name, ".docx")}`;
     pandoc(body, `-f markdown -t docx -o ${path}`, function (err, result) {
       if (err) console.log(err);
       if (fs.existsSync(path)) {
