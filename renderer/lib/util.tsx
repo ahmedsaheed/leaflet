@@ -368,7 +368,7 @@ const removeColumns = () => {
  * @returns {void}
  */
 export const toPDF = (body: string, name: string) => {
-  ipcRenderer.invoke("creatingPdf", cleanName(name)).then(() => {
+  ipcRenderer.invoke("creatingPdf", cleanFileNameForExport(name)).then(() => {
     ipcRenderer.on("pdfPath", function (event, response) {
       try {
         createColumns();
@@ -398,21 +398,12 @@ export const toPDF = (body: string, name: string) => {
   });
 };
 
-const cleanName = (name: string) => {
+const cleanFileNameForExport = (name: string) => {
   let value = name;
   if (name.endsWith(".md")) {
     value = name.substring(0, name.length - 3);
   }
   value = value.replace(/\s/g, "_");
-  return value;
-};
-const cleanInComingName = (name: string, newextension: string) => {
-  let value = name;
-  if (name.endsWith(".md")) {
-    value = name.substring(0, name.length - 3);
-  }
-  value = value.replace(/\s/g, "_");
-  value += newextension;
   return value;
 };
 
@@ -423,17 +414,21 @@ const cleanInComingName = (name: string, newextension: string) => {
  * @returns {void}
  */
 export const toDOCX = (body: string, name: string) => {
-  try {
-    const path = `${Desktop}/${cleanInComingName(name, ".docx")}`;
-    pandoc(body, `-f markdown -t docx -o ${path}`, function (err, result) {
-      if (err) console.log(err);
-      if (fs.existsSync(path)) {
-        open(path);
+  ipcRenderer.invoke("creatingDocx", cleanFileNameForExport(name)).then(() => {
+    ipcRenderer.on("docxPath", function (event, response) {
+      try {
+        const path = response;
+        pandoc(body, `-f markdown -t docx -o ${path}`, function (err) {
+          if (err) console.log(err);
+          if (fs.existsSync(path)) {
+            open(path);
+          }
+        });
+      } catch (e) {
+        console.log(e);
       }
     });
-  } catch (e) {
-    console.log(e);
-  }
+  });
 };
 
 /*

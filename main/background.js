@@ -6,18 +6,17 @@ import open from "open";
 import fs from "fs-extra";
 import os from "os";
 import chokidar from "chokidar";
-const isProd = process.env.NODE_ENV === 'production';
+const isProd = process.env.NODE_ENV === "production";
 const appDir = path.resolve(os.homedir(), "leaflet");
 const isMac = process.platform === "darwin";
-const isDev = require('electron-is-dev');
-const dirTree = require('directory-tree');
+const isDev = require("electron-is-dev");
+const dirTree = require("directory-tree");
 const Desktop = os.homedir() + "/Desktop";
 
 if (isDev) {
   app.setPath("userData", `${app.getPath("userData")} (development)`);
 } else {
   serve({ directory: "app" });
-
 }
 
 (async () => {
@@ -25,12 +24,11 @@ if (isDev) {
 
   const mainWindow = createWindow("main", {
     width: 920,
-    height: 800, 
-    minWidth: 950, 
-    minHeight: 600, 
+    height: 800,
+    minWidth: 950,
+    minHeight: 600,
     // resizable: false,
     // fullscreen: false,
-
   });
 
   //watchFiles(mainWindow);
@@ -111,8 +109,7 @@ if (isDev) {
         },
         {
           label: "Export",
-          
-      
+
           submenu: [
             {
               label: "DOCX",
@@ -128,10 +125,9 @@ if (isDev) {
               // click: () => {
               //   mainWindow.webContents.send("pdf");
               // }
-            }
-            
-          ]
-        }
+            },
+          ],
+        },
       ],
     },
 
@@ -195,7 +191,6 @@ if (isDev) {
             );
           },
         },
-        
       ],
     },
   ];
@@ -203,22 +198,17 @@ if (isDev) {
   if (isDev) {
     const port = process.argv[2];
     await mainWindow.loadURL(`http://localhost:${port}/home`);
-   // mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools();
   } else {
-    try{
-      await mainWindow.loadURL('app://dist/home.html');
-    }catch(err){
+    try {
+      await mainWindow.loadURL("app://dist/home.html");
+    } catch (err) {
       console.log(err);
     }
-    
   }
 
   const menu = Menu.buildFromTemplate(menuBar);
   Menu.setApplicationMenu(menu);
-
- 
-
-  
 })();
 
 const created = (name) => {
@@ -248,71 +238,67 @@ const checkForDir = () => {
 };
 
 //THIS ENABLES FILE GATHERING RECURSIVELY
-var walk = function(dir) {
+var walk = function (dir) {
   var results = [];
   var list = fs.readdirSync(dir);
-  list.forEach(function(file) {
-      file = dir + '/' + file;
-      var stat = fs.statSync(file);
-      if (stat && stat.isDirectory()) { 
-          results = results.concat(walk(file));
-      } else { 
-          results.push(file);
-      }
+  list.forEach(function (file) {
+    file = dir + "/" + file;
+    var stat = fs.statSync(file);
+    if (stat && stat.isDirectory()) {
+      results = results.concat(walk(file));
+    } else {
+      results.push(file);
+    }
   });
   return results;
-}
+};
 
 const getFiles = () => {
   checkForDir();
   const files = walk(appDir);
-  const structure = dirTree(appDir, {extensions:/\.md/}); 
+  const structure = dirTree(appDir, { extensions: /\.md/ });
   return files
     .filter((file) => file.split(".").pop() === "md")
     .map((filePath) => {
       const fileStats = fs.statSync(filePath);
       const content = fs.readFileSync(filePath, "utf8");
       const extension = path.extname(filePath);
-      const filename = path.basename(filePath,extension);
+      const filename = path.basename(filePath, extension);
 
       return {
         name: filename.charAt(0).toUpperCase() + filename.slice(1),
         structure: structure,
         body: content,
         path: filePath,
-      
       };
     });
 };
-
 
 const addFilesOnDragOrDialog = (files = []) => {
   fs.ensureDirSync(appDir);
   files.forEach((file) => {
     const filePath = path.resolve(appDir, file.name);
-    try{
+    try {
       if (!fs.existsSync(filePath)) {
-      fs.copyFileSync(file.path, filePath);
+        fs.copyFileSync(file.path, filePath);
+      }
+    } catch (e) {
+      console.log(e);
     }
-    }catch (e){
-      console.log(e)
-    }
-    
   });
 
   filesAdded(files.length);
 };
 
 const deleteFile = (filePath) => {
-  try{
+  try {
     if (fs.existsSync(filePath)) {
       // move file to trash instead of fs.removeSync
       shell.trashItem(filePath);
     }
-  }catch(e){
+  } catch (e) {
     console.log(e);
   }
-  
 };
 
 const openFile = (filename) => {
@@ -329,7 +315,7 @@ const watchFiles = (win) => {
   });
 };
 
-const newFile = (dir,file) => {
+const newFile = (dir, file) => {
   const today = new Date();
   var date =
     today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
@@ -353,9 +339,8 @@ ipcMain.handle("saveFile", (event, path, content) => {
   }
 });
 
-
-ipcMain.handle("createNewFile", (event, dir,filename) => {
-  newFile(dir,filename);
+ipcMain.handle("createNewFile", (event, dir, filename) => {
+  newFile(dir, filename);
   created(filename);
 });
 ipcMain.handle("getTheFile", () => {
@@ -385,7 +370,6 @@ ipcMain.handle("app:on-fs-dialog-open", (event) => {
   );
 });
 
-
 ipcMain.on("app:on-file-open", (event, file) => {
   openFile(file.filepath);
 });
@@ -396,8 +380,6 @@ ipcMain.on("app:on-file-copy", (event, file) => {
   });
 });
 
-
-
 ipcMain.handle("deleteFile", (event, name, file) => {
   const extension = name.split(".").pop();
   const options = {
@@ -406,36 +388,54 @@ ipcMain.handle("deleteFile", (event, name, file) => {
     defaultId: 2,
     icon: "warning",
     title: "Confirm",
-    message: `Are you sure you want to delete ${extension == "md" ? name : name + ".md"}?`,
+    message: `Are you sure you want to delete ${
+      extension == "md" ? name : name + ".md"
+    }?`,
     detail: "This action cannot be undone.",
   };
   dialog.showMessageBox(null, options).then((result) => {
-      if (result.response === 0) {
-        deleteFile(file);
-      } else if (result.response === 1) {
-        return
-      }
-    })
-
+    if (result.response === 0) {
+      deleteFile(file);
+    } else if (result.response === 1) {
+      return;
+    }
+  });
 });
 
 ipcMain.handle("creatingPdf", (event, name) => {
-    const option = {
-       title: "Save PDF",
-        defaultPath: `${Desktop}/${name}.pdf`,
-        filters: [
-            { name: "PDF", extensions: ["pdf"] },
-            { name: "All Files", extensions: ["*"] },
-        ],
-    };
+  const option = {
+    title: "Save PDF",
+    defaultPath: `${Desktop}/${name}.pdf`,
+    filters: [
+      { name: "PDF", extensions: ["pdf"] },
+      { name: "All Files", extensions: ["*"] },
+    ],
+  };
 
-    dialog.showSaveDialog(option).then((result) => {
-        // send the file path to the renderer
-        if (!result.canceled && result.filePath) {
-            event.sender.send("pdfPath", result.filePath);
+  dialog.showSaveDialog(option).then((result) => {
+    if (!result.canceled && result.filePath) {
+      event.sender.send("pdfPath", result.filePath);
     }
-    });
+  });
 });
+
+ipcMain.handle("creatingDocx", (event, name) => {
+  const option = {
+    title: "Save DOCX",
+    defaultPath: `${Desktop}/${name}.docx`,
+    filters: [
+      { name: "DOCX", extensions: ["docx"] },
+      { name: "All Files", extensions: ["*"] },
+    ],
+  };
+
+  dialog.showSaveDialog(option).then((result) => {
+    if (!result.canceled && result.filePath) {
+      event.sender.send("docxPath", result.filePath);
+    }
+  });
+});
+
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit();
 });
