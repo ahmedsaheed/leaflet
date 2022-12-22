@@ -68,7 +68,8 @@ tags:
 material:
  - {github: 'https://github.com/ahmedsaheed/leaflet'} 
  - {leaflet: 'https://leaflet.saheed.codes/'}
- - {curius: 'https://curius.app/'}   
+ - {curius: 'https://curius.app/'}
+geometry: "left=2cm, right=2cm, top=3cm, bottom=2cm"
 ---
 
 
@@ -341,14 +342,22 @@ export const checkForPandoc = async (
 
 const createColumns = () => {
   const route = path.resolve(Desktop, "columns.lua");
-  fs.writeFileSync(route, __luaColumns__());
+  try {
+    fs.writeFileSync(route, __luaColumns__());
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 const removeColumns = () => {
   const route = path.resolve(Desktop, "columns.lua");
   const exists = fs.existsSync(route);
   if (exists) {
-    fs.unlink(route);
+    try {
+      fs.unlink(route);
+    } catch (e) {
+      console.log(e);
+    }
   }
 };
 
@@ -369,12 +378,13 @@ export const toPDF = (body: string, name: string) => {
         ? `-f markdown -t pdf --lua-filter=${Desktop}/columns.lua -o ${outputpath}`
         : `-f markdown -t pdf -o ${outputpath}`,
       function (err, result) {
-        if (err){console.log(err);
-            removeColumns()
+        if (err) {
+          console.log(err);
+          removeColumns();
         }
         if (fs.existsSync(outputpath)) {
           open(outputpath);
-          removeColumns()
+          removeColumns();
         }
       }
     );
