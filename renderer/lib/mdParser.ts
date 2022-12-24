@@ -9,7 +9,7 @@ const getUniqueId = () => {
   return `mermaid-diagram-${counter + 1}`;
 };
 
-export const getMarkdownWithMermaid = (markdown: string) => {
+export const getMarkdownWithMermaid = (markdown: string): string => {
   const parts = markdown.split(/```mermaid([\s\S]*?)```/);
   const svgCodes: string[] = [];
   // Process each mermaid code block
@@ -25,7 +25,7 @@ export const getMarkdownWithMermaid = (markdown: string) => {
     }
   }
 
-  // Build the final HTML string by replacing the mermaid code blocks with the rendered SVG code
+  // Build HTML string by replacing the mermaid code blocks with the rendered SVG code
   if (svgCodes.length > 0 == false) {
     return markdown;
   } else {
@@ -33,46 +33,10 @@ export const getMarkdownWithMermaid = (markdown: string) => {
     for (let i = 1; i < parts.length; i += 2) {
       html += svgCodes[(i - 1) / 2] + parts[i + 1];
     }
-    console.log("constains mermaid ?", svgCodes.length > 0);
     return html;
   }
 };
 
-// const getUniqueId = () => {
-// let counter = 0;
-//   return `mermaid-diagram-${counter + 1}`;
-// };
-
-// export const getMarkdownWithMermaid = (markdown: string) => {
-//   // Extract mermaid code blocks from the markdown string
-//   const mermaidCodeRegex = /```mermaid([\s\S]*?)```/;
-//   let html = markdown;
-//   const diagram = [];
-//   let match;
-//   while ((match = html.match(mermaidCodeRegex))) {
-//     const mermaidCode = match[1];
-//     const mermaidId = getUniqueId();
-//     try {
-//       mermaid.render(mermaidId, mermaidCode, (svgCode: string) => {
-//         // Insert the rendered SVG code into the DOM
-//         const element = document.createElement("div");
-//         element.innerHTML = svgCode;
-//         diagram.push(element);
-//         const diagramElement = element.firstChild as HTMLElement;
-//         if (diagramElement) {
-//           diagramElement.id = mermaidId;
-//           html = html.replace(mermaidCodeRegex, diagramElement.outerHTML);
-//         }
-//       });
-//     } catch (e) {
-//       console.log(e);
-//     }
-//   }
-
-//   console.log(diagram);
-
-//   return html;
-// };
 
 /**
  * @param {string} value
@@ -118,9 +82,9 @@ export const getMarkdown = (value: string) => {
   });
 
   md.use(todo, { enabled: true });
+  const document = getMarkdownWithMermaid(value);
   try {
-    const diagram = getMarkdownWithMermaid(value);
-    let result = md.render(diagram);
+    let result = md.render(document);
     return {
       document: { __html: result },
       metadata: meta,
@@ -129,3 +93,42 @@ export const getMarkdown = (value: string) => {
     return { __html: "Couldn't render page, Something not right!" };
   }
 };
+
+
+/*
+const getUniqueId = () => {
+let counter = 0;
+  return `mermaid-diagram-${counter + 1}`;
+};
+
+export const getMarkdownWithMermaid = (markdown: string) => {
+  // Extract mermaid code blocks from the markdown string
+  const mermaidCodeRegex = /```mermaid([\s\S]*?)```/;
+  let html = markdown;
+  const diagram = [];
+  let match;
+  while ((match = html.match(mermaidCodeRegex))) {
+    const mermaidCode = match[1];
+    const mermaidId = getUniqueId();
+    try {
+      mermaid.render(mermaidId, mermaidCode, (svgCode: string) => {
+        // Insert the rendered SVG code into the DOM
+        const element = document.createElement("div");
+        element.innerHTML = svgCode;
+        diagram.push(element);
+        const diagramElement = element.firstChild as HTMLElement;
+        if (diagramElement) {
+          diagramElement.id = mermaidId;
+          html = html.replace(mermaidCodeRegex, diagramElement.outerHTML);
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  console.log(diagram);
+
+  return html;
+};
+*/

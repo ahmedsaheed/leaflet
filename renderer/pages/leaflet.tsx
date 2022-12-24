@@ -67,6 +67,8 @@ export function Leaflet() {
   const refs = React.useRef<ReactCodeMirrorRef>({});
   const prefersColorScheme = usePrefersColorScheme();
   const isDarkMode = prefersColorScheme === "dark";
+  const [mermaid,  setMermaid]  = useState<boolean>(false)
+  const resolvedMarkdown = getMarkdown(value)
 
   useEffect(() => {
     if (!initialised) {
@@ -351,7 +353,8 @@ export function Leaflet() {
       setFileNameBox,
       setSearch,
       setClick,
-      click
+      click,
+      mermaid
     );
   });
 
@@ -409,9 +412,9 @@ export function Leaflet() {
     }
     return (
       <div style={{ userSelect: "none" }}>
-        <METADATE incoming={getMarkdown(value).metadata.date} />
-        <METATAGS incoming={getMarkdown(value).metadata.tags} />
-        <METAMATERIAL incoming={getMarkdown(value).metadata?.material} />
+        <METADATE incoming={resolvedMarkdown.metadata.date} />
+        <METATAGS incoming={resolvedMarkdown.metadata.tags} />
+        <METAMATERIAL incoming={resolvedMarkdown.metadata?.material} />
       </div>
     );
   };
@@ -621,7 +624,7 @@ export function Leaflet() {
               <>
                 <div style={{ zIndex: "1", overflow: "hidden" }}>
                   <div style={{ paddingTop: "1em" }}>
-                    {ValidateYaml(getMarkdown(value).metadata)}
+                    {ValidateYaml(resolvedMarkdown.metadata)}
                     <div style={{ overflow: "hidden" }}>
                       <div
                         id="previewArea"
@@ -630,7 +633,7 @@ export function Leaflet() {
                           overflow: "scroll",
                         }}
                         className="third h-full w-full"
-                        dangerouslySetInnerHTML={getMarkdown(value).document}
+                        dangerouslySetInnerHTML={resolvedMarkdown.document}
                       />
                     </div>
                   </div>

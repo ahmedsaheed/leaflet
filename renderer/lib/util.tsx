@@ -12,7 +12,7 @@ import os from "os";
 const route = os.homedir() + "/.columns.lua";
 type Dispatcher<S> = Dispatch<SetStateAction<S>>;
 import { ipcRenderer } from "electron";
-
+import {getMarkdownWithMermaid} from "./mdParser" 
 /**
  * Bold a text in editor view
  * @param view EditorView
@@ -324,7 +324,7 @@ export const EXTENSIONS: Extension[] = [
   [EditorView.lineWrapping],
 ];
 
-export const checkForPandoc = async (
+export const checkForPandoc = (
   setPandocAvailable: Dispatcher<boolean>
 ) => {
   try {
@@ -376,15 +376,17 @@ const cleanFileNameForExport = (name: string) => {
  */
 export const toPDF = (body: string, name: string) => {
   //sending & recieving the name and the whole document to main, is very expensive.
+  let document =  getMarkdownWithMermaid(body)
+  console.log(document)
   ipcRenderer
-    .invoke("creatingPdf", cleanFileNameForExport(name), body)
+    .invoke("creatingPdf", cleanFileNameForExport(name), document)
     .then(() => {
-      ipcRenderer.on("pdfPath", function (event, response, body) {
+      ipcRenderer.on("pdfPath", function (event, response, document) {
         try {
           writeLuaScript();
           let outputpath = response;
           pandoc(
-            body,
+            document,
             fs.existsSync(route)
               ? `-f markdown -t pdf --lua-filter=${route} --toc -o ${outputpath}`
               : `-f markdown -t pdf -o ${outputpath}`,

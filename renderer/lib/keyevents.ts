@@ -33,6 +33,7 @@ export const ListenToKeys = (
   setSearch: Dispatcher<string>,
   setClick: Dispatcher<boolean>,
   click: boolean,
+  mermaid: boolean,
 ) => {
   document.onkeydown = function handleKeysEvent(e: KeyboardEvent) {
     if ((e.ctrlKey || e.metaKey) && e.key === "s") {
