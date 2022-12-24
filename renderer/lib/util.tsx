@@ -377,7 +377,6 @@ const cleanFileNameForExport = (name: string) => {
 export const toPDF = (body: string, name: string) => {
   //sending & recieving the name and the whole document to main, is very expensive.
   let document =  getMarkdownWithMermaid(body)
-  console.log(document)
   ipcRenderer
     .invoke("creatingPdf", cleanFileNameForExport(name), document)
     .then(() => {
