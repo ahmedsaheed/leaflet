@@ -386,7 +386,7 @@ export const toPDF = (body: string, name: string) => {
           pandoc(
             body,
             fs.existsSync(route)
-              ? `-f markdown -t pdf --lua-filter=${route} -o ${outputpath}`
+              ? `-f markdown -t pdf --lua-filter=${route} --toc -o ${outputpath}`
               : `-f markdown -t pdf -o ${outputpath}`,
             function (err, result) {
               if (err) {
