@@ -1,10 +1,8 @@
 import hljs from "highlight.js";
 import todo from "markdown-it-task-lists";
-import yaml from 'yaml'
-import metadata_block from 'markdown-it-metadata-block'
-import mermaid from 'mermaid'
-
-
+import yaml from "yaml";
+import metadata_block from "markdown-it-metadata-block";
+import mermaid from "mermaid";
 
 let counter = 0;
 
@@ -19,26 +17,32 @@ const mermaidCodeRegex = /```mermaid([\s\S]*?)```/;
 export const getMarkdownWithMermaid = (markdown: string) => {
   // Extract mermaid code blocks from the markdown string
   let html = markdown;
+  const diagram = [];
   let match;
   while ((match = html.match(mermaidCodeRegex))) {
     const mermaidCode = match[1];
     const mermaidId = getUniqueId();
-    mermaid.render(mermaidId, mermaidCode, (svgCode: string) => {
-      // Insert the rendered SVG code into the DOM
-      const element = document.createElement('div');
-      element.innerHTML = svgCode;
-      console.log(element);
-      const diagramElement = element.firstChild;
-      if (diagramElement) {
-        diagramElement.id = mermaidId;
-        html = html.replace(mermaidCodeRegex, diagramElement.outerHTML);
-      }
-    });
+    try {
+      mermaid.render(mermaidId, mermaidCode, (svgCode: string) => {
+        // Insert the rendered SVG code into the DOM
+        const element = document.createElement("div");
+        element.innerHTML = svgCode;
+        diagram.push(element);
+        const diagramElement = element.firstChild as HTMLElement;
+        if (diagramElement) {
+          diagramElement.id = mermaidId;
+          html = html.replace(mermaidCodeRegex, diagramElement.outerHTML);
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
+
+  console.log(diagram);
 
   return html;
 };
-
 
 /**
  * @param {string} value
@@ -48,18 +52,18 @@ export const getMarkdownWithMermaid = (markdown: string) => {
  * This function is used to convert markdown to html
  */
 export const getMarkdown = (value: string) => {
-    type Metadata = {
-        title: string,
-        date: string,
-        tags: string[],
-        material: {}
-    }
-  const meta = {} as Metadata
+  type Metadata = {
+    title: string;
+    date: string;
+    tags: string[];
+    material: {};
+  };
+  const meta = {} as Metadata;
   const md = require("markdown-it")({
     html: true,
     typographer: true,
     highlight: function (str: string, lang: string) {
-    if (lang === "mermaid") {
+      if (lang === "mermaid") {
         return str;
       }
       if (lang && hljs.getLanguage(lang)) {
@@ -78,10 +82,10 @@ export const getMarkdown = (value: string) => {
     },
   });
   require("markdown-it-pandoc")(md);
-  md.use(metadata_block,{
+  md.use(metadata_block, {
     parseMetadata: yaml.parse,
-    meta
-})
+    meta,
+  });
 
   md.use(todo, { enabled: true });
   try {
@@ -92,9 +96,6 @@ export const getMarkdown = (value: string) => {
       metadata: meta,
     };
   } catch (err) {
-    return { __html: "Couldn't render page, Something not right!"};
+    return { __html: "Couldn't render page, Something not right!" };
   }
 };
-
-
-
