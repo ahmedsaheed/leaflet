@@ -402,7 +402,7 @@ ipcMain.handle("deleteFile", (event, name, file) => {
   });
 });
 
-ipcMain.handle("creatingPdf", (event, name) => {
+ipcMain.handle("creatingPdf", (event, name, body) => {
   const option = {
     title: "Save PDF",
     defaultPath: `${Desktop}/${name}.pdf`,
@@ -414,7 +414,7 @@ ipcMain.handle("creatingPdf", (event, name) => {
 
   dialog.showSaveDialog(option).then((result) => {
     if (!result.canceled && result.filePath) {
-      event.sender.send("pdfPath", result.filePath);
+      event.sender.send("pdfPath", result.filePath, body);
     }
   });
 });
