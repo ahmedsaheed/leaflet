@@ -1,5 +1,6 @@
+
 # LEAFLET
-A minimal distractionless markdown editor designed to quickly navigate between multiple `.md` files in a directory and its sub directories. It features a clean mathematical typesetting, chemical equation rendering, code blocks highlighting and writing statistics and
+A minimal distractionless markdown editor designed to quickly navigate between multiple `.md` files in a directory and its sub directories. It features a clean mathematical typesetting, chemical equation rendering, code blocks highlighting and writing statistics. 
 
 
 I created this <a href="http://github.com/ahmedsaheed/Leaflet" target="_blank" rel="noreferrer" class="external">application</a> to help me cope with note taking during school lectures as most of my lecturers spoke too fast. This application is made available as a free and <a href="https://github.com/ahmedsaheed/Leaflet" target="_blank" rel="noreferrer" class="external ">open source</a> software.
@@ -70,12 +71,13 @@ $ yarn build
 
 
 ## Demo
-![Screenshot 2022-11-11 at 21 34 28](https://user-images.githubusercontent.com/87912847/201434097-5be8c011-6bd5-4849-acc7-a316d0ca1e6e.png)
-
-![Screenshot 2022-11-11 at 21 31 44](https://user-images.githubusercontent.com/87912847/201433804-36f71c73-21b0-4b8d-9ba0-4131431e0b8f.png)
 
 
+![bb](https://user-images.githubusercontent.com/87912847/209418036-65b3a761-15b9-4a83-bdef-829c22f7d68b.jpeg)
 
+![d](https://user-images.githubusercontent.com/87912847/209418106-70fad9bf-8016-4c92-aeec-1c6f220ce2b2.jpeg)
+
+![c](https://user-images.githubusercontent.com/87912847/209418160-0db5c79c-a5b8-405b-ad51-80f5ffd85ae7.jpeg)
 
 
 ---
@@ -113,3 +115,6 @@ $ yarn build
 - Pull Requests are welcome!
 
 ![](https://api.codiga.io/project/34974/status/svg)
+
+
+
