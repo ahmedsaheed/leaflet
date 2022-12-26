@@ -34,6 +34,8 @@ export const ListenToKeys = (
   setClick: Dispatcher<boolean>,
   click: boolean,
   mermaid: boolean,
+  splitView: boolean,
+  setSplitView: Dispatcher<boolean>
 ) => {
   document.onkeydown = function handleKeysEvent(e: KeyboardEvent) {
     if ((e.ctrlKey || e.metaKey) && e.key === "s") {
@@ -96,6 +98,14 @@ export const ListenToKeys = (
       return;
     }
 
+    if (e.key === "m" && (e.ctrlKey || e.metaKey)) {
+        if (!splitView) {
+        setFileTreeIsOpen(false);
+        }
+      setSplitView(!splitView);
+      e.preventDefault();
+      return;
+    }
     if (e.key === "y" && (e.ctrlKey || e.metaKey)) {
       if (!insert) {
         return;

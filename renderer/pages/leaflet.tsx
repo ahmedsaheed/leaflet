@@ -67,8 +67,9 @@ export function Leaflet() {
   const refs = React.useRef<ReactCodeMirrorRef>({});
   const prefersColorScheme = usePrefersColorScheme();
   const isDarkMode = prefersColorScheme === "dark";
-  const [mermaid,  setMermaid]  = useState<boolean>(false)
-  const resolvedMarkdown = getMarkdown(value)
+  const [mermaid, setMermaid] = useState<boolean>(false);
+  const [splitview, setSplitView] = useState<boolean>(false);
+  const resolvedMarkdown = getMarkdown(value);
 
   useEffect(() => {
     if (!initialised) {
@@ -318,6 +319,7 @@ export function Leaflet() {
   //     setFileTreeIsOpen(true);
   //   }
   // };
+  //
 
   const saveFile = () => {
     try {
@@ -354,7 +356,9 @@ export function Leaflet() {
       setSearch,
       setClick,
       click,
-      mermaid
+      mermaid,
+      splitview,
+      setSplitView
     );
   });
 
@@ -466,9 +470,11 @@ export function Leaflet() {
     <>
       <div className="mainer" style={{ minHeight: "100vh" }}>
         <div>
-          {TopBar(click, fileTreeIsOpen)}
+          {!splitview ? TopBar(click, fileTreeIsOpen) : null}
           <div
-            className="fs fixed"
+            className={`fs fixed sidebars ${
+              fileTreeIsOpen ? "visible" : "closing"
+            }`}
             style={{
               width: "17.5em",
               maxWidth: "18.5em",
@@ -599,30 +605,89 @@ export function Leaflet() {
           }}
         >
           <div
-            style={{
-              paddingTop: "13vh",
-              padding: "40px",
-            }}
+            style={
+              !splitview
+                ? {
+                    paddingTop: "13vh",
+                    padding: "40px",
+                  }
+                : null
+            }
           >
-            {insert ? (
-              <div className="markdown-content">
-                <div style={{ overflow: "hidden" }}>
-                  <CodeMirror
-                    ref={refs}
-                    value={value}
-                    height="100%"
-                    width="100%"
-                    autoFocus={true}
-                    theme={isDarkMode ? githubDark : basicLight}
-                    basicSetup={false}
-                    extensions={isVim ? [vim(), EXTENSIONS] : EXTENSIONS}
-                    onChange={onChange}
-                  />
+            {!splitview ? (
+              insert ? (
+                <div className="markdown-content">
+                  <div style={{ overflow: "hidden" }}>
+                    <CodeMirror
+                      ref={refs}
+                      value={value}
+                      height="100%"
+                      width="100%"
+                      autoFocus={true}
+                      theme={isDarkMode ? githubDark : basicLight}
+                      basicSetup={false}
+                      extensions={isVim ? [vim(), EXTENSIONS] : EXTENSIONS}
+                      onChange={onChange}
+                    />
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <>
+                  <div style={{ zIndex: "1", overflow: "hidden" }}>
+                    <div style={{ paddingTop: "1em" }}>
+                      {ValidateYaml(resolvedMarkdown.metadata)}
+                      <div style={{ overflow: "hidden" }}>
+                        <div
+                          id="previewArea"
+                          style={{
+                            marginBottom: "5em",
+                            overflow: "scroll",
+                          }}
+                          className="third h-full w-full"
+                          dangerouslySetInnerHTML={resolvedMarkdown.document}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )
             ) : (
-              <>
-                <div style={{ zIndex: "1", overflow: "hidden" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                }}
+              >
+                <div className="markdown-content">
+                  <div
+                    style={{
+                      overflow: "scroll",
+                      flex: "0 0 50%",
+                      padding: "40px",
+                    }}
+                  >
+                    <CodeMirror
+                      ref={refs}
+                      value={value}
+                      height="100%"
+                      width="100%"
+                      autoFocus={true}
+                      theme={isDarkMode ? githubDark : basicLight}
+                      basicSetup={false}
+                      extensions={isVim ? [vim(), EXTENSIONS] : EXTENSIONS}
+                      onChange={onChange}
+                    />
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    overflow: "hidden",
+                    flex: "0 0 50%",
+                    padding: "calc(40px + 12px)",
+                    backgroundColor: "#101010",
+                  }}
+                >
                   <div style={{ paddingTop: "1em" }}>
                     {ValidateYaml(resolvedMarkdown.metadata)}
                     <div style={{ overflow: "hidden" }}>
@@ -638,8 +703,9 @@ export function Leaflet() {
                     </div>
                   </div>
                 </div>
-              </>
+              </div>
             )}
+
             {ButtomBar(
               insert,
               () => toggleBetweenVimAndNormalMode(setIsVim),

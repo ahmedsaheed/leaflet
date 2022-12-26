@@ -3,11 +3,13 @@ import todo from "markdown-it-task-lists";
 import yaml from "yaml";
 import metadata_block from "markdown-it-metadata-block";
 import mermaid from "mermaid";
+const ids: string[] = [];
 
 const getUniqueId = () => {
   let counter = 0;
   return `mermaid-diagram-${counter + 1}`;
 };
+
 
 export const getMarkdownWithMermaid = (markdown: string): string => {
   const parts = markdown.split(/```mermaid([\s\S]*?)```/);
@@ -16,6 +18,7 @@ export const getMarkdownWithMermaid = (markdown: string): string => {
   for (let i = 1; i < parts.length; i += 2) {
     const mermaidCode = parts[i];
     const mermaidId = getUniqueId();
+    ids.push(mermaidId);
     try {
       mermaid.render(mermaidId, mermaidCode, (svgCode: string) => {
         svgCodes.push(svgCode);
@@ -36,7 +39,6 @@ export const getMarkdownWithMermaid = (markdown: string): string => {
     return html;
   }
 };
-
 
 /**
  * @param {string} value
@@ -82,18 +84,19 @@ export const getMarkdown = (value: string) => {
   });
 
   md.use(todo, { enabled: true });
-  const document = getMarkdownWithMermaid(value);
+  const documents = getMarkdownWithMermaid(value);
   try {
-    let result = md.render(document);
+    let result = md.render(documents);
+
     return {
       document: { __html: result },
       metadata: meta,
+
     };
   } catch (err) {
     return { __html: "Couldn't render page, Something not right!" };
   }
 };
-
 
 /*
 const getUniqueId = () => {

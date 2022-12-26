@@ -9,7 +9,7 @@ import { EditorView } from "@codemirror/view";
 import open from "open";
 import { spawn } from "child_process";
 import os from "os";
-const route = os.homedir() + "/.columns.lua";
+const route = os.homedir() + "/columns.lua";
 type Dispatcher<S> = Dispatch<SetStateAction<S>>;
 import { ipcRenderer } from "electron";
 import {getMarkdownWithMermaid} from "./mdParser" 
@@ -387,16 +387,16 @@ export const toPDF = (body: string, name: string) => {
           pandoc(
             document,
             fs.existsSync(route)
-              ? `-f markdown -t pdf --lua-filter=${route} --toc -o ${outputpath}`
+              ? `-f markdown -t pdf --lua-filter=${route} --pdf-engine=xelatex  -o ${outputpath}`
               : `-f markdown -t pdf -o ${outputpath}`,
             function (err, result) {
               if (err) {
                 console.log(err);
-                deleteLuaScript();
+                // deleteLuaScript();
               }
               if (fs.existsSync(outputpath)) {
                 open(outputpath);
-                deleteLuaScript();
+                // deleteLuaScript();
               }
             }
           );

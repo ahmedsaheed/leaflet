@@ -24,16 +24,16 @@ h3 {
 @media (prefers-color-scheme: dark) {
   body {
     background: #191919;
-    font-family: "Sono", cursive;
     color: white;
-    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
-      Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji",
-      "Segoe UI Symbol" !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+      "Ubuntu", "Canterell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+      sans-serif;
     -webkit-font-smoothing: antialiased;
     font-size: 14px;
     letter-spacing: 0.055em;
     line-height: 1.6;
     text-rendering: optimizeLegibility;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   .ͼo .cm-vimMode .cm-line ::selection {
@@ -46,10 +46,12 @@ h3 {
     color: black !important;
   }
 
-.ͼz.cm-focused .cm-selectionBackground .cm-selectionBackground, .ͼz .cm-selectionLayer .cm-selectionBackground, .ͼz ::selection {
+  .ͼz.cm-focused .cm-selectionBackground .cm-selectionBackground,
+  .ͼz .cm-selectionLayer .cm-selectionBackground,
+  .ͼz ::selection {
     background-color: #f0f0f0 !important;
     color: black !important;
-}
+  }
 
   .taskRuler {
     border-bottom: 1px solid hsla(0, 0%, 100%, 0.1) !important;
@@ -88,7 +90,7 @@ h3 {
   }
   .ButtomBar {
     -webkit-app-region: drag;
-      background-color: #100f11;
+    background-color: #100f11;
   }
   mark {
     background-color: #ff9a9e;
@@ -127,7 +129,8 @@ h3 {
   kbd {
     display: inline-block;
     padding: 3px 5px;
-    font: 11px "iA Writer Duospace", monospace;
+    font: 11px source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+      monospace;
     line-height: 10px;
     color: #c9d1d9;
     vertical-align: middle;
@@ -139,7 +142,8 @@ h3 {
   }
 
   pre {
-    font-family: "iA Writer Mono", monospace;
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+      monospace;
     background-color: #252525;
     border-radius: 5px;
   }
@@ -166,7 +170,7 @@ h3 {
     border-right: 1px solid #2d2d2d;
     user-select: none;
   }
-  .topBarLeft{
+  .topBarLeft {
     background-color: #100f11;
     border-right: 1px solid #2d2d2d;
     user-select: none;
@@ -241,10 +245,11 @@ strong {
     background-color: #fff !important;
   }
 
-
-.ͼz.cm-focused .cm-selectionBackground .cm-selectionBackground, .ͼz .cm-selectionLayer .cm-selectionBackground, .ͼz ::selection {
+  .ͼz.cm-focused .cm-selectionBackground .cm-selectionBackground,
+  .ͼz .cm-selectionLayer .cm-selectionBackground,
+  .ͼz ::selection {
     background-color: #fff !important;
-}
+  }
 
   .ContextMenuContent,
   .ContextMenuSubContent {
@@ -308,7 +313,8 @@ strong {
   kbd {
     display: inline-block;
     padding: 3px 5px;
-    font: 11px "iA Writer Mono", monospace;
+    font: 11px source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+      monospace;
     line-height: 10px;
     color: black;
     vertical-align: middle;
@@ -342,10 +348,11 @@ strong {
     background-color: #fbfbfb;
     border-top: 1px solid #ddd;
     -webkit-app-region: drag;
-}
+  }
 
   pre {
-    font-family: "iA Writer Mono", monospace;
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+      monospace;
     background-color: rgb(222, 226, 230);
     border-radius: 5px;
   }
@@ -362,7 +369,7 @@ strong {
     user-select: none;
   }
 
-  .topBarLeft{
+  .topBarLeft {
     background-color: #fbfbfb;
     border-right: 1px solid #ddd;
   }
@@ -598,7 +605,8 @@ summary {
 }
 
 pre > code {
-  font-family: "iA Writer Mono", monospace !important;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace !important;
 }
 
 .fs {
@@ -672,12 +680,43 @@ pre > code {
 [data-disabled] .RightSlot {
 }
 
-figcaption{
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
-    font-size: 10px;
+figcaption {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  font-size: 10px;
 }
 
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
 
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
 
+.sidebars.closing {
+  animation: slideOut 0.3s ease-out;
+}
+
+.topBarLeft.closing {
+  animation: slideOut 0.3s ease-out;
+}
+
+.sidebars.visible {
+  animation: slideIn 0.3s ease-out;
+}
+
+.topBarLeft.visible {
+  animation: slideIn 0.3s ease-out;
+}
