@@ -3,42 +3,9 @@ import todo from "markdown-it-task-lists";
 import yaml from "yaml";
 import metadata_block from "markdown-it-metadata-block";
 import mermaid from "mermaid";
-const ids: string[] = [];
-
-const getUniqueId = () => {
-  let counter = 0;
-  return `mermaid-diagram-${counter + 1}`;
-};
-
-
-export const getMarkdownWithMermaid = (markdown: string): string => {
-  const parts = markdown.split(/```mermaid([\s\S]*?)```/);
-  const svgCodes: string[] = [];
-  // Process each mermaid code block
-  for (let i = 1; i < parts.length; i += 2) {
-    const mermaidCode = parts[i];
-    const mermaidId = getUniqueId();
-    ids.push(mermaidId);
-    try {
-      mermaid.render(mermaidId, mermaidCode, (svgCode: string) => {
-        svgCodes.push(svgCode);
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  // Build HTML string by replacing the mermaid code blocks with the rendered SVG code
-  if (svgCodes.length > 0 == false) {
-    return markdown;
-  } else {
-    let html = parts[0];
-    for (let i = 1; i < parts.length; i += 2) {
-      html += svgCodes[(i - 1) / 2] + parts[i + 1];
-    }
-    return html;
-  }
-};
+import fs from "fs-extra";
+import path from "path"
+import mime  from 'mime';
 
 /**
  * @param {string} value
@@ -77,7 +44,25 @@ export const getMarkdown = (value: string) => {
       }
     },
   });
-  require("markdown-it-pandoc")(md);
+const defaultImageRender = md.renderer.rules.image;
+
+md.renderer.rules.image = function (tokens, idx, options, env, self) {
+  const token = tokens[idx];
+  const srcIndex = token.attrIndex("src");
+  const src = token.attrs[srcIndex][1];
+  if (fs.existsSync(src)) {
+    const fileContents = fs.readFileSync(src);
+
+  // Encode the file contents as a data URL
+  const dataUrl = `data:${mime.getType(src)};base64,${fileContents.toString('base64')}`;
+    token.attrs[srcIndex][1] = dataUrl;
+    return defaultImageRender(tokens, idx, options, env, self);
+  } else {
+    return defaultImageRender(tokens, idx, options, env, self);
+  }
+};
+    
+    require("markdown-it-pandoc")(md);
   md.use(metadata_block, {
     parseMetadata: yaml.parse,
     meta,
@@ -95,6 +80,44 @@ export const getMarkdown = (value: string) => {
     };
   } catch (err) {
     return { __html: "Couldn't render page, Something not right!" };
+  }
+};
+
+
+
+const getUniqueId = () => {
+  let counter = 0;
+  return `mermaid-diagram-${counter + 1}`;
+};
+
+
+export const getMarkdownWithMermaid = (markdown: string): string => {
+  const parts = markdown.split(/```mermaid([\s\S]*?)```/);
+  const ids: string[] = [];
+  const svgCodes: string[] = [];
+  // Process each mermaid code block
+  for (let i = 1; i < parts.length; i += 2) {
+    const mermaidCode = parts[i];
+    const mermaidId = getUniqueId();
+    ids.push(mermaidId);
+    try {
+      mermaid.render(mermaidId, mermaidCode, (svgCode: string) => {
+        svgCodes.push(svgCode);
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  // Build HTML string by replacing the mermaid code blocks with the rendered SVG code
+  if (svgCodes.length > 0 == false) {
+    return markdown;
+  } else {
+    let html = parts[0];
+    for (let i = 1; i < parts.length; i += 2) {
+      html += svgCodes[(i - 1) / 2] + parts[i + 1];
+    }
+    return html;
   }
 };
 
