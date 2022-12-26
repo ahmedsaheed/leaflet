@@ -1,10 +1,9 @@
-var stat = require('fs').stat;
-var spawn = require('node:child_process').spawn;
+var stat = require("fs").stat;
+var spawn = require("node:child_process").spawn;
 /**
  * Converts a file or url to PDF or DOCX format using Pandoc
  */
-module.exports = function() {
-
+module.exports = function () {
   var src;
   var args;
   var options;
@@ -32,32 +31,38 @@ module.exports = function() {
   };
 
   onStdErrData = function (err) {
-    callback(new Error(err));
+    try {
+      if (err.code === "EPIPE") {
+        console.log("Pandoc error: " + err);
+        process.exit(0);
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
-
 
   onStatCheck = function (err, stats) {
     // If src is a file or valid web URL, push the src back into args array
-  try {
-    if ((stats && stats.isFile()) || isURL) {
-      args.unshift(src);
-    }
+    try {
+      if ((stats && stats.isFile()) || isURL) {
+        args.unshift(src);
+      }
 
-    // Create child_process.spawn
-    pdSpawn = spawn('pandoc', args, options);
+      // Create child_process.spawn
+      pdSpawn = spawn("pandoc", args, options);
 
-    // If src is not a file, assume a string input.
-    if ((typeof stats === "undefined") && !isURL) {
-      pdSpawn.stdin.end(src, 'utf-8');
-    }
+      // If src is not a file, assume a string input.
+      if (typeof stats === "undefined" && !isURL) {
+        pdSpawn.stdin.end(src, "utf-8");
+      }
 
-    // Set handlers...
-    pdSpawn.stdout.on('data', onStdOutData);
-    pdSpawn.stdout.on('end', onStdOutEnd);
-    pdSpawn.stderr.on('data', onStdErrData);
+      // Set handlers...
+      pdSpawn.stdout.on("data", onStdOutData);
+      pdSpawn.stdout.on("end", onStdOutEnd);
+      pdSpawn.stderr.on("data", onStdErrData);
     } catch (e) {
-        callback(e);
-        }   
+      callback(e);
+    }
   };
 
   // Convert arguments to actual array.
@@ -69,22 +74,22 @@ module.exports = function() {
   // Save the callback out of the args array.
   callback = args.pop();
 
-  // At this point, args array should be atlest .length 
+  // At this point, args array should be atlest .length
   // of 1. If .length is 2, we have an Options object.
   if (args.length == 2 && args[1].constructor !== Array) {
     options = args.pop();
   }
 
-  // Pull only remaining element from 
+  // Pull only remaining element from
   // the args Array and overwrite itself.
   args = args.shift();
 
   // Array of arguments are required for PanDoc.
-  // If arguments are in String format, convert 
-  // them to an array to use 
+  // If arguments are in String format, convert
+  // them to an array to use
   // in the child_process.spawn() call.
   if (args.constructor === String) {
-    args = args.split(' ');
+    args = args.split(" ");
   }
 
   // Check file status of src

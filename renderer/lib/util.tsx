@@ -380,15 +380,15 @@ export const toPDF = (body: string, name: string) => {
   ipcRenderer
     .invoke("creatingPdf", cleanFileNameForExport(name), document)
     .then(() => {
-      ipcRenderer.on("pdfPath", function (event, response, document) {
+      ipcRenderer.on("pdfPath", function (event, response, documents) {
         try {
           writeLuaScript();
           let outputpath = response;
           pandoc(
-            document,
+            documents,
             fs.existsSync(route)
-              ? `-f markdown -t pdf --lua-filter=${route} --pdf-engine=xelatex  -o ${outputpath}`
-              : `-f markdown -t pdf -o ${outputpath}`,
+               ? `-f markdown -t pdf --lua-filter=${route} -o ${outputpath}`
+               : `-f markdown -t pdf -o ${outputpath}`,
             function (err, result) {
               if (err) {
                 console.log(err);
