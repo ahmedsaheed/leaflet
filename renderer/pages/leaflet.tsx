@@ -12,12 +12,13 @@ import {
   toPDF,
   cleanFileNameForExport,
 } from "../lib/util";
-import Balancer from "react-wrap-balancer";
 import Snackbars from "../components/snackbars";
-import { SIDEBARCOLLAPSEIcon } from "../components/icons";
+import {
+  SIDEBARCOLLAPSEIcon,
+} from "../components/icons";
 import { ButtomBar } from "../components/bottomBar";
 import { FileTree } from "../components/filetree";
-import { QuickAction,QuickActions } from "../components/quickactions";
+import { QuickAction, QuickActions } from "../components/quickactions";
 import { METADATE, METATAGS, METAMATERIAL } from "../components/metadata";
 import { getMarkdown } from "../lib/mdParser";
 import fs from "fs-extra";
@@ -39,7 +40,7 @@ import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 // import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 // import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 let initialised = false;
-const drawerWidth = 240;
+const drawerWidth = 250;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
   open?: boolean;
@@ -132,7 +133,7 @@ export function Leaflet() {
   const prefersColorScheme = usePrefersColorScheme();
   const isDarkMode = prefersColorScheme === "dark";
   const resolvedMarkdown = getMarkdown(value);
-
+    let accentColor;
   useEffect(() => {
     if (!initialised) {
       initialised = true;
@@ -556,7 +557,7 @@ export function Leaflet() {
               borderRadius: "4px",
             }}
           >
-            <div title="Collapse Sidebar">
+            <div style={{padding: "0 5px"}}  title="Collapse Sidebar">
               <SIDEBARCOLLAPSEIcon />
             </div>
           </button>
@@ -571,15 +572,16 @@ export function Leaflet() {
             paddingTop: "20px",
           }}
         >
-        <QuickAction
-          createNewFile={() => setFileNameBox(true)}
-          addOpenToAllDetailTags={() => addOpenToAllDetailTags()}
-          detailIsOpen={detailIsOpen}
-          createNewFolder={() => {
-            setFileNameBox(true);
-            setIsCreatingFolder(true);
-          }}
-        />
+          <QuickAction
+            modeSwitch={() => setInsert(!insert)}
+            addOpenToAllDetailTags={() => addOpenToAllDetailTags()}
+            detailIsOpen={detailIsOpen}
+            createNewFolder={() => {
+              setFileNameBox(true);
+              setIsCreatingFolder(true);
+            }}
+            insert = {insert}
+          />
         </div>
       </AppBar>
       <Drawer
@@ -655,15 +657,15 @@ export function Leaflet() {
                   <div style={{ paddingTop: "1em" }}>
                     {ValidateYaml(resolvedMarkdown.metadata)}
                     <div style={{ overflow: "hidden" }}>
-                        <div
-                          id="previewArea"
-                          style={{
-                            marginBottom: "5em",
-                            overflow: "scroll",
-                          }}
-                          className="third h-full w-full"
-                          dangerouslySetInnerHTML={resolvedMarkdown.document}
-                        />
+                      <div
+                        id="previewArea"
+                        style={{
+                          marginBottom: "5em",
+                          overflow: "scroll",
+                        }}
+                        className="third h-full w-full"
+                        dangerouslySetInnerHTML={resolvedMarkdown.document}
+                      />
                     </div>
                   </div>
                 </div>

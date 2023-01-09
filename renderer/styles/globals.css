@@ -143,7 +143,8 @@ h3 {
   }
 
   kbd {
-    display: inline-block;
+    user-select: none;
+      display: inline-block;
     padding: 3px 5px;
     font: 11px source-code-pro, Menlo, Monaco, Consolas, "Courier New",
       monospace;
@@ -333,6 +334,7 @@ strong {
   }
 
   kbd {
+    user-select: none;
     display: inline-block;
     padding: 3px 5px;
     font: 11px source-code-pro, Menlo, Monaco, Consolas, "Courier New",
@@ -642,7 +644,8 @@ pre > code {
   user-select: none;
   -webkit-app-region: drag;
   min-height: 37px;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1); */
+    box-shadow: none !important;
 }
 
 .quickAction {

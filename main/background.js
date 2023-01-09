@@ -13,6 +13,8 @@ const isDev = require("electron-is-dev");
 const dirTree = require("directory-tree");
 const Desktop = os.homedir() + "/Desktop";
 
+
+
 if (isDev) {
   app.setPath("userData", `${app.getPath("userData")} (development)`);
 } else {
@@ -21,7 +23,7 @@ if (isDev) {
 
 (async () => {
   await app.whenReady();
-
+    
   const mainWindow = createWindow("main", {
     width: 920,
     height: 800,

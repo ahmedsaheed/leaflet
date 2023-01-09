@@ -3,13 +3,16 @@ import {
   NEWFOLDERIcon,
   COLLAPSEIcon,
   EXPANDIcon,
+  EDITINGIcon,
+  PREVIEWIcon,
 } from "./icons";
 
 export const QuickAction = ({
-  createNewFile,
+ modeSwitch,
   createNewFolder,
   addOpenToAllDetailTags,
   detailIsOpen,
+  insert
 }) => {
   return (
     <div
@@ -19,23 +22,20 @@ export const QuickAction = ({
         maxWidth: "17.5em",
         justifyContent: "center",
         alignItems: "center",
-        paddingTop: "20px"
       }}
     >
       <button
         className="quickAction"
-        onClick={createNewFile}
+        onClick={modeSwitch}
         style={{
           border: "1px solid transparent",
-          marginRight: "1em",
+          marginRight: "0.5em",
           cursor: "default",
           borderRadius: "4px",
         }}
       >
-        <div
-            title="New Note"
-        >
-          <NEWNOTEIcon />
+        <div title="Current Mode" style={{padding: "0 5px"}}>
+         {insert ? (<EDITINGIcon />) : (<PREVIEWIcon/>)} 
         </div>
       </button>
 
@@ -45,15 +45,12 @@ export const QuickAction = ({
         style={{
           border: "1px solid transparent",
           borderRadius: "4px",
-          marginRight: "1em",
+          marginRight: "0.5em",
           cursor: "default",
           outline: "none",
         }}
       >
-        <div
-
-            title="New Folder"
-        >
+        <div title="New Folder" style={{padding: "0 5px"}} >
           <NEWFOLDERIcon />
         </div>
       </button>
@@ -63,16 +60,15 @@ export const QuickAction = ({
         style={{
           border: "1px solid transparent",
           borderRadius: "4px",
-          marginRight: "1em",
+          marginRight: "0.5em",
           outline: "none",
           cursor: "default",
         }}
       >
-        <div
-            title={detailIsOpen ? "Collapse Files" : "Expand Files"}
-        >{detailIsOpen ? <COLLAPSEIcon /> : <EXPANDIcon />}</div>
+        <div style={{padding: "0 5px"}}  title={detailIsOpen ? "Collapse Files" : "Expand Files"}>
+          {detailIsOpen ? <COLLAPSEIcon /> : <EXPANDIcon />}
+        </div>
       </button>
-
     </div>
   );
 };
@@ -86,7 +82,7 @@ export const QuickActions = ({
     <div
       className="flex"
       style={{
-      paddingTop: "2.6rem",
+        paddingTop: "2.6rem",
         marginBottom: "5vh",
         marginLeft: "auto",
         marginRight: "auto",
@@ -107,9 +103,7 @@ export const QuickActions = ({
           borderRadius: "4px",
         }}
       >
-        <div
-            title="New Note"
-        >
+        <div title="New Note">
           <NEWNOTEIcon />
         </div>
       </button>
@@ -127,10 +121,7 @@ export const QuickActions = ({
           outline: "none",
         }}
       >
-        <div
-
-            title="New Folder"
-        >
+        <div title="New Folder">
           <NEWFOLDERIcon />
         </div>
       </button>
@@ -146,11 +137,10 @@ export const QuickActions = ({
           cursor: "default",
         }}
       >
-        <div
-            title={detailIsOpen ? "Collapse Files" : "Expand Files"}
-        >{detailIsOpen ? <COLLAPSEIcon /> : <EXPANDIcon />}</div>
+        <div title={detailIsOpen ? "Collapse Files" : "Expand Files"}>
+          {detailIsOpen ? <COLLAPSEIcon /> : <EXPANDIcon />}
+        </div>
       </button>
-
     </div>
   );
 };
