@@ -538,14 +538,25 @@ export function Leaflet() {
           paddingBottom: "5px",
         }}
       >
-        <div style={{ flex: 1, alignItems: "center", paddingTop: "20px" }}>
+        <div
+          style={{
+            flex: 1,
+            alignItems: "center",
+            paddingLeft: "20px",
+            paddingTop: "20px",
+          }}
+        >
           <button
-            color="inherit"
             aria-label="open drawer"
+            className="quickAction"
             onClick={open ? handleDrawerClose : handleDrawerOpen}
-            style={{ padding: 0 }}
+            style={{
+              padding: 0,
+              border: "1px solid transparent",
+              borderRadius: "4px",
+            }}
           >
-            <div title="Collapse Sidebar" style={{ paddingLeft: "20px" }}>
+            <div title="Collapse Sidebar">
               <SIDEBARCOLLAPSEIcon />
             </div>
           </button>
@@ -585,9 +596,6 @@ export function Leaflet() {
             setFileNameBox(true);
             setIsCreatingFolder(true);
           }}
-          sidebarCollapse={() => {
-            console.log("hi");
-          }}
         />
         <FileTree
           struct={struct}
@@ -608,7 +616,9 @@ export function Leaflet() {
           toPDF={(body, name) =>
             toPDF(body, name, setSnackbar, setSnackbarMessage)
           }
-          toDOCX={(body, name) => toDOCX(body, name, setSnackbar, setSnackbarMessage)}
+          toDOCX={(body, name) =>
+            toDOCX(body, name, setSnackbar, setSnackbarMessage)
+          }
         />
       </Drawer>
       <Main open={open}>
