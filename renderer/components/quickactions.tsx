@@ -5,6 +5,77 @@ import {
   EXPANDIcon,
 } from "./icons";
 
+export const QuickAction = ({
+  createNewFile,
+  createNewFolder,
+  addOpenToAllDetailTags,
+  detailIsOpen,
+}) => {
+  return (
+    <div
+      className="flex"
+      style={{
+        width: "100%",
+        maxWidth: "17.5em",
+        justifyContent: "center",
+        alignItems: "center",
+        paddingTop: "20px"
+      }}
+    >
+      <button
+        className="quickAction"
+        onClick={createNewFile}
+        style={{
+          border: "1px solid transparent",
+          marginRight: "1em",
+          cursor: "default",
+          borderRadius: "4px",
+        }}
+      >
+        <div
+            title="New Note"
+        >
+          <NEWNOTEIcon />
+        </div>
+      </button>
+
+      <button
+        className="quickAction"
+        onClick={createNewFolder}
+        style={{
+          border: "1px solid transparent",
+          borderRadius: "4px",
+          marginRight: "1em",
+          cursor: "default",
+          outline: "none",
+        }}
+      >
+        <div
+
+            title="New Folder"
+        >
+          <NEWFOLDERIcon />
+        </div>
+      </button>
+      <button
+        className="quickAction"
+        onClick={addOpenToAllDetailTags}
+        style={{
+          border: "1px solid transparent",
+          borderRadius: "4px",
+          marginRight: "1em",
+          outline: "none",
+          cursor: "default",
+        }}
+      >
+        <div
+            title={detailIsOpen ? "Collapse Files" : "Expand Files"}
+        >{detailIsOpen ? <COLLAPSEIcon /> : <EXPANDIcon />}</div>
+      </button>
+
+    </div>
+  );
+};
 export const QuickActions = ({
   createNewFile,
   createNewFolder,

@@ -17,7 +17,7 @@ import Snackbars from "../components/snackbars";
 import { SIDEBARCOLLAPSEIcon } from "../components/icons";
 import { ButtomBar } from "../components/bottomBar";
 import { FileTree } from "../components/filetree";
-import { QuickActions } from "../components/quickactions";
+import { QuickAction,QuickActions } from "../components/quickactions";
 import { METADATE, METATAGS, METAMATERIAL } from "../components/metadata";
 import { getMarkdown } from "../lib/mdParser";
 import fs from "fs-extra";
@@ -571,7 +571,15 @@ export function Leaflet() {
             paddingTop: "20px",
           }}
         >
-          mom
+        <QuickAction
+          createNewFile={() => setFileNameBox(true)}
+          addOpenToAllDetailTags={() => addOpenToAllDetailTags()}
+          detailIsOpen={detailIsOpen}
+          createNewFolder={() => {
+            setFileNameBox(true);
+            setIsCreatingFolder(true);
+          }}
+        />
         </div>
       </AppBar>
       <Drawer
@@ -647,7 +655,6 @@ export function Leaflet() {
                   <div style={{ paddingTop: "1em" }}>
                     {ValidateYaml(resolvedMarkdown.metadata)}
                     <div style={{ overflow: "hidden" }}>
-                      <Balancer>
                         <div
                           id="previewArea"
                           style={{
@@ -657,7 +664,6 @@ export function Leaflet() {
                           className="third h-full w-full"
                           dangerouslySetInnerHTML={resolvedMarkdown.document}
                         />
-                      </Balancer>
                     </div>
                   </div>
                 </div>
