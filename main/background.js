@@ -25,8 +25,8 @@ if (isDev) {
   const mainWindow = createWindow("main", {
     width: 920,
     height: 800,
-    minWidth: 950,
-    minHeight: 600,
+    // minWidth: 950,
+    // minHeight: 600,
     // resizable: false,
     // fullscreen: false,
   });

@@ -359,7 +359,7 @@ const deleteLuaScript = () => {
   }
 };
 
-const cleanFileNameForExport = (name: string) => {
+export const cleanFileNameForExport = (name: string) => {
   let value = name;
   if (name.endsWith(".md")) {
     value = name.substring(0, name.length - 3);

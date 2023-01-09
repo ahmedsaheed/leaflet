@@ -17,6 +17,7 @@ sidebarCollapse,
     <div
       className="flex"
       style={{
+      paddingTop: "2.6rem",
         marginBottom: "5vh",
         marginLeft: "auto",
         marginRight: "auto",

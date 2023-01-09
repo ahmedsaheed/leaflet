@@ -21,6 +21,13 @@ h3 {
   font-size: 18px;
   margin: 15px 0;
 }
+
+.footnote-backref{
+    border: none;
+    content: none;
+}
+
+
 @media (prefers-color-scheme: dark) {
   body {
     background: #191919;
@@ -33,7 +40,7 @@ h3 {
     letter-spacing: 0.055em;
     line-height: 1.6;
     text-rendering: optimizeLegibility;
-    -moz-osx-font-smoothing: grayscale;
+    font-varient-numeric: tabular-nums;
   }
 
   .ͼo .cm-vimMode .cm-line ::selection {
@@ -59,7 +66,9 @@ h3 {
 
   .topBar {
     background-color: #191919 !important;
-  }
+    color: white !important;
+    border-bottom: 1px solid hsla(0, 0%, 100%, 0.1) !important;
+}
 
   .ContextMenuSeparator {
     height: 1px;
@@ -149,7 +158,7 @@ h3 {
   }
   code {
     background-color: #252525;
-    border-radius: 3px;
+    border-radius: 6px;
   }
 
   hr {
@@ -157,7 +166,7 @@ h3 {
   }
 
   a {
-    border-bottom: 1px solid hsla(0, 0%, 100%, 0.1);
+    border-bottom: 1px solid #ff9a9e;
   }
 
   .menu {
@@ -165,7 +174,8 @@ h3 {
     font-weight: bold;
     user-select: none;
   }
-  .fs {
+  .css-12i7wg6-MuiPaper-root-MuiDrawer-paper,
+  .drawer {
     background-color: #100f11;
     border-right: 1px solid #2d2d2d;
     user-select: none;
@@ -230,8 +240,9 @@ strong {
     color: rgb(55, 53, 47);
     font-size: 14px;
     -webkit-font-smoothing: auto;
-    letter-spacing: 0.055em;
+    letter-spacing: 0.05em;
     line-height: 1.6;
+    font-varient-numeric: tabular-nums;
   }
 
   .ͼo .cm-vimMode .cm-line::selection {
@@ -243,7 +254,11 @@ strong {
   }
   .topBar {
     background-color: #fff !important;
-  }
+    color: rgb(55, 53, 47);
+    border-bottom: 1px solid #e1e4e8;
+  
+     
+}
 
   .ͼz.cm-focused .cm-selectionBackground .cm-selectionBackground,
   .ͼz .cm-selectionLayer .cm-selectionBackground,
@@ -362,8 +377,9 @@ strong {
     border-radius: 3px;
   }
 
-  .fs {
-    background-color: #fbfbfb;
+  .css-12i7wg6-MuiPaper-root-MuiDrawer-paper,
+  .drawer {
+    background-color: #ffffff;
     border-right: 1px solid #ddd;
     color: rgb(73, 80, 87);
     user-select: none;
@@ -373,7 +389,8 @@ strong {
     background-color: #fbfbfb;
     border-right: 1px solid #ddd;
   }
-  .fs p {
+  .css-12i7wg6-MuiPaper-root-MuiDrawer-paper p,
+  .drawer p {
     color: rbg(73, 80, 87) !important;
   }
   .fileBody {
@@ -401,7 +418,7 @@ strong {
   }
 
   a {
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid #b3d4fc;
   }
 
   ::selection {
@@ -609,7 +626,8 @@ pre > code {
     monospace !important;
 }
 
-.fs {
+.css-12i7wg6-MuiPaper-root-MuiDrawer-paper,
+.drawer {
   -webkit-app-region: drag;
 }
 
@@ -617,6 +635,7 @@ pre > code {
   user-select: none;
   -webkit-app-region: drag;
   min-height: 37px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
 }
 
 .quickAction {
