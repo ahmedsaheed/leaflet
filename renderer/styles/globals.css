@@ -9,6 +9,11 @@ h1 {
   margin: 15px 0;
 }
 
+@media (min-width: 768px) {
+    .content {
+    }
+}
+
 h2 {
   font-weight: 600;
   font-size: 20px;

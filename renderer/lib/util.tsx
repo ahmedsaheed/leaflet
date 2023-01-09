@@ -12,7 +12,9 @@ import os from "os";
 const route = os.homedir() + "/columns.lua";
 type Dispatcher<S> = Dispatch<SetStateAction<S>>;
 import { ipcRenderer } from "electron";
-import {getMarkdownWithMermaid} from "./mdParser" 
+import { getMarkdownWithMermaid } from "./mdParser";
+import Snackbars from "../components/snackbars";
+import severity from "../components/snackbars";
 /**
  * Bold a text in editor view
  * @param view EditorView
@@ -324,9 +326,7 @@ export const EXTENSIONS: Extension[] = [
   [EditorView.lineWrapping],
 ];
 
-export const checkForPandoc = (
-  setPandocAvailable: Dispatcher<boolean>
-) => {
+export const checkForPandoc = (setPandocAvailable: Dispatcher<boolean>) => {
   try {
     const pandoc = spawn("pandoc", ["--version"]);
     pandoc.on("error", (error) => {
@@ -374,9 +374,13 @@ export const cleanFileNameForExport = (name: string) => {
  * @param {string} name - name of the file
  * @returns {void}
  */
-export const toPDF = (body: string, name: string) => {
-  //sending & recieving the name and the whole document to main, is very expensive.
-  let document =  getMarkdownWithMermaid(body)
+export const toPDF = (
+  body: string,
+  name: string,
+  setSnackbar: Dispatcher<boolean>,
+  setSnackBarMessage: Dispatcher<Array<string>>
+) => {
+  let document = getMarkdownWithMermaid(body);
   ipcRenderer
     .invoke("creatingPdf", cleanFileNameForExport(name), document)
     .then(() => {
@@ -387,16 +391,35 @@ export const toPDF = (body: string, name: string) => {
           pandoc(
             documents,
             fs.existsSync(route)
-               ? `-f markdown -t pdf --lua-filter=${route} -o ${outputpath}`
-               : `-f markdown -t pdf -o ${outputpath}`,
+              ? `-f markdown -t pdf --lua-filter=${route} -o ${outputpath}`
+              : `-f markdown -t pdf -o ${outputpath}`,
             function (err, result) {
               if (err) {
                 console.log(err);
+                activateSnackBar(
+                  setSnackbar,
+                  setSnackBarMessage,
+                  "Couldn't Generate PDF",
+                  "error"
+                );
                 // deleteLuaScript();
               }
               if (fs.existsSync(outputpath)) {
+                activateSnackBar(
+                  setSnackbar,
+                  setSnackBarMessage,
+                  "PDF created successfully",
+                  "success"
+                );
                 open(outputpath);
                 // deleteLuaScript();
+              } else {
+                activateSnackBar(
+                  setSnackbar,
+                  setSnackBarMessage,
+                  "Couldn't Generate PDF",
+                  "error"
+                );
               }
             }
           );
@@ -429,6 +452,16 @@ export const toDOCX = (body: string, name: string) => {
       }
     });
   });
+};
+
+const activateSnackBar = (
+  setSnackbar: Dispatcher<boolean>,
+  setSnackBarMessage: Dispatcher<Array<string>>,
+  message: string,
+  severity: string
+) => {
+  setSnackBarMessage([message, severity]);
+  setSnackbar(true);
 };
 
 /**

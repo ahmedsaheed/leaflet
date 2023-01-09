@@ -11,6 +11,7 @@ const checkIfIncomingIsObject = (incoming: IncomingProps) => {
 export const METATAGS = ({ incoming }) => {
 if (!checkIfIncomingIsObject(incoming) || incoming === undefined) return null;
   return incoming ? (
+  <div style={{display: "inline"}}>
     <div style={{ display: "flex" }}>
       <div
         style={{
@@ -58,6 +59,7 @@ if (!checkIfIncomingIsObject(incoming) || incoming === undefined) return null;
           ))}
         </span>
       </div>
+    </div>
     </div>
   ) : null;
 };

@@ -20,7 +20,7 @@ export const ListenToKeys = (
   editor: EditorView,
   insert: boolean,
   setInsert: Dispatcher<boolean>,
-  toPDF: (value: string, name: string) => void,
+  toPDF: (value: string, name: string, setSnackbar: Dispatcher<boolean>, setSnackbaeMeassage: Dispatcher<Array<string>> ) => void,
   toDOCX: (value: string, name: string) => void,
   value: string,
   name: string,
@@ -30,6 +30,9 @@ export const ListenToKeys = (
   setSearch: Dispatcher<string>,
   setClick: Dispatcher<boolean>,
   click: boolean,
+  toggleSidebar: () => void,
+    setSnackbar: Dispatcher<boolean>,
+  setSnackbarMessage: Dispatcher<Array<string>>,
 ) => {
   document.onkeydown = function handleKeysEvent(e: KeyboardEvent) {
     if ((e.ctrlKey || e.metaKey) && e.key === "s") {
@@ -47,7 +50,7 @@ export const ListenToKeys = (
     }
 
     if ((e.ctrlKey || e.metaKey) && e.key === "e") {
-      toPDF(value, name);
+      toPDF(value, name, setSnackbar, setSnackbarMessage);
       e.preventDefault();
       return;
     }
@@ -132,6 +135,7 @@ export const ListenToKeys = (
     }
 
     if ((e.ctrlKey || e.metaKey) && e.key === "\\") {
+        toggleSidebar();
         return
     }
 

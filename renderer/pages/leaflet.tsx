@@ -10,9 +10,10 @@ import {
   checkForPandoc,
   toDOCX,
   toPDF,
-cleanFileNameForExport
+  cleanFileNameForExport,
 } from "../lib/util";
-import Balancer from 'react-wrap-balancer'
+import Balancer from "react-wrap-balancer";
+import Snackbars from "../components/snackbars";
 import { SIDEBARCOLLAPSEIcon } from "../components/icons";
 import { ButtomBar } from "../components/bottomBar";
 import { FileTree } from "../components/filetree";
@@ -123,6 +124,10 @@ export function Leaflet() {
   const [isVim, setIsVim] = useState<boolean>(false);
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
+  const [snackbar, setSnackbar] = React.useState(false);
+  const [snackbarMessage, setSnackbarMessage] = React.useState<Array<string>>(
+    []
+  );
   const refs = React.useRef<ReactCodeMirrorRef>({});
   const prefersColorScheme = usePrefersColorScheme();
   const isDarkMode = prefersColorScheme === "dark";
@@ -142,6 +147,15 @@ export function Leaflet() {
       });
     }
   }, []);
+
+  useEffect(() => {
+    if (snackbar == true) {
+      setTimeout(() => {
+        setSnackbar(false);
+        setSnackbarMessage([]);
+      }, 3500);
+    }
+  }, [snackbar]);
 
   useEffect(() => {
     if (refs.current?.view) setEditorView(refs.current?.view);
@@ -258,7 +272,10 @@ export function Leaflet() {
       setFileNameBox,
       setSearch,
       setClick,
-      click
+      click,
+      open ? handleDrawerClose : handleDrawerOpen,
+      setSnackbar,
+      setSnackbarMessage
     );
   });
 
@@ -487,9 +504,7 @@ export function Leaflet() {
   };
 
   const addOpenToAllDetailTags = () => {
-    const searchArea = document.getElementById(
-      "fileTree"
-    ) as HTMLDivElement;
+    const searchArea = document.getElementById("fileTree") as HTMLDivElement;
     const allDetailTags = searchArea.getElementsByTagName("details");
     if (!detailIsOpen) {
       if (searchArea) {
@@ -520,25 +535,33 @@ export function Leaflet() {
           flexDirection: "row",
           zIndex: "1",
           paddingTop: "20px",
-          paddingBottom: "5px"
+          paddingBottom: "5px",
         }}
       >
         <div style={{ flex: 1, alignItems: "center", paddingTop: "20px" }}>
           <button
             color="inherit"
             aria-label="open drawer"
-            onClick={open ? handleDrawerClose :handleDrawerOpen}
-            style={{padding: 0}}
+            onClick={open ? handleDrawerClose : handleDrawerOpen}
+            style={{ padding: 0 }}
           >
-            <div title="Collapse Sidebar"
-            style={{paddingLeft: "20px"}}
-            >
+            <div title="Collapse Sidebar" style={{ paddingLeft: "20px" }}>
               <SIDEBARCOLLAPSEIcon />
             </div>
           </button>
         </div>
-        <div style={{ flex: 1, alignItems: "center",  paddingTop: "20px" }}>{cleanFileNameForExport(name)}</div>
-        <div style={{ paddingRight: "20px", alignItems: "center",  paddingTop: "20px" }}>mom</div>
+        <div style={{ flex: 1, alignItems: "center", paddingTop: "20px" }}>
+          {cleanFileNameForExport(name)}
+        </div>
+        <div
+          style={{
+            paddingRight: "20px",
+            alignItems: "center",
+            paddingTop: "20px",
+          }}
+        >
+          mom
+        </div>
       </AppBar>
       <Drawer
         sx={{
@@ -554,7 +577,6 @@ export function Leaflet() {
         open={open}
         className={open ? "drawer" : ""}
       >
-
         <QuickActions
           createNewFile={() => setFileNameBox(true)}
           addOpenToAllDetailTags={() => addOpenToAllDetailTags()}
@@ -563,7 +585,9 @@ export function Leaflet() {
             setFileNameBox(true);
             setIsCreatingFolder(true);
           }}
-          sidebarCollapse={()=> {console.log("hi")}}
+          sidebarCollapse={() => {
+            console.log("hi");
+          }}
         />
         <FileTree
           struct={struct}
@@ -581,53 +605,58 @@ export function Leaflet() {
           }}
           isCreatingFolder={isCreatingFolder}
           onDelete={(path, name) => onDelete(path, name)}
-          toPDF={(body, name) => toPDF(body, name)}
+          toPDF={(body, name) =>
+            toPDF(body, name, setSnackbar, setSnackbarMessage)
+          }
           toDOCX={(body, name) => toDOCX(body, name)}
         />
       </Drawer>
       <Main open={open}>
         <div>
           <DrawerHeader />
-          {insert ? (
-            <div className="markdown-content">
-              <div style={{ overflow: "hidden" }}>
-                <CodeMirror
-                  ref={refs}
-                  value={value}
-                  height="100%"
-                  width="100%"
-                  autoFocus={true}
-                  theme={isDarkMode ? githubDark : basicLight}
-                  basicSetup={false}
-                  extensions={isVim ? [vim(), EXTENSIONS] : EXTENSIONS}
-                  onChange={onChange}
-                />
-              </div>
-            </div>
-          ) : (
-            <>
-              <div style={{ zIndex: "1", overflow: "hidden" }}>
-                <div style={{ paddingTop: "1em" }}>
-                  {ValidateYaml(resolvedMarkdown.metadata)}
-                  <div style={{ overflow: "hidden" }}>
-                  <Balancer>
-                    <div
-                      id="previewArea"
-                      style={{
-                        marginBottom: "5em",
-                        overflow: "scroll",
-                      }}
-                      className="third h-full w-full"
-                      dangerouslySetInnerHTML={resolvedMarkdown.document}
-                    />
-                  </Balancer>
-                  </div>
+          <div className="content">
+            {insert ? (
+              <div className="markdown-content">
+                <div style={{ overflow: "hidden" }}>
+                  <CodeMirror
+                    ref={refs}
+                    value={value}
+                    height="100%"
+                    width="100%"
+                    autoFocus={true}
+                    theme={isDarkMode ? githubDark : basicLight}
+                    basicSetup={false}
+                    extensions={isVim ? [vim(), EXTENSIONS] : EXTENSIONS}
+                    onChange={onChange}
+                  />
                 </div>
               </div>
-            </>
-          )}
+            ) : (
+              <>
+                <div style={{ zIndex: "1", overflow: "hidden" }}>
+                  <div style={{ paddingTop: "1em" }}>
+                    {ValidateYaml(resolvedMarkdown.metadata)}
+                    <div style={{ overflow: "hidden" }}>
+                      <Balancer>
+                        <div
+                          id="previewArea"
+                          style={{
+                            marginBottom: "5em",
+                            overflow: "scroll",
+                          }}
+                          className="third h-full w-full"
+                          dangerouslySetInnerHTML={resolvedMarkdown.document}
+                        />
+                      </Balancer>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </Main>
+      {Snackbars(snackbar, snackbarMessage[0], snackbarMessage[1])}
     </Box>
   );
 
