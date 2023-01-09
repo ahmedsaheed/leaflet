@@ -21,7 +21,7 @@ export const ListenToKeys = (
   insert: boolean,
   setInsert: Dispatcher<boolean>,
   toPDF: (value: string, name: string, setSnackbar: Dispatcher<boolean>, setSnackbaeMeassage: Dispatcher<Array<string>> ) => void,
-  toDOCX: (value: string, name: string) => void,
+  toDOCX: (value: string, name: string, setSnackbar: Dispatcher<boolean>, setSnackbaeMeassage: Dispatcher<Array<string>> ) => void,
   value: string,
   name: string,
   path: string,
@@ -56,7 +56,7 @@ export const ListenToKeys = (
     }
 
     if ((e.ctrlKey || e.metaKey) && e.key === "d") {
-      toDOCX(value, name);
+      toDOCX(value, name, setSnackbar, setSnackbarMessage);
       e.preventDefault();
       return;
     }

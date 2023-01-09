@@ -17,9 +17,6 @@ export default function Snackbars(
   messageType: string
 ) {
   const [open, setOpen] = useState(show);
-  const handleClick = () => {
-    setOpen(true);
-  };
 
   let severity;
   if (messageType === "success") {

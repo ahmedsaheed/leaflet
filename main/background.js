@@ -419,7 +419,7 @@ ipcMain.handle("creatingPdf", (event, name, body) => {
   });
 });
 
-ipcMain.handle("creatingDocx", (event, name) => {
+ipcMain.handle("creatingDocx", (event, name, body) => {
   const option = {
     title: "Save DOCX",
     defaultPath: `${Desktop}/${name}.docx`,
@@ -431,7 +431,7 @@ ipcMain.handle("creatingDocx", (event, name) => {
 
   dialog.showSaveDialog(option).then((result) => {
     if (!result.canceled && result.filePath) {
-      event.sender.send("docxPath", result.filePath);
+      event.sender.send("docxPath", result.filePath, body);
     }
   });
 });

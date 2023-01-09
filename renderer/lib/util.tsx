@@ -13,8 +13,7 @@ const route = os.homedir() + "/columns.lua";
 type Dispatcher<S> = Dispatch<SetStateAction<S>>;
 import { ipcRenderer } from "electron";
 import { getMarkdownWithMermaid } from "./mdParser";
-import Snackbars from "../components/snackbars";
-import severity from "../components/snackbars";
+
 /**
  * Bold a text in editor view
  * @param view EditorView
@@ -372,6 +371,8 @@ export const cleanFileNameForExport = (name: string) => {
  * @description Function Convert specified file to pdf
  * @param {string} body - content to be converted
  * @param {string} name - name of the file
+ * @param {Dispatcher} setSnackbar - displays a snackbar
+ * @param {Dispatcher} setSnackBarMessage - Hold the snackbar message and message type i.e success, error, info
  * @returns {void}
  */
 export const toPDF = (
@@ -436,22 +437,54 @@ export const toPDF = (
  * @param {string} name - name of the file
  * @returns {void}
  */
-export const toDOCX = (body: string, name: string) => {
-  ipcRenderer.invoke("creatingDocx", cleanFileNameForExport(name)).then(() => {
-    ipcRenderer.on("docxPath", function (event, response) {
-      try {
-        const path = response;
-        pandoc(body, `-f markdown -t docx -o ${path}`, function (err) {
-          if (err) console.log(err);
-          if (fs.existsSync(path)) {
-            open(path);
-          }
-        });
-      } catch (e) {
-        console.log(e);
-      }
+export const toDOCX = (
+  body: string,
+  name: string,
+  setSnackbar: Dispatcher<boolean>,
+  setSnackBarMessage: Dispatcher<Array<string>>
+) => {
+  ipcRenderer
+    .invoke("creatingDocx", cleanFileNameForExport(name), body)
+    .then(() => {
+      ipcRenderer.on("docxPath", function (event, response, document) {
+        try {
+          const outputPath = response;
+          pandoc(
+            document,
+            `-f markdown -t docx -o ${outputPath}`,
+            function (err) {
+              if (err) {
+                console.log(err);
+                activateSnackBar(
+                  setSnackbar,
+                  setSnackBarMessage,
+                  "Couldn't Generate DOCX",
+                  "error"
+                );
+              }
+              if (fs.existsSync(outputPath)) {
+                activateSnackBar(
+                  setSnackbar,
+                  setSnackBarMessage,
+                  "DOCX created successfully",
+                  "success"
+                );
+                open(outputPath);
+              } else {
+                activateSnackBar(
+                  setSnackbar,
+                  setSnackBarMessage,
+                  "Couldn't Generate DOCX",
+                  "error"
+                );
+              }
+            }
+          );
+        } catch (e) {
+          console.log(e);
+        }
+      });
     });
-  });
 };
 
 const activateSnackBar = (

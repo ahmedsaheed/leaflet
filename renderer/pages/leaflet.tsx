@@ -608,7 +608,7 @@ export function Leaflet() {
           toPDF={(body, name) =>
             toPDF(body, name, setSnackbar, setSnackbarMessage)
           }
-          toDOCX={(body, name) => toDOCX(body, name)}
+          toDOCX={(body, name) => toDOCX(body, name, setSnackbar, setSnackbarMessage)}
         />
       </Drawer>
       <Main open={open}>
