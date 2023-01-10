@@ -6,7 +6,7 @@ import {
   EDITINGIcon,
   PREVIEWIcon,OPTIONSIcon
 } from "./icons";
-
+import {ipcRenderer} from "electron";
 export const QuickAction = ({
  modeSwitch,
   createNewFolder,
@@ -41,7 +41,12 @@ export const QuickAction = ({
 
       <button
         className="quickAction"
-        onClick={addOpenToAllDetailTags}
+        onClick={
+            (e) => {
+              e.preventDefault();
+              ipcRenderer.send('show-context-menu');
+            }
+        }
         style={{
           border: "1px solid transparent",
           borderRadius: "4px",

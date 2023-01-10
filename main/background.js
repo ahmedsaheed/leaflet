@@ -1,4 +1,12 @@
-import { app, ipcMain, Menu, dialog, Notification, shell } from "electron";
+import {
+  app,
+  BrowserWindow,
+  ipcMain,
+  Menu,
+  dialog,
+  Notification,
+  shell,
+} from "electron";
 import serve from "electron-serve";
 import { createWindow, markdown } from "./helpers";
 import path from "path";
@@ -13,8 +21,6 @@ const isDev = require("electron-is-dev");
 const dirTree = require("directory-tree");
 const Desktop = os.homedir() + "/Desktop";
 
-
-
 if (isDev) {
   app.setPath("userData", `${app.getPath("userData")} (development)`);
 } else {
@@ -23,7 +29,7 @@ if (isDev) {
 
 (async () => {
   await app.whenReady();
-    
+
   const mainWindow = createWindow("main", {
     width: 920,
     height: 800,
@@ -213,6 +219,39 @@ if (isDev) {
   Menu.setApplicationMenu(menu);
 })();
 
+ipcMain.on("show-context-menu", (event) => {
+  const template = [
+    {
+      label: "Reveal in Finder",
+      click: () => {
+        event.sender.send("in-app-command-revealInFinder");
+      },
+    },
+
+    {
+      label: "Export to PDF",
+      click: () => {
+        event.sender.send("in-app-command-topdf");
+      },
+    },
+    {
+      label: "Export to DOCX",
+      click: () => {
+        event.sender.send("in-app-command-todocx");
+      },
+    },
+    { type: "separator" },
+    {
+      label: "Delete File",
+      click: () => {
+        event.sender.send("in-app-command-totrash");
+      },
+    },
+  ];
+  const menu = Menu.buildFromTemplate(template);
+  menu.popup(BrowserWindow.fromWebContents(event.sender));
+});
+
 const created = (name) => {
   const extension = name.split(".").pop();
   const realName = extension == "md" ? name : `${name}.md`;
@@ -295,7 +334,6 @@ const addFilesOnDragOrDialog = (files = []) => {
 const deleteFile = (filePath) => {
   try {
     if (fs.existsSync(filePath)) {
-      // move file to trash instead of fs.removeSync
       shell.trashItem(filePath);
     }
   } catch (e) {

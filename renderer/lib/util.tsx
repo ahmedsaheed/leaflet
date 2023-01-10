@@ -13,7 +13,7 @@ const route = os.homedir() + "/columns.lua";
 type Dispatcher<S> = Dispatch<SetStateAction<S>>;
 import { ipcRenderer } from "electron";
 import { getMarkdownWithMermaid } from "./mdParser";
-
+const { shell } = require("electron");
 /**
  * Bold a text in editor view
  * @param view EditorView
@@ -29,6 +29,14 @@ export const BOLD = (view: EditorView) => {
       range: EditorSelection.range(range.from + 2, range.to + 2),
     }))
   );
+};
+
+export const revealInFinder = (path: string) => {
+  try {
+    shell.showItemInFolder(path);
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 /**

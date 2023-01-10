@@ -10,12 +10,11 @@ import {
   checkForPandoc,
   toDOCX,
   toPDF,
+  revealInFinder,
   cleanFileNameForExport,
 } from "../lib/util";
 import Snackbars from "../components/snackbars";
-import {
-  SIDEBARCOLLAPSEIcon,
-} from "../components/icons";
+import { SIDEBARCOLLAPSEIcon } from "../components/icons";
 import { ButtomBar } from "../components/bottomBar";
 import { FileTree } from "../components/filetree";
 import { QuickAction, QuickActions } from "../components/quickactions";
@@ -133,7 +132,7 @@ export function Leaflet() {
   const prefersColorScheme = usePrefersColorScheme();
   const isDarkMode = prefersColorScheme === "dark";
   const resolvedMarkdown = getMarkdown(value);
-    let accentColor;
+  let accentColor;
   useEffect(() => {
     if (!initialised) {
       initialised = true;
@@ -252,10 +251,70 @@ export function Leaflet() {
   };
 
   useEffect(() => {
-    ipcRenderer.on("save", function () {
-      saveFile();
-      Update();
+    let ignore = false;
+    ipcRenderer.on("in-app-command-revealInFinder", function () {
+      if (!ignore) {
+      revealInFinder(path);
+      }
     });
+
+    return () => {
+      ignore = true;
+    };
+  }, [path]);
+
+  
+  useEffect(() => {
+    let ignore = false;
+    ipcRenderer.on("in-app-command-totrash", function () {
+      if (!ignore) {
+        onDelete(path, name)
+      }
+    });
+
+    return () => {
+      ignore = true;
+    };
+  }, [path, name]);
+  useEffect(() => {
+    let ignore = false;
+    ipcRenderer.on("in-app-command-topdf", function () {
+      if (!ignore) {
+        toPDF(value, name, setSnackbar, setSnackbarMessage);
+      }
+    });
+
+    return () => {
+      ignore = true;
+    };
+  }, [value, name]);
+
+  useEffect(() => {
+    let ignore = false;
+    ipcRenderer.on("in-app-command-todocx", function () {
+      if (!ignore) {
+        toDOCX(value, name, setSnackbar, setSnackbarMessage);
+      }
+    });
+
+    return () => {
+      ignore = true;
+    };
+  }, [value, name]);
+
+  useEffect(() => {
+    let save = false;
+
+    ipcRenderer.on("save", function () {
+      if (!save) {
+        saveFile();
+        Update();
+      }
+    });
+
+    return () => {
+      save = true;
+    };
   }, [value, path]);
 
   useEffect(() => {
@@ -416,6 +475,7 @@ export function Leaflet() {
 
   const saveFile = () => {
     try {
+      console.log("hi");
       setSaver("SAVING...");
       ipcRenderer.invoke("saveFile", path, value).then(() => {
         Update();
@@ -557,7 +617,7 @@ export function Leaflet() {
               borderRadius: "4px",
             }}
           >
-            <div style={{padding: "0 5px"}}  title="Collapse Sidebar">
+            <div style={{ padding: "0 5px" }} title="Collapse Sidebar">
               <SIDEBARCOLLAPSEIcon />
             </div>
           </button>
@@ -580,7 +640,7 @@ export function Leaflet() {
               setFileNameBox(true);
               setIsCreatingFolder(true);
             }}
-            insert = {insert}
+            insert={insert}
           />
         </div>
       </AppBar>
