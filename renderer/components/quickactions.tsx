@@ -4,7 +4,7 @@ import {
   COLLAPSEIcon,
   EXPANDIcon,
   EDITINGIcon,
-  PREVIEWIcon,
+  PREVIEWIcon,OPTIONSIcon
 } from "./icons";
 
 export const QuickAction = ({
@@ -41,21 +41,6 @@ export const QuickAction = ({
 
       <button
         className="quickAction"
-        onClick={createNewFolder}
-        style={{
-          border: "1px solid transparent",
-          borderRadius: "4px",
-          marginRight: "0.5em",
-          cursor: "default",
-          outline: "none",
-        }}
-      >
-        <div title="New Folder" style={{padding: "0 5px"}} >
-          <NEWFOLDERIcon />
-        </div>
-      </button>
-      <button
-        className="quickAction"
         onClick={addOpenToAllDetailTags}
         style={{
           border: "1px solid transparent",
@@ -66,7 +51,7 @@ export const QuickAction = ({
         }}
       >
         <div style={{padding: "0 5px"}}  title={detailIsOpen ? "Collapse Files" : "Expand Files"}>
-          {detailIsOpen ? <COLLAPSEIcon /> : <EXPANDIcon />}
+           <OPTIONSIcon/> 
         </div>
       </button>
     </div>

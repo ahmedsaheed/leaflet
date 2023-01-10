@@ -215,7 +215,6 @@ export const ADDIcon = () => {
   );
 };
 
-
 export const BINIcon = () => {
   return (
     <svg
@@ -270,21 +269,21 @@ export const MOVEIcon = () => {
 export const SIDEBARCOLLAPSEIcon = () => {
   return (
     <svg
-      style={{ display: "inline" }}
+      xmlns="http://www.w3.org/2000/svg"
       width="20"
-      height="16"
+      height="18"
       viewBox="0 0 24 24"
+      fill="none"
+      stroke="#888888"
+      stroke-width="1"
+      stroke-linecap="round"
+      stroke-linejoin="round"
     >
-      <g
-        fill="none"
-        stroke="#888888"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-      >
-        <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
-        <path d="M9 3v18m7-6l-3-3l3-3" />
-      </g>
+      <path d="M21 3H3C1.89543 3 1 3.89543 1 5V19C1 20.1046 1.89543 21 3 21H21C22.1046 21 23 20.1046 23 19V5C23 3.89543 22.1046 3 21 3Z"></path>
+      <path d="M10 4V20"></path>
+      <path d="M4 7H7"></path>
+      <path d="M4 10H7"></path>
+      <path d="M4 13H7"></path>
     </svg>
   );
 };
@@ -292,31 +291,56 @@ export const SIDEBARCOLLAPSEIcon = () => {
 export const EDITINGIcon = () => {
   return (
     <svg
-      style={{ display: "inline" }}
-      width="20"
-      height="20"
+      xmlns="http://www.w3.org/2000/svg"
+      width="18"
+      height="17"
       viewBox="0 0 24 24"
+      fill="none"
+      stroke="#888888"
+      stroke-width="1"
+      stroke-linecap="round"
+      stroke-linejoin="round"
     >
-      <path
-        fill="#888888"
-        d="m19.71 8.04l-2.34 2.33l-3.75-3.75l2.34-2.33c.39-.39 1.04-.39 1.41 0l2.34 2.34c.39.37.39 1.02 0 1.41M3 17.25L13.06 7.18l3.75 3.75L6.75 21H3v-3.75M16.62 5.04l-1.54 1.54l2.34 2.34l1.54-1.54l-2.34-2.34M15.36 11L13 8.64l-9 9.02V20h2.34l9.02-9Z"
-      />
+      <path d="M12 20h9"></path>
+      <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
     </svg>
   );
 };
 export const PREVIEWIcon = () => {
   return (
     <svg
-      style={{ display: "inline" }}
+      xmlns="http://www.w3.org/2000/svg"
       width="18"
-      height="18"
-      viewBox="0 0 1024 1024"
+      height="17"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="#888888"
+      stroke-width="1"
+      stroke-linecap="round"
+      stroke-linejoin="round"
     >
-      <path
-        fill="#888888"
-        d="m512 863.36l384-54.848v-638.72L525.568 222.72a96 96 0 0 1-27.136 0L128 169.792v638.72l384 54.848zM137.024 106.432l370.432 52.928a32 32 0 0 0 9.088 0l370.432-52.928A64 64 0 0 1 960 169.792v638.72a64 64 0 0 1-54.976 63.36l-388.48 55.488a32 32 0 0 1-9.088 0l-388.48-55.488A64 64 0 0 1 64 808.512v-638.72a64 64 0 0 1 73.024-63.36z"
-      />
-      <path fill="currentColor" d="M480 192h64v704h-64z" />
+      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+    </svg>
+  );
+};
+
+export const OPTIONSIcon = () => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="18"
+      height="17"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="#888888"
+      stroke-width="1"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <circle cx="12" cy="12" r="1"></circle>
+      <circle cx="12" cy="5" r="1"></circle>
+      <circle cx="12" cy="19" r="1"></circle>
     </svg>
   );
 };
