@@ -495,7 +495,7 @@ export const toDOCX = (
     });
 };
 
-const activateSnackBar = (
+export const activateSnackBar = (
   setSnackbar: Dispatcher<boolean>,
   setSnackBarMessage: Dispatcher<Array<string>>,
   message: string,

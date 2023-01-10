@@ -5,6 +5,7 @@ import { vim } from "@replit/codemirror-vim";
 import {
   GETDATE,
   EXTENSIONS,
+  activateSnackBar,
   openExternalInDefaultBrowser,
   toggleBetweenVimAndNormalMode,
   checkForPandoc,
@@ -254,7 +255,7 @@ export function Leaflet() {
     let ignore = false;
     ipcRenderer.on("in-app-command-revealInFinder", function () {
       if (!ignore) {
-      revealInFinder(path);
+        revealInFinder(path);
       }
     });
 
@@ -263,12 +264,11 @@ export function Leaflet() {
     };
   }, [path]);
 
-  
   useEffect(() => {
     let ignore = false;
     ipcRenderer.on("in-app-command-totrash", function () {
       if (!ignore) {
-        onDelete(path, name)
+        onDelete(path, name);
       }
     });
 
@@ -461,6 +461,12 @@ export function Leaflet() {
       }
       ipcRenderer.invoke("deleteFile", name, path).then(() => {
         Update();
+        activateSnackBar(
+          setSnackbar,
+          setSnackbarMessage,
+          `${name} moved to trash`,
+          "info"
+        );
         setStruct(files[0].structure.children);
         const index = Math.floor(Math.random() * files.length);
         setInsert(false);
