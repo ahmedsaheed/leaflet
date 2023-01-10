@@ -1,5 +1,4 @@
 module.exports = {
-  reactStrictMode: false,
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.target = 'electron-renderer';
