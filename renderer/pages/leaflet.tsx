@@ -6,26 +6,21 @@ import {
   GETDATE,
   EXTENSIONS,
   activateSnackBar,
-  openExternalInDefaultBrowser,
-  toggleBetweenVimAndNormalMode,
-  checkForPandoc,
   toDOCX,
   toPDF,
-  revealInFinder,
   cleanFileNameForExport,
 } from "../lib/util";
+import { effects } from "../lib/effects";
 import Snackbars from "../components/snackbars";
 import { SIDEBARCOLLAPSEIcon } from "../components/icons";
-import { ButtomBar } from "../components/bottomBar";
+// import { ButtomBar } from "../components/bottomBar";
 import { FileTree } from "../components/filetree";
 import { QuickAction, QuickActions } from "../components/quickactions";
 import { METADATE, METATAGS, METAMATERIAL } from "../components/metadata";
 import { getMarkdown } from "../lib/mdParser";
 import fs from "fs-extra";
-import dragDrop from "drag-drop";
 import mainPath from "path";
-import pandoc from "../lib/pandocConverter";
-import { CMDK } from "../components/cmdk";
+// import { CMDK } from "../components/cmdk";
 import { githubDark } from "@uiw/codemirror-theme-github";
 import CodeMirror from "@uiw/react-codemirror";
 import { getStatistics, ReactCodeMirrorRef } from "@uiw/react-codemirror";
@@ -133,41 +128,118 @@ export function Leaflet() {
   const prefersColorScheme = usePrefersColorScheme();
   const isDarkMode = prefersColorScheme === "dark";
   const resolvedMarkdown = getMarkdown(value);
-  let accentColor;
-  useEffect(() => {
-    if (!initialised) {
-      initialised = true;
-      openExternalInDefaultBrowser();
-      checkForPandoc(setPandocAvailable);
-      toggleBetweenVimAndNormalMode(setIsVim);
+
+  const saveFile = () => {
+    try {
+      console.log("hi");
+      setSaver("SAVING...");
+      ipcRenderer.invoke("saveFile", path, value).then(() => {
+        Update();
+        setSaver("SAVED");
+        setTimeout(() => {
+          setIsEdited(false);
+          setSaver("EDITED");
+        }, 3000);
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const fileDialog = () => {
+    ipcRenderer.invoke("app:on-fs-dialog-open").then(() => {
       ipcRenderer.invoke("getTheFile").then((files = []) => {
         setFiles(files);
-        setValue(files[0] ? `${files[0].body}` : "");
-        setName(files[0] ? `${files[0].name}` : "");
-        setPath(files[0] ? `${files[0].path}` : "");
+        Update();
       });
+    });
+  };
+
+  /**
+   * @description Function to delete a file
+   * @param {string} path - path of the file to be deleted
+   * @param {string} name - name of the file to be deleted
+   * @returns {void}
+   */
+  const onDelete = (path: string, name: string) => {
+    try {
+      if (!fs.existsSync(path)) {
+        return;
+      }
+      ipcRenderer.invoke("deleteFile", name, path).then(() => {
+        Update();
+        activateSnackBar(
+          setSnackbar,
+          setSnackbarMessage,
+          `${name} moved to trash`,
+          "info"
+        );
+        setStruct(files[0].structure.children);
+        const index = Math.floor(Math.random() * files.length);
+        setInsert(false);
+        setValue(files[index].body);
+        setName(files[index].name);
+        setPath(files[index].path);
+      });
+    } catch (e) {
+      console.log(e);
     }
-  }, []);
+  };
 
-  useEffect(() => {
-    if (snackbar == true) {
-      setTimeout(() => {
-        setSnackbar(false);
-        setSnackbarMessage([]);
-      }, 3500);
-    }
-  }, [snackbar]);
-
-  useEffect(() => {
-    if (refs.current?.view) setEditorView(refs.current?.view);
-  }, [refs.current]);
-
-  useEffect(() => {
-    if (files.length > 0) {
+  const Update = () => {
+    ipcRenderer.invoke("getTheFile").then((files = []) => {
+      setFiles(files);
       setStruct(files[0].structure.children);
-    }
-  }, [files]);
+    });
+  };
+  effects(
+    initialised,
+    setPandocAvailable,
+    setIsVim,
+    setFiles,
+    setValue,
+    setName,
+    setPath,
+    snackbar,
+    setSnackbar,
+    setSnackbarMessage,
+    refs,
+    setEditorView,
+    files,
+    setStruct,
+    path,
+    name,
+    value,
+    saveFile,
+    Update,
+    onDelete,
+    setInsert,
+    insert,
+    fileDialog,
+    setScroll
+  );
 
+  useEffect(() => {
+    ListenToKeys(
+      saveFile,
+      editorview,
+      insert,
+      setInsert,
+      toPDF,
+      toDOCX,
+      value,
+      name,
+      path,
+      fileDialog,
+      setFileNameBox,
+      setSearch,
+      setClick,
+      click,
+      open ? handleDrawerClose : handleDrawerOpen,
+      setSnackbar,
+      setSnackbarMessage
+    );
+  });
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -175,21 +247,6 @@ export function Leaflet() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-
-  const handleScroll = (event) => {
-    let ScrollPercent = 0;
-    const Scrolled = document.documentElement.scrollTop;
-    const MaxHeight =
-      document.documentElement.scrollHeight -
-      document.documentElement.clientHeight;
-    ScrollPercent = (Scrolled / MaxHeight) * 100;
-    setScroll(ScrollPercent);
-  };
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   const updateCursor = (a, b) => {
     const line = a.number;
@@ -228,7 +285,6 @@ export function Leaflet() {
    * @description Function creates a new directory with a single file
    * @param {string} name - name of the directory
    */
-
   const createNewDir = (name: string) => {
     if (fs.existsSync(mainPath.join(parentDir, name)) || name === "") {
       return;
@@ -244,111 +300,6 @@ export function Leaflet() {
     setIsCreatingFolder(false);
   };
 
-  const Update = () => {
-    ipcRenderer.invoke("getTheFile").then((files = []) => {
-      setFiles(files);
-      setStruct(files[0].structure.children);
-    });
-  };
-
-  useEffect(() => {
-    let ignore = false;
-    ipcRenderer.on("in-app-command-revealInFinder", function () {
-      if (!ignore) {
-        revealInFinder(path);
-      }
-    });
-
-    return () => {
-      ignore = true;
-    };
-  }, [path]);
-
-  useEffect(() => {
-    let ignore = false;
-    ipcRenderer.on("in-app-command-totrash", function () {
-      if (!ignore) {
-        onDelete(path, name);
-      }
-    });
-
-    return () => {
-      ignore = true;
-    };
-  }, [path, name]);
-  useEffect(() => {
-    let ignore = false;
-    ipcRenderer.on("in-app-command-topdf", function () {
-      if (!ignore) {
-        toPDF(value, name, setSnackbar, setSnackbarMessage);
-      }
-    });
-
-    return () => {
-      ignore = true;
-    };
-  }, [value, name]);
-
-  useEffect(() => {
-    let ignore = false;
-    ipcRenderer.on("in-app-command-todocx", function () {
-      if (!ignore) {
-        toDOCX(value, name, setSnackbar, setSnackbarMessage);
-      }
-    });
-
-    return () => {
-      ignore = true;
-    };
-  }, [value, name]);
-
-  useEffect(() => {
-    let save = false;
-
-    ipcRenderer.on("save", function () {
-      if (!save) {
-        saveFile();
-        Update();
-      }
-    });
-
-    return () => {
-      save = true;
-    };
-  }, [value, path]);
-
-  useEffect(() => {
-    ListenToKeys(
-      saveFile,
-      editorview,
-      insert,
-      setInsert,
-      toPDF,
-      toDOCX,
-      value,
-      name,
-      path,
-      fileDialog,
-      setFileNameBox,
-      setSearch,
-      setClick,
-      click,
-      open ? handleDrawerClose : handleDrawerOpen,
-      setSnackbar,
-      setSnackbarMessage
-    );
-  });
-
-  useEffect(() => {
-    ipcRenderer.on("insertClicked", function () {
-      insert ? "" : setInsert(true);
-    });
-
-    ipcRenderer.on("previewClicked", function () {
-      insert ? setInsert(false) : "";
-    });
-  }, [insert]);
-
   useEffect(() => {
     ipcRenderer.on("open", function () {
       fileDialog();
@@ -360,77 +311,6 @@ export function Leaflet() {
       setFileNameBox(true);
     });
   }, [fileNameBox]);
-
-  /**
-   * @description Function Convert docx file to markdown
-   * @param {string} filePath - path of the file to be converted
-   * @returns {void}
-   */
-  const docxToMd = (filePath) => {
-    let destination = `${appDir}/${filePath.name.split(".")[0]}.md`;
-    destination = destination.replace(/\s/g, "");
-    try {
-      pandoc(
-        filePath.path,
-        `-f docx -t markdown -o ${destination}`,
-        function (err, result) {
-          if (err) console.log(err);
-          if (fs.existsSync(destination)) {
-            Update();
-          }
-        }
-      );
-    } catch (e) {
-      console.log(e);
-    }
-
-    return destination;
-  };
-
-  /**
-   * Listen and handle drags and drops events
-   */
-  useEffect(() => {
-    dragDrop("body", (files) => {
-      const nameOfFileAtLastIndex = files[files.length - 1].name;
-      const _files = files.map((file) => {
-        let fileName = file.name;
-        let filePath = file.path;
-        const extension = file.path.split(".").pop();
-        if (extension != "md" && extension === "docx") {
-          const docx = docxToMd(file);
-          fileName = mainPath.parse(docx).base;
-          filePath = docx;
-        }
-        return {
-          name: fileName,
-          path: filePath,
-        };
-      });
-
-      ipcRenderer.invoke("app:on-file-add", _files).then(() => {
-        ipcRenderer.invoke("getTheFile").then((files = []) => {
-          setFiles(files);
-          setInsert(false);
-          const index = files.findIndex(
-            (file) => file.name === nameOfFileAtLastIndex.split(".")[0]
-          );
-          index !== -1
-            ? () => {
-                setValue(files[index].body);
-                setName(files[index].name);
-                setPath(files[index].path);
-              }
-            : () => {
-                setValue(files[0].body);
-                setName(files[0].name);
-                setPath(files[0].path);
-              };
-          Update();
-        });
-      });
-    });
-  }, []);
 
   /**
    *
@@ -448,54 +328,6 @@ export function Leaflet() {
       : null;
   };
 
-  /**
-   * @description Function to delete a file
-   * @param {string} path - path of the file to be deleted
-   * @param {string} name - name of the file to be deleted
-   * @returns {void}
-   */
-  const onDelete = (path: string, name: string) => {
-    try {
-      if (!fs.existsSync(path)) {
-        return;
-      }
-      ipcRenderer.invoke("deleteFile", name, path).then(() => {
-        Update();
-        activateSnackBar(
-          setSnackbar,
-          setSnackbarMessage,
-          `${name} moved to trash`,
-          "info"
-        );
-        setStruct(files[0].structure.children);
-        const index = Math.floor(Math.random() * files.length);
-        setInsert(false);
-        setValue(files[index].body);
-        setName(files[index].name);
-        setPath(files[index].path);
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const saveFile = () => {
-    try {
-      console.log("hi");
-      setSaver("SAVING...");
-      ipcRenderer.invoke("saveFile", path, value).then(() => {
-        Update();
-        setSaver("SAVED");
-        setTimeout(() => {
-          setIsEdited(false);
-          setSaver("EDITED");
-        }, 3000);
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
   const creatingFileOrFolder = () => {
     if (fileName.length < 1) {
       setFileNameBox(false);
@@ -507,22 +339,6 @@ export function Leaflet() {
       setFileName("");
     }, 100);
   };
-
-  const fileDialog = () => {
-    ipcRenderer.invoke("app:on-fs-dialog-open").then(() => {
-      ipcRenderer.invoke("getTheFile").then((files = []) => {
-        setFiles(files);
-        Update();
-      });
-    });
-  };
-
-  function isEmpty(obj: object) {
-    for (var prop in obj) {
-      if (obj.hasOwnProperty(prop)) return false;
-    }
-    return true;
-  }
 
   /**
    * @description Function validate and render yaml metadata
@@ -743,259 +559,259 @@ export function Leaflet() {
       {Snackbars(snackbar, snackbarMessage[0], snackbarMessage[1])}
     </Box>
   );
-
-  // return (
-  //   <>
-  //     <div className="mainer" style={{ minHeight: "100vh" }}>
-  //       <div>
-  //         {!splitview ? TopBar(click, fileTreeIsOpen) : null}
-  //         <div
-  //           className={`fs fixed sidebars ${
-  //             fileTreeIsOpen ? "visible" : "closing"
-  //           }`}
-  //           style={{
-  //             width: "17.5em",
-  //             maxWidth: "18.5em",
-  //             minHeight: "100vh",
-  //             display: fileTreeIsOpen ? "block" : "none",
-  //           }}
-  //         >
-  //           <div>
-  //             <div
-  //               style={{
-  //                 height: "100vh",
-  //                 marginTop: "5vh",
-  //                 paddingTop: "2em",
-  //               }}
-  //             >
-  //               <QuickActions
-  //                 createNewFile={() => setFileNameBox(true)}
-  //                 addOpenToAllDetailTags={() => addOpenToAllDetailTags()}
-  //                 detailIsOpen={detailIsOpen}
-  //                 createNewFolder={() => {
-  //                   setFileNameBox(true);
-  //                   setIsCreatingFolder(true);
-  //                 }}
-  //                 sidebarCollapse={fileTreeDrawer}
-  //               />
-  //               <FileTree
-  //                 struct={struct}
-  //                 onFileTreeClick={(path, name) => {
-  //                   onFileTreeClick(path, name);
-  //                 }}
-  //                 path={path}
-  //                 fileNameBox={fileNameBox}
-  //                 parentDirClick={(path) => {
-  //                   setParentDir(path);
-  //                 }}
-  //                 creatingFileOrFolder={creatingFileOrFolder}
-  //                 setFileName={(name) => {
-  //                   setFileName(name);
-  //                 }}
-  //                 isCreatingFolder={isCreatingFolder}
-  //                 onDelete={(path, name) => onDelete(path, name)}
-  //                 toPDF={(body, name) => toPDF(body, name)}
-  //                 toDOCX={(body, name) => toDOCX(body, name)}
-  //               />
-  //               <div
-  //                 className={"fixed util"}
-  //                 style={{
-  //                   bottom: "0.25rem",
-  //                 }}
-  //               >
-  //                 <div
-  //                   style={{
-  //                     paddingLeft: "10px",
-  //                     width: "17.5em",
-  //                     maxWidth: "17.5em",
-  //                   }}
-  //                   className="menu"
-  //                   role="button"
-  //                   onClick={() => {
-  //                     try {
-  //                       setClick(true);
-  //                       setSearch("");
-  //                     } catch (err) {
-  //                       console.log(err);
-  //                     }
-  //                   }}
-  //                 >
-  //                   Utilities
-  //                   <span style={{ float: "right", marginRight: "2em" }}>
-  //                     <code style={{ borderRadius: "2px" }}>⌘</code>{" "}
-  //                     <code style={{ borderRadius: "2px" }}>k</code>
-  //                   </span>
-  //                   {click && (
-  //                     <CMDK
-  //                       value={value}
-  //                       onNewFile={() => {
-  //                         setFileNameBox(true);
-  //                       }}
-  //                       onCreatingFolder={() => {
-  //                         try {
-  //                           setIsCreatingFolder(true);
-  //                           setFileNameBox(true);
-  //                         } catch (e) {
-  //                           console.log(e);
-  //                         }
-  //                       }}
-  //                       setSearch={setSearch}
-  //                       files={files}
-  //                       pandocAvailable={pandocAvailable}
-  //                       setClick={setClick}
-  //                       page={page}
-  //                       search={search}
-  //                       onDocxConversion={(value: string, name: string) =>
-  //                         toDOCX(value, name)
-  //                       }
-  //                       onPdfConversion={(value: string, name: string) =>
-  //                         toPDF(value, name)
-  //                       }
-  //                       menuOpen={menuOpen}
-  //                       onFileSelect={(file) => {
-  //                         try {
-  //                           saveFile();
-  //                           setValue(file.body);
-  //                           setName(file.name);
-  //                           setPath(file.path);
-  //                           setInsert(false);
-  //                           document.documentElement.scrollTop = 0;
-  //                         } catch (err) {
-  //                           console.log(err);
-  //                         }
-  //                       }}
-  //                       name={name}
-  //                     />
-  //                   )}
-  //                 </div>
-  //               </div>
-  //             </div>
-  //           </div>
-  //         </div>
-  //       </div>
-
-  //       <div
-  //         style={{
-  //           width: fileTreeIsOpen ? "calc(100vw - 17.5em)" : "100vw",
-  //           minWidth: fileTreeIsOpen ? "calc(100vw - 17.5em)" : "100vw",
-  //           maxWidth: fileTreeIsOpen ? "calc(100vw - 17.5em)" : "100vw",
-  //         }}
-  //       >
-  //         <div
-  //           style={
-  //             !splitview
-  //               ? {
-  //                   paddingTop: "13vh",
-  //                   padding: "40px",
-  //                 }
-  //               : null
-  //           }
-  //         >
-  //           {!splitview ? (
-  //             insert ? (
-  //               <div className="markdown-content">
-  //                 <div style={{ overflow: "hidden" }}>
-  //                   <CodeMirror
-  //                     ref={refs}
-  //                     value={value}
-  //                     height="100%"
-  //                     width="100%"
-  //                     autoFocus={true}
-  //                     theme={isDarkMode ? githubDark : basicLight}
-  //                     basicSetup={false}
-  //                     extensions={isVim ? [vim(), EXTENSIONS] : EXTENSIONS}
-  //                     onChange={onChange}
-  //                   />
-  //                 </div>
-  //               </div>
-  //             ) : (
-  //               <>
-  //                 <div style={{ zIndex: "1", overflow: "hidden" }}>
-  //                   <div style={{ paddingTop: "1em" }}>
-  //                     {ValidateYaml(resolvedMarkdown.metadata)}
-  //                     <div style={{ overflow: "hidden" }}>
-  //                       <div
-  //                         id="previewArea"
-  //                         style={{
-  //                           marginBottom: "5em",
-  //                           overflow: "scroll",
-  //                         }}
-  //                         className="third h-full w-full"
-  //                         dangerouslySetInnerHTML={resolvedMarkdown.document}
-  //                       />
-  //                     </div>
-  //                   </div>
-  //                 </div>
-  //               </>
-  //             )
-  //           ) : (
-  //             <div
-  //               style={{
-  //                 display: "flex",
-  //                 flexDirection: "row",
-  //               }}
-  //             >
-  //               <div className="markdown-content">
-  //                 <div
-  //                   style={{
-  //                     overflow: "scroll",
-  //                     flex: "0 0 50%",
-  //                     padding: "40px",
-  //                   }}
-  //                 >
-  //                   <CodeMirror
-  //                     ref={refs}
-  //                     value={value}
-  //                     height="100%"
-  //                     width="100%"
-  //                     autoFocus={true}
-  //                     theme={isDarkMode ? githubDark : basicLight}
-  //                     basicSetup={false}
-  //                     extensions={isVim ? [vim(), EXTENSIONS] : EXTENSIONS}
-  //                     onChange={onChange}
-  //                   />
-  //                 </div>
-  //               </div>
-
-  //               <div
-  //                 style={{
-  //                   overflow: "hidden",
-  //                   flex: "0 0 50%",
-  //                   padding: "calc(40px + 12px)",
-  //                   backgroundColor: "#101010",
-  //                 }}
-  //               >
-  //                 <div style={{ paddingTop: "1em" }}>
-  //                   {ValidateYaml(resolvedMarkdown.metadata)}
-  //                   <div style={{ overflow: "hidden" }}>
-  //                     <div
-  //                       id="previewArea"
-  //                       style={{
-  //                         marginBottom: "5em",
-  //                         overflow: "scroll",
-  //                       }}
-  //                       className="third h-full w-full"
-  //                       dangerouslySetInnerHTML={resolvedMarkdown.document}
-  //                     />
-  //                   </div>
-  //                 </div>
-  //               </div>
-  //             </div>
-  //           )}
-
-  //           {ButtomBar(
-  //             insert,
-  //             () => toggleBetweenVimAndNormalMode(setIsVim),
-  //             isVim,
-  //             value,
-  //             cursor,
-  //             scroll,
-  //             editorview,
-  //             fileTreeIsOpen
-  //           )}
-  //         </div>
-  //       </div>
-  //     </div>
-  //   </>
-  // );
 }
+
+// return (
+//   <>
+//     <div className="mainer" style={{ minHeight: "100vh" }}>
+//       <div>
+//         {!splitview ? TopBar(click, fileTreeIsOpen) : null}
+//         <div
+//           className={`fs fixed sidebars ${
+//             fileTreeIsOpen ? "visible" : "closing"
+//           }`}
+//           style={{
+//             width: "17.5em",
+//             maxWidth: "18.5em",
+//             minHeight: "100vh",
+//             display: fileTreeIsOpen ? "block" : "none",
+//           }}
+//         >
+//           <div>
+//             <div
+//               style={{
+//                 height: "100vh",
+//                 marginTop: "5vh",
+//                 paddingTop: "2em",
+//               }}
+//             >
+//               <QuickActions
+//                 createNewFile={() => setFileNameBox(true)}
+//                 addOpenToAllDetailTags={() => addOpenToAllDetailTags()}
+//                 detailIsOpen={detailIsOpen}
+//                 createNewFolder={() => {
+//                   setFileNameBox(true);
+//                   setIsCreatingFolder(true);
+//                 }}
+//                 sidebarCollapse={fileTreeDrawer}
+//               />
+//               <FileTree
+//                 struct={struct}
+//                 onFileTreeClick={(path, name) => {
+//                   onFileTreeClick(path, name);
+//                 }}
+//                 path={path}
+//                 fileNameBox={fileNameBox}
+//                 parentDirClick={(path) => {
+//                   setParentDir(path);
+//                 }}
+//                 creatingFileOrFolder={creatingFileOrFolder}
+//                 setFileName={(name) => {
+//                   setFileName(name);
+//                 }}
+//                 isCreatingFolder={isCreatingFolder}
+//                 onDelete={(path, name) => onDelete(path, name)}
+//                 toPDF={(body, name) => toPDF(body, name)}
+//                 toDOCX={(body, name) => toDOCX(body, name)}
+//               />
+//               <div
+//                 className={"fixed util"}
+//                 style={{
+//                   bottom: "0.25rem",
+//                 }}
+//               >
+//                 <div
+//                   style={{
+//                     paddingLeft: "10px",
+//                     width: "17.5em",
+//                     maxWidth: "17.5em",
+//                   }}
+//                   className="menu"
+//                   role="button"
+//                   onClick={() => {
+//                     try {
+//                       setClick(true);
+//                       setSearch("");
+//                     } catch (err) {
+//                       console.log(err);
+//                     }
+//                   }}
+//                 >
+//                   Utilities
+//                   <span style={{ float: "right", marginRight: "2em" }}>
+//                     <code style={{ borderRadius: "2px" }}>⌘</code>{" "}
+//                     <code style={{ borderRadius: "2px" }}>k</code>
+//                   </span>
+//                   {click && (
+//                     <CMDK
+//                       value={value}
+//                       onNewFile={() => {
+//                         setFileNameBox(true);
+//                       }}
+//                       onCreatingFolder={() => {
+//                         try {
+//                           setIsCreatingFolder(true);
+//                           setFileNameBox(true);
+//                         } catch (e) {
+//                           console.log(e);
+//                         }
+//                       }}
+//                       setSearch={setSearch}
+//                       files={files}
+//                       pandocAvailable={pandocAvailable}
+//                       setClick={setClick}
+//                       page={page}
+//                       search={search}
+//                       onDocxConversion={(value: string, name: string) =>
+//                         toDOCX(value, name)
+//                       }
+//                       onPdfConversion={(value: string, name: string) =>
+//                         toPDF(value, name)
+//                       }
+//                       menuOpen={menuOpen}
+//                       onFileSelect={(file) => {
+//                         try {
+//                           saveFile();
+//                           setValue(file.body);
+//                           setName(file.name);
+//                           setPath(file.path);
+//                           setInsert(false);
+//                           document.documentElement.scrollTop = 0;
+//                         } catch (err) {
+//                           console.log(err);
+//                         }
+//                       }}
+//                       name={name}
+//                     />
+//                   )}
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+
+//       <div
+//         style={{
+//           width: fileTreeIsOpen ? "calc(100vw - 17.5em)" : "100vw",
+//           minWidth: fileTreeIsOpen ? "calc(100vw - 17.5em)" : "100vw",
+//           maxWidth: fileTreeIsOpen ? "calc(100vw - 17.5em)" : "100vw",
+//         }}
+//       >
+//         <div
+//           style={
+//             !splitview
+//               ? {
+//                   paddingTop: "13vh",
+//                   padding: "40px",
+//                 }
+//               : null
+//           }
+//         >
+//           {!splitview ? (
+//             insert ? (
+//               <div className="markdown-content">
+//                 <div style={{ overflow: "hidden" }}>
+//                   <CodeMirror
+//                     ref={refs}
+//                     value={value}
+//                     height="100%"
+//                     width="100%"
+//                     autoFocus={true}
+//                     theme={isDarkMode ? githubDark : basicLight}
+//                     basicSetup={false}
+//                     extensions={isVim ? [vim(), EXTENSIONS] : EXTENSIONS}
+//                     onChange={onChange}
+//                   />
+//                 </div>
+//               </div>
+//             ) : (
+//               <>
+//                 <div style={{ zIndex: "1", overflow: "hidden" }}>
+//                   <div style={{ paddingTop: "1em" }}>
+//                     {ValidateYaml(resolvedMarkdown.metadata)}
+//                     <div style={{ overflow: "hidden" }}>
+//                       <div
+//                         id="previewArea"
+//                         style={{
+//                           marginBottom: "5em",
+//                           overflow: "scroll",
+//                         }}
+//                         className="third h-full w-full"
+//                         dangerouslySetInnerHTML={resolvedMarkdown.document}
+//                       />
+//                     </div>
+//                   </div>
+//                 </div>
+//               </>
+//             )
+//           ) : (
+//             <div
+//               style={{
+//                 display: "flex",
+//                 flexDirection: "row",
+//               }}
+//             >
+//               <div className="markdown-content">
+//                 <div
+//                   style={{
+//                     overflow: "scroll",
+//                     flex: "0 0 50%",
+//                     padding: "40px",
+//                   }}
+//                 >
+//                   <CodeMirror
+//                     ref={refs}
+//                     value={value}
+//                     height="100%"
+//                     width="100%"
+//                     autoFocus={true}
+//                     theme={isDarkMode ? githubDark : basicLight}
+//                     basicSetup={false}
+//                     extensions={isVim ? [vim(), EXTENSIONS] : EXTENSIONS}
+//                     onChange={onChange}
+//                   />
+//                 </div>
+//               </div>
+
+//               <div
+//                 style={{
+//                   overflow: "hidden",
+//                   flex: "0 0 50%",
+//                   padding: "calc(40px + 12px)",
+//                   backgroundColor: "#101010",
+//                 }}
+//               >
+//                 <div style={{ paddingTop: "1em" }}>
+//                   {ValidateYaml(resolvedMarkdown.metadata)}
+//                   <div style={{ overflow: "hidden" }}>
+//                     <div
+//                       id="previewArea"
+//                       style={{
+//                         marginBottom: "5em",
+//                         overflow: "scroll",
+//                       }}
+//                       className="third h-full w-full"
+//                       dangerouslySetInnerHTML={resolvedMarkdown.document}
+//                     />
+//                   </div>
+//                 </div>
+//               </div>
+//             </div>
+//           )}
+
+//           {ButtomBar(
+//             insert,
+//             () => toggleBetweenVimAndNormalMode(setIsVim),
+//             isVim,
+//             value,
+//             cursor,
+//             scroll,
+//             editorview,
+//             fileTreeIsOpen
+//           )}
+//         </div>
+//       </div>
+//     </div>
+//   </>
+// );

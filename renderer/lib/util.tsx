@@ -495,6 +495,32 @@ export const toDOCX = (
     });
 };
 
+  /**
+   * @description Function Convert docx file to markdown
+   * @param {string} filePath - path of the file to be converted
+   * @returns {void}
+   */
+  export const docxToMd = (filePath, Update) => {
+    let destination = `${appDir}/${filePath.name.split(".")[0]}.md`;
+    destination = destination.replace(/\s/g, "");
+    try {
+      pandoc(
+        filePath.path,
+        `-f docx -t markdown -o ${destination}`,
+        function (err, result) {
+          if (err) console.log(err);
+          if (fs.existsSync(destination)) {
+            Update();
+          }
+        }
+      );
+    } catch (e) {
+      console.log(e);
+    }
+
+    return destination;
+  };
+
 export const activateSnackBar = (
   setSnackbar: Dispatcher<boolean>,
   setSnackBarMessage: Dispatcher<Array<string>>,

@@ -1,9 +1,10 @@
 import createWindow from './create-window';
-
+import mainMenu from './menu';
 
 export {
   createWindow,
-  markdown
+  markdown,
+  mainMenu
 };
 
 

@@ -68,7 +68,7 @@ export default function createWindow(windowName, options) {
 
   win = new BrowserWindow({
       titleBarStyle: 'hiddenInset',
-      fullscreenable: false,
+      // fullscreenable: false,
     ...options,
     ...state,
     webPreferences: {
