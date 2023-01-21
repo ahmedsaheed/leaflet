@@ -65,13 +65,8 @@ export default function createWindow(windowName, options) {
 
   win = new BrowserWindow({
     frame: false,
-    titleBarStyle: "hiddenInset",
+    titleBarStyle: process.platform == "darwin" ?  "hiddenInset" : "default",
     // fullscreenable: false,
-    titleBarOverlay: {
-      color: "#2f3241",
-      symbolColor: "#74b1be",
-      height: 60,
-    },
     ...options,
     ...state,
     webPreferences: {
