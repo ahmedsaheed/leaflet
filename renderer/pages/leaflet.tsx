@@ -497,6 +497,7 @@ export function Leaflet() {
                 setIsCreatingFolder(true);
               }}
               insert={insert}
+              isVim = {isVim}
             />
           </span>
         </div>

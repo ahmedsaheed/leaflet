@@ -12,7 +12,8 @@ export const QuickAction = ({
   createNewFolder,
   addOpenToAllDetailTags,
   detailIsOpen,
-  insert
+  insert,
+  isVim
 }) => {
   return (
     <div
@@ -44,7 +45,7 @@ export const QuickAction = ({
         onClick={
             (e) => {
               e.preventDefault();
-              ipcRenderer.send('show-context-menu');
+              ipcRenderer.send('show-context-menu', isVim);
             }
         }
         style={{

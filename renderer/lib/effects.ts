@@ -107,6 +107,21 @@ export function effects(
       ignore = true;
     };
   }, [path, name]);
+  
+
+  useEffect(() => {
+    let ignore = false;
+    ipcRenderer.on("in-app-command-togglevim", function () {
+      if (!ignore) {
+        toggleBetweenVimAndNormalMode(setIsVim);
+      }
+    });
+
+    return () => {
+      ignore = true;
+    };
+  }, [path, name]);
+
   useEffect(() => {
     let ignore = false;
     ipcRenderer.on("in-app-command-topdf", function () {
@@ -224,10 +239,10 @@ export function effects(
     setScroll(ScrollPercent);
   };
 
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  // useEffect(() => {
+  //   window.addEventListener("scroll", handleScroll);
+  //   return () => window.removeEventListener("scroll", handleScroll);
+  // }, []);
   const [isRunning, setIsRunning] = React.useState(false);
   const dragDropImage = React.useCallback(() => {
     if (!isRunning) {

@@ -219,7 +219,7 @@ if (isDev) {
   Menu.setApplicationMenu(menu);
 })();
 
-ipcMain.on("show-context-menu", (event) => {
+ipcMain.on("show-context-menu", (event, isVim) => {
   const template = [
     {
       label: "Reveal in Finder",
@@ -239,6 +239,28 @@ ipcMain.on("show-context-menu", (event) => {
       click: () => {
         event.sender.send("in-app-command-todocx");
       },
+    },
+    { type: 'separator' },
+
+    { label: 'Vim Mode', type: 'checkbox', checked: isVim 
+        ,click: () => {
+            if (isVim) {
+                return
+            }else{
+                event.sender.send("in-app-command-togglevim");
+                isVim = true
+            }
+        },
+    },
+    { label: 'Normal Mode', type: 'checkbox', checked: !isVim,
+        click: () => {
+            if (!isVim) {
+                return
+            }else{
+                event.sender.send("in-app-command-togglevim");
+                isVim = false
+            }
+        }
     },
     { type: "separator" },
     {
