@@ -137,7 +137,8 @@ export function Leaflet() {
   const resolvedMarkdown = getMarkdown(value);
 
   const handleMouseOver = () => {
-    ipcRenderer.invoke("mouseInHeader");
+    if(process.platform == "darwin"){ipcRenderer.invoke("mouseInHeader");}
+
     const topper = document.querySelectorAll(".bb");
     topper.forEach((topper) => {
       //@ts-ignore
@@ -145,7 +146,7 @@ export function Leaflet() {
     });
   };
   const handleMouseLeave = () => {
-    ipcRenderer.invoke("mouseOutHeader");
+    if (process.platform == "darwin"){ipcRenderer.invoke("mouseOutHeader");}
     const topper = document.querySelectorAll(".bb");
     topper.forEach((topper) => {
       //@ts-ignore
