@@ -1,12 +1,8 @@
-import {
-  screen,
-  BrowserWindow,
-  ipcMain,
-} from 'electron';
-import Store from 'electron-store';
+import { screen, BrowserWindow, ipcMain } from "electron";
+import Store from "electron-store";
 
 export default function createWindow(windowName, options) {
-  const key = 'window-state';
+  const key = "window-state";
   const name = `window-state-${windowName}`;
   const store = new Store({ name });
   const defaultSize = {
@@ -42,13 +38,13 @@ export default function createWindow(windowName, options) {
     const bounds = screen.getPrimaryDisplay().bounds;
     return Object.assign({}, defaultSize, {
       x: (bounds.width - defaultSize.width) / 2,
-      y: (bounds.height - defaultSize.height) / 2
+      y: (bounds.height - defaultSize.height) / 2,
     });
   };
 
   const ensureVisibleOnSomeDisplay = (windowState) => {
-    const visible = screen.getAllDisplays().some(display => {
-      return windowWithinBounds(windowState, display.bounds)
+    const visible = screen.getAllDisplays().some((display) => {
+      return windowWithinBounds(windowState, display.bounds);
     });
     if (!visible) {
       // Window is partially or fully not visible now.
@@ -69,13 +65,13 @@ export default function createWindow(windowName, options) {
 
   win = new BrowserWindow({
     frame: false,
-    titleBarStyle: 'hiddenInset',
-      // fullscreenable: false,
-       titleBarOverlay: {
-    color: '#2f3241',
-    symbolColor: '#74b1be',
-    height: 60
-  },
+    titleBarStyle: "hiddenInset",
+    // fullscreenable: false,
+    titleBarOverlay: {
+      color: "#2f3241",
+      symbolColor: "#74b1be",
+      height: 60,
+    },
     ...options,
     ...state,
     webPreferences: {
@@ -86,18 +82,18 @@ export default function createWindow(windowName, options) {
     },
   });
 
-win.setWindowButtonVisibility(false)
+  if (process.platform == "darwin") {
+    win.setWindowButtonVisibility(false);
 
+    ipcMain.handle("mouseInHeader", () => {
+      win.setWindowButtonVisibility(true);
+    });
 
-ipcMain.handle("mouseInHeader", () => {
-  win.setWindowButtonVisibility(true)
-})
-
-
-ipcMain.handle("mouseOutHeader", () => {
-  win.setWindowButtonVisibility(false)
-})
-  win.on('close', saveState);
+    ipcMain.handle("mouseOutHeader", () => {
+      win.setWindowButtonVisibility(false);
+    });
+  }
+  win.on("close", saveState);
 
   return win;
-};
+}
