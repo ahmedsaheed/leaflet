@@ -1,6 +1,7 @@
 import {
   screen,
   BrowserWindow,
+  ipcMain,
 } from 'electron';
 import Store from 'electron-store';
 
@@ -67,17 +68,35 @@ export default function createWindow(windowName, options) {
   state = ensureVisibleOnSomeDisplay(restore());
 
   win = new BrowserWindow({
-      titleBarStyle: 'hiddenInset',
+    frame: false,
+    titleBarStyle: 'hiddenInset',
       // fullscreenable: false,
+       titleBarOverlay: {
+    color: '#2f3241',
+    symbolColor: '#74b1be',
+    height: 60
+  },
     ...options,
     ...state,
     webPreferences: {
+      spellcheck: true,
       nodeIntegration: true,
       contextIsolation: false,
       ...options.webPreferences,
     },
   });
 
+win.setWindowButtonVisibility(false)
+
+
+ipcMain.handle("mouseInHeader", () => {
+  win.setWindowButtonVisibility(true)
+})
+
+
+ipcMain.handle("mouseOutHeader", () => {
+  win.setWindowButtonVisibility(false)
+})
   win.on('close', saveState);
 
   return win;

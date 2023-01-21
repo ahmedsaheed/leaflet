@@ -1,4 +1,4 @@
-import { useEffect, Dispatch, SetStateAction } from "react";
+import React, { useEffect, Dispatch, SetStateAction } from "react";
 import { ipcRenderer } from "electron";
 import { EditorView } from "@codemirror/view";
 import mainPath from "path";
@@ -11,6 +11,7 @@ import {
   toPDF,
   revealInFinder,
   docxToMd,
+  imageUrl,
 } from "./util";
 
 import { ReactCodeMirrorRef } from "@uiw/react-codemirror";
@@ -134,7 +135,6 @@ export function effects(
 
   useEffect(() => {
     let save = false;
-
     ipcRenderer.on("save", function () {
       if (!save) {
         saveFile();
@@ -150,47 +150,53 @@ export function effects(
   /**
    * Listen and handle drags and drops events
    */
-  useEffect(() => {
-    dragDrop("body", (files) => {
-      const nameOfFileAtLastIndex = files[files.length - 1].name;
-      const _files = files.map((file) => {
-        let fileName = file.name;
-        let filePath = file.path;
-        const extension = file.path.split(".").pop();
-        if (extension != "md" && extension === "docx") {
-          const docx = docxToMd(file, Update);
-          fileName = mainPath.parse(docx).base;
-          filePath = docx;
-        }
-        return {
-          name: fileName,
-          path: filePath,
-        };
-      });
+  // useEffect(() => {
+  //   dragDrop("body", (files) => {
+  //     const nameOfFileAtLastIndex = files[files.length - 1].name;
+  //     const extension = (file) => file.substr(file.lastIndexOf(".") + 1);
+  //     const _files = files
+  //       .filter(
+  //         (file) =>
+  //           extension(file.path) != "md" || extension(file.path) != "docx"
+  //       )
+  //       .map((file) => {
+  //         let fileName = file.name;
+  //         let filePath = file.path;
+  //         // const extension = file.path.split(".").pop();
+  //         if (extension(file.path) != "md" && extension(file.path) === "docx") {
+  //           const docx = docxToMd(file, Update);
+  //           fileName = mainPath.parse(docx).base;
+  //           filePath = docx;
+  //         }
+  //         return {
+  //           name: fileName,
+  //           path: filePath,
+  //         };
+  //       });
 
-      ipcRenderer.invoke("app:on-file-add", _files).then(() => {
-        ipcRenderer.invoke("getTheFile").then((files = []) => {
-          setFiles(files);
-          setInsert(false);
-          const index = files.findIndex(
-            (file) => file.name === nameOfFileAtLastIndex.split(".")[0]
-          );
-          index !== -1
-            ? () => {
-                setValue(files[index].body);
-                setName(files[index].name);
-                setPath(files[index].path);
-              }
-            : () => {
-                setValue(files[0].body);
-                setName(files[0].name);
-                setPath(files[0].path);
-              };
-          Update();
-        });
-      });
-    });
-  }, []);
+  //     ipcRenderer.invoke("app:on-file-add", _files).then(() => {
+  //       ipcRenderer.invoke("getTheFile").then((files = []) => {
+  //         setFiles(files);
+  //         setInsert(false);
+  //         const index = files.findIndex(
+  //           (file) => file.name === nameOfFileAtLastIndex.split(".")[0]
+  //         );
+  //         index !== -1
+  //           ? () => {
+  //               setValue(files[index].body);
+  //               setName(files[index].name);
+  //               setPath(files[index].path);
+  //             }
+  //           : () => {
+  //               setValue(files[0].body);
+  //               setName(files[0].name);
+  //               setPath(files[0].path);
+  //             };
+  //         Update();
+  //       });
+  //     });
+  //   });
+  // }, []);
 
   useEffect(() => {
     ipcRenderer.on("insertClicked", function () {
@@ -222,4 +228,29 @@ export function effects(
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+  const [isRunning, setIsRunning] = React.useState(false);
+  const dragDropImage = React.useCallback(() => {
+    if (!isRunning) {
+      setIsRunning(true);
+      dragDrop(".markdown-content", (images) => {
+        const imageFiles = images.filter((file) => {
+          const ext = mainPath.extname(file.path);
+          return ext === ".jpg" || ext === ".jpeg" || ext === ".png";
+        });
+        imageFiles.map((validImage) =>
+          imageUrl(refs.current?.view, validImage.path)
+        );
+        setIsRunning(false);
+      });
+    }
+  }, [isRunning, refs.current]);
+  const dragDropRef = React.useRef(dragDropImage);
+  dragDropRef.current = dragDropImage;
+
+  useEffect(() => {
+    if (insert) {
+      dragDropRef.current();
+    }
+  }, [insert, refs.current]);
+
 }

@@ -1,4 +1,11 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, {
+  useRef,
+  useCallback,
+  DragEvent,
+  useEffect,
+  useState,
+} from "react";
+import dragDrop from "drag-drop";
 import { ipcRenderer } from "electron";
 import "react-cmdk/dist/cmdk.css";
 import { vim } from "@replit/codemirror-vim";
@@ -118,17 +125,33 @@ export function Leaflet() {
   const [detailIsOpen, setDetailIsOpen] = useState<boolean>(false);
   const [editorview, setEditorView] = useState<EditorView>();
   const [isVim, setIsVim] = useState<boolean>(false);
-  const theme = useTheme();
   const [open, setOpen] = React.useState(true);
   const [snackbar, setSnackbar] = React.useState(false);
   const [snackbarMessage, setSnackbarMessage] = React.useState<Array<string>>(
     []
   );
   const refs = React.useRef<ReactCodeMirrorRef>({});
+  const headerRef = useRef<HTMLHeadingElement>(null);
   const prefersColorScheme = usePrefersColorScheme();
   const isDarkMode = prefersColorScheme === "dark";
   const resolvedMarkdown = getMarkdown(value);
 
+  const handleMouseOver = () => {
+    ipcRenderer.invoke("mouseInHeader");
+    const topper = document.querySelectorAll(".bb");
+    topper.forEach((topper) => {
+      //@ts-ignore
+      topper.style.visibility = "visible";
+    });
+  };
+  const handleMouseLeave = () => {
+    ipcRenderer.invoke("mouseOutHeader");
+    const topper = document.querySelectorAll(".bb");
+    topper.forEach((topper) => {
+      //@ts-ignore
+      topper.style.visibility = "hidden";
+    });
+  };
   const saveFile = () => {
     try {
       console.log("hi");
@@ -145,6 +168,7 @@ export function Leaflet() {
       console.log(e);
     }
   };
+
 
   const fileDialog = () => {
     ipcRenderer.invoke("app:on-fs-dialog-open").then(() => {
@@ -357,7 +381,7 @@ export function Leaflet() {
       );
     }
     return (
-      <div style={{ userSelect: "none" }}>
+      <div className="meta" style={{ userSelect: "none" }}>
         <METADATE incoming={resolvedMarkdown.metadata.date} />
         <METATAGS incoming={resolvedMarkdown.metadata.tags} />
         <METAMATERIAL incoming={resolvedMarkdown.metadata?.material} />
@@ -409,6 +433,9 @@ export function Leaflet() {
   return (
     <Box sx={{ display: "flex" }}>
       <AppBar
+        ref={headerRef}
+        onMouseOver={handleMouseOver}
+        onMouseLeave={handleMouseLeave}
         position="fixed"
         open={open}
         className="topBar"
@@ -417,21 +444,21 @@ export function Leaflet() {
           display: "flex",
           flexDirection: "row",
           zIndex: "1",
-          paddingTop: "20px",
-          paddingBottom: "5px",
+          // paddingTop: "20px",
+          // paddingBottom: "5px",
         }}
       >
         <div
           style={{
             flex: 1,
-            alignItems: "center",
-            paddingLeft: "20px",
-            paddingTop: "20px",
+            // alignItems: "center",
+            paddingLeft: "75px",
+            paddingTop: "6px",
           }}
         >
           <button
             aria-label="open drawer"
-            className="quickAction"
+            className="quickAction bb"
             onClick={open ? handleDrawerClose : handleDrawerOpen}
             style={{
               padding: 0,
@@ -444,26 +471,34 @@ export function Leaflet() {
             </div>
           </button>
         </div>
-        <div style={{ flex: 1, alignItems: "center", paddingTop: "20px" }}>
-          {cleanFileNameForExport(name)}
+        <div
+          style={{
+            flex: 1,
+            alignItems: "center",
+            // paddingTop: "20px"
+          }}
+        >
+          <strong>{cleanFileNameForExport(name)}</strong>
         </div>
         <div
           style={{
             paddingRight: "20px",
             alignItems: "center",
-            paddingTop: "20px",
+            // paddingTop: "20px",
           }}
         >
-          <QuickAction
-            modeSwitch={() => setInsert(!insert)}
-            addOpenToAllDetailTags={() => addOpenToAllDetailTags()}
-            detailIsOpen={detailIsOpen}
-            createNewFolder={() => {
-              setFileNameBox(true);
-              setIsCreatingFolder(true);
-            }}
-            insert={insert}
-          />
+          <span className="bb">
+            <QuickAction
+              modeSwitch={() => setInsert(!insert)}
+              addOpenToAllDetailTags={() => addOpenToAllDetailTags()}
+              detailIsOpen={detailIsOpen}
+              createNewFolder={() => {
+                setFileNameBox(true);
+                setIsCreatingFolder(true);
+              }}
+              insert={insert}
+            />
+          </span>
         </div>
       </AppBar>
       <Drawer

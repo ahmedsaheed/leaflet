@@ -29,6 +29,11 @@ h3 {
     }
 }
 
+
+.bb{
+    visibility: hidden;
+}
+
 .footnote-backref{
     border: none;
     content: none;
@@ -174,9 +179,12 @@ h3 {
   }
 
   a {
-    border-bottom: 1px solid #ff9a9e;
+   color: #2D79B2;
   }
 
+  .meta a{
+    color: #000000;
+  }
   .menu {
     color: grey !important;
     font-weight: bold;
@@ -427,7 +435,12 @@ strong {
   }
 
   a {
-    border-bottom: 1px solid #b3d4fc;
+    /* border-bottom: 1px solid #b3d4fc; */
+    color: #0366d6;
+  }
+
+  .meta a{
+    color: black !important;
   }
 
   ::selection {

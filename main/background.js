@@ -36,7 +36,7 @@ if (isDev) {
     // minWidth: 950,
     // minHeight: 600,
     // resizable: false,
-    fullscreen: true,
+    // fullscreen: true,
   });
 
   //watchFiles(mainWindow);

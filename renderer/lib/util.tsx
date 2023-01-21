@@ -31,6 +31,20 @@ export const BOLD = (view: EditorView) => {
   );
 };
 
+
+export const imageUrl = (view: EditorView, url: string) => {
+  if (!view) return;
+  const main = view.state.selection.main;
+  view.dispatch({
+    changes: {
+      from: main.from,
+      to: main.to,
+      insert: `![alt-text](${url})`,
+    },
+    // selection: EditorSelection.range(main.from + 3 + url.length, main.to + 6),
+  });
+}
+
 export const revealInFinder = (path: string) => {
   try {
     shell.showItemInFolder(path);
@@ -324,7 +338,7 @@ export const openExternalInDefaultBrowser = () => {
 export const EXTENSIONS: Extension[] = [
   indentOnInput(),
   codeFolding(),
-  foldGutter(),
+  // foldGutter(),
   markdown({
     base: markdownLanguage,
     codeLanguages: languages,
