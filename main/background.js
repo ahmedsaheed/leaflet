@@ -217,7 +217,7 @@ if (isDev) {
 
   const menu = Menu.buildFromTemplate(menuBar);
   Menu.setApplicationMenu(menu);
-    mainWindow.setMenuBarVisibility(true);
+ mainWindow.setApplicationMenu(menu);
 })();
 
 ipcMain.on("show-context-menu", (event, isVim) => {
