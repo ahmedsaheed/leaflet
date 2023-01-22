@@ -46,7 +46,8 @@ export function effects(
   setInsert: Dispatcher<boolean>,
   insert: boolean,
   fileDialog: () => void,
-  setScroll: Dispatcher<number>
+  setScroll: Dispatcher<number>,
+  handleDrawerClose
 ) {
   useEffect(() => {
     if (!initialised) {
@@ -107,7 +108,6 @@ export function effects(
       ignore = true;
     };
   }, [path, name]);
-  
 
   useEffect(() => {
     let ignore = false;
@@ -268,4 +268,17 @@ export function effects(
     }
   }, [insert, refs.current]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.matchMedia("(max-width: 600px)").matches) {
+        handleDrawerClose();
+        // call your function here
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 }

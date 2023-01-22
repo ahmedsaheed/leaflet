@@ -88,7 +88,6 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
   ...theme.mixins.toolbar,
   justifyContent: "flex-end",
 }));
@@ -136,8 +135,17 @@ export function Leaflet() {
   const isDarkMode = prefersColorScheme === "dark";
   const resolvedMarkdown = getMarkdown(value);
 
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
   const handleMouseOver = () => {
-    if(process.platform == "darwin"){ipcRenderer.invoke("mouseInHeader");}
+    if (process.platform == "darwin") {
+      ipcRenderer.invoke("mouseInHeader");
+    }
 
     const topper = document.querySelectorAll(".bb");
     topper.forEach((topper) => {
@@ -146,7 +154,9 @@ export function Leaflet() {
     });
   };
   const handleMouseLeave = () => {
-    if (process.platform == "darwin"){ipcRenderer.invoke("mouseOutHeader");}
+    if (process.platform == "darwin") {
+      ipcRenderer.invoke("mouseOutHeader");
+    }
     const topper = document.querySelectorAll(".bb");
     topper.forEach((topper) => {
       //@ts-ignore
@@ -169,7 +179,6 @@ export function Leaflet() {
       console.log(e);
     }
   };
-
 
   const fileDialog = () => {
     ipcRenderer.invoke("app:on-fs-dialog-open").then(() => {
@@ -241,7 +250,8 @@ export function Leaflet() {
     setInsert,
     insert,
     fileDialog,
-    setScroll
+    setScroll,
+    handleDrawerClose
   );
 
   useEffect(() => {
@@ -265,13 +275,6 @@ export function Leaflet() {
       setSnackbarMessage
     );
   });
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
 
   const updateCursor = (a, b) => {
     const line = a.number;
@@ -498,7 +501,7 @@ export function Leaflet() {
                 setIsCreatingFolder(true);
               }}
               insert={insert}
-              isVim = {isVim}
+              isVim={isVim}
             />
           </span>
         </div>
@@ -510,12 +513,14 @@ export function Leaflet() {
           "& .MuiDrawer-paper": {
             width: drawerWidth,
             boxSizing: "border-box",
+            overflow: "scroll",
           },
         }}
         variant="persistent"
         anchor="left"
         open={open}
         className={open ? "drawer" : ""}
+        style={{ overflow: "scroll" }}
       >
         <QuickActions
           createNewFile={() => setFileNameBox(true)}
@@ -550,7 +555,7 @@ export function Leaflet() {
           }
         />
       </Drawer>
-      <Main open={open}>
+      <Main open={open} style={{ overflow: "scroll" }}>
         <div>
           <DrawerHeader />
           <div className="content">
