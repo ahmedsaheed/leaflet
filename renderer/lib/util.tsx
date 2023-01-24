@@ -1,4 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
+import {unified} from 'unified'
+import prettier from "prettier";
+import remarkParse from 'remark-parse'
 import fs from "fs-extra";
 import pandoc from "./pandocConverter";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
@@ -31,7 +34,6 @@ export const BOLD = (view: EditorView) => {
   );
 };
 
-
 export const imageUrl = (view: EditorView, url: string) => {
   if (!view) return;
   const main = view.state.selection.main;
@@ -43,7 +45,7 @@ export const imageUrl = (view: EditorView, url: string) => {
     },
     // selection: EditorSelection.range(main.from + 3 + url.length, main.to + 6),
   });
-}
+};
 
 export const revealInFinder = (path: string) => {
   try {
@@ -509,31 +511,31 @@ export const toDOCX = (
     });
 };
 
-  /**
-   * @description Function Convert docx file to markdown
-   * @param {string} filePath - path of the file to be converted
-   * @returns {void}
-   */
-  export const docxToMd = (filePath, Update) => {
-    let destination = `${appDir}/${filePath.name.split(".")[0]}.md`;
-    destination = destination.replace(/\s/g, "");
-    try {
-      pandoc(
-        filePath.path,
-        `-f docx -t markdown -o ${destination}`,
-        function (err, result) {
-          if (err) console.log(err);
-          if (fs.existsSync(destination)) {
-            Update();
-          }
+/**
+ * @description Function Convert docx file to markdown
+ * @param {string} filePath - path of the file to be converted
+ * @returns {void}
+ */
+export const docxToMd = (filePath, Update) => {
+  let destination = `${appDir}/${filePath.name.split(".")[0]}.md`;
+  destination = destination.replace(/\s/g, "");
+  try {
+    pandoc(
+      filePath.path,
+      `-f docx -t markdown -o ${destination}`,
+      function (err, result) {
+        if (err) console.log(err);
+        if (fs.existsSync(destination)) {
+          Update();
         }
-      );
-    } catch (e) {
-      console.log(e);
-    }
+      }
+    );
+  } catch (e) {
+    console.log(e);
+  }
 
-    return destination;
-  };
+  return destination;
+};
 
 export const activateSnackBar = (
   setSnackbar: Dispatcher<boolean>,
@@ -543,6 +545,68 @@ export const activateSnackBar = (
 ) => {
   setSnackBarMessage([message, severity]);
   setSnackbar(true);
+};
+
+const pos2offset = (text, pos) => {
+  const list = text.split("\n");
+
+  let offset = pos.ch;
+  for (let i = 0; i < pos.line; i++) {
+    offset += list[i].length + 1;
+  }
+
+  return offset;
+};
+
+const offset2pos = (text, offset) => {
+  const list = text.split("\n");
+
+  let sum = 0;
+  for (let i = 0; i < list.length; i++) {
+    sum += list[i].length + 1;
+    if (sum > offset) {
+      return { line: i, ch: list[i].length + 1 - (sum - offset) };
+    }
+  }
+
+  return { line: list.length, ch: list[list.length - 1].length };
+};
+
+export const format = (ref) => {
+  if (!ref.current?.view) {
+    return
+  }
+  const indentUnit = 4;
+  const cm = ref.current?.editor;
+  const view = ref.current?.view; 
+  console.log(cm)
+  const previousPos = view.state.selection.main.head 
+  // cm.getCursor();
+  const previousValue =view.state.doc.toString();
+  // const beforeCoords = cm.cursorCoords();
+  const beforeOffset = pos2offset(previousValue, previousPos);
+  // const { formatted, cursorOffset } = prettier.formatWithCursor(previousValue, {
+  //   cursorOffset: beforeOffset,
+  //   parser: remarkParse, 
+  //   tabWidth: indentUnit,
+  // });
+
+const formatted = prettier.format(previousValue, { semi: false, parser: unified().use(remarkParse) });
+
+  const pos = offset2pos(formatted, 22);
+
+ cm.dispatch({
+  changes: {from: 0, to: cm.state.doc.length, insert: formatted}
+})
+cm.dispatch({selection: {anchor: pos}})
+  // cm.setValue(formatted);
+  // cm.setCursor(pos);
+
+  // const afterCoords = cm.cursorCoords();
+  // const afterScrollInfo = cm.getScrollInfo();
+  // const scroll = afterScrollInfo.top + afterCoords.top - beforeCoords.top;
+  
+  // cm.scrollTo(0, scroll);
 };
 
 /**

@@ -1,7 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 h1 {
   font-weight: 600;
   line-height: 1.2 !important;
@@ -28,7 +27,6 @@ h3 {
         margin: 0 auto;
     }
 }
-
 
 .bb{
     visibility: hidden;
@@ -547,7 +545,7 @@ p {
 }
 
 #markdown-content {
-  cursor: text;
+  cursor: default;
 }
 
 .katex-display {
@@ -665,8 +663,8 @@ pre > code {
   outline: none;
 }
 .cm-fat-cursor {
-  outline: solid 1px grey !important;
-  background-color: grey !important;
+  outline: solid 1px transparent !important;
+  background-color: #77EE77 !important;
 }
 
 .ContextMenuItem,

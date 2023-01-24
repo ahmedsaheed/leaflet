@@ -4,16 +4,17 @@ import {
   COLLAPSEIcon,
   EXPANDIcon,
   EDITINGIcon,
-  PREVIEWIcon,OPTIONSIcon
+  PREVIEWIcon,
+  OPTIONSIcon,
 } from "./icons";
-import {ipcRenderer} from "electron";
+import { ipcRenderer } from "electron";
 export const QuickAction = ({
- modeSwitch,
+  modeSwitch,
   createNewFolder,
   addOpenToAllDetailTags,
   detailIsOpen,
   insert,
-  isVim
+  isVim,
 }) => {
   return (
     <div
@@ -35,19 +36,17 @@ export const QuickAction = ({
           borderRadius: "4px",
         }}
       >
-        <div title="Current Mode" style={{padding: "0 5px"}}>
-         {insert ? (<EDITINGIcon />) : (<PREVIEWIcon/>)} 
+        <div title="Current Mode" style={{ padding: "0 5px" }}>
+          {insert ? <EDITINGIcon /> : <PREVIEWIcon />}
         </div>
       </button>
 
       <button
         className="quickAction"
-        onClick={
-            (e) => {
-              e.preventDefault();
-              ipcRenderer.send('show-context-menu', isVim);
-            }
-        }
+        onClick={(e) => {
+          e.preventDefault();
+          ipcRenderer.send("show-context-menu", isVim);
+        }}
         style={{
           border: "1px solid transparent",
           borderRadius: "4px",
@@ -56,8 +55,11 @@ export const QuickAction = ({
           cursor: "default",
         }}
       >
-        <div style={{padding: "0 5px"}}  title={detailIsOpen ? "Collapse Files" : "Expand Files"}>
-           <OPTIONSIcon/> 
+        <div
+          style={{ padding: "0 5px" }}
+          title={detailIsOpen ? "Collapse Files" : "Expand Files"}
+        >
+          <OPTIONSIcon />
         </div>
       </button>
     </div>

@@ -10,7 +10,6 @@ import {
   toDOCX,
   toPDF,
   revealInFinder,
-  docxToMd,
   imageUrl,
 } from "./util";
 
@@ -47,7 +46,8 @@ export function effects(
   insert: boolean,
   fileDialog: () => void,
   setScroll: Dispatcher<number>,
-  handleDrawerClose
+  handleDrawerClose,
+  setMom: Dispatcher<[]>
 ) {
   useEffect(() => {
     if (!initialised) {
@@ -60,6 +60,7 @@ export function effects(
         setValue(files[0] ? `${files[0].body}` : "");
         setName(files[0] ? `${files[0].name}` : "");
         setPath(files[0] ? `${files[0].path}` : "");
+        setMom(files[0].structure.children);
       });
     }
   }, []);
@@ -80,6 +81,7 @@ export function effects(
   useEffect(() => {
     if (files.length > 0) {
       setStruct(files[0].structure.children);
+      setMom(files[0].structure.children);
     }
   }, [files]);
 
@@ -272,7 +274,6 @@ export function effects(
     const handleResize = () => {
       if (window.matchMedia("(max-width: 600px)").matches) {
         handleDrawerClose();
-        // call your function here
       }
     };
 

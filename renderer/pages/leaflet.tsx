@@ -15,13 +15,14 @@ import {
   activateSnackBar,
   toDOCX,
   toPDF,
+  format,
   cleanFileNameForExport,
 } from "../lib/util";
 import { effects } from "../lib/effects";
 import Snackbars from "../components/snackbars";
 import { SIDEBARCOLLAPSEIcon } from "../components/icons";
 // import { ButtomBar } from "../components/bottomBar";
-import { FileTree } from "../components/filetree";
+import { FileTree, FileTrees } from "../components/filetree";
 import { QuickAction, QuickActions } from "../components/quickactions";
 import { METADATE, METATAGS, METAMATERIAL } from "../components/metadata";
 import { getMarkdown } from "../lib/mdParser";
@@ -129,6 +130,7 @@ export function Leaflet() {
   const [snackbarMessage, setSnackbarMessage] = React.useState<Array<string>>(
     []
   );
+  const [mom, setMom] = React.useState();
   const refs = React.useRef<ReactCodeMirrorRef>({});
   const headerRef = useRef<HTMLHeadingElement>(null);
   const prefersColorScheme = usePrefersColorScheme();
@@ -146,7 +148,6 @@ export function Leaflet() {
     if (process.platform == "darwin") {
       ipcRenderer.invoke("mouseInHeader");
     }
-
     const topper = document.querySelectorAll(".bb");
     topper.forEach((topper) => {
       //@ts-ignore
@@ -165,8 +166,10 @@ export function Leaflet() {
   };
   const saveFile = () => {
     try {
-      console.log("hi");
       setSaver("SAVING...");
+      if (insert) {
+        format(refs);
+      }
       ipcRenderer.invoke("saveFile", path, value).then(() => {
         Update();
         setSaver("SAVED");
@@ -251,7 +254,8 @@ export function Leaflet() {
     insert,
     fileDialog,
     setScroll,
-    handleDrawerClose
+    handleDrawerClose,
+    setMom
   );
 
   useEffect(() => {
@@ -414,6 +418,19 @@ export function Leaflet() {
     }
   };
 
+  const onNodeClicked = (path: string, name: string): void => {
+    try {
+      saveFile();
+      setValue(fs.readFileSync(path, "utf8"));
+      setName(name);
+      setPath(path);
+      setInsert(false);
+      document.documentElement.scrollTop = 0;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const addOpenToAllDetailTags = () => {
     const searchArea = document.getElementById("fileTree") as HTMLDivElement;
     const allDetailTags = searchArea.getElementsByTagName("details");
@@ -448,14 +465,11 @@ export function Leaflet() {
           display: "flex",
           flexDirection: "row",
           zIndex: "1",
-          // paddingTop: "20px",
-          // paddingBottom: "5px",
         }}
       >
         <div
           style={{
             flex: 1,
-            // alignItems: "center",
             paddingLeft: "75px",
             paddingTop: "6px",
           }}
@@ -482,13 +496,14 @@ export function Leaflet() {
             // paddingTop: "20px"
           }}
         >
-          <strong>{cleanFileNameForExport(name)}</strong>
+          <strong style={{ display: "inline" }}>
+            {cleanFileNameForExport(name)}
+          </strong>
         </div>
         <div
           style={{
             paddingRight: "20px",
             alignItems: "center",
-            // paddingTop: "20px",
           }}
         >
           <span className="bb">
@@ -522,6 +537,12 @@ export function Leaflet() {
         className={open ? "drawer" : ""}
         style={{ overflow: "scroll" }}
       >
+        <div
+          onMouseOver={handleMouseOver}
+          onMouseLeave={handleMouseLeave}
+          className="mane"
+          style={{ backgroundColor: "transparent", minHeight: "37px" }}
+        ></div>
         <QuickActions
           createNewFile={() => setFileNameBox(true)}
           addOpenToAllDetailTags={() => addOpenToAllDetailTags()}
@@ -531,6 +552,13 @@ export function Leaflet() {
             setIsCreatingFolder(true);
           }}
         />
+
+        <FileTrees
+          structure={struct}
+          callBack = {onNodeClicked}
+        />
+
+        {/*
         <FileTree
           struct={struct}
           onFileTreeClick={(path, name) => {
@@ -553,7 +581,7 @@ export function Leaflet() {
           toDOCX={(body, name) =>
             toDOCX(body, name, setSnackbar, setSnackbarMessage)
           }
-        />
+        />*/}
       </Drawer>
       <Main open={open} style={{ overflow: "scroll" }}>
         <div>
