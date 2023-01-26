@@ -7,8 +7,8 @@ import React, {
 } from "react";
 import dragDrop from "drag-drop";
 import { ipcRenderer } from "electron";
-import "react-cmdk/dist/cmdk.css";
 import { vim } from "@replit/codemirror-vim";
+import { CONSTANT } from "../lib/constant";
 import {
   GETDATE,
   EXTENSIONS,
@@ -21,14 +21,12 @@ import {
 import { effects } from "../lib/effects";
 import Snackbars from "../components/snackbars";
 import { SIDEBARCOLLAPSEIcon } from "../components/icons";
-// import { ButtomBar } from "../components/bottomBar";
 import { FileTree, FileTrees } from "../components/filetree";
 import { QuickAction, QuickActions } from "../components/quickactions";
 import { METADATE, METATAGS, METAMATERIAL } from "../components/metadata";
 import { getMarkdown } from "../lib/mdParser";
 import fs from "fs-extra";
 import mainPath from "path";
-// import { CMDK } from "../components/cmdk";
 import { githubDark } from "@uiw/codemirror-theme-github";
 import CodeMirror from "@uiw/react-codemirror";
 import { getStatistics, ReactCodeMirrorRef } from "@uiw/react-codemirror";
@@ -36,62 +34,18 @@ import { EditorView } from "@codemirror/view";
 import { usePrefersColorScheme } from "../lib/theme";
 import { basicLight } from "cm6-theme-basic-light";
 import { ListenToKeys } from "../lib/keyevents";
+import { Main, AppBar, DrawerHeader } from "../components/skeleton";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
-// import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-// import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-let initialised = false;
-const drawerWidth = 250;
 
-const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
-  open?: boolean;
-}>(({ theme, open }) => ({
-  flexGrow: 1,
-  padding: theme.spacing(3),
-  transition: theme.transitions.create("margin", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  marginLeft: `-${drawerWidth}px`,
-  ...(open && {
-    transition: theme.transitions.create("margin", {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    marginLeft: 0,
-  }),
-}));
-
-interface AppBarProps extends MuiAppBarProps {
-  open?: boolean;
-}
-
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
-})<AppBarProps>(({ theme, open }) => ({
-  transition: theme.transitions.create(["margin", "width"], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: `${drawerWidth}px`,
-    transition: theme.transitions.create(["margin", "width"], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-}));
-
-const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  padding: theme.spacing(0, 1),
-  ...theme.mixins.toolbar,
-  justifyContent: "flex-end",
-}));
+/*
+import "react-cmdk/dist/cmdk.css";
+import { ButtomBar } from "../components/bottomBar";
+import { CMDK } from "../components/cmdk";
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+*/
 
 export function Leaflet() {
   type file = {
@@ -130,7 +84,6 @@ export function Leaflet() {
   const [snackbarMessage, setSnackbarMessage] = React.useState<Array<string>>(
     []
   );
-  const [mom, setMom] = React.useState();
   const refs = React.useRef<ReactCodeMirrorRef>({});
   const headerRef = useRef<HTMLHeadingElement>(null);
   const prefersColorScheme = usePrefersColorScheme();
@@ -145,22 +98,20 @@ export function Leaflet() {
     setOpen(false);
   };
   const handleMouseOver = () => {
-    if (process.platform == "darwin") {
+    if (CONSTANT.PLATFORM == "darwin") {
       ipcRenderer.invoke("mouseInHeader");
     }
     const topper = document.querySelectorAll(".bb");
     topper.forEach((topper) => {
-      //@ts-ignore
       topper.style.visibility = "visible";
     });
   };
   const handleMouseLeave = () => {
-    if (process.platform == "darwin") {
+    if (CONSTANT.PLATFORM == "darwin") {
       ipcRenderer.invoke("mouseOutHeader");
     }
     const topper = document.querySelectorAll(".bb");
     topper.forEach((topper) => {
-      //@ts-ignore
       topper.style.visibility = "hidden";
     });
   };
@@ -230,7 +181,7 @@ export function Leaflet() {
     });
   };
   effects(
-    initialised,
+    CONSTANT.INITIALISED,
     setPandocAvailable,
     setIsVim,
     setFiles,
@@ -255,7 +206,6 @@ export function Leaflet() {
     fileDialog,
     setScroll,
     handleDrawerClose,
-    setMom
   );
 
   useEffect(() => {
@@ -523,10 +473,10 @@ export function Leaflet() {
       </AppBar>
       <Drawer
         sx={{
-          width: drawerWidth,
+          width: CONSTANT.DRAWERWIDTH,
           flexShrink: 0,
           "& .MuiDrawer-paper": {
-            width: drawerWidth,
+            width: CONSTANT.DRAWERWIDTH,
             boxSizing: "border-box",
             overflow: "scroll",
           },
@@ -555,7 +505,7 @@ export function Leaflet() {
 
         <FileTrees
           structure={struct}
-          callBack = {onNodeClicked}
+          callBack={(path, name) => onNodeClicked(path, name)}
         />
 
         {/*

@@ -89,8 +89,7 @@ export function FileTrees(
     if (node.node.type === "file") {
     let path =node.node?.path;
     let name =node.node?.name; 
-console.log(node.node?.path);
-      callBack(path, name)
+    console.log(path, name);
     }
   };
   const handleUpdate = (state) => {

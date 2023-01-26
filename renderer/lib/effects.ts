@@ -47,7 +47,6 @@ export function effects(
   fileDialog: () => void,
   setScroll: Dispatcher<number>,
   handleDrawerClose,
-  setMom: Dispatcher<[]>
 ) {
   useEffect(() => {
     if (!initialised) {
@@ -60,7 +59,6 @@ export function effects(
         setValue(files[0] ? `${files[0].body}` : "");
         setName(files[0] ? `${files[0].name}` : "");
         setPath(files[0] ? `${files[0].path}` : "");
-        setMom(files[0].structure.children);
       });
     }
   }, []);
@@ -81,7 +79,6 @@ export function effects(
   useEffect(() => {
     if (files.length > 0) {
       setStruct(files[0].structure.children);
-      setMom(files[0].structure.children);
     }
   }, [files]);
 
