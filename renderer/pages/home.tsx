@@ -1,5 +1,13 @@
 import { Leaflet } from "./leaflet";
 import Head from "next/head";
+import { Toaster } from "react-hot-toast";
+const isDarkMode =()=> {
+  if (typeof window !== "undefined") {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+  return false;
+
+} 
 export default function Home() {
   return (
     <>
@@ -23,7 +31,16 @@ export default function Home() {
           crossOrigin="anonymous"
         ></script>
       </Head>
-
+      <Toaster
+        position="bottom-right"
+        reverseOrder={false}
+        toastOptions={{
+          style: {
+            backgroundColor: isDarkMode ? "#1e1e1e" : "#fff",
+            color: isDarkMode ? "#fff" : "#000",
+          },
+        }}
+      />
       <Leaflet />
     </>
   );

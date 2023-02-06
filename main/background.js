@@ -485,6 +485,8 @@ ipcMain.handle("creatingPdf", (event, name, body) => {
   dialog.showSaveDialog(option).then((result) => {
     if (!result.canceled && result.filePath) {
       event.sender.send("pdfPath", result.filePath, body);
+    }else{
+      event.sender.send("pdfPath", null, null);
     }
   });
 });
@@ -502,6 +504,8 @@ ipcMain.handle("creatingDocx", (event, name, body) => {
   dialog.showSaveDialog(option).then((result) => {
     if (!result.canceled && result.filePath) {
       event.sender.send("docxPath", result.filePath, body);
+    }else{
+      event.sender.send("docxPath", null, null);
     }
   });
 });

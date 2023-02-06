@@ -29,9 +29,6 @@ export function effects(
   setValue: Dispatcher<string>,
   setName: Dispatcher<string>,
   setPath: Dispatcher<string>,
-  snackbar: boolean,
-  setSnackbar: Dispatcher<boolean>,
-  setSnackbarMessage: Dispatcher<Array<string>>,
   refs: React.MutableRefObject<ReactCodeMirrorRef>,
   setEditorView: Dispatcher<EditorView>,
   files: file[],
@@ -69,14 +66,7 @@ export function effects(
     }
   }, []);
 
-  useEffect(() => {
-    if (snackbar == true) {
-      setTimeout(() => {
-        setSnackbar(false);
-        setSnackbarMessage([]);
-      }, 3500);
-    }
-  }, [snackbar]);
+
 
   useEffect(() => {
     if (refs.current?.view) setEditorView(refs.current?.view);
@@ -131,7 +121,7 @@ export function effects(
     let ignore = false;
     ipcRenderer.on("in-app-command-topdf", function () {
       if (!ignore) {
-        toPDF(value, name, setSnackbar, setSnackbarMessage);
+        toPDF(value, name);
       }
     });
 
@@ -144,7 +134,7 @@ export function effects(
     let ignore = false;
     ipcRenderer.on("in-app-command-todocx", function () {
       if (!ignore) {
-        toDOCX(value, name, setSnackbar, setSnackbarMessage);
+        toDOCX(value, name);
       }
     });
 

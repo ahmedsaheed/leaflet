@@ -17,6 +17,12 @@ type Dispatcher<S> = Dispatch<SetStateAction<S>>;
 import { ipcRenderer } from "electron";
 import { getMarkdownWithMermaid } from "./mdParser";
 const { shell } = require("electron");
+import toast, {
+  Toaster,
+  useToasterStore,
+  ToastPosition,
+} from 'react-hot-toast';
+import { positions } from "@mui/system";
 /**
  * Bold a text in editor view
  * @param view EditorView
@@ -399,62 +405,81 @@ export const cleanFileNameForExport = (name: string) => {
  * @param {Dispatcher} setSnackBarMessage - Hold the snackbar message and message type i.e success, error, info
  * @returns {void}
  */
+
+
 export const toPDF = (
   body: string,
   name: string,
-  setSnackbar: Dispatcher<boolean>,
-  setSnackBarMessage: Dispatcher<Array<string>>
 ) => {
+  toast.promise(
+    preparePDF(body, name),
+    {
+      loading: 'Preparing PDF',
+      error: 'Could not convert to PDF',
+      success: `Opened file as PDF`,
+    },
+  )
+}
+
+
+export const toDOCX = (
+  body: string,
+  name: string,
+) => {
+  toast.promise(
+    prepareDOCX(body, name),
+    {
+      loading: 'Preparing DOCX',
+      error: 'Could not convert to DOCX',
+      success: `Opened file as DOCX`,
+    },    
+  )
+}
+ const preparePDF = (
+  body: string,
+  name: string,
+) => {
+  return new Promise((resolve, reject) => {
   let document = getMarkdownWithMermaid(body);
   ipcRenderer
     .invoke("creatingPdf", cleanFileNameForExport(name), document)
     .then(() => {
-      ipcRenderer.on("pdfPath", function (event, response, documents) {
+      ipcRenderer.on("pdfPath", function (event, response, documents)
+      {
+        if (response == null && documents == null) {
+          setTimeout(reject, 1000);
+          reject();
+        }
         try {
           writeLuaScript();
           let outputpath = response;
           pandoc(
             documents,
-            `-f markdown -t pdf --lua-filter=${route} -o ${outputpath}`,
-            // fs.existsSync(route)
-              
-            //   ? `-f markdown -t pdf --lua-filter=${route} -o ${outputpath}`
-            //   : `-f markdown -t pdf -o ${outputpath}`,
+            // `-f markdown -t pdf --lua-filter=${route} -o ${outputpath}`,
+            fs.existsSync(route)
+              ? `-f markdown -t pdf --lua-filter=${route} -o ${outputpath}`
+              : `-f markdown -t pdf -o ${outputpath}`,
             function (err, result) {
               if (err) {
                 console.log(err);
-                activateSnackBar(
-                  setSnackbar,
-                  setSnackBarMessage,
-                  "Couldn't Generate PDF",
-                  "error"
-                );
-                // deleteLuaScript();
+                setTimeout(reject, 1000);
               }
               if (fs.existsSync(outputpath)) {
-                activateSnackBar(
-                  setSnackbar,
-                  setSnackBarMessage,
-                  "PDF created successfully",
-                  "success"
-                );
                 open(outputpath);
-                // deleteLuaScript();
+                setTimeout(resolve, 3000);
+
               } else {
-                activateSnackBar(
-                  setSnackbar,
-                  setSnackBarMessage,
-                  "Couldn't Generate PDF",
-                  "error"
-                );
+                setTimeout(reject, 1000);
               }
             }
           );
         } catch (e) {
           console.log(e);
+          setTimeout(reject, 1000);
         }
       });
     });
+  });
 };
 
 /**
@@ -463,16 +488,19 @@ export const toPDF = (
  * @param {string} name - name of the file
  * @returns {void}
  */
-export const toDOCX = (
+ const prepareDOCX = (
   body: string,
   name: string,
-  setSnackbar: Dispatcher<boolean>,
-  setSnackBarMessage: Dispatcher<Array<string>>
 ) => {
+  return new Promise((resolve, reject) => {
   ipcRenderer
     .invoke("creatingDocx", cleanFileNameForExport(name), body)
     .then(() => {
       ipcRenderer.on("docxPath", function (event, response, document) {
+        if (response == null && document == null) {
+          setTimeout(reject, 1000);
+          reject();
+        }
         try {
           const outputPath = response;
           pandoc(
@@ -481,36 +509,23 @@ export const toDOCX = (
             function (err) {
               if (err) {
                 console.log(err);
-                activateSnackBar(
-                  setSnackbar,
-                  setSnackBarMessage,
-                  "Couldn't Generate DOCX",
-                  "error"
-                );
+                setTimeout(reject, 1000);
               }
               if (fs.existsSync(outputPath)) {
-                activateSnackBar(
-                  setSnackbar,
-                  setSnackBarMessage,
-                  "DOCX created successfully",
-                  "success"
-                );
+                setTimeout(resolve, 3000);
                 open(outputPath);
               } else {
-                activateSnackBar(
-                  setSnackbar,
-                  setSnackBarMessage,
-                  "Couldn't Generate DOCX",
-                  "error"
-                );
+                setTimeout(reject, 1000);
               }
             }
           );
         } catch (e) {
           console.log(e);
+          setTimeout(reject, 1000);
         }
       });
     });
+  });
 };
 
 /**

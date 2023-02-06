@@ -13,7 +13,6 @@ import {
   cleanFileNameForExport,
 } from "../lib/util";
 import { effects } from "../lib/effects";
-import Snackbars from "../components/snackbars";
 import { SIDEBARCOLLAPSEIcon } from "../components/icons";
 import { FileTree, FileTrees } from "../components/filetree";
 import { QuickAction, QuickActions } from "../components/quickactions";
@@ -36,6 +35,7 @@ import {
   DrawerHeader,
 } from "../components/skeleton";
 import Drawer from "@mui/material/Drawer";
+import { toast } from "react-hot-toast";
 /*
 import "react-cmdk/dist/cmdk.css";
 import Box from "@mui/material/Box";
@@ -79,10 +79,7 @@ export function Leaflet() {
   const [editorview, setEditorView] = useState<EditorView>();
   const [isVim, setIsVim] = useState<boolean>(false);
   const [open, setOpen] = React.useState(true);
-  const [snackbar, setSnackbar] = React.useState(false);
-  const [snackbarMessage, setSnackbarMessage] = React.useState<Array<string>>(
-    []
-  );
+
   const refs = React.useRef<ReactCodeMirrorRef>({});
   const headerRef = useRef<HTMLHeadingElement>(null);
   const prefersColorScheme = usePrefersColorScheme();
@@ -132,12 +129,15 @@ export function Leaflet() {
       }
       ipcRenderer.invoke("deleteFile", name, path).then(() => {
         Update();
-        activateSnackBar(
-          setSnackbar,
-          setSnackbarMessage,
-          `${name} moved to trash`,
-          "info"
-        );
+        toast("File moved to trash", {
+          icon: "🗑️",
+          style: {
+            backgroundColor: isDarkMode ? "#1e1e1e" : "#fff",
+            color: isDarkMode ? "#fff" : "#000",
+          },
+        });
+         
+        
         setStruct(files[0].structure.children);
         const index = Math.floor(Math.random() * files.length);
         setInsert(false);
@@ -164,9 +164,6 @@ export function Leaflet() {
     setValue,
     setName,
     setPath,
-    snackbar,
-    setSnackbar,
-    setSnackbarMessage,
     refs,
     setEditorView,
     files,
@@ -202,8 +199,6 @@ export function Leaflet() {
       setClick,
       click,
       open ? handleDrawerClose : handleDrawerOpen,
-      setSnackbar,
-      setSnackbarMessage
     );
   });
 
@@ -485,10 +480,10 @@ export function Leaflet() {
                 isCreatingFolder={isCreatingFolder}
                 onDelete={(path, name) => onDelete(path, name)}
                 toPDF={(body, name) =>
-                  toPDF(body, name, setSnackbar, setSnackbarMessage)
+                  toPDF(body, name)
                 }
                 toDOCX={(body, name) =>
-                  toDOCX(body, name, setSnackbar, setSnackbarMessage)
+                  toDOCX(body, name)
                 }
               />
             </Drawer>
@@ -537,7 +532,6 @@ export function Leaflet() {
                 </div>
               </div>
             </Main>
-            {Snackbars(snackbar, snackbarMessage[0], snackbarMessage[1])}
           </div>
         </div>
       </div>
