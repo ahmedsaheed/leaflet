@@ -77,17 +77,17 @@ export default function createWindow(windowName, options) {
     },
   });
 
-  if (process.platform == "darwin") {
-    win.setWindowButtonVisibility(false);
+  // if (process.platform == "darwin") {
+  //   win.setWindowButtonVisibility(false);
 
-    ipcMain.handle("mouseInHeader", () => {
-      win.setWindowButtonVisibility(true);
-    });
+  //   ipcMain.handle("mouseInHeader", () => {
+  //     win.setWindowButtonVisibility(true);
+  //   });
 
-    ipcMain.handle("mouseOutHeader", () => {
-      win.setWindowButtonVisibility(false);
-    });
-  }
+  //   ipcMain.handle("mouseOutHeader", () => {
+  //     win.setWindowButtonVisibility(false);
+  //   });
+  // }
   win.on("close", saveState);
 
   return win;

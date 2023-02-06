@@ -415,9 +415,11 @@ export const toPDF = (
           let outputpath = response;
           pandoc(
             documents,
-            fs.existsSync(route)
-              ? `-f markdown -t pdf --lua-filter=${route} -o ${outputpath}`
-              : `-f markdown -t pdf -o ${outputpath}`,
+            `-f markdown -t pdf --lua-filter=${route} -o ${outputpath}`,
+            // fs.existsSync(route)
+              
+            //   ? `-f markdown -t pdf --lua-filter=${route} -o ${outputpath}`
+            //   : `-f markdown -t pdf -o ${outputpath}`,
             function (err, result) {
               if (err) {
                 console.log(err);
@@ -517,7 +519,7 @@ export const toDOCX = (
  * @returns {void}
  */
 export const docxToMd = (filePath, Update) => {
-  let destination = `${appDir}/${filePath.name.split(".")[0]}.md`;
+  let destination = `${filePath.name.split(".")[0]}.md`;
   destination = destination.replace(/\s/g, "");
   try {
     pandoc(

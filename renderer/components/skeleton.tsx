@@ -1,7 +1,7 @@
 import { styled } from "@mui/material/styles";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import { CONSTANT } from "../lib/constant";
-
+import {ipcRenderer} from "electron"
 export const Main = styled("main", {
   shouldForwardProp: (prop) => prop !== "open",
 })<{
@@ -50,3 +50,16 @@ export const DrawerHeader = styled("div")(({ theme }) => ({
   ...theme.mixins.toolbar,
   justifyContent: "flex-end",
 }));
+
+  export const appBarMouseOver = () => {
+    const topper = document.querySelectorAll(".bb");
+    topper.forEach((topper) => {
+      (topper as HTMLElement).style.visibility = "visible";
+    });
+  };
+  export const appBarMouseLeave = () => {
+    const topper = document.querySelectorAll(".bb");
+    topper.forEach((topper) => {
+      (topper as HTMLElement).style.visibility = "hidden";
+    });
+  };

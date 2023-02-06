@@ -1,48 +1,10 @@
-import fs from "fs";
+import fs from "fs-extra";
 import { MARKDOWNIcon } from "./icons";
 import ContextMenuDemo from "./context-menu";
-import React, { useState, useLayoutEffect } from "react";
+import React, { useState, useLayoutEffect, Dispatch, SetStateAction } from "react";
 import Tree from "../lib/Tree/Tree.js";
 type Structure = { [key: string]: any };
-
-// const structure = [
-//   {
-//     type: "folder",
-//     name: "client",
-//     files: [
-//       {
-//         type: "folder",
-//         name: "ui",
-//         files: [
-//           { type: "file", name: "Toggle.js" },
-//           { type: "file", name: "Button.js" },
-//           { type: "file", name: "Button.style.js" },
-//         ],
-//       },
-//       {
-//         type: "folder",
-//         name: "components",
-//         files: [
-//           { type: "file", name: "Tree.js" },
-//           { type: "file", name: "Tree.style.js" },
-//         ],
-//       },
-//       { type: "file", name: "setup.js" },
-//       { type: "file", name: "setupTests.js" },
-//     ],
-//   },
-//   {
-//     type: "folder",
-//     name: "packages",
-//     files: [
-//       {
-//         type: "file",
-//         name: "main.js",
-//       },
-//     ],
-//   },
-//   { type: "file", name: "index.js" },
-// ];
+type Dispatcher<S> = Dispatch<SetStateAction<S>>;
 
 function convertObject(obj: Structure): Array<{}> {
   const struct: Array<{}> = [];
@@ -72,12 +34,9 @@ function convertObject(obj: Structure): Array<{}> {
 }
 
 export function FileTrees(
-/*
- * TODO: PASS CALLBACK CORRECTLY!!!
- */
   structures: Structure,
-  callBack: (path:string, name:string) => void
-) {
+  setValue: Dispatcher<string>,
+ ) {
   let [data, setData] = useState<Array<{}>>([]);
 
   React.useEffect(() => {
@@ -85,11 +44,11 @@ export function FileTrees(
     setData(incoming);
   }, [structures]);
 
-  const handleClick = (node) => {
+const handleClick = (node) => {
     if (node.node.type === "file") {
-    let path =node.node?.path;
-    let name =node.node?.name; 
-    console.log(path, name);
+    let path = node.node?.path;
+    let name = node.node?.name; 
+    // console.log(path, name);
     }
   };
   const handleUpdate = (state) => {
@@ -110,7 +69,16 @@ export function FileTrees(
       // children={null}
       data={data}
       onUpdate={handleUpdate}
-      onNodeClick={handleClick}
+      onNodeClick={(node) => {
+        if (node.node.type === "file") {
+          let path = node.node?.path;
+          let name = node.node?.name; 
+          const value = fs.readFileSync(path, "utf8");
+          console.log(value);
+          
+          // WHY CANT I SET THE VALUE FROM HERE ?
+          //setValue(value)  
+        }}}
     />
   );
 }
@@ -127,7 +95,6 @@ export function FileTree({
   toPDF,
   toDOCX,
 }) {
-  console.log("struct fomr old tree", struct);
   return (
     <div
       id="fileTree"

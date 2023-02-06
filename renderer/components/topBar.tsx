@@ -19,8 +19,6 @@ export const TopBar = (click: boolean,fileTreeIsOpen: boolean) => {
           >
           </div>
         </div>
-
-
   )
 };
 

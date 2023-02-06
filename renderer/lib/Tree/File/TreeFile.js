@@ -4,6 +4,7 @@ import { StyledFile } from "./TreeFile.style";
 import { useTreeContext } from "../state/TreeContext";
 import { ActionsWrapper, StyledName } from "../Tree.style.js";
 import { PlaceholderInput } from "../TreePlaceholderInput";
+import fs from "fs-extra"
 
 import { FILE } from "../state/constants";
 import FILE_ICONS from "../FileIcons";

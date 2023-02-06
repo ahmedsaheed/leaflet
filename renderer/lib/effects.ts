@@ -47,10 +47,16 @@ export function effects(
   fileDialog: () => void,
   setScroll: Dispatcher<number>,
   handleDrawerClose,
+  setOpen: Dispatcher<boolean>
 ) {
   useEffect(() => {
     if (!initialised) {
       initialised = true;
+      if (typeof window != undefined) {
+        if (window.matchMedia("(max-width: 600px)").matches) {
+          ipcRenderer.invoke("resize-for-drawer");
+        }
+      }
       openExternalInDefaultBrowser();
       checkForPandoc(setPandocAvailable);
       toggleBetweenVimAndNormalMode(setIsVim);

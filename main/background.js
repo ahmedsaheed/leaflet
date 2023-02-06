@@ -6,6 +6,7 @@ import {
   dialog,
   Notification,
   shell,
+   electron
 } from "electron";
 import serve from "electron-serve";
 import { createWindow, markdown } from "./helpers";
@@ -321,7 +322,6 @@ const getFiles = () => {
   checkForDir();
   const files = walk(appDir);
   const structure = dirTree(appDir, { extensions: /\.md/ });
-  console.log(structure)
   return files
     .filter((file) => file.split(".").pop() === "md")
     .map((filePath) => {
@@ -401,6 +401,12 @@ ipcMain.handle("saveFile", (event, path, content) => {
   } catch (e) {
     console.log(e);
   }
+});
+
+ipcMain.handle("resize-for-drawer", (event) => {
+    const win = BrowserWindow.fromWebContents(event.sender);
+    const size = win.getSize()
+    win.setSize(size[0] + 300, size[1], true);
 });
 
 ipcMain.handle("createNewFile", (event, dir, filename) => {

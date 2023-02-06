@@ -1,10 +1,4 @@
-import React, {
-  useRef,
-  useCallback,
-  DragEvent,
-  useEffect,
-  useState,
-} from "react";
+import React, { useRef, useCallback, useEffect, useState } from "react";
 import dragDrop from "drag-drop";
 import { ipcRenderer } from "electron";
 import { vim } from "@replit/codemirror-vim";
@@ -34,17 +28,22 @@ import { EditorView } from "@codemirror/view";
 import { usePrefersColorScheme } from "../lib/theme";
 import { basicLight } from "cm6-theme-basic-light";
 import { ListenToKeys } from "../lib/keyevents";
-import { Main, AppBar, DrawerHeader } from "../components/skeleton";
-import { styled, useTheme } from "@mui/material/styles";
-import Box from "@mui/material/Box";
+import {
+  appBarMouseOver,
+  appBarMouseLeave,
+  Main,
+  AppBar,
+  DrawerHeader,
+} from "../components/skeleton";
 import Drawer from "@mui/material/Drawer";
-
 /*
 import "react-cmdk/dist/cmdk.css";
+import Box from "@mui/material/Box";
 import { ButtomBar } from "../components/bottomBar";
 import { CMDK } from "../components/cmdk";
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { styled, useTheme } from "@mui/material/styles";
 */
 
 export function Leaflet() {
@@ -89,38 +88,15 @@ export function Leaflet() {
   const prefersColorScheme = usePrefersColorScheme();
   const isDarkMode = prefersColorScheme === "dark";
   const resolvedMarkdown = getMarkdown(value);
-
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
-  const handleMouseOver = () => {
-    if (CONSTANT.PLATFORM == "darwin") {
-      ipcRenderer.invoke("mouseInHeader");
-    }
-    const topper = document.querySelectorAll(".bb");
-    topper.forEach((topper) => {
-      topper.style.visibility = "visible";
-    });
-  };
-  const handleMouseLeave = () => {
-    if (CONSTANT.PLATFORM == "darwin") {
-      ipcRenderer.invoke("mouseOutHeader");
-    }
-    const topper = document.querySelectorAll(".bb");
-    topper.forEach((topper) => {
-      topper.style.visibility = "hidden";
-    });
-  };
+  const handleDrawerOpen = () => {setOpen(true)};
+  const handleDrawerClose = () => {setOpen(false);};
+  
   const saveFile = () => {
     try {
       setSaver("SAVING...");
-      if (insert) {
-        format(refs);
-      }
+      // if (insert) {
+      //   format(refs);
+      // }
       ipcRenderer.invoke("saveFile", path, value).then(() => {
         Update();
         setSaver("SAVED");
@@ -144,7 +120,7 @@ export function Leaflet() {
   };
 
   /**
-   * @description Function to delete a file
+   * @description delete a file node
    * @param {string} path - path of the file to be deleted
    * @param {string} name - name of the file to be deleted
    * @returns {void}
@@ -206,6 +182,7 @@ export function Leaflet() {
     fileDialog,
     setScroll,
     handleDrawerClose,
+    setOpen
   );
 
   useEffect(() => {
@@ -245,10 +222,11 @@ export function Leaflet() {
   };
 
   /**
-   * @description Function updates cm state on change
+   * @description updates cm state on change
    */
   const onChange = useCallback(
     (doc, viewUpdate) => {
+      console.log(typeof viewUpdate);
       setValue(doc.toString());
       let offset = getStatistics(viewUpdate).selection.main.head;
       let line = viewUpdate.state.doc.lineAt(offset);
@@ -264,7 +242,7 @@ export function Leaflet() {
   );
 
   /**
-   * @description Function creates a new directory with a single file
+   * @description creates a new directory with a single file
    * @param {string} name - name of the directory
    */
   const createNewDir = (name: string) => {
@@ -348,12 +326,12 @@ export function Leaflet() {
   };
 
   /**
-   * @description Function to handle file selection from the sidebar
+   * @description handle file selection from the sidebar
    * @param {string} path - path of the file to be selected
    * @param {string} name - name of the file to be selected
    * @returns {void}
    */
-  const onFileTreeClick = (path: string, name: string) => {
+  const onFileTreeClick = (path: string, name: string): void => {
     try {
       setParentDir(mainPath.dirname(path));
       saveFile();
@@ -381,457 +359,188 @@ export function Leaflet() {
     }
   };
 
-  const addOpenToAllDetailTags = () => {
-    const searchArea = document.getElementById("fileTree") as HTMLDivElement;
-    const allDetailTags = searchArea.getElementsByTagName("details");
-    if (!detailIsOpen) {
-      if (searchArea) {
-        for (let i = 0; i < allDetailTags.length; i++) {
-          allDetailTags[i].setAttribute("open", "");
-        }
-        setDetailIsOpen(true);
-      }
-    } else {
-      if (searchArea) {
-        for (let i = 0; i < allDetailTags.length; i++) {
-          allDetailTags[i].removeAttribute("open");
-        }
-        setDetailIsOpen(false);
-      }
-    }
-  };
-
   return (
-    <Box sx={{ display: "flex" }}>
-      <AppBar
-        ref={headerRef}
-        onMouseOver={handleMouseOver}
-        onMouseLeave={handleMouseLeave}
-        position="fixed"
-        open={open}
-        className="topBar"
-        style={{
-          alignItems: "center",
-          display: "flex",
-          flexDirection: "row",
-          zIndex: "1",
-        }}
-      >
-        <div
-          style={{
-            flex: 1,
-            paddingLeft: "75px",
-            paddingTop: "6px",
-          }}
-        >
-          <button
-            aria-label="open drawer"
-            className="quickAction bb"
-            onClick={open ? handleDrawerClose : handleDrawerOpen}
-            style={{
-              padding: 0,
-              border: "1px solid transparent",
-              borderRadius: "4px",
-            }}
-          >
-            <div style={{ padding: "0 5px" }} title="Collapse Sidebar">
-              <SIDEBARCOLLAPSEIcon />
-            </div>
-          </button>
-        </div>
-        <div
-          style={{
-            flex: 1,
-            alignItems: "center",
-            // paddingTop: "20px"
-          }}
-        >
-          <strong style={{ display: "inline" }}>
-            {cleanFileNameForExport(name)}
-          </strong>
-        </div>
-        <div
-          style={{
-            paddingRight: "20px",
-            alignItems: "center",
-          }}
-        >
-          <span className="bb">
-            <QuickAction
-              modeSwitch={() => setInsert(!insert)}
-              addOpenToAllDetailTags={() => addOpenToAllDetailTags()}
-              detailIsOpen={detailIsOpen}
-              createNewFolder={() => {
-                setFileNameBox(true);
-                setIsCreatingFolder(true);
-              }}
-              insert={insert}
-              isVim={isVim}
-            />
-          </span>
-        </div>
-      </AppBar>
-      <Drawer
-        sx={{
-          width: CONSTANT.DRAWERWIDTH,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width: CONSTANT.DRAWERWIDTH,
-            boxSizing: "border-box",
-            overflow: "scroll",
-          },
-        }}
-        variant="persistent"
-        anchor="left"
-        open={open}
-        className={open ? "drawer" : ""}
-        style={{ overflow: "scroll" }}
-      >
-        <div
-          onMouseOver={handleMouseOver}
-          onMouseLeave={handleMouseLeave}
-          className="mane"
-          style={{ backgroundColor: "transparent", minHeight: "37px" }}
-        ></div>
-        <QuickActions
-          createNewFile={() => setFileNameBox(true)}
-          addOpenToAllDetailTags={() => addOpenToAllDetailTags()}
-          detailIsOpen={detailIsOpen}
-          createNewFolder={() => {
-            setFileNameBox(true);
-            setIsCreatingFolder(true);
-          }}
-        />
-
-        <FileTrees
-          structure={struct}
-          callBack={(path, name) => onNodeClicked(path, name)}
-        />
-
-        {/*
-        <FileTree
-          struct={struct}
-          onFileTreeClick={(path, name) => {
-            onFileTreeClick(path, name);
-          }}
-          path={path}
-          fileNameBox={fileNameBox}
-          parentDirClick={(path) => {
-            setParentDir(path);
-          }}
-          creatingFileOrFolder={creatingFileOrFolder}
-          setFileName={(name) => {
-            setFileName(name);
-          }}
-          isCreatingFolder={isCreatingFolder}
-          onDelete={(path, name) => onDelete(path, name)}
-          toPDF={(body, name) =>
-            toPDF(body, name, setSnackbar, setSnackbarMessage)
-          }
-          toDOCX={(body, name) =>
-            toDOCX(body, name, setSnackbar, setSnackbarMessage)
-          }
-        />*/}
-      </Drawer>
-      <Main open={open} style={{ overflow: "scroll" }}>
+    <div>
+      <div>
         <div>
-          <DrawerHeader />
-          <div className="content">
-            {insert ? (
-              <div className="markdown-content">
-                <div style={{ overflow: "hidden" }}>
-                  <CodeMirror
-                    ref={refs}
-                    value={value}
-                    height="100%"
-                    width="100%"
-                    autoFocus={true}
-                    theme={isDarkMode ? githubDark : basicLight}
-                    basicSetup={false}
-                    extensions={isVim ? [vim(), EXTENSIONS] : EXTENSIONS}
-                    onChange={onChange}
+          <div style={{ display: "flex" }}>
+            <AppBar
+              ref={headerRef}
+              onMouseOver={appBarMouseOver}
+              onMouseLeave={appBarMouseLeave}
+              position="fixed"
+              open={open}
+              className="topBar"
+              style={{
+                alignItems: "center",
+                display: "flex",
+                flexDirection: "row",
+                zIndex: "1",
+              }}
+            >
+              <div
+                style={{
+                  flex: 1,
+                  paddingLeft: "75px",
+                  paddingTop: "6px",
+                }}
+              >
+                <button
+                  aria-label="open drawer"
+                  className="quickAction bb"
+                  onClick={open ? handleDrawerClose : handleDrawerOpen}
+                  style={{
+                    padding: 0,
+                    border: "1px solid transparent",
+                    borderRadius: "4px",
+                  }}
+                >
+                  <div style={{ padding: "0 5px" }} title="Collapse Sidebar">
+                    <SIDEBARCOLLAPSEIcon />
+                  </div>
+                </button>
+              </div>
+              <div
+                style={{
+                  flex: 1,
+                  alignItems: "center",
+                  // paddingTop: "20px"
+                }}
+              >
+                <strong style={{ display: "inline" }}>
+                  {cleanFileNameForExport(name)}
+                </strong>
+              </div>
+              <div
+                style={{
+                  paddingRight: "20px",
+                  alignItems: "center",
+                }}
+              >
+                <span className="bb">
+                  <QuickAction
+                    modeSwitch={() => setInsert(!insert)}
+                    addOpenToAllDetailTags={() => {}}
+                    detailIsOpen={detailIsOpen}
+                    createNewFolder={() => {
+                      setFileNameBox(true);
+                      setIsCreatingFolder(true);
+                    }}
+                    insert={insert}
+                    isVim={isVim}
                   />
+                </span>
+              </div>
+            </AppBar>
+            <Drawer
+              sx={{
+                width: CONSTANT.DRAWERWIDTH,
+                flexShrink: 0,
+                "& .MuiDrawer-paper": {
+                  width: CONSTANT.DRAWERWIDTH,
+                  boxSizing: "border-box",
+                  overflow: "scroll",
+                },
+              }}
+              variant="persistent"
+              anchor="left"
+              open={open}
+              className={open ? "drawer" : ""}
+              style={{ overflow: "scroll" }}
+            >
+              <div
+                onMouseOver={appBarMouseOver}
+                onMouseLeave={appBarMouseLeave}
+                className="mane"
+                style={{ backgroundColor: "transparent", minHeight: "37px" }}
+              ></div>
+              <QuickActions
+                createNewFile={() => setFileNameBox(true)}
+                addOpenToAllDetailTags={() => {}}
+                detailIsOpen={detailIsOpen}
+                createNewFolder={() => {
+                  setFileNameBox(true);
+                  setIsCreatingFolder(true);
+                }}
+              />
+
+              {/* <FileTrees
+                structures={struct}
+                setValue={setValue}
+              /> */}
+              <FileTree
+                struct={struct}
+                onFileTreeClick={(path, name) => {
+                  onFileTreeClick(path, name);
+                }}
+                path={path}
+                fileNameBox={fileNameBox}
+                parentDirClick={(path) => {
+                  setParentDir(path);
+                }}
+                creatingFileOrFolder={creatingFileOrFolder}
+                setFileName={(name) => {
+                  setFileName(name);
+                }}
+                isCreatingFolder={isCreatingFolder}
+                onDelete={(path, name) => onDelete(path, name)}
+                toPDF={(body, name) =>
+                  toPDF(body, name, setSnackbar, setSnackbarMessage)
+                }
+                toDOCX={(body, name) =>
+                  toDOCX(body, name, setSnackbar, setSnackbarMessage)
+                }
+              />
+            </Drawer>
+            <Main open={open} style={{ overflow: "scroll" }}>
+              <div>
+                <DrawerHeader />
+                <div className="content">
+                  {insert ? (
+                    <div className="markdown-content">
+                      <div style={{ overflow: "hidden" }}>
+                        <CodeMirror
+                          ref={refs}
+                          value={value}
+                          height="100%"
+                          width="100%"
+                          autoFocus={true}
+                          theme={isDarkMode ? githubDark : basicLight}
+                          basicSetup={false}
+                          extensions={isVim ? [vim(), EXTENSIONS] : EXTENSIONS}
+                          onChange={onChange}
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <div style={{ zIndex: "1", overflow: "hidden" }}>
+                        <div style={{ paddingTop: "1em" }}>
+                          {ValidateYaml(resolvedMarkdown.metadata)}
+                          <div style={{ overflow: "hidden" }}>
+                            <div
+                              id="previewArea"
+                              style={{
+                                marginBottom: "5em",
+                                overflow: "scroll",
+                              }}
+                              className="third h-full w-full"
+                              dangerouslySetInnerHTML={
+                                resolvedMarkdown.document
+                              }
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
-            ) : (
-              <>
-                <div style={{ zIndex: "1", overflow: "hidden" }}>
-                  <div style={{ paddingTop: "1em" }}>
-                    {ValidateYaml(resolvedMarkdown.metadata)}
-                    <div style={{ overflow: "hidden" }}>
-                      <div
-                        id="previewArea"
-                        style={{
-                          marginBottom: "5em",
-                          overflow: "scroll",
-                        }}
-                        className="third h-full w-full"
-                        dangerouslySetInnerHTML={resolvedMarkdown.document}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </>
-            )}
+            </Main>
+            {Snackbars(snackbar, snackbarMessage[0], snackbarMessage[1])}
           </div>
         </div>
-      </Main>
-      {Snackbars(snackbar, snackbarMessage[0], snackbarMessage[1])}
-    </Box>
+      </div>
+    </div>
   );
 }
-
-// return (
-//   <>
-//     <div className="mainer" style={{ minHeight: "100vh" }}>
-//       <div>
-//         {!splitview ? TopBar(click, fileTreeIsOpen) : null}
-//         <div
-//           className={`fs fixed sidebars ${
-//             fileTreeIsOpen ? "visible" : "closing"
-//           }`}
-//           style={{
-//             width: "17.5em",
-//             maxWidth: "18.5em",
-//             minHeight: "100vh",
-//             display: fileTreeIsOpen ? "block" : "none",
-//           }}
-//         >
-//           <div>
-//             <div
-//               style={{
-//                 height: "100vh",
-//                 marginTop: "5vh",
-//                 paddingTop: "2em",
-//               }}
-//             >
-//               <QuickActions
-//                 createNewFile={() => setFileNameBox(true)}
-//                 addOpenToAllDetailTags={() => addOpenToAllDetailTags()}
-//                 detailIsOpen={detailIsOpen}
-//                 createNewFolder={() => {
-//                   setFileNameBox(true);
-//                   setIsCreatingFolder(true);
-//                 }}
-//                 sidebarCollapse={fileTreeDrawer}
-//               />
-//               <FileTree
-//                 struct={struct}
-//                 onFileTreeClick={(path, name) => {
-//                   onFileTreeClick(path, name);
-//                 }}
-//                 path={path}
-//                 fileNameBox={fileNameBox}
-//                 parentDirClick={(path) => {
-//                   setParentDir(path);
-//                 }}
-//                 creatingFileOrFolder={creatingFileOrFolder}
-//                 setFileName={(name) => {
-//                   setFileName(name);
-//                 }}
-//                 isCreatingFolder={isCreatingFolder}
-//                 onDelete={(path, name) => onDelete(path, name)}
-//                 toPDF={(body, name) => toPDF(body, name)}
-//                 toDOCX={(body, name) => toDOCX(body, name)}
-//               />
-//               <div
-//                 className={"fixed util"}
-//                 style={{
-//                   bottom: "0.25rem",
-//                 }}
-//               >
-//                 <div
-//                   style={{
-//                     paddingLeft: "10px",
-//                     width: "17.5em",
-//                     maxWidth: "17.5em",
-//                   }}
-//                   className="menu"
-//                   role="button"
-//                   onClick={() => {
-//                     try {
-//                       setClick(true);
-//                       setSearch("");
-//                     } catch (err) {
-//                       console.log(err);
-//                     }
-//                   }}
-//                 >
-//                   Utilities
-//                   <span style={{ float: "right", marginRight: "2em" }}>
-//                     <code style={{ borderRadius: "2px" }}>⌘</code>{" "}
-//                     <code style={{ borderRadius: "2px" }}>k</code>
-//                   </span>
-//                   {click && (
-//                     <CMDK
-//                       value={value}
-//                       onNewFile={() => {
-//                         setFileNameBox(true);
-//                       }}
-//                       onCreatingFolder={() => {
-//                         try {
-//                           setIsCreatingFolder(true);
-//                           setFileNameBox(true);
-//                         } catch (e) {
-//                           console.log(e);
-//                         }
-//                       }}
-//                       setSearch={setSearch}
-//                       files={files}
-//                       pandocAvailable={pandocAvailable}
-//                       setClick={setClick}
-//                       page={page}
-//                       search={search}
-//                       onDocxConversion={(value: string, name: string) =>
-//                         toDOCX(value, name)
-//                       }
-//                       onPdfConversion={(value: string, name: string) =>
-//                         toPDF(value, name)
-//                       }
-//                       menuOpen={menuOpen}
-//                       onFileSelect={(file) => {
-//                         try {
-//                           saveFile();
-//                           setValue(file.body);
-//                           setName(file.name);
-//                           setPath(file.path);
-//                           setInsert(false);
-//                           document.documentElement.scrollTop = 0;
-//                         } catch (err) {
-//                           console.log(err);
-//                         }
-//                       }}
-//                       name={name}
-//                     />
-//                   )}
-//                 </div>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-
-//       <div
-//         style={{
-//           width: fileTreeIsOpen ? "calc(100vw - 17.5em)" : "100vw",
-//           minWidth: fileTreeIsOpen ? "calc(100vw - 17.5em)" : "100vw",
-//           maxWidth: fileTreeIsOpen ? "calc(100vw - 17.5em)" : "100vw",
-//         }}
-//       >
-//         <div
-//           style={
-//             !splitview
-//               ? {
-//                   paddingTop: "13vh",
-//                   padding: "40px",
-//                 }
-//               : null
-//           }
-//         >
-//           {!splitview ? (
-//             insert ? (
-//               <div className="markdown-content">
-//                 <div style={{ overflow: "hidden" }}>
-//                   <CodeMirror
-//                     ref={refs}
-//                     value={value}
-//                     height="100%"
-//                     width="100%"
-//                     autoFocus={true}
-//                     theme={isDarkMode ? githubDark : basicLight}
-//                     basicSetup={false}
-//                     extensions={isVim ? [vim(), EXTENSIONS] : EXTENSIONS}
-//                     onChange={onChange}
-//                   />
-//                 </div>
-//               </div>
-//             ) : (
-//               <>
-//                 <div style={{ zIndex: "1", overflow: "hidden" }}>
-//                   <div style={{ paddingTop: "1em" }}>
-//                     {ValidateYaml(resolvedMarkdown.metadata)}
-//                     <div style={{ overflow: "hidden" }}>
-//                       <div
-//                         id="previewArea"
-//                         style={{
-//                           marginBottom: "5em",
-//                           overflow: "scroll",
-//                         }}
-//                         className="third h-full w-full"
-//                         dangerouslySetInnerHTML={resolvedMarkdown.document}
-//                       />
-//                     </div>
-//                   </div>
-//                 </div>
-//               </>
-//             )
-//           ) : (
-//             <div
-//               style={{
-//                 display: "flex",
-//                 flexDirection: "row",
-//               }}
-//             >
-//               <div className="markdown-content">
-//                 <div
-//                   style={{
-//                     overflow: "scroll",
-//                     flex: "0 0 50%",
-//                     padding: "40px",
-//                   }}
-//                 >
-//                   <CodeMirror
-//                     ref={refs}
-//                     value={value}
-//                     height="100%"
-//                     width="100%"
-//                     autoFocus={true}
-//                     theme={isDarkMode ? githubDark : basicLight}
-//                     basicSetup={false}
-//                     extensions={isVim ? [vim(), EXTENSIONS] : EXTENSIONS}
-//                     onChange={onChange}
-//                   />
-//                 </div>
-//               </div>
-
-//               <div
-//                 style={{
-//                   overflow: "hidden",
-//                   flex: "0 0 50%",
-//                   padding: "calc(40px + 12px)",
-//                   backgroundColor: "#101010",
-//                 }}
-//               >
-//                 <div style={{ paddingTop: "1em" }}>
-//                   {ValidateYaml(resolvedMarkdown.metadata)}
-//                   <div style={{ overflow: "hidden" }}>
-//                     <div
-//                       id="previewArea"
-//                       style={{
-//                         marginBottom: "5em",
-//                         overflow: "scroll",
-//                       }}
-//                       className="third h-full w-full"
-//                       dangerouslySetInnerHTML={resolvedMarkdown.document}
-//                     />
-//                   </div>
-//                 </div>
-//               </div>
-//             </div>
-//           )}
-
-//           {ButtomBar(
-//             insert,
-//             () => toggleBetweenVimAndNormalMode(setIsVim),
-//             isVim,
-//             value,
-//             cursor,
-//             scroll,
-//             editorview,
-//             fileTreeIsOpen
-//           )}
-//         </div>
-//       </div>
-//     </div>
-//   </>
-// );
