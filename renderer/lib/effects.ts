@@ -12,7 +12,6 @@ import {
   revealInFinder,
   imageUrl,
 } from "./util";
-
 import { ReactCodeMirrorRef } from "@uiw/react-codemirror";
 type Dispatcher<S> = Dispatch<SetStateAction<S>>;
 type file = {
@@ -44,7 +43,8 @@ export function effects(
   fileDialog: () => void,
   setScroll: Dispatcher<number>,
   handleDrawerClose,
-  setOpen: Dispatcher<boolean>
+  setOpen: Dispatcher<boolean>,
+
 ) {
   useEffect(() => {
     if (!initialised) {
@@ -62,6 +62,8 @@ export function effects(
         setValue(files[0] ? `${files[0].body}` : "");
         setName(files[0] ? `${files[0].name}` : "");
         setPath(files[0] ? `${files[0].path}` : "");
+        setStruct(files[0].structure.children);
+
       });
     }
   }, []);

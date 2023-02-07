@@ -554,15 +554,6 @@ export const docxToMd = (filePath, Update) => {
   return destination;
 };
 
-export const activateSnackBar = (
-  setSnackbar: Dispatcher<boolean>,
-  setSnackBarMessage: Dispatcher<Array<string>>,
-  message: string,
-  severity: string
-) => {
-  setSnackBarMessage([message, severity]);
-  setSnackbar(true);
-};
 
 const pos2offset = (text, pos) => {
   const list = text.split("\n");

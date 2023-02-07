@@ -6,7 +6,7 @@ import Tree from "../lib/Tree/Tree.js";
 type Structure = { [key: string]: any };
 type Dispatcher<S> = Dispatch<SetStateAction<S>>;
 
-function convertObject(obj: Structure): Array<{}> {
+ function convertObject(obj: Structure): Array<{}> {
   const struct: Array<{}> = [];
   for (let key in obj) {
     for (let i = 0; i < obj[key].length; i++) {
@@ -33,14 +33,19 @@ function convertObject(obj: Structure): Array<{}> {
   return struct;
 }
 
-export function FileTrees(
-  structures: Structure,
-  setValue: Dispatcher<string>,
+
+
+export function FileTrees ({
+  structures,
+  onNodeClicked,
+}: {
+  structures: Structure;
+  onNodeClicked: (path: string, name:string) => void;
+}
  ) {
   let [data, setData] = useState<Array<{}>>([]);
-
   React.useEffect(() => {
-    const incoming = convertObject(structures);
+    const incoming = convertObject({structures});
     setData(incoming);
   }, [structures]);
 
@@ -48,8 +53,10 @@ const handleClick = (node) => {
     if (node.node.type === "file") {
     let path = node.node?.path;
     let name = node.node?.name; 
-    // console.log(path, name);
-    }
+    const value = fs.readFileSync(path, "utf8");
+    console.log(value);
+    onNodeClicked(path, name)
+      }
   };
   const handleUpdate = (state) => {
     localStorage.setItem(
@@ -69,19 +76,11 @@ const handleClick = (node) => {
       // children={null}
       data={data}
       onUpdate={handleUpdate}
-      onNodeClick={(node) => {
-        if (node.node.type === "file") {
-          let path = node.node?.path;
-          let name = node.node?.name; 
-          const value = fs.readFileSync(path, "utf8");
-          console.log(value);
-          
-          // WHY CANT I SET THE VALUE FROM HERE ?
-          //setValue(value)  
-        }}}
+      onNodeClick={(node) => {handleClick(node)}}
     />
   );
 }
+
 export function FileTree({
   struct,
   parentDirClick,

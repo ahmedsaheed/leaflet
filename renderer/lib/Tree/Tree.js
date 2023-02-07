@@ -28,6 +28,7 @@ const Tree = ({ children, data, onNodeClick, onUpdate }) => {
           state,
           dispatch,
           onNodeClick: (node) => {
+            console.log("hi")
             onNodeClick && onNodeClick(node);
           },
         }}

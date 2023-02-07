@@ -6,7 +6,6 @@ import { CONSTANT } from "../lib/constant";
 import {
   GETDATE,
   EXTENSIONS,
-  activateSnackBar,
   toDOCX,
   toPDF,
   format,
@@ -14,11 +13,11 @@ import {
 } from "../lib/util";
 import { effects } from "../lib/effects";
 import { SIDEBARCOLLAPSEIcon } from "../components/icons";
-import { FileTree, FileTrees } from "../components/filetree";
+import {  FileTree, FileTrees } from "../components/filetree";
 import { QuickAction, QuickActions } from "../components/quickactions";
 import { METADATE, METATAGS, METAMATERIAL } from "../components/metadata";
 import { getMarkdown } from "../lib/mdParser";
-import fs from "fs-extra";
+import fs, { readFileSync } from "fs-extra";
 import mainPath from "path";
 import { githubDark } from "@uiw/codemirror-theme-github";
 import CodeMirror from "@uiw/react-codemirror";
@@ -38,7 +37,6 @@ import Drawer from "@mui/material/Drawer";
 import { toast } from "react-hot-toast";
 /*
 import "react-cmdk/dist/cmdk.css";
-import Box from "@mui/material/Box";
 import { ButtomBar } from "../components/bottomBar";
 import { CMDK } from "../components/cmdk";
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -79,7 +77,6 @@ export function Leaflet() {
   const [editorview, setEditorView] = useState<EditorView>();
   const [isVim, setIsVim] = useState<boolean>(false);
   const [open, setOpen] = React.useState(true);
-
   const refs = React.useRef<ReactCodeMirrorRef>({});
   const headerRef = useRef<HTMLHeadingElement>(null);
   const prefersColorScheme = usePrefersColorScheme();
@@ -179,7 +176,7 @@ export function Leaflet() {
     fileDialog,
     setScroll,
     handleDrawerClose,
-    setOpen
+    setOpen,
   );
 
   useEffect(() => {
@@ -221,7 +218,6 @@ export function Leaflet() {
    */
   const onChange = useCallback(
     (doc, viewUpdate) => {
-      console.log(typeof viewUpdate);
       setValue(doc.toString());
       let offset = getStatistics(viewUpdate).selection.main.head;
       let line = viewUpdate.state.doc.lineAt(offset);
@@ -355,9 +351,6 @@ export function Leaflet() {
   };
 
   return (
-    <div>
-      <div>
-        <div>
           <div style={{ display: "flex" }}>
             <AppBar
               ref={headerRef}
@@ -459,11 +452,12 @@ export function Leaflet() {
                 }}
               />
 
-              {/* <FileTrees
-                structures={struct}
-                setValue={setValue}
-              /> */}
-              <FileTree
+              <FileTrees
+              structures={struct}
+              onNodeClicked={(path, name)=>onNodeClicked(path, name)}/>
+
+
+              {/* <FileTree
                 struct={struct}
                 onFileTreeClick={(path, name) => {
                   onFileTreeClick(path, name);
@@ -485,7 +479,7 @@ export function Leaflet() {
                 toDOCX={(body, name) =>
                   toDOCX(body, name)
                 }
-              />
+              /> */}
             </Drawer>
             <Main open={open} style={{ overflow: "scroll" }}>
               <div>
@@ -533,8 +527,5 @@ export function Leaflet() {
               </div>
             </Main>
           </div>
-        </div>
-      </div>
-    </div>
   );
 }
