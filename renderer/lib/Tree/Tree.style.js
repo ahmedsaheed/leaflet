@@ -16,6 +16,7 @@ export const ActionsWrapper = styled.div`
   align-items: center;
   flex-wrap: nowrap;
   justify-content: space-between;
+  
 
   .actions {
     display: flex;
@@ -47,6 +48,17 @@ export const ActionsWrapper = styled.div`
 
 export const StyledName = styled.div`
   background-color: white;
+  font-size: 13px;
+    line-height: 1.5;
+    font-weight: 500;
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+    display: inline;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    outline: none;
+
   @media (prefers-color-scheme: dark) {
     background-color: #100f11;
     color: white;
@@ -55,6 +67,10 @@ export const StyledName = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
+  :hover {
+    /* background-color: rgb(255, 255, 255, 0.075);
+    border-radius: 4px; */
+  }
 `;
 
 export const Collapse = styled.div`

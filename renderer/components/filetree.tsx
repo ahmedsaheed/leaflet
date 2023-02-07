@@ -54,7 +54,6 @@ const handleClick = (node) => {
     let path = node.node?.path;
     let name = node.node?.name; 
     const value = fs.readFileSync(path, "utf8");
-    console.log(value);
     onNodeClicked(path, name)
       }
   };

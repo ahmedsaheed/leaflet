@@ -35,14 +35,16 @@ const File = ({ name, id, node }) => {
   const handleCancel = () => {
     setEditing(false);
   };
-
+  const cleanName = (name) => {
+    return name.endsWith(".md") ? name.substring(0, name.length - 3) : name;
+  }
   return (
     <StyledFile onClick={handleNodeClick} className="tree__file">
       {isEditing ? (
         <PlaceholderInput
           type="file"
           style={{ paddingLeft: 0 }}
-          defaultValue={name}
+          defaultValue={cleanName(name)}
           onSubmit={commitEditing}
           onCancel={handleCancel}
         />
@@ -54,7 +56,7 @@ const File = ({ name, id, node }) => {
             ) : (
               <AiOutlineFile />
             )}
-            &nbsp;&nbsp;{name}
+            &nbsp;&nbsp;{cleanName(name)}
           </StyledName>
           {isImparative && (
             <div className="actions">
