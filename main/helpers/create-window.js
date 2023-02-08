@@ -64,7 +64,6 @@ export default function createWindow(windowName, options) {
   state = ensureVisibleOnSomeDisplay(restore());
 
   win = new BrowserWindow({
-    frame: false,
     titleBarStyle: process.platform == "darwin" ?  "hiddenInset" : "default",
     // fullscreenable: false,
     ...options,
