@@ -1,9 +1,9 @@
 import styled from "styled-components";
 
 export const StyledFolder = styled.section`
-  font-weight: bold;
+  margin-top:2px;
   padding-left: ${(p) => p.theme.indent}px;
   .tree__file {
-    padding-left: ${(p) => p.theme.indent}px;
+    padding-left: 10px;
   }
 `;

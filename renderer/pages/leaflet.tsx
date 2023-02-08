@@ -1,8 +1,6 @@
 import React, { useRef, useCallback, useEffect, useState } from "react";
-import dragDrop from "drag-drop";
 import { ipcRenderer } from "electron";
 import { vim } from "@replit/codemirror-vim";
-import { CONSTANT } from "../lib/constant";
 import {
   GETDATE,
   EXTENSIONS,
@@ -13,11 +11,11 @@ import {
 } from "../lib/util";
 import { effects } from "../lib/effects";
 import { SIDEBARCOLLAPSEIcon } from "../components/icons";
-import {  FileTree, FileTrees } from "../components/filetree";
+import { FileTree } from "../components/filetree";
 import { QuickAction, QuickActions } from "../components/quickactions";
 import { METADATE, METATAGS, METAMATERIAL } from "../components/metadata";
 import { getMarkdown } from "../lib/mdParser";
-import fs, { readFileSync } from "fs-extra";
+import fs from "fs-extra";
 import mainPath from "path";
 import { githubDark } from "@uiw/codemirror-theme-github";
 import CodeMirror from "@uiw/react-codemirror";
@@ -51,7 +49,6 @@ export function Leaflet() {
     body: string;
     structure: { [key: string]: any };
   };
-
   const date = new Date();
   const [value, setValue] = useState<string>("");
   const [insert, setInsert] = useState<boolean>(false);
@@ -84,6 +81,7 @@ export function Leaflet() {
   const resolvedMarkdown = getMarkdown(value);
   const handleDrawerOpen = () => {setOpen(true)};
   const handleDrawerClose = () => {setOpen(false);};
+  const DRAWERWIDTH = 250
   
   const saveFile = () => {
     try {
@@ -92,7 +90,6 @@ export function Leaflet() {
       //   format(refs);
       // }
       ipcRenderer.invoke("saveFile", path, value).then(() => {
-        Update();
         setSaver("SAVED");
         setTimeout(() => {
           setIsEdited(false);
@@ -150,11 +147,11 @@ export function Leaflet() {
   const Update = () => {
     ipcRenderer.invoke("getTheFile").then((files = []) => {
       setFiles(files);
-      setStruct(files[0].structure.children);
+        setStruct(files[0].structure.children);
     });
   };
   effects(
-    CONSTANT.INITIALISED,
+    false,
     setPandocAvailable,
     setIsVim,
     setFiles,
@@ -316,33 +313,21 @@ export function Leaflet() {
     );
   };
 
-  /**
+ 
+   /**
    * @description handle file selection from the sidebar
    * @param {string} path - path of the file to be selected
    * @param {string} name - name of the file to be selected
    * @returns {void}
    */
-  const onFileTreeClick = (path: string, name: string): void => {
-    try {
-      setParentDir(mainPath.dirname(path));
-      saveFile();
-      setValue(fs.readFileSync(path, "utf8"));
-      setName(name);
-      setPath(path);
-      setInsert(false);
-
-      document.documentElement.scrollTop = 0;
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   const onNodeClicked = (path: string, name: string): void => {
     try {
-      saveFile();
+      saveFile(); 
       setValue(fs.readFileSync(path, "utf8"));
       setName(name);
       setPath(path);
+      localStorage.setItem(
+        "currPath",path)
       setInsert(false);
       document.documentElement.scrollTop = 0;
     } catch (err) {
@@ -375,7 +360,7 @@ export function Leaflet() {
               >
                 <button
                   aria-label="open drawer"
-                  className="quickAction bb"
+                  className="quickAction topbar-bottons"
                   onClick={open ? handleDrawerClose : handleDrawerOpen}
                   style={{
                     padding: 0,
@@ -392,7 +377,6 @@ export function Leaflet() {
                 style={{
                   flex: 1,
                   alignItems: "center",
-                  // paddingTop: "20px"
                 }}
               >
                 <strong style={{ display: "inline" }}>
@@ -405,7 +389,7 @@ export function Leaflet() {
                   alignItems: "center",
                 }}
               >
-                <span className="bb">
+                <span className="topbar-bottons">
                   <QuickAction
                     modeSwitch={() => setInsert(!insert)}
                     addOpenToAllDetailTags={() => {}}
@@ -422,10 +406,10 @@ export function Leaflet() {
             </AppBar>
             <Drawer
               sx={{
-                width: CONSTANT.DRAWERWIDTH,
+                width: DRAWERWIDTH,
                 flexShrink: 0,
                 "& .MuiDrawer-paper": {
-                  width: CONSTANT.DRAWERWIDTH,
+                  width: DRAWERWIDTH,
                   boxSizing: "border-box",
                   overflow: "scroll",
                 },
@@ -452,34 +436,12 @@ export function Leaflet() {
                 }}
               />
 
-              <FileTrees
+              <FileTree
               structures={struct}
-              onNodeClicked={(path, name)=>onNodeClicked(path, name)}/>
+              onNodeClicked={(path, name)=>onNodeClicked(path, name)}
+              path={path}
+              />
 
-
-              {/* <FileTree
-                struct={struct}
-                onFileTreeClick={(path, name) => {
-                  onFileTreeClick(path, name);
-                }}
-                path={path}
-                fileNameBox={fileNameBox}
-                parentDirClick={(path) => {
-                  setParentDir(path);
-                }}
-                creatingFileOrFolder={creatingFileOrFolder}
-                setFileName={(name) => {
-                  setFileName(name);
-                }}
-                isCreatingFolder={isCreatingFolder}
-                onDelete={(path, name) => onDelete(path, name)}
-                toPDF={(body, name) =>
-                  toPDF(body, name)
-                }
-                toDOCX={(body, name) =>
-                  toDOCX(body, name)
-                }
-              /> */}
             </Drawer>
             <Main open={open} style={{ overflow: "scroll" }}>
               <div>

@@ -1,17 +1,14 @@
-import React, { useRef, useState } from "react";
-import { AiOutlineFile, AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
+import React, { useRef, useState, useEffect } from "react";
 import { StyledFile } from "./TreeFile.style";
 import { useTreeContext } from "../state/TreeContext";
-import { ActionsWrapper, StyledName } from "../Tree.style.js";
+import { ActionsWrapper, StyledName, StyledNameWrapper } from "../Tree.style.js";
 import { PlaceholderInput } from "../TreePlaceholderInput";
-import fs from "fs-extra"
-
 import { FILE } from "../state/constants";
-import FILE_ICONS from "../FileIcons";
 
 const File = ({ name, id, node }) => {
   const { dispatch, isImparative, onNodeClick } = useTreeContext();
   const [isEditing, setEditing] = useState(false);
+  const [activePath, setActivePath] = useState("")
   const ext = useRef("");
 
   let splitted = name?.split(".");
@@ -29,6 +26,7 @@ const File = ({ name, id, node }) => {
     (e) => {
       e.stopPropagation();
       onNodeClick({ node });
+      localStorage.getItem("currPath")
     },
     [node]
   );
@@ -36,7 +34,7 @@ const File = ({ name, id, node }) => {
     setEditing(false);
   };
   const cleanName = (name) => {
-    return name.endsWith(".md") ? name.substring(0, name.length - 3) : name;
+    return name.endsWith(".md") ? name.substring(0, name.length - 3).toLowerCase() : name.toLowerCase();
   }
   return (
     <StyledFile onClick={handleNodeClick} className="tree__file">
@@ -50,14 +48,11 @@ const File = ({ name, id, node }) => {
         />
       ) : (
         <ActionsWrapper>
-          <StyledName>
-            {FILE_ICONS[ext.current] ? (
-              FILE_ICONS[ext.current]
-            ) : (
-              <AiOutlineFile />
-            )}
+          <StyledNameWrapper>
+          <StyledName className={node.path == localStorage.getItem("currPath") ? "isActive" : ""}>
             &nbsp;&nbsp;{cleanName(name)}
           </StyledName>
+          </StyledNameWrapper>
           {isImparative && (
             <div className="actions">
               {/*<AiOutlineEdit onClick={toggleEditing} />

@@ -1,7 +1,7 @@
 import { styled } from "@mui/material/styles";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
-import { CONSTANT } from "../lib/constant";
 import {ipcRenderer} from "electron"
+const DRAWERWIDTH = 250
 export const Main = styled("main", {
   shouldForwardProp: (prop) => prop !== "open",
 })<{
@@ -13,7 +13,7 @@ export const Main = styled("main", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  marginLeft: `-${CONSTANT.DRAWERWIDTH}px`,
+  marginLeft: `-${DRAWERWIDTH}px`,
   ...(open && {
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.easeOut,
@@ -34,8 +34,8 @@ export const AppBar = styled(MuiAppBar, {
     duration: theme.transitions.duration.leavingScreen,
   }),
   ...(open && {
-    width: `calc(100% - ${CONSTANT.DRAWERWIDTH}px)`,
-    marginLeft: `${CONSTANT.DRAWERWIDTH}px`,
+    width: `calc(100% - ${DRAWERWIDTH}px)`,
+    marginLeft: `${DRAWERWIDTH}px`,
     transition: theme.transitions.create(["margin", "width"], {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
@@ -52,13 +52,13 @@ export const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
   export const appBarMouseOver = () => {
-    const topper = document.querySelectorAll(".bb");
+    const topper = document.querySelectorAll(".topbar-bottons");
     topper.forEach((topper) => {
       (topper as HTMLElement).style.visibility = "visible";
     });
   };
   export const appBarMouseLeave = () => {
-    const topper = document.querySelectorAll(".bb");
+    const topper = document.querySelectorAll(".topbar-bottons");
     topper.forEach((topper) => {
       (topper as HTMLElement).style.visibility = "hidden";
     });

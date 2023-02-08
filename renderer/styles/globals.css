@@ -28,7 +28,7 @@ h3 {
     }
 }
 
-.bb{
+.topbar-bottons{
     visibility: hidden;
 }
 
@@ -49,8 +49,6 @@ h3 {
     font-size: 14px;
     letter-spacing: 0.055em;
     line-height: 1.6;
-    text-rendering: optimizeLegibility;
-    font-varient-numeric: tabular-nums;
   }
 
   .ͼo .cm-vimMode .cm-line ::selection {
@@ -70,38 +68,12 @@ h3 {
     color: black !important;
   }
 
-  .taskRuler {
-    border-bottom: 1px solid hsla(0, 0%, 100%, 0.1) !important;
-  }
-
   .topBar {
     background-color: #191919 !important;
     color: white !important;
     border-bottom: 1px solid hsla(0, 0%, 100%, 0.1) !important;
 }
 
-  .ContextMenuSeparator {
-    height: 1px;
-    background-color: hsla(0, 0%, 100%, 0.1);
-    margin: 5px;
-  }
-
-  .ContextMenuContent,
-  .ContextMenuSubContent {
-    min-width: 220px;
-    background-color: #100f11;
-    border-radius: 6px;
-    overflow: hidden;
-    padding: 5px;
-  }
-
-  .cancel {
-    background-color: #2d2d2d;
-    user-select: none;
-  }
-  .cancel:hover:enabled {
-    background-color: #3d3d3d !important;
-  }
   blockquote {
     border-left: 2px solid #ff9a9e;
     padding-left: 0.7em;
@@ -128,13 +100,6 @@ h3 {
     align-items: center;
   }
 
-  .ContextMenuItem[data-highlighted],
-  .ContextMenuCheckboxItem[data-highlighted],
-  .ContextMenuRadioItem[data-highlighted],
-  .ContextMenuSubTrigger[data-highlighted] {
-    background-color: rgb(255, 255, 255, 0.075);
-  }
-
   .files:hover {
     background-color: rgb(255, 255, 255, 0.075);
     border-radius: 4px;
@@ -147,10 +112,9 @@ h3 {
 
   kbd {
     user-select: none;
-      display: inline-block;
+    display: inline-block;
     padding: 3px 5px;
-    font: 11px source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-      monospace;
+    font: 11px source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
     line-height: 10px;
     color: #c9d1d9;
     vertical-align: middle;
@@ -162,8 +126,7 @@ h3 {
   }
 
   pre {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-      monospace;
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
     background-color: #252525;
     border-radius: 5px;
   }
@@ -235,15 +198,7 @@ h3 {
     color: black;
   }
 }
-.createFile {
-  background-color: transparent;
-  outline: none;
-  padding-left: 22px;
-}
 
-strong {
-  font-weight: 600 !important;
-}
 @media (prefers-color-scheme: light) {
   body {
     fill: currentColor;
@@ -256,7 +211,6 @@ strong {
     -webkit-font-smoothing: auto;
     letter-spacing: 0.05em;
     line-height: 1.6;
-    font-varient-numeric: tabular-nums;
   }
 
   .ͼo .cm-vimMode .cm-line::selection {
@@ -280,16 +234,6 @@ strong {
     background-color: #fff !important;
   }
 
-  .ContextMenuContent,
-  .ContextMenuSubContent {
-    min-width: 220px;
-    background-color: #fff;
-    border-radius: 6px;
-    overflow: hidden;
-    padding: 5px;
-    box-shadow: 0px 10px 38px -10px rgba(22, 23, 24, 0.35),
-      0px 10px 20px -15px rgba(22, 23, 24, 0.2);
-  }
   .util {
     border-top: 1px solid #ddd;
     min-width: 18.5em;
@@ -313,18 +257,6 @@ strong {
   .quickAction:hover {
     background-color: rgba(0, 0, 0, 0.075);
   }
-  .ContextMenuSeparator {
-    height: 1px;
-    background-color: #f0f0f0;
-    margin: 5px;
-  }
-
-  .ContextMenuItem[data-highlighted],
-  .ContextMenuCheckboxItem[data-highlighted],
-  .ContextMenuRadioItem[data-highlighted],
-  .ContextMenuSubTrigger[data-highlighted] {
-    background-color: rgba(0, 0, 0, 0.075);
-  }
 
   .menu {
     color: grey !important;
@@ -343,8 +275,7 @@ strong {
     user-select: none;
     display: inline-block;
     padding: 3px 5px;
-    font: 11px source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-      monospace;
+    font: 11px source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
     line-height: 10px;
     color: black;
     vertical-align: middle;
@@ -353,16 +284,6 @@ strong {
     border-bottom-color: rgba(175, 184, 193, 0.2);
     border-radius: 6px;
     box-shadow: inset 0 -1px 0 rgba(175, 184, 193, 0.2);
-  }
-
-  .cancel {
-    user-select: none;
-    background-color: #f5f5f5;
-    color: #1a1a1b;
-  }
-
-  .cancel:hover:enabled {
-    background-color: #e5e5e5 !important;
   }
 
   table,
@@ -433,7 +354,6 @@ strong {
   }
 
   a {
-    /* border-bottom: 1px solid #b3d4fc; */
     color: #0366d6;
   }
 
@@ -449,9 +369,6 @@ strong {
 li {
   padding-top: 0.075em;
   padding-bottom: 0.075em;
-}
-.taskRuler {
-  border-bottom: 1px solid #f0f0f0;
 }
 
 ul,
@@ -473,26 +390,14 @@ video,
 iframe {
   margin-top: 1em;
   margin-bottom: 1em;
-  animation: cool-fadein 1s;
   object-fit: cover;
   border-radius: 4px;
 }
-@keyframes cool-fadein {
-  0% {
-    mask: linear-gradient(90deg, #000 25%, #000000e6 50%, #00000000) 150% 0 /
-      400% no-repeat;
-    opacity: 0.2;
-  }
-  100% {
-    mask: linear-gradient(90deg, #000 25%, #000000e6 50%, #00000000) 0 / 400%
-      no-repeat;
-    opacity: 1;
-  }
-}
+
 
 textarea {
   -webkit-app-region: no-drag;
-  -webkit-writing-mode: horizontal-tb !important;
+  writing-mode: horizontal-tb !important;
   text-rendering: auto;
   letter-spacing: normal;
   word-spacing: normal;
@@ -521,11 +426,6 @@ pre code {
 
 p {
   margin: 0.8em 0;
-}
-
-.mainer {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
 }
 
 .third {
@@ -561,33 +461,6 @@ td {
   display: none;
 }
 
-.Closed:before {
-  content: "\203A"; /* chevron */
-  text-align: center;
-  margin: 0 5px;
-}
-
-.Opened:before {
-  content: "\203A"; /* chevron */
-  display: inline-block;
-  transition: 0.2s;
-  transform: rotate(90deg);
-  margin: 0 5px;
-}
-
-summary {
-  display: block;
-}
-
-summary::before {
-  margin-left: 1ch;
-  display: inline-block;
-  transition: 0.2s;
-  content: "\203A"; /* chevron */
-}
-details[open] summary::before {
-  transform: rotate(90deg);
-}
 
 .cm-theme > div {
   background-color: transparent !important;
@@ -610,44 +483,12 @@ u {
   text-decoration: underline;
 }
 
-.cm-gutters {
-  background-color: transparent !important;
-  border: none !important;
-}
-
-.cm-foldPlaceholder {
-  background-color: transparent !important;
-  border: none !important;
-}
-
-.cm-foldPlaceholder-folded {
-  background-color: transparent !important;
-  border: none !important;
-}
-
-.fileBody p,
-summary {
-  font-size: 13px;
-  line-height: 1.5;
-  font-weight: 500;
-  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji",
-    "Segoe UI Symbol";
-}
-
-.todo {
-  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji",
-    "Segoe UI Symbol" !important;
-}
-
 pre > code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace !important;
 }
 
-.css-12i7wg6-MuiPaper-root-MuiDrawer-paper,
-.drawer {
+.mane {
   -webkit-app-region: drag;
 }
 
@@ -655,7 +496,6 @@ pre > code {
   user-select: none;
   -webkit-app-region: drag;
   min-height: 37px;
-  /* box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1); */
     box-shadow: none !important;
 }
 
@@ -664,60 +504,7 @@ pre > code {
 }
 .cm-fat-cursor {
   outline: solid 1px transparent !important;
-  background-color: #77EE77 !important;
-}
-
-.ContextMenuItem,
-.ContextMenuCheckboxItem,
-.ContextMenuRadioItem,
-.ContextMenuSubTrigger {
-  font-size: 13px;
-  line-height: 1;
-  border-radius: 3px;
-  display: flex;
-  align-items: center;
-  height: 25px;
-  padding: 0 5px;
-  position: relative;
-  padding-left: 25px;
-  user-select: none;
-  outline: none;
-}
-.ContextMenuSubTrigger[data-state="open"] {
-}
-.ContextMenuItem[data-disabled],
-.ContextMenuCheckboxItem[data-disabled],
-.ContextMenuRadioItem[data-disabled],
-.ContextMenuSubTrigger[data-disabled] {
-  pointer-events: "none";
-}
-
-.ContextMenuLabel {
-  padding-left: 25px;
-  font-size: 12px;
-  line-height: 25px;
-  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji";
-}
-
-.ContextMenuItemIndicator {
-  position: absolute;
-  left: 0;
-  width: 25px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.RightSlot {
-  margin-left: auto;
-  padding-left: 20px;
-  color: grey;
-}
-[data-highlighted] > .RightSlot {
-  color: grey;
-}
-[data-disabled] .RightSlot {
+  background-color: #b4b48c !important;
 }
 
 figcaption {
@@ -726,37 +513,12 @@ figcaption {
   text-align: center;
   font-size: 10px;
 }
-
-@keyframes slideIn {
-  from {
-    transform: translateX(-100%);
-  }
-  to {
-    transform: translateX(0);
-  }
+.createFile {
+  background-color: transparent;
+  outline: none;
+  padding-left: 22px;
 }
 
-@keyframes slideOut {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(100%);
-  }
-}
-
-.sidebars.closing {
-  animation: slideOut 0.3s ease-out;
-}
-
-.topBarLeft.closing {
-  animation: slideOut 0.3s ease-out;
-}
-
-.sidebars.visible {
-  animation: slideIn 0.3s ease-out;
-}
-
-.topBarLeft.visible {
-  animation: slideIn 0.3s ease-out;
+strong {
+  font-weight: 600 !important;
 }

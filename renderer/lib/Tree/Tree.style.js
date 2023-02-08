@@ -9,9 +9,28 @@ export const StyledTree = styled.div`
   }
 `;
 
+
+export const StyledNameWrapper = styled.div`
+  @media (prefers-color-scheme: dark) {
+  :hover{
+    background-color: rgb(255, 255, 255, 0.075);
+    border-radius: 4px;
+    color: white;
+  }}
+  @media (prefers-color-scheme: light) {
+    :hover{
+      background-color: rgb(0, 0, 0, 0.075);
+      border-radius: 4px;
+      color: black;
+  }
+  }
+  width: 80%;
+  margin-top: 2px;
+
+`
+
 export const ActionsWrapper = styled.div`
   width: 100%;
-
   display: flex;
   align-items: center;
   flex-wrap: nowrap;
@@ -49,28 +68,35 @@ export const ActionsWrapper = styled.div`
 export const StyledName = styled.div`
   background-color: white;
   font-size: 13px;
-    line-height: 1.5;
-    font-weight: 500;
     font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
-    display: inline;
-    width: 100%;
+    display: inline-block;
+    width: 90%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     outline: none;
-
+    display: flex;
+    align-items: center;
+    cursor: pointer;
   @media (prefers-color-scheme: dark) {
     background-color: #100f11;
-    color: white;
+    color: #808080;
+    :hover{
+      background-color: rgb(255, 255, 255, 0.075);
+      border-radius: 4px;
+      color: white;
+  }
   }
 
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  :hover {
-    /* background-color: rgb(255, 255, 255, 0.075);
-    border-radius: 4px; */
+  @media (prefers-color-scheme: light) {
+    :hover{
+      background-color: rgb(0, 0, 0, 0.075);
+      border-radius: 4px;
+      color: black;
   }
+  }
+
+ 
 `;
 
 export const Collapse = styled.div`
@@ -87,15 +113,15 @@ export const VerticalLine = styled.section`
     display: block;
     position: absolute;
     top: -0px; /* just to hide 1px peek */
-    left: 1px;
+    left: 4px;
     width: 0;
     height: 100%;
-  @media (prefers-color-scheme: dark) {
-    border: 1px solid rgba(255, 255, 255, 0.12);
-  }
     z-index: -1;
+  @media (prefers-color-scheme: dark) {
+    border-left: 1px solid rgba(255, 255, 255, 0.12);
+  }
   @media (prefers-color-scheme: light) {
-    border: 1px solid rgba(0,0,0, 0.12);
+    border-left: 1px solid rgba(0,0,0, 0.12);
   }
   }
 `;

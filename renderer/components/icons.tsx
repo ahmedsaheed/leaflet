@@ -325,8 +325,8 @@ export const PREVIEWIcon = () => {
   );
 };
 
-export const OPTIONSIcon = () => {
-  return (
+export const OPTIONSIcon = () => 
+  
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="18"
@@ -342,5 +342,13 @@ export const OPTIONSIcon = () => {
       <circle cx="12" cy="5" r="1"></circle>
       <circle cx="12" cy="19" r="1"></circle>
     </svg>
-  );
-};
+
+
+
+export const FOLDEROPENED  = () => <svg
+  style={{
+    transform: "rotate(270deg)",
+    transition: "transform 100ms ease-in-out"
+  }}
+xmlns="http://www.w3.org/2000/svg" width="10" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8L12 17L21 8"></path></svg>
+export const FOLDERCLOSED =()=> <svg xmlns="http://www.w3.org/2000/svg" width="10" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8L12 17L21 8"></path></svg>

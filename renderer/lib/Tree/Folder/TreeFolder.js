@@ -13,14 +13,15 @@ import {
   StyledName,
   VerticalLine,
 } from "../Tree.style";
-import { StyledFolder } from "./TreeFolder.style";
+import { StyledFolder,  } from "./TreeFolder.style";
 import { FILE, FOLDER } from "../state/constants";
 import { useTreeContext } from "../state/TreeContext";
 import { PlaceholderInput } from "../TreePlaceholderInput";
+import {FOLDERCLOSED, FOLDEROPENED} from "../../../components/icons"
 
 const FolderName = ({ isOpen, name, handleClick }) => (
   <StyledName onClick={handleClick}>
-    {isOpen ? <AiOutlineFolderOpen /> : <AiOutlineFolder />}
+    {isOpen ? <FOLDERCLOSED /> : <FOLDEROPENED />}
     &nbsp;&nbsp;{name}
   </StyledName>
 );

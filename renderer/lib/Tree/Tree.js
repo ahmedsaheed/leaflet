@@ -7,7 +7,7 @@ import { StyledTree } from "./Tree.style";
 import { Folder } from "./Folder/TreeFolder";
 import { File } from "./File/TreeFile";
 
-const Tree = ({ children, data, onNodeClick, onUpdate }) => {
+const Tree = ({ children, data, onNodeClick, onUpdate}) => {
   const [state, dispatch] = useReducer(reducer, data);
 
   useLayoutEffect(() => {
@@ -28,7 +28,6 @@ const Tree = ({ children, data, onNodeClick, onUpdate }) => {
           state,
           dispatch,
           onNodeClick: (node) => {
-            console.log("hi")
             onNodeClick && onNodeClick(node);
           },
         }}
@@ -45,7 +44,7 @@ const Tree = ({ children, data, onNodeClick, onUpdate }) => {
   );
 };
 
-const TreeRecusive = ({ data, parentNode }) => {
+const TreeRecusive = ({ data, parentNode}) => {
   return data.map((item) => {
     item.parentNode = parentNode;
     if (!parentNode) {
@@ -54,7 +53,7 @@ const TreeRecusive = ({ data, parentNode }) => {
     if (!item.id) item.id = v4();
 
     if (item.type === "file") {
-      return <File key={item.id} id={item.id} name={item.name} node={item} />;
+      return <File key={item.id} id={item.id} name={item.name} node={item}  />;
     }
     if (item.type === "folder") {
       return (
