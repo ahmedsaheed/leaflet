@@ -4,6 +4,7 @@ import { useTreeContext } from "../state/TreeContext";
 import { ActionsWrapper, StyledName, StyledNameWrapper } from "../Tree.style.js";
 import { PlaceholderInput } from "../TreePlaceholderInput";
 import { FILE } from "../state/constants";
+import { ipcRenderer, IpcRenderer } from "electron";
 
 const File = ({ name, id, node }) => {
   const { dispatch, isImparative, onNodeClick } = useTreeContext();
@@ -25,8 +26,14 @@ const File = ({ name, id, node }) => {
   const handleNodeClick = React.useCallback(
     (e) => {
       e.stopPropagation();
-      onNodeClick({ node });
-      localStorage.getItem("currPath")
+     
+      if (e.type === 'click') {
+        onNodeClick({ node });
+        localStorage.getItem("currPath")
+      } else if (e.type === 'contextmenu') {
+        ipcRenderer.send("file-context-menu")
+        console.log('Right click');
+      }
     },
     [node]
   );
@@ -36,8 +43,9 @@ const File = ({ name, id, node }) => {
   const cleanName = (name) => {
     return name.endsWith(".md") ? name.substring(0, name.length - 3).toLowerCase() : name.toLowerCase();
   }
+
   return (
-    <StyledFile onClick={handleNodeClick} className="tree__file">
+    <StyledFile onClick={handleNodeClick}  onContextMenu={handleNodeClick} className="tree__file">
       {isEditing ? (
         <PlaceholderInput
           type="file"

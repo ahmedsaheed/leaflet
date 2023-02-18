@@ -41,7 +41,18 @@ export default function Home() {
           },
         }}
       />
+      <div 
+        style={{
+          height: "100vh",
+          width: "100vw",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          zIndex: -1,
+        }}
+      >
       <Leaflet />
+      </div>
     </>
   );
 }

@@ -6,7 +6,6 @@ import {
   dialog,
   Notification,
   shell,
-   electron
 } from "electron";
 import serve from "electron-serve";
 import { createWindow, markdown } from "./helpers";
@@ -220,6 +219,66 @@ if (isDev) {
   Menu.setApplicationMenu(menu);
  mainWindow.setApplicationMenu(menu);
 })();
+ipcMain.on("file-context-menu", (event) => {
+  const template = [
+    {
+      label: "Reveal in Finder",
+      click: () => {
+        event.sender.send("in-app-command-revealInFinder");
+      },
+    },
+
+    {
+      label: "Export to PDF",
+      click: () => {
+        event.sender.send("in-app-command-topdf");
+      },
+    },
+    {
+      label: "Export to DOCX",
+      click: () => {
+        event.sender.send("in-app-command-todocx");
+      },
+    },
+    // { type: 'separator' },
+
+    // { label: 'Vim Mode', type: 'checkbox', checked: isVim 
+    //     ,click: () => {
+    //         if (isVim) {
+    //             return
+    //         }else{
+    //             event.sender.send("in-app-command-togglevim");
+    //             isVim = true
+    //         }
+    //     },
+    // },
+    // { label: 'Normal Mode', type: 'checkbox', checked: !isVim,
+    //     click: () => {
+    //         if (!isVim) {
+    //             return
+    //         }else{
+    //             event.sender.send("in-app-command-togglevim");
+    //             isVim = false
+    //         }
+    //     }
+    // },
+    { type: "separator" },
+    {
+      label: "Rename",
+      click: () => {
+        //event.sender.send("in-app-command-totrash");
+      },
+    },
+    {
+      label: "Delete File",
+      click: () => {
+        //event.sender.send("in-app-command-totrash");
+      },
+    },
+  ];
+  const menu = Menu.buildFromTemplate(template);
+  menu.popup(BrowserWindow.fromWebContents(event.sender));
+});
 
 ipcMain.on("show-context-menu", (event, isVim) => {
   const template = [
