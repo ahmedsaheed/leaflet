@@ -443,7 +443,7 @@ export function Leaflet() {
 
   return (
     <div className="h-screen w-screen" style={{ overflow: "hidden" }}>
-      <div className="flex">
+      <div className="flex" style={{minHeight: "100vh"}}>
         <div className="hidden md:flex md:flex-row">
           <div className="h-screen-fix no-scrollbar flex overflow-y-scroll bg-palette-0 bg-black"></div>
           <nav
@@ -813,10 +813,14 @@ export function Leaflet() {
               </div>
             </div>
             <div className="no-scrollbar grow overflow-y-scroll pt-[3.5rem] md:pt-[4rem]">
-              <div className="h-full table-auto">
+              <div className="virtual-list h-full">
+              
+                <div className="
+                flex h-[calc(100vh-170px)] w-full flex-col 
+                ">
                 {insert ? (
                   <div
-                    className="markdown-content h-full"
+                    className="markdown-content"
                     style={{ padding: "40px" }}
                   >
                     <div>
@@ -835,18 +839,16 @@ export function Leaflet() {
                   </div>
                 ) : (
                   <>
-                    <div className="h-full ">
                       <div style={{ paddingTop: "1em" }}>
                         <div style={{ padding: "40px" }}>
                           {ValidateYaml(resolvedMarkdown.metadata)}
-                          <div style={{ overflow: "hidden" }}>
+                          <div>
                             <div
                               id="previewArea"
                               style={{
                                 marginBottom: "5em",
-                                overflow: "scroll",
                               }}
-                              className="third h-full w-full prose"
+                              className=""
                               dangerouslySetInnerHTML={
                                 resolvedMarkdown.document
                               }
@@ -864,10 +866,9 @@ export function Leaflet() {
                         editorview,
                         open
                       )}
-                    </div>
                   </>
                 )}
-                <div className="virtual-list h-full"></div>
+                </div>
               </div>
             </div>
           </div>
