@@ -1,11 +1,11 @@
 import { Dispatch, SetStateAction } from "react";
-import {unified} from 'unified'
+import { unified } from "unified";
 import prettier from "prettier";
-import remarkParse from 'remark-parse'
+import remarkParse from "remark-parse";
 import fs from "fs-extra";
 import pandoc from "./pandocConverter";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
-import { codeFolding, foldGutter, indentOnInput } from "@codemirror/language";
+import { codeFolding, indentOnInput } from "@codemirror/language";
 import { languages } from "@codemirror/language-data";
 import { EditorSelection, Extension } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
@@ -16,13 +16,11 @@ const route = os.homedir() + "/columns.lua";
 type Dispatcher<S> = Dispatch<SetStateAction<S>>;
 import { ipcRenderer } from "electron";
 import { getMarkdownWithMermaid } from "./mdParser";
-const { shell } = require("electron");
-import toast, {
-  Toaster,
-  useToasterStore,
-  ToastPosition,
-} from 'react-hot-toast';
-import { positions } from "@mui/system";
+import { shell } from "electron";
+import {toast} from 'react-hot-toast'
+import { indentationMarkers } from '@replit/codemirror-indentation-markers';
+
+
 /**
  * Bold a text in editor view
  * @param view EditorView
@@ -346,13 +344,13 @@ export const openExternalInDefaultBrowser = () => {
 export const EXTENSIONS: Extension[] = [
   indentOnInput(),
   codeFolding(),
-  // foldGutter(),
+  indentationMarkers(),
   markdown({
     base: markdownLanguage,
     codeLanguages: languages,
     addKeymap: true,
   }),
-  [EditorView.lineWrapping],
+  [EditorView.lineWrapping,],
 ];
 
 export const checkForPandoc = (setPandocAvailable: Dispatcher<boolean>) => {
@@ -397,6 +395,16 @@ export const cleanFileNameForExport = (name: string) => {
   return value;
 };
 
+
+export function cleaner(name: string){
+  let value = name;
+  if (name.endsWith(".md")) {
+    value = name.substring(0, name.length - 3);
+  }
+  value =  value.charAt(0).toUpperCase() + value.slice(1);
+  return value;
+}
+
 /**
  * @description Function Convert specified file to pdf
  * @param {string} body - content to be converted
@@ -406,79 +414,60 @@ export const cleanFileNameForExport = (name: string) => {
  * @returns {void}
  */
 
+export const toPDF = (body: string, name: string) => {
+  toast.promise(preparePDF(body, name), {
+    loading: "Preparing PDF",
+    error: "Could not convert to PDF",
+    success: `Opened file as PDF`,
+  });
+};
 
-export const toPDF = (
-  body: string,
-  name: string,
-) => {
-  toast.promise(
-    preparePDF(body, name),
-    {
-      loading: 'Preparing PDF',
-      error: 'Could not convert to PDF',
-      success: `Opened file as PDF`,
-    },
-  )
-}
-
-
-export const toDOCX = (
-  body: string,
-  name: string,
-) => {
-  toast.promise(
-    prepareDOCX(body, name),
-    {
-      loading: 'Preparing DOCX',
-      error: 'Could not convert to DOCX',
-      success: `Opened file as DOCX`,
-    },    
-  )
-}
- const preparePDF = (
-  body: string,
-  name: string,
-) => {
+export const toDOCX = (body: string, name: string) => {
+  toast.promise(prepareDOCX(body, name), {
+    loading: "Preparing DOCX",
+    error: "Could not convert to DOCX",
+    success: `Opened file as DOCX`,
+  });
+};
+const preparePDF = (body: string, name: string) => {
   return new Promise((resolve, reject) => {
-  let document = getMarkdownWithMermaid(body);
-  ipcRenderer
-    .invoke("creatingPdf", cleanFileNameForExport(name), document)
-    .then(() => {
-      ipcRenderer.on("pdfPath", function (event, response, documents)
-      {
-        if (response == null && documents == null) {
-          setTimeout(reject, 1000);
-          reject();
-        }
-        try {
-          writeLuaScript();
-          let outputpath = response;
-          pandoc(
-            documents,
-            // `-f markdown -t pdf --lua-filter=${route} -o ${outputpath}`,
-            fs.existsSync(route)
-              ? `-f markdown -t pdf --lua-filter=${route} -o ${outputpath}`
-              : `-f markdown -t pdf -o ${outputpath}`,
-            function (err, result) {
-              if (err) {
-                console.log(err);
-                setTimeout(reject, 1000);
+    let document = getMarkdownWithMermaid(body);
+    ipcRenderer
+      .invoke("creatingPdf", cleanFileNameForExport(name), document)
+      .then(() => {
+        ipcRenderer.on("pdfPath", function (event, response, documents) {
+          if (response == null && documents == null) {
+            setTimeout(reject, 1000);
+            reject();
+          }
+          try {
+            writeLuaScript();
+            let outputpath = response;
+            pandoc(
+              documents,
+              // `-f markdown -t pdf --lua-filter=${route} -o ${outputpath}`,
+              fs.existsSync(route)
+                ? `-f markdown -t pdf --lua-filter=${route} -o ${outputpath}`
+                : `-f markdown -t pdf -o ${outputpath}`,
+              function (err, result) {
+                if (err) {
+                  console.log(err);
+                  setTimeout(reject, 1000);
+                }
+                if (fs.existsSync(outputpath)) {
+                  open(outputpath);
+                  setTimeout(resolve, 3000);
+                } else {
+                  setTimeout(reject, 1000);
+                }
               }
-              if (fs.existsSync(outputpath)) {
-                open(outputpath);
-                setTimeout(resolve, 3000);
-
-              } else {
-                setTimeout(reject, 1000);
-              }
-            }
-          );
-        } catch (e) {
-          console.log(e);
-          setTimeout(reject, 1000);
-        }
+            );
+          } catch (e) {
+            console.log(e);
+            setTimeout(reject, 1000);
+          }
+        });
       });
-    });
   });
 };
 
@@ -488,43 +477,40 @@ export const toDOCX = (
  * @param {string} name - name of the file
  * @returns {void}
  */
- const prepareDOCX = (
-  body: string,
-  name: string,
-) => {
+const prepareDOCX = (body: string, name: string) => {
   return new Promise((resolve, reject) => {
-  ipcRenderer
-    .invoke("creatingDocx", cleanFileNameForExport(name), body)
-    .then(() => {
-      ipcRenderer.on("docxPath", function (event, response, document) {
-        if (response == null && document == null) {
-          setTimeout(reject, 1000);
-          reject();
-        }
-        try {
-          const outputPath = response;
-          pandoc(
-            document,
-            `-f markdown -t docx -o ${outputPath}`,
-            function (err) {
-              if (err) {
-                console.log(err);
-                setTimeout(reject, 1000);
+    ipcRenderer
+      .invoke("creatingDocx", cleanFileNameForExport(name), body)
+      .then(() => {
+        ipcRenderer.on("docxPath", function (event, response, document) {
+          if (response == null && document == null) {
+            setTimeout(reject, 1000);
+            reject();
+          }
+          try {
+            const outputPath = response;
+            pandoc(
+              document,
+              `-f markdown -t docx -o ${outputPath}`,
+              function (err) {
+                if (err) {
+                  console.log(err);
+                  setTimeout(reject, 1000);
+                }
+                if (fs.existsSync(outputPath)) {
+                  setTimeout(resolve, 3000);
+                  open(outputPath);
+                } else {
+                  setTimeout(reject, 1000);
+                }
               }
-              if (fs.existsSync(outputPath)) {
-                setTimeout(resolve, 3000);
-                open(outputPath);
-              } else {
-                setTimeout(reject, 1000);
-              }
-            }
-          );
-        } catch (e) {
-          console.log(e);
-          setTimeout(reject, 1000);
-        }
+            );
+          } catch (e) {
+            console.log(e);
+            setTimeout(reject, 1000);
+          }
+        });
       });
-    });
   });
 };
 
@@ -554,7 +540,6 @@ export const docxToMd = (filePath, Update) => {
   return destination;
 };
 
-
 const pos2offset = (text, pos) => {
   const list = text.split("\n");
 
@@ -582,38 +567,41 @@ const offset2pos = (text, offset) => {
 
 export const format = (ref) => {
   if (!ref.current?.view) {
-    return
+    return;
   }
   const indentUnit = 4;
   const cm = ref.current?.editor;
-  const view = ref.current?.view; 
-  console.log(cm)
-  const previousPos = view.state.selection.main.head 
+  const view = ref.current?.view;
+  console.log(cm);
+  const previousPos = view.state.selection.main.head;
   // cm.getCursor();
-  const previousValue =view.state.doc.toString();
+  const previousValue = view.state.doc.toString();
   // const beforeCoords = cm.cursorCoords();
   const beforeOffset = pos2offset(previousValue, previousPos);
   // const { formatted, cursorOffset } = prettier.formatWithCursor(previousValue, {
   //   cursorOffset: beforeOffset,
-  //   parser: remarkParse, 
+  //   parser: remarkParse,
   //   tabWidth: indentUnit,
   // });
 
-const formatted = prettier.format(previousValue, { semi: false, parser: unified().use(remarkParse) });
+  const formatted = prettier.format(previousValue, {
+    semi: false,
+    parser: unified().use(remarkParse),
+  });
 
   const pos = offset2pos(formatted, 22);
 
- cm.dispatch({
-  changes: {from: 0, to: cm.state.doc.length, insert: formatted}
-})
-cm.dispatch({selection: {anchor: pos}})
+  cm.dispatch({
+    changes: { from: 0, to: cm.state.doc.length, insert: formatted },
+  });
+  cm.dispatch({ selection: { anchor: pos } });
   // cm.setValue(formatted);
   // cm.setCursor(pos);
 
   // const afterCoords = cm.cursorCoords();
   // const afterScrollInfo = cm.getScrollInfo();
   // const scroll = afterScrollInfo.top + afterCoords.top - beforeCoords.top;
-  
+
   // cm.scrollTo(0, scroll);
 };
 

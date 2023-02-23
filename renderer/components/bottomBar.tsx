@@ -29,7 +29,7 @@ export const ButtomBar = (
           style={{
             float: "left",
             paddingLeft: "10px",
-            paddingTop:  "5px" ,
+            paddingTop: "5px",
             paddingBottom: insert ? "5px" : "8px",
             fontSize: "12px !important",
           }}
@@ -111,10 +111,11 @@ export const ButtomBar = (
             ) : (
               <span style={{ display: "inline" }}>
                 <div>
-                  <p style={{padding: "1px", display: "inline"}}>Preview</p>
+                  <p style={{ padding: "1px", display: "inline" }}>Preview</p>
                   <div style={{ display: "inline", marginRight: "20px" }}></div>
-                  <span>{`${value.toString().split(" ").length} words  ${value
-                    .toString().length} characters `}</span>
+                  <span>{`${value.toString().split(" ").length} words  ${
+                    value.toString().length
+                  } characters `}</span>
                   <div style={{ display: "inline", marginRight: "30px" }}></div>
                   <div
                     style={{

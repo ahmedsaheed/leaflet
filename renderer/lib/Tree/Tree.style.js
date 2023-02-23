@@ -66,7 +66,7 @@ export const ActionsWrapper = styled.div`
 `;
 
 export const StyledName = styled.div`
-  background-color: white;
+  background-color: #fff;
   font-size: 13px;
     font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
     display: inline-block;
@@ -79,7 +79,7 @@ export const StyledName = styled.div`
     align-items: center;
     cursor: pointer;
   @media (prefers-color-scheme: dark) {
-    background-color: #100f11;
+    background-color: #000000;
     color: #808080;
     :hover{
       background-color: rgb(255, 255, 255, 0.075);

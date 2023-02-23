@@ -1,7 +1,38 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-h1 {
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+
+.drag{
+    -webkit-app-region: drag;
+}
+
+@media (prefers-color-scheme: dark) {
+  body { background: #000000; color: #E5E5E5 !important; }
+  .custom-border{ border-color: rgb(31 31 31/1) !important;}
+  hr{ border-color: rgb(31 31 31/1) !important;}
+  .cm-scroller{background-color: #000000 !important; outline:none;}
+
+}
+
+@media (prefers-color-scheme: light) {
+  body { background: #fff; color: rgb(55, 53, 47)
+    !important; }
+   
+}
+
+body {
+    fill: currentColor;
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+      Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji",
+      "Segoe UI Symbol" !important;
+    font-size: 14px;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: 0.05em;
+    line-height: 1.6;
+  }
+  h1 {
   font-weight: 600;
   line-height: 1.2 !important;
   font-size: 24px;
@@ -21,504 +52,48 @@ h3 {
   margin: 15px 0;
 }
 
-@media (min-width: 768px) {
-    .content {
-        max-width: 700px;
-        margin: 0 auto;
-    }
-}
-
-.topbar-bottons{
-    visibility: hidden;
-}
-
-.footnote-backref{
-    border: none;
-    content: none;
-}
-
-
-@media (prefers-color-scheme: dark) {
-  body {
-    background: #191919;
-    color: white;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-      "Ubuntu", "Canterell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-      sans-serif;
-    -webkit-font-smoothing: antialiased;
-    font-size: 14px;
-    letter-spacing: 0.055em;
-    line-height: 1.6;
-  }
-
-  .ͼo .cm-vimMode .cm-line ::selection {
-    background-color: #f0f0f0 !important;
-    color: black !important;
-  }
-
-  .ͼo .cm-vimMode .cm-line::selection {
-    background-color: #f0f0f0 !important;
-    color: black !important;
-  }
-
-  .ͼz.cm-focused .cm-selectionBackground .cm-selectionBackground,
-  .ͼz .cm-selectionLayer .cm-selectionBackground,
-  .ͼz ::selection {
-    background-color: #f0f0f0 !important;
-    color: black !important;
-  }
-
-  .topBar {
-    background-color: #191919 !important;
-    color: white !important;
-    border-bottom: 1px solid hsla(0, 0%, 100%, 0.1) !important;
-}
-
-  blockquote {
-    border-left: 2px solid #ff9a9e;
-    padding-left: 0.7em;
-    margin-inline-end: 0;
-  }
-  .ButtomBar {
-    -webkit-app-region: drag;
-    background-color: #100f11;
-  }
-  mark {
-    background-color: #ff9a9e;
-    display: "block";
-    border: 1px solid #b3d4fc;
-    border-color: #b3d4fc;
-  }
-  .util {
-    border-top: 1px solid #2d2d2d;
-    min-width: 18.5em;
-    max-width: 18.5em;
-    width: 18.5em;
-    height: 28.5px;
-    padding-top: 5px;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .files:hover {
-    background-color: rgb(255, 255, 255, 0.075);
-    border-radius: 4px;
-    color: white;
-  }
-
-  .quickAction:hover {
-    background-color: rgb(255, 255, 255, 0.075);
-  }
-
-  kbd {
-    user-select: none;
-    display: inline-block;
-    padding: 3px 5px;
-    font: 11px source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
-    line-height: 10px;
-    color: #c9d1d9;
-    vertical-align: middle;
-    background-color: #161b22;
-    border: 1px solid rgba(110, 118, 129, 0.4);
-    border-bottom-color: rgba(110, 118, 129, 0.4);
-    border-radius: 6px;
-    box-shadow: inset 0 -1px 0 rgba(110, 118, 129, 0.4);
-  }
-
-  pre {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
-    background-color: #252525;
-    border-radius: 5px;
-  }
-  code {
-    background-color: #252525;
-    border-radius: 6px;
-  }
-
-  hr {
-    border: 1px solid hsla(0, 0%, 100%, 0.1);
-  }
-
-  a {
-   color: #2D79B2;
-  }
-
-  .meta a{
-    color: #000000;
-  }
-  .menu {
-    color: grey !important;
-    font-weight: bold;
-    user-select: none;
-  }
-  .css-12i7wg6-MuiPaper-root-MuiDrawer-paper,
-  .drawer {
-    background-color: #100f11;
-    border-right: 1px solid #2d2d2d;
-    user-select: none;
-  }
-  .topBarLeft {
-    background-color: #100f11;
-    border-right: 1px solid #2d2d2d;
-    user-select: none;
-  }
-  .fileBody {
-    padding: 0 10px 10px 10px;
-  }
-
-  b {
-    font-weight: bold;
-    color: #fff;
-  }
-  .whites {
-    color: #fff;
-  }
-
-  .greys {
-    color: grey;
-  }
-
-  .selected {
-    background-color: rgba(255, 225, 225, 0.075);
-    border-radius: 4px;
-    color: white;
-  }
-  table,
-  th,
-  td {
-    margin-bottom: 2em;
-    margin-top: 2em;
-    margin-left: auto;
-    margin-right: auto;
-    border: 1px solid hsla(0, 0%, 100%, 0.1);
-  }
-
-  ::selection {
-    background: #f0f0f0;
-    color: black;
-  }
-}
-
-@media (prefers-color-scheme: light) {
-  body {
-    fill: currentColor;
-    background: #fff;
-    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
-      Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji",
-      "Segoe UI Symbol" !important;
-    color: rgb(55, 53, 47);
-    font-size: 14px;
-    -webkit-font-smoothing: auto;
-    letter-spacing: 0.05em;
-    line-height: 1.6;
-  }
-
-  .ͼo .cm-vimMode .cm-line::selection {
-    background-color: #b3d4fc !important;
-  }
-
-  .ͼo .cm-vimMode .cm-line ::selection {
-    background-color: #b3d4fc !important;
-  }
-  .topBar {
-    background-color: #fff !important;
-    color: rgb(55, 53, 47);
-    border-bottom: 1px solid #e1e4e8;
-  
-     
-}
-
-  .ͼz.cm-focused .cm-selectionBackground .cm-selectionBackground,
-  .ͼz .cm-selectionLayer .cm-selectionBackground,
-  .ͼz ::selection {
-    background-color: #fff !important;
-  }
-
-  .util {
-    border-top: 1px solid #ddd;
-    min-width: 18.5em;
-    max-width: 18.5em;
-    width: 18.5em;
-    height: 28.5px;
-    padding-top: 5px;
-    justify-content: space-between;
-    align-items: center;
-  }
-  blockquote {
-    border-left: 2px solid #b3d4fc;
-    padding-left: 0.7em;
-    margin-inline-end: 0;
-  }
-
-  .files:hover {
-    background-color: rgba(0, 0, 0, 0.075);
-    border-radius: 4px;
-  }
-  .quickAction:hover {
-    background-color: rgba(0, 0, 0, 0.075);
-  }
-
-  .menu {
-    color: grey !important;
-    font-weight: bold;
-    user-select: none;
-  }
-
-  mark {
-    background-color: #b3d4fc;
-    display: "block";
-    border: 1px solid #b3d4fc;
-    border-color: #ff9a9e;
-  }
-
-  kbd {
-    user-select: none;
-    display: inline-block;
-    padding: 3px 5px;
-    font: 11px source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
-    line-height: 10px;
-    color: black;
-    vertical-align: middle;
-    background-color: #f6f8fa;
-    border: 1px solid rgba(175, 184, 193, 0.2);
-    border-bottom-color: rgba(175, 184, 193, 0.2);
-    border-radius: 6px;
-    box-shadow: inset 0 -1px 0 rgba(175, 184, 193, 0.2);
-  }
-
-  table,
-  th,
-  td {
-    margin-bottom: 2em;
-    margin-top: 2em;
-    margin-left: auto;
-    margin-right: auto;
-    border: 1px solid #f0f0f0;
-  }
-  .ButtomBar {
-    background-color: #fbfbfb;
-    border-top: 1px solid #ddd;
-    -webkit-app-region: drag;
-  }
-
-  pre {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-      monospace;
-    background-color: rgb(222, 226, 230);
-    border-radius: 5px;
-  }
-
-  code {
-    background-color: rgb(222, 226, 230);
-    border-radius: 3px;
-  }
-
-  .css-12i7wg6-MuiPaper-root-MuiDrawer-paper,
-  .drawer {
-    background-color: #ffffff;
-    border-right: 1px solid #ddd;
-    color: rgb(73, 80, 87);
-    user-select: none;
-  }
-
-  .topBarLeft {
-    background-color: #fbfbfb;
-    border-right: 1px solid #ddd;
-  }
-  .css-12i7wg6-MuiPaper-root-MuiDrawer-paper p,
-  .drawer p {
-    color: rbg(73, 80, 87) !important;
-  }
-  .fileBody {
-    padding: 0 10px 10px 10px;
-  }
-
-  b {
-    font-weight: bold;
-    color: black;
-  }
-
-  .whites {
-    color: black;
-  }
-
-  .greys {
-    color: grey;
-  }
-  .selected {
-    background-color: rgba(0, 0, 0, 0.075);
-    border-radius: 4px;
-  }
-  hr {
-    border: 1px solid #f0f0f0;
-  }
-
-  a {
-    color: #0366d6;
-  }
-
-  .meta a{
-    color: black !important;
-  }
-
-  ::selection {
-    background: #b3d4fc;
-  }
-}
-
-li {
-  padding-top: 0.075em;
-  padding-bottom: 0.075em;
-}
-
-ul,
-ol {
-  margin-left: 2em;
-  margin-top: 1em;
-}
-.fileBody ol {
-  margin-left: 1em;
-  margin-top: 0;
-}
-
-hr {
-  margin: 1.5em 0;
-}
-
-img,
-video,
-iframe {
-  margin-top: 1em;
-  margin-bottom: 1em;
-  object-fit: cover;
-  border-radius: 4px;
-}
-
-
-textarea {
-  -webkit-app-region: no-drag;
-  writing-mode: horizontal-tb !important;
-  text-rendering: auto;
-  letter-spacing: normal;
-  word-spacing: normal;
-  text-transform: none;
-  text-indent: 0px;
-  text-shadow: none;
-  -webkit-rtl-ordering: logical;
-  resize: none !important;
-}
-textarea:focus-visible {
-  outline: none;
-}
 
 code {
-  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji",
-    "Segoe UI Symbol" !important;
-  padding: 0.2em 0.4em;
   white-space: pre-wrap;
+font-family: JetBrains Mono, ui-monospace, Menlo, Monaco, "Segoe UI Mono", "Roboto Mono", monospace !important;
 }
 pre code {
-  display: block;
-  border-radius: 5px;
-  padding: 1em;
+  border-radius: 6px;
+  align-items: center;
+  overflow-x: auto;
+}
+pre {
+  font-family: JetBrains Mono, ui-monospace, Menlo, Monaco, "Segoe UI Mono", "Roboto Mono", monospace !important;
+  border-radius: 6px;
+  border: 1px solid hsl(0,0%,31.2%);
+  padding: 1rem;
 }
 
 p {
   margin: 0.8em 0;
 }
 
-.third {
-  animation-name: animateIn;
-  animation-duration: 1s;
-  animation-fill-mode: both;
-  animation-timing-function: ease-in-out;
+hr {
+  margin: 1.5em 0;
 }
-@keyframes animateIn {
-  0% {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 1;
-  }
+li {
+  padding-top: 0.075em;
+  padding-bottom: 0.075em;
 }
 
-#markdown-content {
-  cursor: default;
-}
-
-.katex-display {
-  margin: 2em;
-}
-
-th,
-td {
-  padding: 5px;
-}
-
-*::-webkit-scrollbar {
-  display: none;
+.contentss ul, ol {
+  margin-left: 2em;
+  margin-top: 1em;
 }
 
 
-.cm-theme > div {
-  background-color: transparent !important;
-}
-.cm-line {
-  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji",
-    "Segoe UI Symbol";
-  letter-spacing: 0.055em;
-  line-height: 1.6;
-}
-
-ul > li {
+.contentss ul > li {
   list-style: disc;
 }
-ol > li {
+.contentss ol > li {
   list-style: list-number;
 }
 u {
   text-decoration: underline;
 }
 
-pre > code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace !important;
-}
-
-.mane {
-  -webkit-app-region: drag;
-}
-
-.topBar {
-  user-select: none;
-  -webkit-app-region: drag;
-  min-height: 37px;
-    box-shadow: none !important;
-}
-
-.quickAction {
-  outline: none;
-}
-.cm-fat-cursor {
-  outline: solid 1px transparent !important;
-  background-color: #b4b48c !important;
-}
-
-figcaption {
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
-  font-size: 10px;
-}
-.createFile {
-  background-color: transparent;
-  outline: none;
-  padding-left: 22px;
-}
-
-strong {
-  font-weight: 600 !important;
-}

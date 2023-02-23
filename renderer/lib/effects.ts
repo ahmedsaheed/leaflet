@@ -236,10 +236,12 @@ export function effects(
     setScroll(ScrollPercent);
   };
 
-  // useEffect(() => {
-  //   window.addEventListener("scroll", handleScroll);
-  //   return () => window.removeEventListener("scroll", handleScroll);
-  // }, []);
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+
   const [isRunning, setIsRunning] = React.useState(false);
   const dragDropImage = React.useCallback(() => {
     if (!isRunning) {

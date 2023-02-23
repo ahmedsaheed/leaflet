@@ -5,67 +5,68 @@ type IncomingProps = {
 };
 
 const checkIfIncomingIsObject = (incoming: IncomingProps) => {
-  return typeof incoming != undefined 
+  return typeof incoming != undefined;
 };
 
 export const METATAGS = ({ incoming }) => {
-if (!checkIfIncomingIsObject(incoming) || incoming === undefined) return null;
+  if (!checkIfIncomingIsObject(incoming) || incoming === undefined) return null;
   return incoming ? (
-  <div style={{display: "inline"}}>
-    <div style={{ display: "flex" }}>
-      <div
-        style={{
-          alignItems: "center",
-          padding: "0px 6px 10px",
-          color: "#888888",
-          display: "flex",
-          width: "130px",
-          flex: "0 0 auto",
-        }}
-      >
-        <TAGIcon />
-        &nbsp;Tags&nbsp;
-      </div>
-      <div
-        style={{
-          display: "flex",
-          flex: "1 1 auto",
-          alignItems: "center",
-          minWidth: "0",
-          paddingBottom: "10px",
-        }}
-      >
-        <span
+    <div style={{ display: "inline" }}>
+      <div style={{ display: "flex" }}>
+        <div
           style={{
-            width: "100%",
+            alignItems: "center",
+            padding: "0px 6px 10px",
             color: "#888888",
-            whiteSpace: "nowrap",
-            overflowX: "scroll",
+            display: "flex",
+            width: "130px",
+            flex: "0 0 auto",
           }}
         >
-          {incoming?.map((tag) => (
-            <code
-              style={{
-                borderRadius: "4px",
-                marginRight: "1em",
-                display: "inline",
-                overflow: "hidden",
-                color: "#000",
-                backgroundColor: getBG(),
-              }}
-            >
-              {tag?.toLowerCase()}
-            </code>
-          ))}
-        </span>
+          <TAGIcon />
+          &nbsp;Tags&nbsp;
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flex: "1 1 auto",
+            alignItems: "center",
+            minWidth: "0",
+            paddingBottom: "10px",
+          }}
+        >
+          <span
+            style={{
+              width: "100%",
+              color: "#888888",
+              whiteSpace: "nowrap",
+              overflowX: "scroll",
+            }}
+          >
+            {incoming?.map((tag) => (
+              <code
+                style={{
+                  marginRight: "1em",
+                  display: "inline",
+                  overflow: "hidden",
+                  color: "#000",
+                  backgroundColor: getBG(),
+                  padding: "5px",
+                  borderRadius: "6px !important",
+                  border: "1px solid transparent",
+                }}
+              >
+                {tag?.toLowerCase()}
+              </code>
+            ))}
+          </span>
+        </div>
       </div>
-    </div>
     </div>
   ) : null;
 };
 
 export const METAMATERIAL = ({ incoming }) => {
-  
   if (!checkIfIncomingIsObject(incoming) || incoming === undefined) return null;
   return incoming ? (
     <div style={{ display: "flex" }}>
@@ -104,12 +105,14 @@ export const METAMATERIAL = ({ incoming }) => {
               value?.toString().startsWith("http") && key != value ? (
                 <code
                   style={{
-                    borderRadius: "4px",
                     marginRight: "1em",
                     display: "inline",
                     overflow: "hidden",
                     color: "#000",
                     backgroundColor: getBG(),
+                    padding: "5px",
+                    borderRadius: "6px !important",
+                    border: "1px solid transparent",
                   }}
                 >
                   <a

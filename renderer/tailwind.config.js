@@ -5,6 +5,7 @@ module.exports = {
     './renderer/pages/**/*.{js,ts,jsx,tsx}',
     './renderer/components/**/*.{js,ts,jsx,tsx}',
   ],
+  darkMode: 'media',
   theme: {
     colors: {
       // use colors only specified
