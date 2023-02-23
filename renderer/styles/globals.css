@@ -4,35 +4,86 @@
 @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,700;1,400;1,700&display=swap");
 
-.drag{
-    -webkit-app-region: drag;
+.drag {
+  -webkit-app-region: drag;
 }
 
 @media (prefers-color-scheme: dark) {
-  body { background: #000000; color: #E5E5E5 !important; }
-  .custom-border{ border-color: rgb(31 31 31/1) !important;}
-  hr{ border-color: rgb(31 31 31/1) !important;}
-  .cm-scroller{background-color: #000000 !important; outline:none;}
+  body {
+    background: #000000;
+    color: #e5e5e5 !important;
+  }
+  .command-palette .bg-gray-900{
+    background-color: rgb(0 0 0/0.9) !important;
+  }
+  .command-palette .dark\:bg-gray-800{
+    background-color: rgb(255,255,255,0.075) !important;
+  }
+  .command-palette .dark\:hover\:bg-gray-800:hover{
+    background-color: rgb(255,255,255,0.075) !important;
+  }
 
+  .command-palette .dark\:bg-gray-900{
+    background-color: rgb(0 0 0/1) !important;
+  }
+  pre{
+    background-color: hsl(0 0% 8.5%) !important;
+    box-shadow: 0 0 0 1px hsl(0 0% 8.5%) !important;
+  }
+  .command-palette .dark\:bg-gray-900{
+    background-color: #000000;
+  }
+  .custom-border {
+    border-color: rgb(31 31 31/1) !important;
+  }
+  hr {
+    border-color: rgb(31 31 31/1) !important;
+  }
+  .cm-scroller {
+    background-color: #000000 !important;
+    outline: none;
+  }
+  .table{
+    border-color: rgb(31 31 31/1) !important;
+    border-radius: 6px;
+  }
 }
 
 @media (prefers-color-scheme: light) {
-  body { background: #fff; color: rgb(55, 53, 47)
-    !important; }
-   
+  body {
+    background: #fff;
+    color: rgb(55, 53, 47) !important;
+  }
+  pre{
+    background-color: #EDEDED !important;
+  }
+
 }
 
+table,
+th,
+td {
+  margin-bottom: 2em;
+  margin-top: 2em;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid ;
+}
+th,
+td {
+  padding: 5px;
+}
 body {
-    fill: currentColor;
-    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
-      Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji",
-      "Segoe UI Symbol" !important;
-    font-size: 14px;
-    -webkit-font-smoothing: antialiased;
-    letter-spacing: 0.05em;
-    line-height: 1.6;
-  }
-  h1 {
+  fill: currentColor;
+  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji",
+    "Segoe UI Symbol" !important;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: 0.05em;
+  line-height: 1.6;
+}
+h1 {
   font-weight: 600;
   line-height: 1.2 !important;
   font-size: 24px;
@@ -52,10 +103,13 @@ h3 {
   margin: 15px 0;
 }
 
-
+.ͼ1.cm-editor.cm-focused {
+  outline: none;
+}
 code {
   white-space: pre-wrap;
-font-family: JetBrains Mono, ui-monospace, Menlo, Monaco, "Segoe UI Mono", "Roboto Mono", monospace !important;
+  font-family: JetBrains Mono, ui-monospace, Menlo, Monaco, "Segoe UI Mono",
+    "Roboto Mono", monospace !important;
 }
 pre code {
   border-radius: 6px;
@@ -63,10 +117,13 @@ pre code {
   overflow-x: auto;
 }
 pre {
-  font-family: JetBrains Mono, ui-monospace, Menlo, Monaco, "Segoe UI Mono", "Roboto Mono", monospace !important;
+  font-family: JetBrains Mono, ui-monospace, Menlo, Monaco, "Segoe UI Mono",
+    "Roboto Mono", monospace !important;
   border-radius: 6px;
-  border: 1px solid hsl(0,0%,31.2%);
+  border: 1px solid hsl(0, 0%, 31.2%);
   padding: 1rem;
+  margin: 1rem 0;
+  
 }
 
 p {
@@ -81,11 +138,11 @@ li {
   padding-bottom: 0.075em;
 }
 
-.contentss ul, ol {
+.contentss ul,
+ol {
   margin-left: 2em;
   margin-top: 1em;
 }
-
 
 .contentss ul > li {
   list-style: disc;
@@ -97,3 +154,19 @@ u {
   text-decoration: underline;
 }
 
+.ͼo .cm-vimMode .cm-line ::selection {
+    background-color: #f0f0f0 !important;
+    color: black !important;
+  }
+
+  .ͼo .cm-vimMode .cm-line::selection {
+    background-color: #f0f0f0 !important;
+    color: black !important;
+  }
+
+  .ͼz.cm-focused .cm-selectionBackground .cm-selectionBackground,
+  .ͼz .cm-selectionLayer .cm-selectionBackground,
+  .ͼz ::selection {
+    background-color: #f0f0f0 !important;
+    color: black !important;
+  }
