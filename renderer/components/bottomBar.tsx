@@ -36,7 +36,7 @@ export const ButtomBar = (
         >
           <div
             style={{
-              marginLeft: !fileTreeIsOpen && !insert ? "1.5em" : "0em",
+              // marginLeft: !fileTreeIsOpen && !insert ? "1.5em" : "0em",
             }}
           >
             {insert ? (
