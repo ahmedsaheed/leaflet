@@ -13,6 +13,9 @@
     background: #000000;
     color: #e5e5e5 !important;
   }
+  .ButtomBar{
+    background-color: #000000 !important;
+  }
   .command-palette .bg-gray-900{
     background-color: rgb(0 0 0/0.9) !important;
   }
@@ -43,9 +46,12 @@
     background-color: #000000 !important;
     outline: none;
   }
-  .table{
+  table{
     border-color: rgb(31 31 31/1) !important;
     border-radius: 6px;
+  }
+  .topbar{
+    background-color: #000000 !important;
   }
 }
 
@@ -54,8 +60,14 @@
     background: #fff;
     color: rgb(55, 53, 47) !important;
   }
+  .topbar{
+    background-color: #fff !important;
+  }
   pre{
     background-color: #EDEDED !important;
+  }
+  .ButtomBar{
+    background-color: #fff !important;
   }
 
 }
@@ -170,3 +182,6 @@ u {
     background-color: #f0f0f0 !important;
     color: black !important;
   }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+}

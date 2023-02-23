@@ -18,7 +18,6 @@ export const ButtomBar = (
       style={{
         display: "inline",
         userSelect: "none",
-        marginLeft: fileTreeIsOpen ? "17.55em" : "0em",
         maxHeight: "10vh",
         marginTop: "20px",
       }}
@@ -30,7 +29,7 @@ export const ButtomBar = (
             float: "left",
             paddingLeft: "10px",
             paddingTop: "5px",
-            paddingBottom: insert ? "5px" : "8px",
+            // paddingBottom: insert ? "5px" : "8px",
             fontSize: "12px !important",
           }}
         >

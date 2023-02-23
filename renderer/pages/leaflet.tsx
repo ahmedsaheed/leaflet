@@ -615,7 +615,7 @@ export function Leaflet() {
                         />
                       </svg>
                       <span className="align-middle font-mono text-sm" >
-                        feed
+                        search
                       </span>
                     </span>
                   </li>
@@ -717,7 +717,7 @@ export function Leaflet() {
             style={{ transform: "none", opacity: 1 }}
           >
             <div className="absolute inset-x-0 top-0 z-100">
-              <div className="drag fixed top-0 z-100 mx-auto flex w-full flex-col bg-palette-0">
+              <div className="topbar drag fixed top-0 z-100 mx-auto flex w-full flex-col bg-palette-0">
                 <div className="custom-border flex h-14 shrink-0 border-b-[0.5px] bg-transparent md:px-4 md:h-16">
                   <button
                     type="button"
@@ -821,7 +821,7 @@ export function Leaflet() {
                 {insert ? (
                   <div
                     className="markdown-content"
-                    style={{ padding: "40px" }}
+                    style={{ padding: "40px", zIndex: "-1" }}
                   >
                     <div>
                       <CodeMirror
