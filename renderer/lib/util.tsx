@@ -1,6 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
 import { unified } from "unified";
-import prettier from "prettier";
 import remarkParse from "remark-parse";
 import fs from "fs-extra";
 import pandoc from "./pandocConverter";
@@ -19,6 +18,10 @@ import { getMarkdownWithMermaid } from "./mdParser";
 import { shell } from "electron";
 import {toast} from 'react-hot-toast'
 import { indentationMarkers } from '@replit/codemirror-indentation-markers';
+import * as prettier from 'prettier/standalone';
+import * as markdowns from 'prettier/parser-markdown';
+
+export const format =(value)=>prettier.format(value, { parser: 'markdown', tabWidth: 2, plugins: [markdowns] });
 
 
 /**
@@ -565,7 +568,13 @@ const offset2pos = (text, offset) => {
   return { line: list.length, ch: list[list.length - 1].length };
 };
 
-export const format = (ref) => {
+
+export function formatPlugin(ref){
+  const plugin = function(CodeMirror){
+
+  }
+}
+export const formats = (ref) => {
   if (!ref.current?.view) {
     return;
   }

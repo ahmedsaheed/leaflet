@@ -105,14 +105,14 @@ export function Leaflet() {
   const saveFile = () => {
     try {
       setSaver("SAVING...");
-      // console.log(formatMarkdown(value))
-      // if (insert) {
-      //   format(refs)}
-      //
-      //
-      // console.log(prettierPlugin());
+      let newvalue = value;
+      try{
+        newvalue = format(value);
+      }catch(e){
+        console.log(e);
+      }
 
-      ipcRenderer.invoke("saveFile", path, value).then(() => {
+      ipcRenderer.invoke("saveFile", path, newvalue).then(() => {
         setSaver("SAVED");
         setTimeout(() => {
           setIsEdited(false);
@@ -600,20 +600,8 @@ export function Leaflet() {
                       onClick={() => setClick(!click)}
                       aria-current="page"
                     >
-                      <svg
-                        className="h-[1.25rem] w-[1.25rem]"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          fill="none"
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M15.5 3h.5v0c1.77 0 3.32 1.18 3.78 2.89l1.24 4.56c.14.51.21.77.26 1.02 .37 1.65.39 3.37.05 5.04 -.06.25-.12.51-.25 1.03v0c-.16.61-.24.92-.34 1.19 -.66 1.75-2.25 3-4.12 3.21 -.29.03-.61.03-1.24.03H8.52c-.64 0-.96 0-1.24-.04 -1.87-.22-3.46-1.46-4.12-3.22 -.1-.27-.18-.58-.34-1.2v0c-.13-.52-.2-.78-.25-1.04 -.34-1.67-.33-3.39.05-5.05 .05-.26.12-.52.26-1.03l1.24-4.57c.46-1.71 2.01-2.9 3.78-2.9v0h.5m-6 11h2.78c.62 0 .93 0 1.22.08 .25.07.48.2.68.36 .22.18.4.44.75.97l.1.15c.34.52.52.78.75.97 .2.16.43.29.68.36 .28.08.59.08 1.22.08h2.57c.62 0 .93 0 1.22-.09 .25-.08.48-.21.68-.37 .22-.19.4-.45.75-.98l.1-.15c.34-.53.52-.79.75-.98 .2-.17.43-.3.68-.37 .28-.09.59-.09 1.22-.09h2.78m-9.5-3l3-3m-3 3l-3-3m2.99 3v-9"
-                        />
-                      </svg>
+                    
+                       <svg className="h-[1.25rem] w-[1.25rem] font-medium text-palette-900 transition-all duration-300 active:text-palette-500 smarthover:hover:text-palette-500" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M21 21l-3.64-3.64m0 0c1.62-1.63 2.63-3.88 2.63-6.37 0-4.98-4.03-9-9-9 -4.98 0-9 4.02-9 9 0 4.97 4.02 9 9 9 2.48 0 4.73-1.01 6.36-2.64Z"></path></svg>
                       <span className="align-middle font-mono text-sm" >
                         search
                       </span>
@@ -672,7 +660,7 @@ export function Leaflet() {
               <div className="space-y-1.5">
                 <div className="sticky top-0 bg-palette-0 pb-2">
                   <div className="flex items-center justify-between px-2 text-palette-700">
-                    <div className="text-base font-medium">channels</div>
+                    <div className="text-base font-medium">notes</div>
                     <div>
                       <button className="flex h-[22px] items-center transition-all duration-300 smarthover:hover:text-primary-500">
                         <svg
@@ -746,42 +734,10 @@ export function Leaflet() {
                         {name.endsWith(".md") ? name.slice(0, -3) : name}
                       </span>
                       <div className="flex justify-end space-x-5">
-                        <button className="focus:outline-none">
-                          <svg
-                            className="h-[22px] font-medium text-palette-900 transition-all duration-300 active:text-palette-500 smarthover:hover:text-palette-500"
-                            viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              fill="none"
-                              stroke="currentColor"
-                              strokeLinecap="round"
-                              strokeWidth={2}
-                              d="M21 21l-3.64-3.64m0 0c1.62-1.63 2.63-3.88 2.63-6.37 0-4.98-4.03-9-9-9 -4.98 0-9 4.02-9 9 0 4.97 4.02 9 9 9 2.48 0 4.73-1.01 6.36-2.64Z"
-                            />
-                          </svg>
-                        </button>
-                        <button className="focus:outline-none">
-                          <svg
-                            className="h-[22px] font-medium text-palette-900 transition-all duration-300 active:text-palette-500 smarthover:hover:text-palette-500"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M22 13L16.2933 15.8534C14.7191 16.6405 13.932 17.034 13.1064 17.1889C12.3752 17.3261 11.6248 17.3261 10.8936 17.1889C10.068 17.034 9.28094 16.6405 7.70675 15.8534L2 13M22 18L16.2933 20.8534C14.7191 21.6405 13.932 22.034 13.1064 22.1889C12.3752 22.3261 11.6248 22.3261 10.8936 22.1889C10.068 22.034 9.28094 21.6405 7.70675 20.8534L2 18M5.72433 9.86217L9.13783 11.5689C10.1873 12.0936 10.712 12.356 11.2624 12.4593C11.7499 12.5507 12.2501 12.5507 12.7376 12.4593C13.288 12.356 13.8127 12.0936 14.8622 11.5689L18.2757 9.86217C20.1181 8.94095 21.0393 8.48035 21.3349 7.85705C21.5922 7.31464 21.5922 6.68536 21.3349 6.14295C21.0393 5.51965 20.1181 5.05905 18.2757 4.13783L14.8622 2.43108C13.8127 1.90635 13.288 1.64399 12.7376 1.54073C12.2501 1.44927 11.7499 1.44927 11.2624 1.54073C10.712 1.64399 10.1873 1.90635 9.13783 2.43108L5.72433 4.13783C3.88191 5.05905 2.96069 5.51965 2.66508 6.14295C2.40782 6.68536 2.40782 7.31464 2.66508 7.85705C2.96069 8.48035 3.88191 8.94095 5.72433 9.86217Z"
-                              stroke="currentColor"
-                              strokeWidth={2}
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                          </svg>
-                        </button>
-                        <button
+                      <button
                           className="focus:outline-none"
                           onClick={(e) => {
-                            e.preventDefault();
-                            ipcRenderer.send("show-context-menu", isVim);
+                           setInsert(!insert)
                           }}
                         >
                           <div className="h-[22px] font-medium text-palette-900 transition-all duration-300 active:text-palette-500 smarthover:hover:text-palette-500">
@@ -806,6 +762,26 @@ export function Leaflet() {
                             </svg>
                           </div>
                         </button>
+                        <button className="focus:outline-none" onClick={(e) => {
+                            e.preventDefault();
+                            ipcRenderer.send("show-context-menu", isVim);
+                          }}>
+                          <svg
+                            className="h-[22px] font-medium text-palette-900 transition-all duration-300 active:text-palette-500 smarthover:hover:text-palette-500"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M22 13L16.2933 15.8534C14.7191 16.6405 13.932 17.034 13.1064 17.1889C12.3752 17.3261 11.6248 17.3261 10.8936 17.1889C10.068 17.034 9.28094 16.6405 7.70675 15.8534L2 13M22 18L16.2933 20.8534C14.7191 21.6405 13.932 22.034 13.1064 22.1889C12.3752 22.3261 11.6248 22.3261 10.8936 22.1889C10.068 22.034 9.28094 21.6405 7.70675 20.8534L2 18M5.72433 9.86217L9.13783 11.5689C10.1873 12.0936 10.712 12.356 11.2624 12.4593C11.7499 12.5507 12.2501 12.5507 12.7376 12.4593C13.288 12.356 13.8127 12.0936 14.8622 11.5689L18.2757 9.86217C20.1181 8.94095 21.0393 8.48035 21.3349 7.85705C21.5922 7.31464 21.5922 6.68536 21.3349 6.14295C21.0393 5.51965 20.1181 5.05905 18.2757 4.13783L14.8622 2.43108C13.8127 1.90635 13.288 1.64399 12.7376 1.54073C12.2501 1.44927 11.7499 1.44927 11.2624 1.54073C10.712 1.64399 10.1873 1.90635 9.13783 2.43108L5.72433 4.13783C3.88191 5.05905 2.96069 5.51965 2.66508 6.14295C2.40782 6.68536 2.40782 7.31464 2.66508 7.85705C2.96069 8.48035 3.88191 8.94095 5.72433 9.86217Z"
+                              stroke="currentColor"
+                              strokeWidth={2}
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        </button>
+                        
                       </div>
                     </div>
                   </div>
