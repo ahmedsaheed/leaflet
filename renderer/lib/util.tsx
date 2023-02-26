@@ -1,6 +1,4 @@
 import { Dispatch, SetStateAction } from "react";
-import { unified } from "unified";
-import remarkParse from "remark-parse";
 import fs from "fs-extra";
 import pandoc from "./pandocConverter";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
@@ -569,51 +567,6 @@ const offset2pos = (text, offset) => {
   return { line: list.length, ch: list[list.length - 1].length };
 };
 
-
-export function formatPlugin(ref){
-  const plugin = function(CodeMirror){
-
-  }
-}
-export const formats = (ref) => {
-  if (!ref.current?.view) {
-    return;
-  }
-  const indentUnit = 4;
-  const cm = ref.current?.editor;
-  const view = ref.current?.view;
-  console.log(cm);
-  const previousPos = view.state.selection.main.head;
-  // cm.getCursor();
-  const previousValue = view.state.doc.toString();
-  // const beforeCoords = cm.cursorCoords();
-  const beforeOffset = pos2offset(previousValue, previousPos);
-  // const { formatted, cursorOffset } = prettier.formatWithCursor(previousValue, {
-  //   cursorOffset: beforeOffset,
-  //   parser: remarkParse,
-  //   tabWidth: indentUnit,
-  // });
-
-  const formatted = prettier.format(previousValue, {
-    semi: false,
-    parser: unified().use(remarkParse),
-  });
-
-  const pos = offset2pos(formatted, 22);
-
-  cm.dispatch({
-    changes: { from: 0, to: cm.state.doc.length, insert: formatted },
-  });
-  cm.dispatch({ selection: { anchor: pos } });
-  // cm.setValue(formatted);
-  // cm.setCursor(pos);
-
-  // const afterCoords = cm.cursorCoords();
-  // const afterScrollInfo = cm.getScrollInfo();
-  // const scroll = afterScrollInfo.top + afterCoords.top - beforeCoords.top;
-
-  // cm.scrollTo(0, scroll);
-};
 
   /**
    * @description Function validate and render yaml metadata

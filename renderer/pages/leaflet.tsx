@@ -8,23 +8,18 @@ import { ipcRenderer } from "electron";
 import { VscFiles } from "react-icons/vsc";
 import { vim } from "@replit/codemirror-vim";
 import "react-cmdk/dist/cmdk.css";
-import { Excalidraw } from "@excalidraw/excalidraw";
 import {
   GETDATE,
   EXTENSIONS,
   toDOCX,
   toPDF,
   format,
-  cleanFileNameForExport,
   toggleBetweenVimAndNormalMode,
   ValidateYaml,
 } from "../lib/util";
 import { effects } from "../lib/effects";
-import { SIDEBARCOLLAPSEIcon } from "../components/icons";
 import { FileTree } from "../components/filetree";
-import { QuickAction, QuickActions } from "../components/quickactions";
-import { METADATE, METATAGS, METAMATERIAL } from "../components/metadata";
-import { Metadata, getMarkdown } from "../lib/mdParser";
+import { getMarkdown } from "../lib/mdParser";
 import fs from "fs-extra";
 import mainPath from "path";
 import { githubDark } from "@uiw/codemirror-theme-github";
@@ -34,24 +29,10 @@ import { EditorView } from "@codemirror/view";
 import { usePrefersColorScheme } from "../lib/theme";
 import { basicLight } from "cm6-theme-basic-light";
 import { ListenToKeys } from "../lib/keyevents";
-import {
-  appBarMouseOver,
-  appBarMouseLeave,
-  Main,
-  AppBar,
-  DrawerHeader,
-} from "../components/skeleton";
-import Drawer from "@mui/material/Drawer";
 import { toast } from "react-hot-toast";
 import { ButtomBar } from "../components/bottomBar";
 import { CMDK } from "../components/cmdk";
 import { AnimatePresence, motion } from "framer-motion"; 
-/*
-import "react-cmdk/dist/cmdk.css";
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { styled, useTheme } from "@mui/material/styles";
-*/
 
 export function Leaflet() {
   type file = {
@@ -86,10 +67,30 @@ export function Leaflet() {
   const [isVim, setIsVim] = useState<boolean>(false);
   const [open, setOpen] = React.useState(true);
   const refs = React.useRef<ReactCodeMirrorRef>({});
-  const headerRef = useRef<HTMLHeadingElement>(null);
   const prefersColorScheme = usePrefersColorScheme();
   const isDarkMode = prefersColorScheme === "dark";
   const resolvedMarkdown = getMarkdown(value);
+  
+  useEffect(() => {
+    ListenToKeys(
+      saveFile,
+      editorview,
+      insert,
+      setInsert,
+      toPDF,
+      toDOCX,
+      value,
+      name,
+      path,
+      fileDialog,
+      setFileNameBox,
+      setSearch,
+      setClick,
+      click,
+      open ? handleDrawerClose : handleDrawerOpen
+    );
+  });
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -190,29 +191,7 @@ export function Leaflet() {
     insert,
     fileDialog,
     setScroll,
-    handleDrawerClose,
-    setOpen
   );
-
-  useEffect(() => {
-    ListenToKeys(
-      saveFile,
-      editorview,
-      insert,
-      setInsert,
-      toPDF,
-      toDOCX,
-      value,
-      name,
-      path,
-      fileDialog,
-      setFileNameBox,
-      setSearch,
-      setClick,
-      click,
-      open ? handleDrawerClose : handleDrawerOpen
-    );
-  });
 
   const updateCursor = (a, b) => {
     const line = a.number;
@@ -272,16 +251,52 @@ export function Leaflet() {
     });
   }, []);
 
+  function CommandMenu(){
+    return(
+      click && (
+        <CMDK
+          value={value}
+          onNewFile={() => {
+            setFileNameBox(true);
+          }}
+          onCreatingFolder={() => {
+            try {
+              setIsCreatingFolder(true);
+              setFileNameBox(true);
+            } catch (e) {
+              console.log(e);
+            }
+          }}
+          setSearch={setSearch}
+          files={files}
+          pandocAvailable={pandocAvailable}
+          setClick={setClick}
+          page={page}
+          search={search}
+          onDocxConversion={(value: string, name: string) =>
+            toDOCX(value, name)
+          }
+          onPdfConversion={(value: string, name: string) => toPDF(value, name)}
+          menuOpen={menuOpen}
+          onFileSelect={(file) => {
+            try {
+              onNodeClicked(file.path, file.name);
+            } catch (err) {
+              console.log(err);
+            }
+          }}
+          name={name}
+        />
+      )
+    )
+    
+  }
   useEffect(() => {
     ipcRenderer.on("new", function () {
       setFileNameBox(true);
     });
   }, [fileNameBox]);
 
-  /**
-   *
-   * Creates a new file
-   */
   const createNewFile = () => {
     fileName != ""
       ? ipcRenderer
@@ -306,8 +321,6 @@ export function Leaflet() {
     }, 100);
   };
 
-
-
   /**
    * @description handle file selection from the sidebar
    * @param {string} path - path of the file to be selected
@@ -329,8 +342,6 @@ export function Leaflet() {
       console.log(err);
     }
   };
-
-
 
   return (
     <div className="h-screen w-screen" style={{ overflow: "hidden" }}>
@@ -385,7 +396,7 @@ export function Leaflet() {
                 {!open && 
                 (
                   <li className="aspect-w-1 aspect-h-1 w-full">
-                  <span className="flex flex-col items-center justify-center rounded-full transition-all duration-300 bg-palette-0 text-palette-600 smarthover:hover:text-primary-500">
+                  <span onClick={() => setClick(!click)} className="cursor-pointer flex flex-col items-center justify-center rounded-full transition-all duration-300 bg-palette-0 text-palette-600 smarthover:hover:text-primary-500">
                   <svg
                         className="h-[1.25rem] w-[1.25rem] font-medium text-palette-900 transition-all duration-300 active:text-palette-500 smarthover:hover:text-palette-500"
                         viewBox="0 0 24 24"
@@ -510,54 +521,6 @@ export function Leaflet() {
                       </span>
                     </span>
                   </li>
-                  {/* <li>
-                    <a
-                      className="flex w-full items-center space-x-2.5 rounded-xl px-2.5 py-2.5 transition-all duration-300 smarthover:hover:text-primary-500 bg-transparent text-palette-600"
-                      href="/dashboard/63f56b500b1b1944dd455528/charts"
-                    >
-                      <svg
-                        className="h-[1.25rem] w-[1.25rem]"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          fill="none"
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M19.36 2H4.62c-.91 0-1.64.73-1.64 1.63 0 2.11 1.01 4.09 2.73 5.32l1.92 1.37h0c.64.45.96.68 1.22.95 .53.55.89 1.26 1.04 2.02 .06.36.06.76.06 1.55v5.13c0 1.1.89 2 2 2 1.1 0 2-.9 2-2v-5.14c0-.79 0-1.19.06-1.56 .14-.77.5-1.47 1.04-2.03 .25-.28.58-.5 1.22-.96l1.92-1.38c1.71-1.23 2.73-3.21 2.73-5.33 0-.91-.74-1.64-1.64-1.64Z"
-                        />
-                      </svg>
-                      <span className="align-middle font-mono text-sm">
-                        charts
-                      </span>
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      className="flex w-full items-center space-x-2.5 rounded-xl px-2.5 py-2.5 transition-all duration-300 smarthover:hover:text-primary-500 bg-transparent text-palette-600"
-                      href="/dashboard/63f56b500b1b1944dd455528/insight"
-                    >
-                      <svg
-                        className="h-[1.25rem] w-[1.25rem]"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          fill="none"
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M5.75 5c-1.1 1.36-1.76 3.1-1.76 5 0 2.94 2.22 5.3 3.7 6.54 .76.64 1.29 1.56 1.29 2.57v0c0 1.59 1.29 2.88 2.88 2.88h.23c1.58 0 2.87-1.29 2.87-2.88v0c0-1.01.53-1.95 1.31-2.59 1.48-1.23 3.68-3.56 3.68-6.55 0-4.42-3.59-8-8-8 -1.07 0-2.08.2-3 .58m0 15.41s1 .5 3 .5"
-                        />
-                      </svg>
-                      <span className="align-middle font-mono text-sm">
-                        insight
-                      </span>
-                    </a>
-                  </li> */}
                 </ul>
               </div>
               <div className="space-y-1.5">
@@ -772,216 +735,8 @@ export function Leaflet() {
           </div>
         </div>
       </div>
-
-      {click && (
-        <CMDK
-          value={value}
-          onNewFile={() => {
-            setFileNameBox(true);
-          }}
-          onCreatingFolder={() => {
-            try {
-              setIsCreatingFolder(true);
-              setFileNameBox(true);
-            } catch (e) {
-              console.log(e);
-            }
-          }}
-          setSearch={setSearch}
-          files={files}
-          pandocAvailable={pandocAvailable}
-          setClick={setClick}
-          page={page}
-          search={search}
-          onDocxConversion={(value: string, name: string) =>
-            toDOCX(value, name)
-          }
-          onPdfConversion={(value: string, name: string) => toPDF(value, name)}
-          menuOpen={menuOpen}
-          onFileSelect={(file) => {
-            try {
-              saveFile();
-              setValue(file.body);
-              setName(file.name);
-              setPath(file.path);
-              setInsert(false);
-              document.documentElement.scrollTop = 0;
-            } catch (err) {
-              console.log(err);
-            }
-          }}
-          name={name}
-        />
-      )}
+      <CommandMenu/>
+     
     </div>
   );
-}
-
-{
-  /*<div style={{ display: "flex" }}>
-      <AppBars />
-      <Drawer
-        sx={{
-          width: DRAWERWIDTH,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width: DRAWERWIDTH,
-            boxSizing: "border-box",
-            overflow: "scroll",
-          },
-        }}
-        variant="persistent"
-        anchor="left"
-        open={open}
-        className={open ? "drawer" : ""}
-        style={{ overflow: "scroll" }}
-      >
-        <div
-          onMouseOver={appBarMouseOver}
-          onMouseLeave={appBarMouseLeave}
-          className="mane"
-          style={{ backgroundColor: "transparent", minHeight: "37px" }}
-        ></div>
-        <QuickActions
-          createNewFile={() => setFileNameBox(true)}
-          addOpenToAllDetailTags={() => {}}
-          detailIsOpen={detailIsOpen}
-          createNewFolder={() => {
-            setFileNameBox(true);
-            setIsCreatingFolder(true);
-          }}
-        />
-
-        <FileTree
-          structures={struct}
-          onNodeClicked={(path, name) => contentonNodeClicked(path, name)}
-          path={path}
-        />
-        <div
-          className={"fixed util"}
-          style={{
-            bottom: "0.25rem",
-          }}
-        >
-          <div
-            style={{
-              paddingLeft: "10px",
-              width: "17.5em",
-              maxWidth: "17.5em",
-            }}
-            className="menu"
-            role="button"
-            onClick={() => {
-              try {
-                setClick(true);
-                setSearch("");
-              } catch (err) {
-                console.log(err);
-              }
-            }}
-          >
-            Utilities
-            <span style={{ float: "right", marginRight: "2em" }}>
-              <code style={{ borderRadius: "2px" }}>⌘</code>{" "}
-              <code style={{ borderRadius: "2px" }}>k</code>
-            </span>
-            {click && (
-              <CMDK
-                value={value}
-                onNewFile={() => {
-                  setFileNameBox(true);
-                }}
-                onCreatingFolder={() => {
-                  try {
-                    setIsCreatingFolder(true);
-                    setFileNameBox(true);
-                  } catch (e) {
-                    console.log(e);
-                  }
-                }}
-                setSearch={setSearch}
-                files={files}
-                pandocAvailable={pandocAvailable}
-                setClick={setClick}
-                page={page}
-                search={search}
-                onDocxConversion={(value: string, name: string) =>
-                  toDOCX(value, name)
-                }
-                onPdfConversion={(value: string, name: string) =>
-                  toPDF(value, name)
-                }
-                menuOpen={menuOpen}
-                onFileSelect={(file) => {
-                  try {
-                    saveFile();
-                    setValue(file.body);
-                    setName(file.name);
-                    setPath(file.path);
-                    setInsert(false);
-                    document.documentElement.scrollTop = 0;
-                  } catch (err) {
-                    console.log(err);
-                  }
-                }}
-                name={name}
-              />
-            )}
-          </div>
-        </div>
-      </Drawer>
-      <Main open={open} style={{ overflow: "scroll" }}>
-        <div>
-          <DrawerHeader />
-          <div className="content">
-            {insert ? (
-              <div className="markdown-content">
-                <div style={{ overflow: "hidden" }}>
-                  <CodeMirror
-                    ref={refs}
-                    value={value}
-                    height="100%"
-                    width="100%"
-                    autoFocus={true}
-                    theme={isDarkMode ? githubDark : basicLight}
-                    basicSetup={false}
-                    extensions={isVim ? [vim(), EXTENSIONS] : EXTENSIONS}
-                    onChange={onChange}
-                  />
-                </div>
-              </div>
-            ) : (
-              <>
-                <div style={{ zIndex: "1", overflow: "hidden" }}>
-                  <div style={{ paddingTop: "1em" }}>
-                    {ValidateYaml(resolvedMarkdown.metadata)}
-                    <div style={{ overflow: "hidden" }}>
-                      <div
-                        id="previewArea"
-                        style={{
-                          marginBottom: "5em",
-                          overflow: "scroll",
-                        }}
-                        className="third h-full w-full"
-                        dangerouslySetInnerHTML={resolvedMarkdown.document}
-                      />
-                    </div>
-                  </div>
-                  {ButtomBar(
-                    insert,
-                    () => toggleBetweenVimAndNormalMode(setIsVim),
-                    isVim,
-                    value,
-                    cursor,
-                    scroll,
-                    editorview,
-                    open
-                  )}
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      </Main>
-    </div>*/
 }

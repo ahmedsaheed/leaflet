@@ -42,18 +42,11 @@ export function effects(
   insert: boolean,
   fileDialog: () => void,
   setScroll: Dispatcher<number>,
-  handleDrawerClose,
-  setOpen: Dispatcher<boolean>,
 
 ) {
   useEffect(() => {
     if (!initialised) {
       initialised = true;
-      if (typeof window != undefined) {
-        if (window.matchMedia("(max-width: 600px)").matches) {
-          ipcRenderer.invoke("resize-for-drawer");
-        }
-      }
       openExternalInDefaultBrowser();
       checkForPandoc(setPandocAvailable);
       toggleBetweenVimAndNormalMode(setIsVim);
@@ -107,7 +100,6 @@ export function effects(
   }, [path, name]);
   useEffect(() => {
     ipcRenderer.on("in-app-command-vibracy", function () {
-        // SET BG TO TRANSPARENT   
         document.body.style.background = "transparent";
     })
     },[])
@@ -164,57 +156,6 @@ export function effects(
       save = true;
     };
   }, [value, path]);
-
-  /**
-   * Listen and handle drags and drops events
-   */
-  // useEffect(() => {
-  //   dragDrop("body", (files) => {
-  //     const nameOfFileAtLastIndex = files[files.length - 1].name;
-  //     const extension = (file) => file.substr(file.lastIndexOf(".") + 1);
-  //     const _files = files
-  //       .filter(
-  //         (file) =>
-  //           extension(file.path) != "md" || extension(file.path) != "docx"
-  //       )
-  //       .map((file) => {
-  //         let fileName = file.name;
-  //         let filePath = file.path;
-  //         // const extension = file.path.split(".").pop();
-  //         if (extension(file.path) != "md" && extension(file.path) === "docx") {
-  //           const docx = docxToMd(file, Update);
-  //           fileName = mainPath.parse(docx).base;
-  //           filePath = docx;
-  //         }
-  //         return {
-  //           name: fileName,
-  //           path: filePath,
-  //         };
-  //       });
-
-  //     ipcRenderer.invoke("app:on-file-add", _files).then(() => {
-  //       ipcRenderer.invoke("getTheFile").then((files = []) => {
-  //         setFiles(files);
-  //         setInsert(false);
-  //         const index = files.findIndex(
-  //           (file) => file.name === nameOfFileAtLastIndex.split(".")[0]
-  //         );
-  //         index !== -1
-  //           ? () => {
-  //               setValue(files[index].body);
-  //               setName(files[index].name);
-  //               setPath(files[index].path);
-  //             }
-  //           : () => {
-  //               setValue(files[0].body);
-  //               setName(files[0].name);
-  //               setPath(files[0].path);
-  //             };
-  //         Update();
-  //       });
-  //     });
-  //   });
-  // }, []);
 
   useEffect(() => {
     ipcRenderer.on("insertClicked", function () {
@@ -273,16 +214,4 @@ export function effects(
     }
   }, [insert, refs.current]);
 
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.matchMedia("(max-width: 600px)").matches) {
-        handleDrawerClose();
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
 }
