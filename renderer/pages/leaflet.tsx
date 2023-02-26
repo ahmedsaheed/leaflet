@@ -7,8 +7,8 @@ import React, {
 } from "react";
 import { ipcRenderer } from "electron";
 import { vim } from "@replit/codemirror-vim";
-import * as prettier from "prettier";
 import "react-cmdk/dist/cmdk.css";
+import { Excalidraw } from "@excalidraw/excalidraw";
 import {
   GETDATE,
   EXTENSIONS,
@@ -44,6 +44,7 @@ import Drawer from "@mui/material/Drawer";
 import { toast } from "react-hot-toast";
 import { ButtomBar } from "../components/bottomBar";
 import { CMDK } from "../components/cmdk";
+import { AnimatePresence, motion } from "framer-motion"; 
 /*
 import "react-cmdk/dist/cmdk.css";
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -94,21 +95,14 @@ export function Leaflet() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  const DRAWERWIDTH = 250;
-  // function formatMarkdown(markdown: string): string {
-  //   return prettier.format(markdown, {
-  //     parser: 'markdown',
-  //     plugins: [prettier.plugins.markdown],
-  //   });
-  // }
-
+  
   const saveFile = () => {
     try {
       setSaver("SAVING...");
       let newvalue = value;
-      try{
+      try {
         newvalue = format(value);
-      }catch(e){
+      } catch (e) {
         console.log(e);
       }
 
@@ -350,7 +344,9 @@ export function Leaflet() {
       setPath(path);
       localStorage.setItem("currPath", path);
       setInsert(false);
-      document.documentElement.scrollTop = 0;
+      const docus = document.getElementById("dashboard-view-container");
+      docus.scrollTop = 0;
+      docus?.focus()
     } catch (err) {
       console.log(err);
     }
@@ -428,22 +424,9 @@ export function Leaflet() {
     );
   };
 
-  function closeSecondaryMenu() {
-    const secondaryMenu = document.getElementsByClassName(
-      "second-nav"
-    )[0] as HTMLElement;
-    if (secondaryMenu) {
-      secondaryMenu.style.transition =
-        "transform 225ms cubic-bezier(0, 0, 0.2, 1) 0ms";
-      setTimeout(() => {
-        secondaryMenu.style.display = "none";
-      }, 300);
-    }
-  }
-
   return (
     <div className="h-screen w-screen" style={{ overflow: "hidden" }}>
-      <div className="flex" style={{minHeight: "100vh"}}>
+      <div className="flex" style={{ minHeight: "100vh" }}>
         <div className="hidden md:flex md:flex-row">
           <div className="h-screen-fix no-scrollbar flex overflow-y-scroll bg-palette-0 bg-black"></div>
           <nav
@@ -476,15 +459,15 @@ export function Leaflet() {
               </ul>
               <ul className="no-scrollbar flex w-20 grow flex-col items-center space-y-4 overflow-y-scroll bg-transparent py-4 px-5">
                 <li className="aspect-w-1 aspect-h-1 w-full">
-                  <a
+                  <span
+                  onClick={!open ? handleDrawerOpen : null}
                     className="flex flex-col items-center justify-center rounded-full outline-none transition-all focus:outline-none sm:duration-300 text-primary-500 ring ring-primary-300"
-                    href="/dashboard/63f56b500b1b1944dd455528"
                     aria-current="page"
                   >
                     <span className="inline-block w-full text-center align-middle font-mono">
                       te
                     </span>
-                  </a>
+                  </span>
                 </li>
                 <div className="custom-border mx-auto h-px w-3/4 flex-shrink-0 grow-0 border-b-[0.5px]" />
                 <li className="aspect-w-1 aspect-h-1 w-full">
@@ -560,7 +543,13 @@ export function Leaflet() {
               </li>
             </ul>
           </nav>
-          <div className="second-nav custom-border no-scrollbar z-30 flex min-w-[220px] grow flex-col overflow-y-scroll border-r-[0.5px] bg-transparent">
+          <AnimatePresence initial={false}>
+            {open && (
+          <motion.div
+            animate={{ width: 220 }}
+            initial={{ width: 0 }}
+            exit={{ width: 0 }}
+          className="second-nav custom-border no-scrollbar z-30 flex grow flex-col overflow-y-scroll border-r-[0.5px] bg-transparent">
             <div className="drag flex shrink-0 flex-col justify-center px-4 h-16">
               <div className="flex items-center justify-between">
                 <span className="w-full text-lg font-medium lowercase text-palette-800">
@@ -568,7 +557,7 @@ export function Leaflet() {
                 </span>
                 <span
                   onClick={() => {
-                    closeSecondaryMenu();
+                    setOpen(false);
                   }}
                   className="flex h-[22px] items-center transition-all duration-300 smarthover:hover:text-primary-500 text-palette-600"
                 >
@@ -600,9 +589,20 @@ export function Leaflet() {
                       onClick={() => setClick(!click)}
                       aria-current="page"
                     >
-                    
-                       <svg className="h-[1.25rem] w-[1.25rem] font-medium text-palette-900 transition-all duration-300 active:text-palette-500 smarthover:hover:text-palette-500" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M21 21l-3.64-3.64m0 0c1.62-1.63 2.63-3.88 2.63-6.37 0-4.98-4.03-9-9-9 -4.98 0-9 4.02-9 9 0 4.97 4.02 9 9 9 2.48 0 4.73-1.01 6.36-2.64Z"></path></svg>
-                      <span className="align-middle font-mono text-sm" >
+                      <svg
+                        className="h-[1.25rem] w-[1.25rem] font-medium text-palette-900 transition-all duration-300 active:text-palette-500 smarthover:hover:text-palette-500"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-width="2"
+                          d="M21 21l-3.64-3.64m0 0c1.62-1.63 2.63-3.88 2.63-6.37 0-4.98-4.03-9-9-9 -4.98 0-9 4.02-9 9 0 4.97 4.02 9 9 9 2.48 0 4.73-1.01 6.36-2.64Z"
+                        ></path>
+                      </svg>
+                      <span className="align-middle font-mono text-sm">
                         search
                       </span>
                     </span>
@@ -692,7 +692,9 @@ export function Leaflet() {
                 </ul>
               </div>
             </div>
-          </div>
+          </motion.div>
+            )}
+          </AnimatePresence>
         </div>
         <div
           className="flex grow flex-col overflow-hidden transition-all duration-150"
@@ -734,10 +736,10 @@ export function Leaflet() {
                         {name.endsWith(".md") ? name.slice(0, -3) : name}
                       </span>
                       <div className="flex justify-end space-x-5">
-                      <button
+                        <button
                           className="focus:outline-none"
                           onClick={(e) => {
-                           setInsert(!insert)
+                            setInsert(!insert);
                           }}
                         >
                           <div className="h-[22px] font-medium text-palette-900 transition-all duration-300 active:text-palette-500 smarthover:hover:text-palette-500">
@@ -762,10 +764,13 @@ export function Leaflet() {
                             </svg>
                           </div>
                         </button>
-                        <button className="focus:outline-none" onClick={(e) => {
+                        <button
+                          className="focus:outline-none"
+                          onClick={(e) => {
                             e.preventDefault();
                             ipcRenderer.send("show-context-menu", isVim);
-                          }}>
+                          }}
+                        >
                           <svg
                             className="h-[22px] font-medium text-palette-900 transition-all duration-300 active:text-palette-500 smarthover:hover:text-palette-500"
                             viewBox="0 0 24 24"
@@ -781,7 +786,6 @@ export function Leaflet() {
                             />
                           </svg>
                         </button>
-                        
                       </div>
                     </div>
                   </div>
@@ -790,33 +794,40 @@ export function Leaflet() {
             </div>
             <div className="no-scrollbar grow pt-[3.5rem] md:pt-[4rem]">
               <div className="virtual-list h-full">
-              
-                <div className="
+                <div
+                  className="
                 flex h-[calc(100vh-170px)] w-full flex-col 
-                ">
-                {insert ? (
-                  <div
-                    className="markdown-content"
-                    style={{ padding: "40px", zIndex: "-1" }}
-                  >
-                    <div>
-                      <CodeMirror
-                        ref={refs}
-                        value={value}
-                        height="100%"
-                        width="100%"
-                        autoFocus={true}
-                        theme={isDarkMode ? githubDark : basicLight}
-                        basicSetup={false}
-                        extensions={isVim ? [vim(), EXTENSIONS] : EXTENSIONS}
-                        onChange={onChange}
-                      />
+                "
+                >
+                  {insert ? (
+                    <div
+                      className="markdown-content"
+                      style={{ padding: "40px", zIndex: "-1" }}
+                    >
+                      <div>
+                        <CodeMirror
+                          ref={refs}
+                          value={value}
+                          height="100%"
+                          width="100%"
+                          autoFocus={true}
+                          theme={isDarkMode ? githubDark : basicLight}
+                          basicSetup={false}
+                          extensions={isVim ? [vim(), EXTENSIONS] : EXTENSIONS}
+                          onChange={onChange}
+                        />
+                      </div>
                     </div>
-                  </div>
-                ) : (
-                  <>
-                      <div style={{ paddingTop: "1em" }}>
-                        <div style={{ padding: "40px" }}>
+                  ) : (
+                    <>
+                    <AnimatePresence>
+                      <motion.div
+                        key={path}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }} 
+                      style={{ paddingTop: "1em" }}>
+                        <div id="content" style={{ padding: "40px" }}>
                           {ValidateYaml(resolvedMarkdown.metadata)}
                           <div>
                             <div
@@ -824,14 +835,14 @@ export function Leaflet() {
                               style={{
                                 marginBottom: "5em",
                               }}
-                              className=""
                               dangerouslySetInnerHTML={
                                 resolvedMarkdown.document
                               }
                             />
                           </div>
                         </div>
-                      </div>
+                      </motion.div>
+                      </AnimatePresence>
                       {ButtomBar(
                         insert,
                         () => toggleBetweenVimAndNormalMode(setIsVim),
@@ -842,8 +853,8 @@ export function Leaflet() {
                         editorview,
                         open
                       )}
-                  </>
-                )}
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -932,7 +943,7 @@ export function Leaflet() {
 
         <FileTree
           structures={struct}
-          onNodeClicked={(path, name) => onNodeClicked(path, name)}
+          onNodeClicked={(path, name) => contentonNodeClicked(path, name)}
           path={path}
         />
         <div

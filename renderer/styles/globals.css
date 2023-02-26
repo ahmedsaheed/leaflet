@@ -28,14 +28,17 @@
 
   .command-palette .dark\:bg-gray-900{
     background-color: rgb(0 0 0/1) !important;
+    border:1px solid rgba(64, 64, 64, 0.5)
+
+  }
+  .command-palette .dark\:divide-gray-800>:not([hidden])~:not([hidden]){
+    border:1px solid rgba(64, 64, 64, 0.5)
   }
   pre{
     background-color: hsl(0 0% 8.5%) !important;
     box-shadow: 0 0 0 1px hsl(0 0% 8.5%) !important;
   }
-  .command-palette .dark\:bg-gray-900{
-    background-color: #000000;
-  }
+
   .custom-border {
     border-color: rgb(31 31 31/1) !important;
   }
