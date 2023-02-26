@@ -69,10 +69,10 @@ export const StyledName = styled.div`
   background-color: #fff;
   font-size: 13px;
     font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
-    display: inline-block;
+    display: inline;
     width: 90%;
     white-space: nowrap;
-    overflow: hidden;
+    /* overflow: hidden; */
     text-overflow: ellipsis;
     outline: none;
     display: flex;
@@ -80,7 +80,7 @@ export const StyledName = styled.div`
     cursor: pointer;
   @media (prefers-color-scheme: dark) {
     background-color: #000000;
-    color: #808080;
+    color: #e5e5e5 !important;
     :hover{
       background-color: rgb(255, 255, 255, 0.075);
       border-radius: 4px;

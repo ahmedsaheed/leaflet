@@ -7,6 +7,12 @@ import fs from "fs-extra";
 import path from "path"
 import mime  from 'mime';
 
+  export type Metadata = {
+    title: string;
+    date: string;
+    tags: string[];
+    material: {};
+  };
 /**
  * @param {string} value
  * @returns {string} html
@@ -15,12 +21,6 @@ import mime  from 'mime';
  * This function is used to convert markdown to html
  */
 export const getMarkdown = (value: string) => {
-  type Metadata = {
-    title: string;
-    date: string;
-    tags: string[];
-    material: {};
-  };
   const meta = {} as Metadata;
   const md = require("markdown-it")({
     html: true,

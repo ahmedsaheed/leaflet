@@ -38,9 +38,6 @@ if (isDev) {
     // resizable: false,
     // fullscreen: true,
   });
-
-  //watchFiles(mainWindow);
-
   const menuBar = [
     // { role: 'appMenu' }
     ...(isMac
@@ -240,28 +237,6 @@ ipcMain.on("file-context-menu", (event) => {
         event.sender.send("in-app-command-todocx");
       },
     },
-    // { type: 'separator' },
-
-    // { label: 'Vim Mode', type: 'checkbox', checked: isVim 
-    //     ,click: () => {
-    //         if (isVim) {
-    //             return
-    //         }else{
-    //             event.sender.send("in-app-command-togglevim");
-    //             isVim = true
-    //         }
-    //     },
-    // },
-    // { label: 'Normal Mode', type: 'checkbox', checked: !isVim,
-    //     click: () => {
-    //         if (!isVim) {
-    //             return
-    //         }else{
-    //             event.sender.send("in-app-command-togglevim");
-    //             isVim = false
-    //         }
-    //     }
-    // },
     { type: "separator" },
     {
       label: "Rename",
@@ -321,6 +296,14 @@ ipcMain.on("show-context-menu", (event, isVim) => {
                 event.sender.send("in-app-command-togglevim");
                 isVim = false
             }
+        }
+    },
+    { label: 'Vibracy', type: 'checkbox', checked: false,
+        click: () => {
+            //get current browser window and attach vibrancy
+            const win = BrowserWindow.getFocusedWindow()
+            win.setVibrancy('ultra-dark')
+            event.sender.send("in-app-command-vibracy");
         }
     },
     { type: "separator" },

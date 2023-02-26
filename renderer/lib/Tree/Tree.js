@@ -21,7 +21,7 @@ const Tree = ({ children, data, onNodeClick, onUpdate}) => {
   const isImparative = data && !children;
 
   return (
-    <ThemeProvider theme={{ indent: 20 }}>
+    <ThemeProvider theme={{ indent: 15 }}>
       <TreeContext.Provider
         value={{
           isImparative,

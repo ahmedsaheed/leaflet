@@ -14,12 +14,13 @@ import os from "os";
 const route = os.homedir() + "/columns.lua";
 type Dispatcher<S> = Dispatch<SetStateAction<S>>;
 import { ipcRenderer } from "electron";
-import { getMarkdownWithMermaid } from "./mdParser";
+import { Metadata, getMarkdownWithMermaid } from "./mdParser";
 import { shell } from "electron";
 import {toast} from 'react-hot-toast'
 import { indentationMarkers } from '@replit/codemirror-indentation-markers';
 import * as prettier from 'prettier/standalone';
 import * as markdowns from 'prettier/parser-markdown';
+import { METADATE, METAMATERIAL, METATAGS } from "../components/metadata";
 
 export const format =(value)=>prettier.format(value, { parser: 'markdown', tabWidth: 2, plugins: [markdowns] });
 
@@ -613,6 +614,31 @@ export const formats = (ref) => {
 
   // cm.scrollTo(0, scroll);
 };
+
+  /**
+   * @description Function validate and render yaml metadata
+   * @param {object} yaml - yaml object
+   * @returns {React.ReactNode}
+   * @todo - this function doesn't render the body, when yaml is not valid
+   *
+   */
+  export const ValidateYaml = (metadata: Metadata | undefined) => {
+    if (metadata === undefined) {
+      return (
+        <>
+          <p>yaml is not valid</p>
+          <hr />
+        </>
+      );
+    }
+    return (
+      <div className="meta" style={{ userSelect: "none" }}>
+        <METADATE incoming={metadata.date} />
+        <METATAGS incoming={metadata.tags} />
+        <METAMATERIAL incoming={metadata?.material} />
+      </div>
+    );
+  };
 
 /**
  * @description A lua script that allows manipulation of pandoc pdf

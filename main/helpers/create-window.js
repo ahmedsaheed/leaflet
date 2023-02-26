@@ -65,9 +65,9 @@ export default function createWindow(windowName, options) {
 
   win = new BrowserWindow({
     titleBarStyle: process.platform == "darwin" ?  "hiddenInset" : "default",
-    // fullscreenable: false,
     ...options,
     ...state,
+    // vibrancy: "dark",
     webPreferences: {
       spellcheck: true,
       nodeIntegration: true,

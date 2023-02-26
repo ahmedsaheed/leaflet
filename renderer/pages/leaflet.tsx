@@ -3,9 +3,9 @@ import React, {
   useCallback,
   useEffect,
   useState,
-  ReactElement,
 } from "react";
 import { ipcRenderer } from "electron";
+import { VscFiles } from "react-icons/vsc";
 import { vim } from "@replit/codemirror-vim";
 import "react-cmdk/dist/cmdk.css";
 import { Excalidraw } from "@excalidraw/excalidraw";
@@ -17,13 +17,14 @@ import {
   format,
   cleanFileNameForExport,
   toggleBetweenVimAndNormalMode,
+  ValidateYaml,
 } from "../lib/util";
 import { effects } from "../lib/effects";
 import { SIDEBARCOLLAPSEIcon } from "../components/icons";
 import { FileTree } from "../components/filetree";
 import { QuickAction, QuickActions } from "../components/quickactions";
 import { METADATE, METATAGS, METAMATERIAL } from "../components/metadata";
-import { getMarkdown } from "../lib/mdParser";
+import { Metadata, getMarkdown } from "../lib/mdParser";
 import fs from "fs-extra";
 import mainPath from "path";
 import { githubDark } from "@uiw/codemirror-theme-github";
@@ -305,30 +306,7 @@ export function Leaflet() {
     }, 100);
   };
 
-  /**
-   * @description Function validate and render yaml metadata
-   * @param {object} yaml - yaml object
-   * @returns {React.ReactNode}
-   * @todo - this function doesn't render the body, when yaml is not valid
-   *
-   */
-  const ValidateYaml = (yaml: object | undefined) => {
-    if (yaml === undefined) {
-      return (
-        <>
-          <p>yaml is not valid</p>
-          <hr />
-        </>
-      );
-    }
-    return (
-      <div className="meta" style={{ userSelect: "none" }}>
-        <METADATE incoming={resolvedMarkdown.metadata.date} />
-        <METATAGS incoming={resolvedMarkdown.metadata.tags} />
-        <METAMATERIAL incoming={resolvedMarkdown.metadata?.material} />
-      </div>
-    );
-  };
+
 
   /**
    * @description handle file selection from the sidebar
@@ -352,77 +330,7 @@ export function Leaflet() {
     }
   };
 
-  const AppBars: React.FC = (): ReactElement => {
-    return (
-      <AppBar
-        ref={headerRef}
-        onMouseOver={appBarMouseOver}
-        onMouseLeave={appBarMouseLeave}
-        position="fixed"
-        open={open}
-        className="topBar"
-        style={{
-          alignItems: "center",
-          display: "flex",
-          flexDirection: "row",
-          zIndex: "1",
-        }}
-      >
-        <div
-          style={{
-            flex: 1,
-            paddingLeft: "75px",
-            paddingTop: "6px",
-          }}
-        >
-          <button
-            aria-label="open drawer"
-            className="quickAction topbar-bottons"
-            onClick={open ? handleDrawerClose : handleDrawerOpen}
-            style={{
-              padding: 0,
-              border: "1px solid transparent",
-              borderRadius: "4px",
-            }}
-          >
-            <div style={{ padding: "0 5px" }} title="Collapse Sidebar">
-              <SIDEBARCOLLAPSEIcon />
-            </div>
-          </button>
-        </div>
-        <div
-          style={{
-            flex: 1,
-            alignItems: "center",
-          }}
-        >
-          <strong style={{ display: "inline" }}>
-            {cleanFileNameForExport(name)}
-          </strong>
-        </div>
-        <div
-          style={{
-            paddingRight: "20px",
-            alignItems: "center",
-          }}
-        >
-          <span className="topbar-bottons">
-            <QuickAction
-              modeSwitch={() => setInsert(!insert)}
-              addOpenToAllDetailTags={() => {}}
-              detailIsOpen={detailIsOpen}
-              createNewFolder={() => {
-                setFileNameBox(true);
-                setIsCreatingFolder(true);
-              }}
-              insert={insert}
-              isVim={isVim}
-            />
-          </span>
-        </div>
-      </AppBar>
-    );
-  };
+
 
   return (
     <div className="h-screen w-screen" style={{ overflow: "hidden" }}>
@@ -436,9 +344,8 @@ export function Leaflet() {
             <div className="flex flex-col overflow-y-hidden">
               <ul className="flex w-20 shrink-0 flex-col items-center justify-end bg-transparent px-5 pt-1 pb-px space-y-2.5">
                 <li className="aspect-w-1 aspect-h-1 w-full">
-                  <a
+                  <span
                     className="flex flex-col items-center justify-center rounded-full outline-none transition-all focus:outline-none sm:duration-300 bg-palette-0 text-palette-600 smarthover:hover:text-primary-500"
-                    href="/dashboard/feed"
                   >
                     <svg
                       className="w-6"
@@ -454,40 +361,49 @@ export function Leaflet() {
                         d="M22 17v-5.16c0-1.42 0-2.12-.18-2.77 -.16-.58-.43-1.13-.78-1.61 -.4-.55-.95-.99-2.06-1.88l-2-1.6c-1.79-1.43-2.68-2.15-3.67-2.42 -.88-.25-1.8-.25-2.67 0 -.99.27-1.89.98-3.67 2.41l-2 1.6c-1.11.88-1.66 1.32-2.06 1.87 -.36.48-.62 1.02-.78 1.6 -.18.65-.18 1.35-.18 2.76v5.15c0 2.76 2.23 5 5 5 1.1 0 2-.9 2-2v-4.01c0-1.66 1.34-3 3-3 1.65 0 3 1.34 3 3v4c0 1.1.89 2 2 2 2.76 0 5-2.24 5-5Z"
                       />
                     </svg>
-                  </a>
+                  </span>
                 </li>
               </ul>
               <ul className="no-scrollbar flex w-20 grow flex-col items-center space-y-4 overflow-y-scroll bg-transparent py-4 px-5">
-                <li className="aspect-w-1 aspect-h-1 w-full">
+              <li className="aspect-w-1 aspect-h-1 w-full">
                   <span
-                  onClick={!open ? handleDrawerOpen : null}
-                    className="flex flex-col items-center justify-center rounded-full outline-none transition-all focus:outline-none sm:duration-300 text-primary-500 ring ring-primary-300"
-                    aria-current="page"
+                  onClick={!open ? handleDrawerOpen : handleDrawerClose}
+                  className=" cursor-pointer flex flex-col items-center justify-center rounded-full transition-all duration-300 bg-palette-0 text-palette-600 smarthover:hover:text-primary-500"
+                  aria-current="page"
                   >
-                    <span className="inline-block w-full text-center align-middle font-mono">
-                      te
+                    <VscFiles className="w-7 h-5" viewBox="0 0 24 24"
+                     stroke="currentColor"
+                     strokeLinecap="round"
+                     strokeLinejoin="round"
+                     strokeWidth={1}
+                    />
                     </span>
+              </li>
+              
+                
+                <div className="custom-border mx-auto h-px w-3/4 flex-shrink-0 grow-0 border-b-[0.5px]" />
+                {!open && 
+                (
+                  <li className="aspect-w-1 aspect-h-1 w-full">
+                  <span className="flex flex-col items-center justify-center rounded-full transition-all duration-300 bg-palette-0 text-palette-600 smarthover:hover:text-primary-500">
+                  <svg
+                        className="h-[1.25rem] w-[1.25rem] font-medium text-palette-900 transition-all duration-300 active:text-palette-500 smarthover:hover:text-palette-500"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-width="2"
+                          d="M21 21l-3.64-3.64m0 0c1.62-1.63 2.63-3.88 2.63-6.37 0-4.98-4.03-9-9-9 -4.98 0-9 4.02-9 9 0 4.97 4.02 9 9 9 2.48 0 4.73-1.01 6.36-2.64Z"
+                        ></path>
+                      </svg>
                   </span>
                 </li>
-                <div className="custom-border mx-auto h-px w-3/4 flex-shrink-0 grow-0 border-b-[0.5px]" />
-                <li className="aspect-w-1 aspect-h-1 w-full">
-                  <button className="flex flex-col items-center justify-center rounded-full transition-all duration-300 bg-palette-0 text-palette-600 smarthover:hover:text-primary-500">
-                    <svg
-                      className="w-6"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        fill="none"
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 12h7m7 0h-7m0 0V5m0 7v7"
-                      />
-                    </svg>
-                  </button>
-                </li>
+                )
+                }
+               
               </ul>
             </div>
             <ul className="flex w-20 flex-col items-center space-y-5 bg-transparent px-5 pb-5">
@@ -500,22 +416,24 @@ export function Leaflet() {
                   }}
                 />
                 <div className="absolute top-[50%] left-[50%] h-[115%] w-[115%] -translate-y-[50%] -translate-x-[50%] rounded-full bg-primary-400 opacity-5" />
-                <button className="flex flex-col items-center justify-center rounded-full transition-all duration-300 bg-palette-0 text-palette-600 smarthover:hover:text-primary-500">
-                  <svg
+                <span className="flex flex-col items-center justify-center rounded-full transition-all duration-300 bg-palette-0 text-palette-600 smarthover:hover:text-primary-500">
+                <svg
                     className="w-5"
                     viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg"
                   >
-                    <path
-                      fill="none"
-                      stroke="currentColor"
+                    <g
                       strokeLinecap="round"
-                      strokeLinejoin="round"
                       strokeWidth={2}
-                      d="M5.11 10.1l4.6-5.76c1.31-1.64 1.96-2.46 2.54-2.55 .49-.08 1 .09 1.34.47 .39.42.39 1.47.39 3.57v1.75c0 .84 0 1.26.16 1.58 .14.28.37.51.65.65 .32.16.74.16 1.58.16h.6c1.59 0 2.39 0 2.8.32 .35.28.56.71.56 1.17 -.01.52-.5 1.14-1.5 2.39l-4.61 5.75c-1.32 1.63-1.97 2.45-2.55 2.54 -.5.07-1.01-.1-1.35-.48 -.4-.43-.4-1.48-.4-3.58v-1.76c0-.85 0-1.27-.17-1.59 -.15-.29-.38-.52-.66-.66 -.33-.17-.75-.17-1.59-.17h-.61c-1.6 0-2.4 0-2.81-.33 -.36-.29-.57-.72-.57-1.18 0-.53.49-1.15 1.49-2.4Z"
-                    />
+                      stroke="currentColor"
+                      fill="none"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M12 4c-.7 0-1.39-.27-1.82-.82l-.46-.59C9.1 1.79 8 1.58 7.13 2.08l-1.31.75c-.87.5-1.23 1.56-.86 2.48l.27.68c.26.64.14 1.37-.21 1.97v0c-.35.6-.93 1.07-1.62 1.16l-.74.09c-1 .13-1.73.98-1.73 1.98v1.5c0 1 .73 1.84 1.72 1.98l.73.09c.69.09 1.26.56 1.61 1.16v0c.34.6.46 1.32.2 1.97l-.28.68c-.38.92-.02 1.98.85 2.48l1.3.75c.86.5 1.96.28 2.58-.51l.45-.59c.42-.56 1.11-.82 1.81-.82v0 0c.69 0 1.38.26 1.81.81l.45.58c.61.79 1.71 1 2.58.5l1.3-.76c.86-.51 1.22-1.57.85-2.49l-.28-.69c-.27-.65-.15-1.38.2-1.98v0c.34-.61.92-1.08 1.61-1.17l.73-.1c.99-.14 1.72-.99 1.72-1.99v-1.51c0-1.01-.74-1.85-1.73-1.99l-.74-.1c-.7-.1-1.27-.57-1.62-1.17v0c-.35-.61-.47-1.33-.21-1.98l.27-.69c.37-.93.01-1.99-.86-2.49l-1.31-.76c-.87-.51-1.97-.29-2.59.5l-.46.58c-.43.55-1.12.81-1.82.81v0 0Z" />
+                      <path d="M15 12c0 1.65-1.35 3-3 3 -1.66 0-3-1.35-3-3 0-1.66 1.34-3 3-3 1.65 0 3 1.34 3 3Z" />
+                    </g>
                   </svg>
-                </button>
+                </span>
               </li>
               <div className="custom-border mx-auto h-px w-3/4 border-t-[0.5px]" />
               <li className="aspect-w-1 aspect-h-1 w-full">
@@ -552,8 +470,8 @@ export function Leaflet() {
           className="second-nav custom-border no-scrollbar z-30 flex grow flex-col overflow-y-scroll border-r-[0.5px] bg-transparent">
             <div className="drag flex shrink-0 flex-col justify-center px-4 h-16">
               <div className="flex items-center justify-between">
-                <span className="w-full text-lg font-medium lowercase text-palette-800">
-                  tese
+                <span className="w-full text-lg font-small text-palette-800">
+                  Explorer
                 </span>
                 <span
                   onClick={() => {
@@ -561,22 +479,7 @@ export function Leaflet() {
                   }}
                   className="flex h-[22px] items-center transition-all duration-300 smarthover:hover:text-primary-500 text-palette-600"
                 >
-                  <svg
-                    className="h-full"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <g
-                      strokeLinecap="round"
-                      strokeWidth={2}
-                      stroke="currentColor"
-                      fill="none"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M12 4c-.7 0-1.39-.27-1.82-.82l-.46-.59C9.1 1.79 8 1.58 7.13 2.08l-1.31.75c-.87.5-1.23 1.56-.86 2.48l.27.68c.26.64.14 1.37-.21 1.97v0c-.35.6-.93 1.07-1.62 1.16l-.74.09c-1 .13-1.73.98-1.73 1.98v1.5c0 1 .73 1.84 1.72 1.98l.73.09c.69.09 1.26.56 1.61 1.16v0c.34.6.46 1.32.2 1.97l-.28.68c-.38.92-.02 1.98.85 2.48l1.3.75c.86.5 1.96.28 2.58-.51l.45-.59c.42-.56 1.11-.82 1.81-.82v0 0c.69 0 1.38.26 1.81.81l.45.58c.61.79 1.71 1 2.58.5l1.3-.76c.86-.51 1.22-1.57.85-2.49l-.28-.69c-.27-.65-.15-1.38.2-1.98v0c.34-.61.92-1.08 1.61-1.17l.73-.1c.99-.14 1.72-.99 1.72-1.99v-1.51c0-1.01-.74-1.85-1.73-1.99l-.74-.1c-.7-.1-1.27-.57-1.62-1.17v0c-.35-.61-.47-1.33-.21-1.98l.27-.69c.37-.93.01-1.99-.86-2.49l-1.31-.76c-.87-.51-1.97-.29-2.59.5l-.46.58c-.43.55-1.12.81-1.82.81v0 0Z" />
-                      <path d="M15 12c0 1.65-1.35 3-3 3 -1.66 0-3-1.35-3-3 0-1.66 1.34-3 3-3 1.65 0 3 1.34 3 3Z" />
-                    </g>
-                  </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" className="h-6 w-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path></svg>
                 </span>
               </div>
             </div>
@@ -607,7 +510,7 @@ export function Leaflet() {
                       </span>
                     </span>
                   </li>
-                  <li>
+                  {/* <li>
                     <a
                       className="flex w-full items-center space-x-2.5 rounded-xl px-2.5 py-2.5 transition-all duration-300 smarthover:hover:text-primary-500 bg-transparent text-palette-600"
                       href="/dashboard/63f56b500b1b1944dd455528/charts"
@@ -654,7 +557,7 @@ export function Leaflet() {
                         insight
                       </span>
                     </a>
-                  </li>
+                  </li> */}
                 </ul>
               </div>
               <div className="space-y-1.5">
@@ -682,7 +585,7 @@ export function Leaflet() {
                   </div>
                 </div>
                 <ul className="space-y-1">
-                  <li>
+                  <li className="overflow-y-scroll">
                     <FileTree
                       structures={struct}
                       onNodeClicked={(path, name) => onNodeClicked(path, name)}
@@ -823,6 +726,14 @@ export function Leaflet() {
                     <AnimatePresence>
                       <motion.div
                         key={path}
+                        variants={{
+                          hidden: { opacity: 0,y: -50 },
+                          visible: (i) => ({
+                            opacity : 1,
+                            y: 0,
+                            transition: { delay: i * 0.01 },
+                          }),
+                        }}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }} 

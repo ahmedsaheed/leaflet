@@ -105,8 +105,14 @@ export function effects(
       ignore = true;
     };
   }, [path, name]);
-
   useEffect(() => {
+    ipcRenderer.on("in-app-command-vibracy", function () {
+        // SET BG TO TRANSPARENT   
+        document.body.style.background = "transparent";
+    })
+    },[])
+
+    useEffect(() => {
     let ignore = false;
     ipcRenderer.on("in-app-command-togglevim", function () {
       if (!ignore) {
