@@ -395,7 +395,13 @@ export function Leaflet() {
                 <div className="custom-border mx-auto h-px w-3/4 flex-shrink-0 grow-0 border-b-[0.5px]" />
                 {!open && 
                 (
-                  <li className="aspect-w-1 aspect-h-1 w-full">
+                  <AnimatePresence>
+                  <motion.li className="aspect-w-1 aspect-h-1 w-full"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+
+                  >
                   <span onClick={() => setClick(!click)} className="cursor-pointer flex flex-col items-center justify-center rounded-full transition-all duration-300 bg-palette-0 text-palette-600 smarthover:hover:text-primary-500">
                   <svg
                         className="h-[1.25rem] w-[1.25rem] font-medium text-palette-900 transition-all duration-300 active:text-palette-500 smarthover:hover:text-palette-500"
@@ -411,7 +417,9 @@ export function Leaflet() {
                         ></path>
                       </svg>
                   </span>
-                </li>
+                </motion.li>
+                </AnimatePresence>
+
                 )
                 }
                
