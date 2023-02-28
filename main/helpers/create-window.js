@@ -67,7 +67,7 @@ export default function createWindow(windowName, options) {
     titleBarStyle: process.platform == "darwin" ?  "hiddenInset" : "default",
     ...options,
     ...state,
-    vibrancy: "ultra-dark",
+    // vibrancy: "ultra-dark",
     webPreferences: {
       spellcheck: true,
       nodeIntegration: true,
