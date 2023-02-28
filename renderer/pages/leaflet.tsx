@@ -1,5 +1,4 @@
 import React, {
-  useRef,
   useCallback,
   useEffect,
   useState,
@@ -135,32 +134,32 @@ export function Leaflet() {
    * @param {string} name - name of the file to be deleted
    * @returns {void}
    */
-  const onDelete = (path: string, name: string) => {
-    try {
-      if (!fs.existsSync(path)) {
-        return;
-      }
-      ipcRenderer.invoke("deleteFile", name, path).then(() => {
-        Update();
-        toast("File moved to trash", {
-          icon: "🗑️",
-          style: {
-            backgroundColor: isDarkMode ? "#1e1e1e" : "#fff",
-            color: isDarkMode ? "#fff" : "#000",
-          },
-        });
+  function onDelete(path: string, name: string): void {
+        try {
+            if (!fs.existsSync(path)) {
+                return;
+            }
+            ipcRenderer.invoke("deleteFile", name, path).then(() => {
+                Update();
+                toast("File moved to trash", {
+                    icon: "🗑️",
+                    style: {
+                        backgroundColor: isDarkMode ? "#1e1e1e" : "#fff",
+                        color: isDarkMode ? "#fff" : "#000",
+                    },
+                });
 
-        setStruct(files[0].structure.children);
-        const index = Math.floor(Math.random() * files.length);
-        setInsert(false);
-        setValue(files[index].body);
-        setName(files[index].name);
-        setPath(files[index].path);
-      });
-    } catch (e) {
-      console.log(e);
+                setStruct(files[0].structure.children);
+                const index = Math.floor(Math.random() * files.length);
+                setInsert(false);
+                setValue(files[index].body);
+                setName(files[index].name);
+                setPath(files[index].path);
+            });
+        } catch (e) {
+            console.log(e);
+        }
     }
-  };
 
   const Update = () => {
     ipcRenderer.invoke("getTheFile").then((files = []) => {

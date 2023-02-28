@@ -8,7 +8,8 @@
   -webkit-app-region: drag;
 }
 
-/*@media (prefers-color-scheme: dark) {
+
+ @media (prefers-color-scheme: dark) {
   .custom-border {
     border-color: rgb(31 31 31/1) !important;
   }
@@ -18,57 +19,57 @@
   body {
     color: #e5e5e5 !important;
     }
-}*/
-
-@media (prefers-color-scheme: dark) {
-  body {
-    background: #000000;
-    color: #e5e5e5 !important;
-    }
-  .ButtomBar {
-    background-color: #000000 !important;
-  }
-  .command-palette .bg-gray-900 {
-    background-color: rgb(0 0 0/0.9) !important;
-  }
-  .command-palette .dark\:bg-gray-800 {
-    background-color: rgb(255, 255, 255, 0.075) !important;
-  }
-  .command-palette .dark\:hover\:bg-gray-800:hover {
-    background-color: rgb(255, 255, 255, 0.075) !important;
-  }
-
-  .command-palette .dark\:bg-gray-900 {
-    background-color: rgb(0 0 0/1) !important;
-    border: 1px solid rgba(64, 64, 64, 0.5);
-  }
-  .command-palette .dark\:divide-gray-800 > :not([hidden]) ~ :not([hidden]) {
-    border: 1px solid rgba(64, 64, 64, 0.5) !important;
-  }
-
-  pre {
-    background-color: hsl(0 0% 8.5%) !important;
-    box-shadow: 0 0 0 1px hsl(0 0% 8.5%) !important;
-  }
-
-  .custom-border {
-    border-color: rgb(31 31 31/1) !important;
-  }
-  hr {
-    border-color: rgb(31 31 31/1) !important;
-  }
-  .cm-scroller {
-    background-color: #000000 !important;
-    outline: none;
-  }
-  table {
-    border-color: rgb(31 31 31/1) !important;
-    border-radius: 6px;
-  }
-  .topbar {
-    background-color: #000000 !important;
-  }
 }
+
+/* @media (prefers-color-scheme: dark) { */
+/*   body { */
+/*     background: #000000; */
+/*     color: #e5e5e5 !important; */
+/*     } */
+/*   .ButtomBar { */
+/*     background-color: #000000 !important; */
+/*   } */
+/*   .command-palette .bg-gray-900 { */
+/*     background-color: rgb(0 0 0/0.9) !important; */
+/*   } */
+/*   .command-palette .dark\:bg-gray-800 { */
+/*     background-color: rgb(255, 255, 255, 0.075) !important; */
+/*   } */
+/*   .command-palette .dark\:hover\:bg-gray-800:hover { */
+/*     background-color: rgb(255, 255, 255, 0.075) !important; */
+/*   } */
+
+/*   .command-palette .dark\:bg-gray-900 { */
+/*     background-color: rgb(0 0 0/1) !important; */
+/*     border: 1px solid rgba(64, 64, 64, 0.5); */
+/*   } */
+/*   .command-palette .dark\:divide-gray-800 > :not([hidden]) ~ :not([hidden]) { */
+/*     border: 1px solid rgba(64, 64, 64, 0.5) !important; */
+/*   } */
+
+/*   pre { */
+/*     background-color: hsl(0 0% 8.5%) !important; */
+/*     box-shadow: 0 0 0 1px hsl(0 0% 8.5%) !important; */
+/*   } */
+
+/*   .custom-border { */
+/*     border-color: rgb(31 31 31/1) !important; */
+/*   } */
+/*   hr { */
+/*     border-color: rgb(31 31 31/1) !important; */
+/*   } */
+/*   .cm-scroller { */
+/*     background-color: #000000 !important; */
+/*     outline: none; */
+/*   } */
+/*   table { */
+/*     border-color: rgb(31 31 31/1) !important; */
+/*     border-radius: 6px; */
+/*   } */
+/*   .topbar { */
+/*     background-color: #000000 !important; */
+/*   } */
+/* } */
 
 @media (prefers-color-scheme: light) {
   body {
