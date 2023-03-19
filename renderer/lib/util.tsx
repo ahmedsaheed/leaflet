@@ -5,7 +5,7 @@ import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import { codeFolding, indentOnInput } from "@codemirror/language";
 import { languages } from "@codemirror/language-data";
 import { EditorSelection, Extension } from "@codemirror/state";
-import { EditorView } from "@codemirror/view";
+import { EditorView, highlightActiveLine } from "@codemirror/view";
 import open from "open";
 import { spawn } from "child_process";
 import os from "os";
@@ -14,14 +14,76 @@ type Dispatcher<S> = Dispatch<SetStateAction<S>>;
 import { ipcRenderer } from "electron";
 import { Metadata, getMarkdownWithMermaid } from "./mdParser";
 import { shell } from "electron";
-import {toast} from 'react-hot-toast'
-import { indentationMarkers } from '@replit/codemirror-indentation-markers';
-import * as prettier from 'prettier/standalone';
-import * as markdowns from 'prettier/parser-markdown';
+import { toast } from "react-hot-toast";
+import { indentationMarkers } from "@replit/codemirror-indentation-markers";
+import * as prettier from "prettier/standalone";
+import * as markdowns from "prettier/parser-markdown";
 import { METADATE, METAMATERIAL, METATAGS } from "../components/metadata";
+import {
+  defaultHighlightStyle,
+  HighlightStyle,
+  tags,
+} from "@codemirror/highlight";
 
-export const format =(value)=>prettier.format(value, { parser: 'markdown', tabWidth: 2, plugins: [markdowns] });
+import { tags as t, highlightTree } from "@lezer/highlight";
+import { createTheme } from "@uiw/codemirror-themes";
+export const transparentTheme = EditorView.theme({
+  "&": {
+    backgroundColor: "white",
+    height: "100%",
+  },
+  pre: {
+    backgroundColor: "red",
+  },
+});
 
+const myTheme = createTheme({
+  theme: "light",
+  settings: {
+    background: "#ffffff",
+    foreground: "#75baff",
+    caret: "#5d00ff",
+    selection: "#036dd626",
+    selectionMatch: "#036dd626",
+    lineHighlight: "#8a91991a",
+    gutterBackground: "#fff",
+    gutterForeground: "#8a919966",
+  },
+
+  styles: [
+    { tag: t.heading1, fontSize: "1.6em", margin: "15px 0", lineHeight: "1.2" },
+    { tag: t.heading2, fontSize: "20px", margin: "15px 0", lineHeight: "1.2" },
+    { tag: t.heading3, fontSize: "18px", margin: "15px 0", lineHeight: "1.2" },
+    { tag: t.comment, color: "#787b8099" },
+    {
+      tag: t.link,
+      textDecorationColor: "hsl(200deg, 5%, 60%)",
+      boarderRaduis: "0.1875",
+    },
+    { tag: t.atom, class: "pre", color: "red" },
+    // style the code blocks
+
+    { tag: [t.string, t.special(t.brace)], color: "#5c6166" },
+    { tag: t.number, color: "#5c6166" },
+    { tag: t.bool, color: "#5c6166" },
+    { tag: t.null, color: "#5c6166" },
+    { tag: t.keyword, color: "#5c6166" },
+    { tag: t.operator, color: "#5c6166" },
+    { tag: t.className, color: "#5c6166" },
+    { tag: t.definition(t.typeName), color: "#5c6166" },
+    { tag: t.typeName, color: "#5c6166" },
+    { tag: t.angleBracket, color: "#5c6166" },
+    { tag: t.tagName, color: "#5c6166" },
+    { tag: t.attributeName, color: "#5c6166" },
+  ],
+});
+
+export const format = (value) =>
+  prettier.format(value, {
+    parser: "markdown",
+    tabWidth: 2,
+    plugins: [markdowns],
+  });
 
 /**
  * Bold a text in editor view
@@ -347,12 +409,15 @@ export const EXTENSIONS: Extension[] = [
   indentOnInput(),
   codeFolding(),
   indentationMarkers(),
+  highlightActiveLine(),
+  myTheme,
+  transparentTheme,
   markdown({
     base: markdownLanguage,
     codeLanguages: languages,
     addKeymap: true,
   }),
-  [EditorView.lineWrapping,],
+  [EditorView.lineWrapping],
 ];
 
 export const checkForPandoc = (setPandocAvailable: Dispatcher<boolean>) => {
@@ -397,13 +462,12 @@ export const cleanFileNameForExport = (name: string) => {
   return value;
 };
 
-
-export function cleaner(name: string){
+export function cleaner(name: string) {
   let value = name;
   if (name.endsWith(".md")) {
     value = name.substring(0, name.length - 3);
   }
-  value =  value.charAt(0).toUpperCase() + value.slice(1);
+  value = value.charAt(0).toUpperCase() + value.slice(1);
   return value;
 }
 
@@ -567,31 +631,30 @@ const offset2pos = (text, offset) => {
   return { line: list.length, ch: list[list.length - 1].length };
 };
 
-
-  /**
-   * @description Function validate and render yaml metadata
-   * @param {object} yaml - yaml object
-   * @returns {React.ReactNode}
-   * @todo - this function doesn't render the body, when yaml is not valid
-   *
-   */
-  export const ValidateYaml = (metadata: Metadata | undefined) => {
-    if (metadata === undefined) {
-      return (
-        <>
-          <p>yaml is not valid</p>
-          <hr />
-        </>
-      );
-    }
+/**
+ * @description Function validate and render yaml metadata
+ * @param {object} yaml - yaml object
+ * @returns {React.ReactNode}
+ * @todo - this function doesn't render the body, when yaml is not valid
+ *
+ */
+export const ValidateYaml = (metadata: Metadata | undefined) => {
+  if (metadata === undefined) {
     return (
-      <div className="meta" style={{ userSelect: "none" }}>
-        <METADATE incoming={metadata.date} />
-        <METATAGS incoming={metadata.tags} />
-        <METAMATERIAL incoming={metadata?.material} />
-      </div>
+      <>
+        <p>yaml is not valid</p>
+        <hr />
+      </>
     );
-  };
+  }
+  return (
+    <div className="meta" style={{ userSelect: "none" }}>
+      <METADATE incoming={metadata.date} />
+      <METATAGS incoming={metadata.tags} />
+      <METAMATERIAL incoming={metadata?.material} />
+    </div>
+  );
+};
 
 /**
  * @description A lua script that allows manipulation of pandoc pdf

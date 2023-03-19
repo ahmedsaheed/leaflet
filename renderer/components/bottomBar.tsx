@@ -104,7 +104,7 @@ export const ButtomBar = (
               </div>
             ) : (
               <span style={{ display: "inline" }}>
-                <div>
+                <div className="py-2 flex items-center">
                   <div style={{ display: "inline", marginRight: "20px" }}></div>
                   <span>{`${value.toString().split(" ").length} words  ${
                     value.toString().length
