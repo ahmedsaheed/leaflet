@@ -6,8 +6,7 @@
   
 </div>
 
-![Dark Mode](https://user-images.githubusercontent.com/87912847/221436250-083f626e-7999-4682-9bf8-9d6442f420ad.png)
-
+<img width="1333" alt="Screenshot 2023-03-19 at 18 46 19" src="https://user-images.githubusercontent.com/87912847/226199881-c9afbdc4-f2f6-4835-bcb8-eb96d79e06a5.png">
 ## Features
 
 - **Editing**: Switch between editing and preview mode seemlessly
