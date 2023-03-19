@@ -104,6 +104,7 @@ export const METAMATERIAL = ({ incoming }) => {
               //TODO: Look for a better way to do this
               value?.toString().startsWith("http") && key != value ? (
                 <code
+                className="material"
                   style={{
                     marginRight: "1em",
                     display: "inline",

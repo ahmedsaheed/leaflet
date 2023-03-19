@@ -2,17 +2,17 @@ import hljs from "highlight.js";
 import todo from "markdown-it-task-lists";
 import yaml from "yaml";
 import metadata_block from "markdown-it-metadata-block";
-import mermaid from "mermaid";
+// import mermaid from "mermaid";
 import fs from "fs-extra";
-import path from "path"
-import mime  from 'mime';
+import path from "path";
+import mime from "mime";
 
-  export type Metadata = {
-    title: string;
-    date: string;
-    tags: string[];
-    material: {};
-  };
+export type Metadata = {
+  title: string;
+  date: string;
+  tags: string[];
+  material: {};
+};
 /**
  * @param {string} value
  * @returns {string} html
@@ -44,25 +44,27 @@ export const getMarkdown = (value: string) => {
       }
     },
   });
-const defaultImageRender = md.renderer.rules.image;
+  const defaultImageRender = md.renderer.rules.image;
 
-md.renderer.rules.image = function (tokens, idx, options, env, self) {
-  const token = tokens[idx];
-  const srcIndex = token.attrIndex("src");
-  const src = token.attrs[srcIndex][1];
-  if (fs.existsSync(src)) {
-    const fileContents = fs.readFileSync(src);
+  md.renderer.rules.image = function (tokens, idx, options, env, self) {
+    const token = tokens[idx];
+    const srcIndex = token.attrIndex("src");
+    const src = token.attrs[srcIndex][1];
+    if (fs.existsSync(src)) {
+      const fileContents = fs.readFileSync(src);
 
-  // Encode the file contents as a data URL
-  const dataUrl = `data:${mime.getType(src)};base64,${fileContents.toString('base64')}`;
-    token.attrs[srcIndex][1] = dataUrl;
-    return defaultImageRender(tokens, idx, options, env, self);
-  } else {
-    return defaultImageRender(tokens, idx, options, env, self);
-  }
-};
-    
-    require("markdown-it-pandoc")(md);
+      // Encode the file contents as a data URL
+      const dataUrl = `data:${mime.getType(src)};base64,${fileContents.toString(
+        "base64"
+      )}`;
+      token.attrs[srcIndex][1] = dataUrl;
+      return defaultImageRender(tokens, idx, options, env, self);
+    } else {
+      return defaultImageRender(tokens, idx, options, env, self);
+    }
+  };
+
+  require("markdown-it-pandoc")(md);
   md.use(metadata_block, {
     parseMetadata: yaml.parse,
     meta,
@@ -76,20 +78,16 @@ md.renderer.rules.image = function (tokens, idx, options, env, self) {
     return {
       document: { __html: result },
       metadata: meta,
-
     };
   } catch (err) {
     return { __html: "Couldn't render page, Something not right!" };
   }
 };
 
-
-
 const getUniqueId = () => {
   let counter = 0;
   return `mermaid-diagram-${counter + 1}`;
 };
-
 
 export const getMarkdownWithMermaid = (markdown: string): string => {
   const parts = markdown.split(/```mermaid([\s\S]*?)```/);

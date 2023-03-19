@@ -2,29 +2,40 @@
 /* @tailwind components; */
 @tailwind utilities;
 @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,700;1,400;1,700&display=swap");
 
 .drag {
   -webkit-app-region: drag;
 }
+blockquote {
+    @apply border-l-2 border-gray-200 dark:border-gray-800 pl-4;
+}
+.material a[href^="http"]:after {
+   content: none !important;
+}
 
-/*
- @media (prefers-color-scheme: dark) {
-  .custom-border {
-    border-color: rgb(31 31 31/1) !important;
-  }
-  hr {
-    border-color: rgb(31 31 31/1) !important;
-  }
-  body {
-    color: #e5e5e5 !important;
-    }
-}*/
-
+.cm-content {
+    @apply font-sans text-gray-900 dark:text-gray-100;
+    /* font-family: inherit; */
+    /* caret-color: aliceblue !important; */
+}
+a {
+  border-radius: 0.1875rem;
+  -webkit-text-decoration-line: underline;
+  text-decoration-line: underline;
+  -webkit-text-decoration-color: hsl(200deg, 5%, 60%);
+  text-decoration-color: hsl(200deg, 5%, 60%);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
 @media (prefers-color-scheme: dark) {
   body {
     background: #000000;
+    font-variant-numeric: slashed-zero;
     color: #e5e5e5 !important;
+  }
+
+ th, td {
+    border: 1px solid rgb(31 31 31/1) !important;
   }
   .ButtomBar {
     background-color: #000000 !important;
@@ -74,6 +85,7 @@
 @media (prefers-color-scheme: light) {
   body {
     background: #fff;
+    font-variant-numeric: slashed-zero;
     color: rgb(55, 53, 47) !important;
   }
   .topbar {
@@ -85,6 +97,9 @@
   .ButtomBar {
     background-color: #fff !important;
   }
+  th, td {
+    border: 1px solid #e5e7eb;
+  }
 }
 
 table,
@@ -94,7 +109,6 @@ td {
   margin-top: 2em;
   margin-left: auto;
   margin-right: auto;
-  border: 1px solid;
 }
 th,
 td {
@@ -178,152 +192,34 @@ u {
 }
 
 .ͼo .cm-vimMode .cm-line ::selection {
-  background-color: #f0f0f0 !important;
-  color: black !important;
+  background-color: rgba(47, 190, 234, 0.25) !important;
 }
 
 .ͼo .cm-vimMode .cm-line::selection {
-  background-color: #f0f0f0 !important;
-  color: black !important;
+  background-color: rgba(47, 190, 234, 0.25) !important;
 }
 
 .ͼz.cm-focused .cm-selectionBackground .cm-selectionBackground,
 .ͼz .cm-selectionLayer .cm-selectionBackground,
 .ͼz ::selection {
-  background-color: #f0f0f0 !important;
-  color: black !important;
+  background-color: rgba(47, 190, 234, 0.25) !important;
+}
+
+::selection {
+  background-color: rgba(47, 190, 234, 0.25) !important;
 }
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
 
-@font-face {
-  font-family: "Satoshi-Variable";
-  src: url("/fonts/Satoshi-Variable.woff2") format("woff2"),
-    url("/fonts/Satoshi-Variable.woff") format("woff"),
-    url("/fonts/Satoshi-Variable.ttf") format("truetype");
-  font-weight: 300 900;
-  font-display: swap;
-  font-style: normal;
-}
-
-/**
-* This is a variable font
-* You can controll variable axes as shown below:
-* font-variation-settings: 'wght' 900.0;
-*
-* available axes:
-
-* 'wght' (range from 300.0 to 900.0)
-
-*/
-
-@font-face {
-  font-family: "Satoshi-VariableItalic";
-  src: url("/fonts/Satoshi-VariableItalic.woff2") format("woff2"),
-    url("/fonts/Satoshi-VariableItalic.woff") format("woff"),
-    url("/fonts/Satoshi-VariableItalic.ttf") format("truetype");
-  font-weight: 300 900;
-  font-display: swap;
-  font-style: italic;
-}
-
-@font-face {
-  font-family: "Satoshi-Light";
-  src: url("/fonts/Satoshi-Light.woff2") format("woff2"),
-    url("/fonts/Satoshi-Light.woff") format("woff"),
-    url("/fonts/Satoshi-Light.ttf") format("truetype");
-  font-weight: 300;
-  font-display: swap;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "Satoshi-LightItalic";
-  src: url("/fonts/Satoshi-LightItalic.woff2") format("woff2"),
-    url("/fonts/Satoshi-LightItalic.woff") format("woff"),
-    url("/fonts/Satoshi-LightItalic.ttf") format("truetype");
-  font-weight: 300;
-  font-display: swap;
-  font-style: italic;
-}
-
-@font-face {
-  font-family: "Satoshi-Regular";
-  src: url("/fonts/Satoshi-Regular.woff2") format("woff2"),
-    url("/fonts/Satoshi-Regular.woff") format("woff"),
-    url("/fonts/Satoshi-Regular.ttf") format("truetype");
-  font-weight: 400;
-  font-display: swap;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "Satoshi-Italic";
-  src: url("/fonts/Satoshi-Italic.woff2") format("woff2"),
-    url("/fonts/Satoshi-Italic.woff") format("woff"),
-    url("/fonts/Satoshi-Italic.ttf") format("truetype");
-  font-weight: 400;
-  font-display: swap;
-  font-style: italic;
-}
-
-@font-face {
-  font-family: "Satoshi-Medium";
-  src: url("/fonts/Satoshi-Medium.woff2") format("woff2"),
-    url("/fonts/Satoshi-Medium.woff") format("woff"),
-    url("/fonts/Satoshi-Medium.ttf") format("truetype");
-  font-weight: 500;
-  font-display: swap;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "Satoshi-MediumItalic";
-  src: url("/fonts/Satoshi-MediumItalic.woff2") format("woff2"),
-    url("/fonts/Satoshi-MediumItalic.woff") format("woff"),
-    url("/fonts/Satoshi-MediumItalic.ttf") format("truetype");
-  font-weight: 500;
-  font-display: swap;
-  font-style: italic;
-}
-
-@font-face {
-  font-family: "Satoshi-Bold";
-  src: url("/fonts/Satoshi-Bold.woff2") format("woff2"),
-    url("/fonts/Satoshi-Bold.woff") format("woff"),
-    url("/fonts/Satoshi-Bold.ttf") format("truetype");
-  font-weight: 700;
-  font-display: swap;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "Satoshi-BoldItalic";
-  src: url("/fonts/Satoshi-BoldItalic.woff2") format("woff2"),
-    url("/fonts/Satoshi-BoldItalic.woff") format("woff"),
-    url("/fonts/Satoshi-BoldItalic.ttf") format("truetype");
-  font-weight: 700;
-  font-display: swap;
-  font-style: italic;
-}
-
-@font-face {
-  font-family: "Satoshi-Black";
-  src: url("/fonts/Satoshi-Black.woff2") format("woff2"),
-    url("/fonts/Satoshi-Black.woff") format("woff"),
-    url("/fonts/Satoshi-Black.ttf") format("truetype");
-  font-weight: 900;
-  font-display: swap;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "Satoshi-BlackItalic";
-  src: url("/fonts/Satoshi-BlackItalic.woff2") format("woff2"),
-    url("/fonts/Satoshi-BlackItalic.woff") format("woff"),
-    url("/fonts/Satoshi-BlackItalic.ttf") format("truetype");
-  font-weight: 900;
-  font-display: swap;
-  font-style: italic;
+a[href^="http"]:after {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 16px;
+  background-color: hsl(200deg, 5%, 60%);
+  -webkit-mask-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOCIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDggMTYiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0yIDJoNXY1SDZWMy43MDdsLTQuNSA0LjVMLjc5MyA3LjVsNC41LTQuNUgyVjJaIiBmaWxsPSIjMDAwIi8+PC9zdmc+);
+  mask-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOCIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDggMTYiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0yIDJoNXY1SDZWMy43MDdsLTQuNSA0LjVMLjc5MyA3LjVsNC41LTQuNUgyVjJaIiBmaWxsPSIjMDAwIi8+PC9zdmc+);
+  vertical-align: middle;
+  margin-left: 2px;
 }

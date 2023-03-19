@@ -310,7 +310,7 @@ export const STRIKETHROUGH = (view: EditorView) => {
  */
 export const toggleBetweenVimAndNormalMode = (
   setIsVim: Dispatcher<boolean>
-) => {
+): void => {
   const whatMode = localStorage.getItem("writingMode");
   if (whatMode == undefined) {
     localStorage.setItem("writingMode", "normal");
@@ -330,7 +330,7 @@ export const toggleBetweenVimAndNormalMode = (
  * @description Function opens external links in default browser
  * @returns {void}
  */
-export const openExternalInDefaultBrowser = () => {
+export const openExternalInDefaultBrowser = (): void => {
   document.addEventListener("click", (event) => {
     const element = event.target as HTMLAnchorElement | null;
     if (

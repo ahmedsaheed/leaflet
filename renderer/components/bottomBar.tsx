@@ -1,7 +1,6 @@
 import { EditorView } from "@codemirror/view";
 import { EditorUtils } from "./editorutils";
-import { progress } from "./progress";
-
+import readingTime from "reading-time";
 export const ButtomBar = (
   insert: boolean,
   vimToggler: () => void,
@@ -29,14 +28,10 @@ export const ButtomBar = (
             float: "left",
             paddingLeft: "10px",
             paddingTop: "5px",
-            // paddingBottom: insert ? "5px" : "8px",
             fontSize: "12px !important",
           }}
         >
           <div
-            style={{
-              // marginLeft: !fileTreeIsOpen && !insert ? "1.5em" : "0em",
-            }}
           >
             {insert ? (
               <div style={{ display: "inline" }}>
@@ -110,22 +105,12 @@ export const ButtomBar = (
             ) : (
               <span style={{ display: "inline" }}>
                 <div>
-                  <p style={{ padding: "1px", display: "inline" }}>Preview</p>
                   <div style={{ display: "inline", marginRight: "20px" }}></div>
                   <span>{`${value.toString().split(" ").length} words  ${
                     value.toString().length
                   } characters `}</span>
                   <div style={{ display: "inline", marginRight: "30px" }}></div>
-                  <div
-                    style={{
-                      display: insert ? "none" : "inline",
-                      color: "grey",
-                      overflow: "hidden",
-                    }}
-                    dangerouslySetInnerHTML={{
-                      __html: insert ? cursor : progress(scroll),
-                    }}
-                  />
+                  <span>{`${readingTime(value).text}`}</span>
                 </div>
               </span>
             )}

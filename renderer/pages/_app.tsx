@@ -1,6 +1,7 @@
 import React from "react";
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
+import "../public/fonts/css/font.css";
 
 if(typeof window !== "undefined"){
   const prefersColorScheme = window.matchMedia("(prefers-color-scheme: dark)").matches;

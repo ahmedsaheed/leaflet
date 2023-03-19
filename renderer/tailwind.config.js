@@ -1,19 +1,15 @@
-const colors = require('tailwindcss/colors');
-
+const colors = require("tailwindcss/colors");
+const defaults = require("tailwindcss/defaultTheme");
 module.exports = {
   content: [
-    './renderer/pages/**/*.{js,ts,jsx,tsx}',
-    './renderer/components/**/*.{js,ts,jsx,tsx}',
+    "./renderer/pages/**/*.{js,ts,jsx,tsx}",
+    "./renderer/components/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: 'media',
+  darkMode: "media",
   theme: {
-    colors: {
-      // use colors only specified
-      white: colors.white,
-      gray: colors.gray,
-      blue: colors.blue,
+    fontFamily: {
+      mono: ['"iA Writer Quattro"', "system-ui", "sans-serif"],
+      sans: ['"iA Writer Quattro"', "system-ui", "sans-serif"],
     },
-    extend: {},
   },
-  plugins: [],
 };

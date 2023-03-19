@@ -41,15 +41,7 @@ export default function Home() {
           },
         }}
       />
-      <div 
-        style={{
-          height: "100vh",
-          width: "100vw",
-          position: "absolute",
-          top: 0,
-          left: 0,
-          zIndex: -1,
-        }}
+      <div className="font-sans text-gray-900 dark:text-gray-100 antialiased" 
       >
       <Leaflet />
       </div>

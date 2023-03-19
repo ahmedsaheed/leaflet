@@ -34,7 +34,6 @@ export function CMDK({
     search,
     value
   );
-
   return (
     <CommandPalette
       onChangeSearch={setSearch}
@@ -42,7 +41,7 @@ export function CMDK({
       search={search}
       isOpen={menuOpen}
       page={page}
-      placeholder="Select a command..."
+      placeholder= {  `Search ${filteredItems.length} notes...` }
       footer={
 
       <Cmdkfooter />

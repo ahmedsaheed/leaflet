@@ -1,10 +1,5 @@
-import React, {
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ipcRenderer } from "electron";
-import { VscFiles } from "react-icons/vsc";
 import { vim } from "@replit/codemirror-vim";
 import "react-cmdk/dist/cmdk.css";
 import {
@@ -31,7 +26,7 @@ import { ListenToKeys } from "../lib/keyevents";
 import { toast } from "react-hot-toast";
 import { ButtomBar } from "../components/bottomBar";
 import { CMDK } from "../components/cmdk";
-import { AnimatePresence, motion } from "framer-motion"; 
+import { AnimatePresence, motion } from "framer-motion";
 
 export function Leaflet() {
   type file = {
@@ -56,12 +51,10 @@ export function Leaflet() {
   const [fileName, setFileName] = useState<string>("");
   const [pandocAvailable, setPandocAvailable] = useState<boolean>(false);
   const [cursor, setCursor] = useState<string>("1L:1C");
-  const [saver, setSaver] = useState<string>("");
   const appDir = mainPath.resolve(require("os").homedir(), "leaflet");
   const [struct, setStruct] = useState<{ [key: string]: any }>([]);
   const [isCreatingFolder, setIsCreatingFolder] = useState<boolean>(false);
   const [parentDir, setParentDir] = useState<string>(appDir);
-  const [detailIsOpen, setDetailIsOpen] = useState<boolean>(false);
   const [editorview, setEditorView] = useState<EditorView>();
   const [isVim, setIsVim] = useState<boolean>(false);
   const [open, setOpen] = React.useState(true);
@@ -69,7 +62,6 @@ export function Leaflet() {
   const prefersColorScheme = usePrefersColorScheme();
   const isDarkMode = prefersColorScheme === "dark";
   const resolvedMarkdown = getMarkdown(value);
-  
   useEffect(() => {
     ListenToKeys(
       saveFile,
@@ -90,28 +82,28 @@ export function Leaflet() {
     );
   });
 
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  
+
+
   const saveFile = () => {
     try {
-      setSaver("SAVING...");
       let newvalue = value;
       try {
         newvalue = format(value);
+        console.log(newvalue)
       } catch (e) {
         console.log(e);
       }
 
       ipcRenderer.invoke("saveFile", path, newvalue).then(() => {
-        setSaver("SAVED");
         setTimeout(() => {
           setIsEdited(false);
-          setSaver("EDITED");
         }, 3000);
       });
     } catch (e) {
@@ -135,31 +127,31 @@ export function Leaflet() {
    * @returns {void}
    */
   function onDelete(path: string, name: string): void {
-        try {
-            if (!fs.existsSync(path)) {
-                return;
-            }
-            ipcRenderer.invoke("deleteFile", name, path).then(() => {
-                Update();
-                toast("File moved to trash", {
-                    icon: "🗑️",
-                    style: {
-                        backgroundColor: isDarkMode ? "#1e1e1e" : "#fff",
-                        color: isDarkMode ? "#fff" : "#000",
-                    },
-                });
+    try {
+      if (!fs.existsSync(path)) {
+        return;
+      }
+      ipcRenderer.invoke("deleteFile", name, path).then(() => {
+        Update();
+        toast("File moved to trash", {
+          icon: "🗑️",
+          style: {
+            backgroundColor: isDarkMode ? "#1e1e1e" : "#fff",
+            color: isDarkMode ? "#fff" : "#000",
+          },
+        });
 
-                setStruct(files[0].structure.children);
-                const index = Math.floor(Math.random() * files.length);
-                setInsert(false);
-                setValue(files[index].body);
-                setName(files[index].name);
-                setPath(files[index].path);
-            });
-        } catch (e) {
-            console.log(e);
-        }
+        setStruct(files[0].structure.children);
+        const index = Math.floor(Math.random() * files.length);
+        setInsert(false);
+        setValue(files[index].body);
+        setName(files[index].name);
+        setPath(files[index].path);
+      });
+    } catch (e) {
+      console.log(e);
     }
+  }
 
   const Update = () => {
     ipcRenderer.invoke("getTheFile").then((files = []) => {
@@ -189,7 +181,7 @@ export function Leaflet() {
     setInsert,
     insert,
     fileDialog,
-    setScroll,
+    setScroll
   );
 
   const updateCursor = (a, b) => {
@@ -202,7 +194,7 @@ export function Leaflet() {
     if (!path) return;
     doc.toString() === fs.readFileSync(path, "utf8")
       ? setIsEdited(false)
-      : setSaver("EDITED");
+      : () => {};
     setIsEdited(true);
   };
 
@@ -250,8 +242,8 @@ export function Leaflet() {
     });
   }, []);
 
-  function CommandMenu(){
-    return(
+  function CommandMenu() {
+    return (
       click && (
         <CMDK
           value={value}
@@ -287,8 +279,7 @@ export function Leaflet() {
           name={name}
         />
       )
-    )
-    
+    );
   }
   useEffect(() => {
     ipcRenderer.on("new", function () {
@@ -296,29 +287,7 @@ export function Leaflet() {
     });
   }, [fileNameBox]);
 
-  const createNewFile = () => {
-    fileName != ""
-      ? ipcRenderer
-          .invoke("createNewFile", parentDir, fileName.replace(/\.md$/, ""))
-          .then(() => {
-            setFiles(files);
-            setInsert(false);
-            Update();
-          })
-      : null;
-  };
 
-  const creatingFileOrFolder = () => {
-    if (fileName.length < 1) {
-      setFileNameBox(false);
-      return;
-    }
-    isCreatingFolder ? createNewDir(fileName) : createNewFile();
-    setFileNameBox(false);
-    setTimeout(() => {
-      setFileName("");
-    }, 100);
-  };
 
   /**
    * @description handle file selection from the sidebar
@@ -334,9 +303,6 @@ export function Leaflet() {
       setPath(path);
       localStorage.setItem("currPath", path);
       setInsert(false);
-      const docus = document.getElementById("dashboard-view-container");
-      docus.scrollTop = 0;
-      docus?.focus()
     } catch (err) {
       console.log(err);
     }
@@ -354,9 +320,7 @@ export function Leaflet() {
             <div className="flex flex-col overflow-y-hidden">
               <ul className="flex w-20 shrink-0 flex-col items-center justify-end bg-transparent px-5 pt-1 pb-px space-y-2.5">
                 <li className="aspect-w-1 aspect-h-1 w-full">
-                  <span
-                    className="flex flex-col items-center justify-center rounded-full outline-none transition-all focus:outline-none sm:duration-300 bg-palette-0 text-palette-600 smarthover:hover:text-primary-500"
-                  >
+                  <span className="flex flex-col items-center justify-center rounded-full outline-none transition-all focus:outline-none sm:duration-300 bg-palette-0 text-palette-600 smarthover:hover:text-primary-500">
                     <svg
                       className="w-6"
                       viewBox="0 0 24 24"
@@ -367,7 +331,7 @@ export function Leaflet() {
                         stroke="currentColor"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        strokeWidth={2}
+                        strokeWidth={1.4}
                         d="M22 17v-5.16c0-1.42 0-2.12-.18-2.77 -.16-.58-.43-1.13-.78-1.61 -.4-.55-.95-.99-2.06-1.88l-2-1.6c-1.79-1.43-2.68-2.15-3.67-2.42 -.88-.25-1.8-.25-2.67 0 -.99.27-1.89.98-3.67 2.41l-2 1.6c-1.11.88-1.66 1.32-2.06 1.87 -.36.48-.62 1.02-.78 1.6 -.18.65-.18 1.35-.18 2.76v5.15c0 2.76 2.23 5 5 5 1.1 0 2-.9 2-2v-4.01c0-1.66 1.34-3 3-3 1.65 0 3 1.34 3 3v4c0 1.1.89 2 2 2 2.76 0 5-2.24 5-5Z"
                       />
                     </svg>
@@ -375,53 +339,67 @@ export function Leaflet() {
                 </li>
               </ul>
               <ul className="no-scrollbar flex w-20 grow flex-col items-center space-y-4 overflow-y-scroll bg-transparent py-4 px-5">
-              <li className="aspect-w-1 aspect-h-1 w-full">
+                <li className="aspect-w-1 aspect-h-1 w-full">
                   <span
-                  onClick={!open ? handleDrawerOpen : handleDrawerClose}
-                  className=" cursor-pointer flex flex-col items-center justify-center rounded-full transition-all duration-300 bg-palette-0 text-palette-600 smarthover:hover:text-primary-500"
-                  aria-current="page"
+                    onClick={!open ? handleDrawerOpen : handleDrawerClose}
+                    className=" cursor-pointer flex flex-col items-center justify-center rounded-full transition-all duration-300 bg-palette-0 text-palette-600 smarthover:hover:text-primary-500"
+                    aria-current="page"
                   >
-                    <VscFiles className="w-7 h-5" viewBox="0 0 24 24"
-                     stroke="currentColor"
-                     strokeLinecap="round"
-                     strokeLinejoin="round"
-                     strokeWidth={1}
-                    />
-                    </span>
-              </li>
-              
-                
-                <div className="custom-border mx-auto h-px w-3/4 flex-shrink-0 grow-0 border-b-[0.5px]" />
-                {!open && 
-                (
-                  <AnimatePresence>
-                  <motion.li className="aspect-w-1 aspect-h-1 w-full"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.2 }}
-
-                  >
-                  <span onClick={() => setClick(!click)} className="cursor-pointer flex flex-col items-center justify-center rounded-full transition-all duration-300 bg-palette-0 text-palette-600 smarthover:hover:text-primary-500">
-                  <svg
-                        className="h-[1.25rem] w-[1.25rem] font-medium text-palette-900 transition-all duration-300 active:text-palette-500 smarthover:hover:text-palette-500"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-width="2"
-                          d="M21 21l-3.64-3.64m0 0c1.62-1.63 2.63-3.88 2.63-6.37 0-4.98-4.03-9-9-9 -4.98 0-9 4.02-9 9 0 4.97 4.02 9 9 9 2.48 0 4.73-1.01 6.36-2.64Z"
-                        ></path>
-                      </svg>
+                    <svg
+                      className="w-10 h-8"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={0.1}
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 28 28"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M10.809 5.242a1.25 1.25 0 00-1.531.884L6.042 18.2a1.25 1.25 0 00.884 1.53l9.66 2.59a1.25 1.25 0 001.53-.885l3.236-12.074a1.25 1.25 0 00-.884-1.53l-9.66-2.589zm-2.98.496a2.75 2.75 0 013.368-1.945l9.66 2.588A2.75 2.75 0 0122.8 9.75l-3.236 12.074a2.75 2.75 0 01-3.368 1.945L6.538 21.18a2.75 2.75 0 01-1.944-3.368L7.829 5.738z"
+                        fill="white"
+                      ></path>
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M10.518 8.27a.75.75 0 01.919-.53l7.241 1.94a.75.75 0 01-.388 1.449l-7.242-1.94a.75.75 0 01-.53-.919zM9.677 11.41a.75.75 0 01.918-.531l7.242 1.94a.75.75 0 11-.388 1.45l-7.242-1.941a.75.75 0 01-.53-.919zM8.836 14.549a.75.75 0 01.918-.53l4.83 1.293a.75.75 0 11-.388 1.45l-4.83-1.295a.75.75 0 01-.53-.918z"
+                        fill="white"
+                      ></path>
+                    </svg>
                   </span>
-                </motion.li>
-                </AnimatePresence>
+                </li>
 
-                )
-                }
-               
+                <div className="custom-border mx-auto h-px w-3/4 flex-shrink-0 grow-0 border-b-[0.5px]" />
+                {!open && (
+                  <AnimatePresence>
+                    <motion.li
+                      className="aspect-w-1 aspect-h-1 w-full"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.2 }}
+                    >
+                      <span
+                        onClick={() => setClick(!click)}
+                        className="cursor-pointer flex flex-col items-center justify-center rounded-full transition-all duration-300 bg-palette-0 text-palette-600 smarthover:hover:text-primary-500"
+                      >
+                        <svg
+                          className="h-[1.25rem] w-[1.25rem] font-medium text-palette-900 transition-all duration-300 active:text-palette-500 smarthover:hover:text-palette-500"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-width="2"
+                            d="M21 21l-3.64-3.64m0 0c1.62-1.63 2.63-3.88 2.63-6.37 0-4.98-4.03-9-9-9 -4.98 0-9 4.02-9 9 0 4.97 4.02 9 9 9 2.48 0 4.73-1.01 6.36-2.64Z"
+                          ></path>
+                        </svg>
+                      </span>
+                    </motion.li>
+                  </AnimatePresence>
+                )}
               </ul>
             </div>
             <ul className="flex w-20 flex-col items-center space-y-5 bg-transparent px-5 pb-5">
@@ -435,7 +413,7 @@ export function Leaflet() {
                 />
                 <div className="absolute top-[50%] left-[50%] h-[115%] w-[115%] -translate-y-[50%] -translate-x-[50%] rounded-full bg-primary-400 opacity-5" />
                 <span className="flex flex-col items-center justify-center rounded-full transition-all duration-300 bg-palette-0 text-palette-600 smarthover:hover:text-primary-500">
-                <svg
+                  <svg
                     className="w-5"
                     viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg"
@@ -481,91 +459,86 @@ export function Leaflet() {
           </nav>
           <AnimatePresence initial={false}>
             {open && (
-          <motion.div
-            animate={{ width: 220 }}
-            initial={{ width: 0 }}
-            exit={{ width: 0 }}
-          className="second-nav custom-border no-scrollbar z-30 flex grow flex-col overflow-y-scroll border-r-[0.5px] bg-transparent">
-            <div className="drag flex shrink-0 flex-col justify-center px-4 h-16">
-              <div className="flex items-center justify-between">
-                <span className="w-full text-lg font-small text-palette-800">
-                  Explorer
-                </span>
-                <span
-                  onClick={() => {
-                    setOpen(false);
-                  }}
-                  className="flex h-[22px] items-center transition-all duration-300 smarthover:hover:text-primary-500 text-palette-600"
-                >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" className="h-6 w-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path></svg>
-                </span>
-              </div>
-            </div>
-            <div className="no-scrollbar mx-2.5 space-y-5 overflow-y-auto pb-32">
-              <div>
-                <ul className="space-y-1">
-                  <li>
+              <motion.div
+                animate={{ width: 220 }}
+                initial={{ width: 0 }}
+                exit={{ width: 0 }}
+                className="second-nav custom-border no-scrollbar z-30 flex grow flex-col overflow-y-scroll border-r-[0.5px] bg-transparent"
+              >
+                <div className="drag flex shrink-0 flex-col justify-center px-4 h-16">
+                  <div className="flex items-center justify-between">
+                    <span className="w-full text-lg font-small text-palette-800">
+                      Notes
+                    </span>
                     <span
-                      className="cursor-pointer flex w-full items-center space-x-2.5 rounded-xl px-2.5 py-2.5 transition-all duration-300 smarthover:hover:text-primary-500 bg-palette-100 text-primary-500 dark:bg-palette-50"
-                      onClick={() => setClick(!click)}
-                      aria-current="page"
+                      onClick={() => {
+                        setOpen(false);
+                      }}
+                      className="flex h-[22px] items-center transition-all duration-300 smarthover:hover:text-primary-500 text-palette-600"
                     >
                       <svg
-                        className="h-[1.25rem] w-[1.25rem] font-medium text-palette-900 transition-all duration-300 active:text-palette-500 smarthover:hover:text-palette-500"
-                        viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        aria-hidden="true"
+                        className="h-6 w-6"
                       >
                         <path
-                          fill="none"
-                          stroke="currentColor"
                           stroke-linecap="round"
+                          stroke-linejoin="round"
                           stroke-width="2"
-                          d="M21 21l-3.64-3.64m0 0c1.62-1.63 2.63-3.88 2.63-6.37 0-4.98-4.03-9-9-9 -4.98 0-9 4.02-9 9 0 4.97 4.02 9 9 9 2.48 0 4.73-1.01 6.36-2.64Z"
+                          d="M4 6h16M4 12h16M4 18h7"
                         ></path>
                       </svg>
-                      <span className="align-middle font-mono text-sm">
-                        search
-                      </span>
                     </span>
-                  </li>
-                </ul>
-              </div>
-              <div className="space-y-1.5">
-                <div className="sticky top-0 bg-palette-0 pb-2">
-                  <div className="flex items-center justify-between px-2 text-palette-700">
-                    <div className="text-base font-medium">notes</div>
-                    <div>
-                      <button className="flex h-[22px] items-center transition-all duration-300 smarthover:hover:text-primary-500">
-                        <svg
-                          className="h-full p-px"
-                          viewBox="0 0 24 24"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            fill="none"
-                            stroke="currentColor"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M5 12h7m7 0h-7m0 0V5m0 7v7"
-                          />
-                        </svg>
-                      </button>
-                    </div>
                   </div>
                 </div>
-                <ul className="space-y-1">
-                  <li className="overflow-y-scroll">
-                    <FileTree
-                      structures={struct}
-                      onNodeClicked={(path, name) => onNodeClicked(path, name)}
-                      path={path}
-                    />
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </motion.div>
+                <div className="no-scrollbar mx-2.5 space-y-5 overflow-y-auto pb-32">
+                  <div>
+                    <ul className="space-y-1">
+                      <li>
+                        <span
+                          className="cursor-pointer flex w-full items-center space-x-2.5 rounded-xl px-2.5 py-2.5 transition-all duration-300 smarthover:hover:text-primary-500 bg-palette-100 text-primary-500 dark:bg-palette-50"
+                          onClick={() => setClick(!click)}
+                          aria-current="page"
+                        >
+                          <svg
+                            className="h-[1.25rem] w-[1.25rem] font-medium text-palette-900 transition-all duration-300 active:text-palette-500 smarthover:hover:text-palette-500"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-width="2"
+                              d="M21 21l-3.64-3.64m0 0c1.62-1.63 2.63-3.88 2.63-6.37 0-4.98-4.03-9-9-9 -4.98 0-9 4.02-9 9 0 4.97 4.02 9 9 9 2.48 0 4.73-1.01 6.36-2.64Z"
+                            ></path>
+                          </svg>
+                          <span className="align-middle font-mono text-sm">
+                            search
+                          </span>
+                        </span>
+                      </li>
+                    </ul>
+                  </div>
+                  <div className="space-y-1.5">
+                    <div className="sticky top-0 bg-palette-0 pb-2"></div>
+                    <ul className="space-y-1">
+                      <li className="overflow-y-scroll">
+                        <FileTree
+                          structures={struct}
+                          onNodeClicked={(path, name) =>
+                            onNodeClicked(path, name)
+                          }
+                          path={path}
+                        />
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </motion.div>
             )}
           </AnimatePresence>
         </div>
@@ -693,36 +666,40 @@ export function Leaflet() {
                     </div>
                   ) : (
                     <>
-                    <AnimatePresence>
-                      <motion.div
-                        key={path}
-                        variants={{
-                          hidden: { opacity: 0,y: -50 },
-                          visible: (i) => ({
-                            opacity : 1,
-                            y: 0,
-                            transition: { delay: i * 0.01 },
-                          }),
-                        }}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }} 
-                      style={{ paddingTop: "1em" }}>
-                        <div id="content" style={{ padding: "40px" }}>
-                          {ValidateYaml(resolvedMarkdown.metadata)}
-                          <div>
-                            <div
-                              id="previewArea"
-                              style={{
-                                marginBottom: "5em",
-                              }}
-                              dangerouslySetInnerHTML={
-                                resolvedMarkdown.document
-                              }
-                            />
+                      <AnimatePresence>
+                        <motion.div
+                          key={path}
+                          variants={{
+                            hidden: { opacity: 0, y: -50 },
+                            visible: (i) => ({
+                              opacity: 1,
+                              y: 0,
+                              transition: { delay: i * 0.01 },
+                            }),
+                          }}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          style={{ paddingTop: "1em" }}
+                        >
+                          <div
+                            id="content"
+                            style={{ padding: "40px" }}
+                          >
+                            {ValidateYaml(resolvedMarkdown.metadata)}
+                            <div>
+                              <div
+                                id="previewArea"
+                                style={{
+                                  marginBottom: "5em",
+                                }}
+                                dangerouslySetInnerHTML={
+                                  resolvedMarkdown.document
+                                }
+                              />
+                            </div>
                           </div>
-                        </div>
-                      </motion.div>
+                        </motion.div>
                       </AnimatePresence>
                       {ButtomBar(
                         insert,
@@ -742,8 +719,7 @@ export function Leaflet() {
           </div>
         </div>
       </div>
-      <CommandMenu/>
-     
+      <CommandMenu />
     </div>
   );
 }
