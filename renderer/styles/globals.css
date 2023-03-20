@@ -15,8 +15,12 @@ blockquote {
 
 .cm-content {
   @apply font-sans text-gray-900 dark:text-gray-100;
-  /* font-family: inherit; */
-  /* caret-color: aliceblue !important; */
+}
+@media (max-width: 768px) {
+  img {
+    max-width: 70%;
+    margin: auto;
+  }
 }
 a {
   border-radius: 0.1875rem;

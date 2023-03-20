@@ -59,6 +59,12 @@ const myTheme = createTheme({
       tag: t.link,
       textDecorationColor: "hsl(200deg, 5%, 60%)",
       boarderRaduis: "0.1875",
+       // hover
+       "&:hover": {
+        textDecoration: "underline",
+        color: "blue"
+       }
+
     },
     { tag: t.atom, class: "pre", color: "red" },
     // style the code blocks

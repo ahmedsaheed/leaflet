@@ -325,30 +325,171 @@ export const PREVIEWIcon = () => {
   );
 };
 
-export const OPTIONSIcon = () => 
-  
+export const OPTIONSIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="18"
+    height="17"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="#888888"
+    stroke-width="1"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <circle cx="12" cy="12" r="1"></circle>
+    <circle cx="12" cy="5" r="1"></circle>
+    <circle cx="12" cy="19" r="1"></circle>
+  </svg>
+);
+
+export const FOLDEROPENED = () => (
+  <svg
+    style={{
+      transform: "rotate(270deg)",
+      transition: "transform 100ms ease-in-out",
+    }}
+    xmlns="http://www.w3.org/2000/svg"
+    width="10"
+    height="13"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <path d="M3 8L12 17L21 8"></path>
+  </svg>
+);
+export const FOLDERCLOSED = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="10"
+    height="13"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <path d="M3 8L12 17L21 8"></path>
+  </svg>
+);
+
+export const HOMEIcon = () => {
+  return (
+    <svg className="w-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={1.4}
+        d="M22 17v-5.16c0-1.42 0-2.12-.18-2.77 -.16-.58-.43-1.13-.78-1.61 -.4-.55-.95-.99-2.06-1.88l-2-1.6c-1.79-1.43-2.68-2.15-3.67-2.42 -.88-.25-1.8-.25-2.67 0 -.99.27-1.89.98-3.67 2.41l-2 1.6c-1.11.88-1.66 1.32-2.06 1.87 -.36.48-.62 1.02-.78 1.6 -.18.65-.18 1.35-.18 2.76v5.15c0 2.76 2.23 5 5 5 1.1 0 2-.9 2-2v-4.01c0-1.66 1.34-3 3-3 1.65 0 3 1.34 3 3v4c0 1.1.89 2 2 2 2.76 0 5-2.24 5-5Z"
+      />
+    </svg>
+  );
+};
+
+export const SEARCHIcon = () => {
+  return (
+    <svg
+      className="h-[1.25rem] w-[1.25rem] font-medium text-palette-900 transition-all duration-300 active:text-palette-500 smarthover:hover:text-palette-500"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        fill="none"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-width="2"
+        d="M21 21l-3.64-3.64m0 0c1.62-1.63 2.63-3.88 2.63-6.37 0-4.98-4.03-9-9-9 -4.98 0-9 4.02-9 9 0 4.97 4.02 9 9 9 2.48 0 4.73-1.01 6.36-2.64Z"
+      ></path>
+    </svg>
+  );
+};
+
+export const SLIDERIcon = () => {
+  return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="18"
-      height="17"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      aria-hidden="true"
+      className="h-6 w-6"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M4 6h16M4 12h16M4 18h7"
+      ></path>
+    </svg>
+  );
+};
+
+export const OPENSLIDERIcon = () => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      aria-hidden="true"
+      className="h-6 w-6"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M4 6h16M4 12h16M4 18h7"
+      />
+    </svg>
+  );
+};
+
+export const MARKDOWNToggler = () => {
+  return (
+    <svg
+      className="h-[22px] font-medium text-palette-900 transition-all duration-300 active:text-palette-500 smarthover:hover:text-palette-500 p-[0.5px]"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <g
+        strokeLinecap="round"
+        strokeWidth={2}
+        stroke="currentColor"
+        fill="none"
+        strokeLinejoin="round"
+      >
+        <path
+          opacity=".15"
+          d="M2 12c0 2.25.74 4.32 2 6m18-6.01c0-2.26-.74-4.33-1.99-6"
+        />
+        <path d="M2 7.5V4m0 3.5C2 7.5 5.33 2 12 2c3.29 0 6.19 1.57 8.01 4M1.99 7.5h3.5m15.5 9s-3.48 5.5-9 5.5c-3.28 0-6.18-1.58-8-4m17-1.51h-3.5m3.5 0v3.5" />
+      </g>
+    </svg>
+  );
+};
+
+export const STACKIcon = () => {
+  return (
+    <svg
+      className="h-[22px] font-medium text-palette-900 transition-all duration-300 active:text-palette-500 smarthover:hover:text-palette-500"
       viewBox="0 0 24 24"
       fill="none"
-      stroke="#888888"
-      stroke-width="1"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      xmlns="http://www.w3.org/2000/svg"
     >
-      <circle cx="12" cy="12" r="1"></circle>
-      <circle cx="12" cy="5" r="1"></circle>
-      <circle cx="12" cy="19" r="1"></circle>
+      <path
+        d="M22 13L16.2933 15.8534C14.7191 16.6405 13.932 17.034 13.1064 17.1889C12.3752 17.3261 11.6248 17.3261 10.8936 17.1889C10.068 17.034 9.28094 16.6405 7.70675 15.8534L2 13M22 18L16.2933 20.8534C14.7191 21.6405 13.932 22.034 13.1064 22.1889C12.3752 22.3261 11.6248 22.3261 10.8936 22.1889C10.068 22.034 9.28094 21.6405 7.70675 20.8534L2 18M5.72433 9.86217L9.13783 11.5689C10.1873 12.0936 10.712 12.356 11.2624 12.4593C11.7499 12.5507 12.2501 12.5507 12.7376 12.4593C13.288 12.356 13.8127 12.0936 14.8622 11.5689L18.2757 9.86217C20.1181 8.94095 21.0393 8.48035 21.3349 7.85705C21.5922 7.31464 21.5922 6.68536 21.3349 6.14295C21.0393 5.51965 20.1181 5.05905 18.2757 4.13783L14.8622 2.43108C13.8127 1.90635 13.288 1.64399 12.7376 1.54073C12.2501 1.44927 11.7499 1.44927 11.2624 1.54073C10.712 1.64399 10.1873 1.90635 9.13783 2.43108L5.72433 4.13783C3.88191 5.05905 2.96069 5.51965 2.66508 6.14295C2.40782 6.68536 2.40782 7.31464 2.66508 7.85705C2.96069 8.48035 3.88191 8.94095 5.72433 9.86217Z"
+        stroke="currentColor"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
-
-
-
-export const FOLDEROPENED  = () => <svg
-  style={{
-    transform: "rotate(270deg)",
-    transition: "transform 100ms ease-in-out"
-  }}
-xmlns="http://www.w3.org/2000/svg" width="10" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8L12 17L21 8"></path></svg>
-export const FOLDERCLOSED =()=> <svg xmlns="http://www.w3.org/2000/svg" width="10" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8L12 17L21 8"></path></svg>
+  );
+};

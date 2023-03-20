@@ -1,4 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
+import { HOMEIcon } from "./icons";
 type Props = {
   open: boolean;
   handleDrawerOpen: () => void;
@@ -16,20 +17,7 @@ export const Nav = (prop: Props) => {
         <ul className="flex w-20 shrink-0 flex-col items-center justify-end bg-transparent px-5 pt-1 pb-px space-y-2.5">
           <li className="aspect-w-1 aspect-h-1 w-full">
             <span className="flex flex-col items-center justify-center rounded-full outline-none transition-all focus:outline-none sm:duration-300 bg-palette-0 text-palette-600 smarthover:hover:text-primary-500">
-              <svg
-                className="w-6"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.4}
-                  d="M22 17v-5.16c0-1.42 0-2.12-.18-2.77 -.16-.58-.43-1.13-.78-1.61 -.4-.55-.95-.99-2.06-1.88l-2-1.6c-1.79-1.43-2.68-2.15-3.67-2.42 -.88-.25-1.8-.25-2.67 0 -.99.27-1.89.98-3.67 2.41l-2 1.6c-1.11.88-1.66 1.32-2.06 1.87 -.36.48-.62 1.02-.78 1.6 -.18.65-.18 1.35-.18 2.76v5.15c0 2.76 2.23 5 5 5 1.1 0 2-.9 2-2v-4.01c0-1.66 1.34-3 3-3 1.65 0 3 1.34 3 3v4c0 1.1.89 2 2 2 2.76 0 5-2.24 5-5Z"
-                />
-              </svg>
+              <HOMEIcon />
             </span>
           </li>
         </ul>
@@ -43,6 +31,7 @@ export const Nav = (prop: Props) => {
               aria-current="page"
             >
               <svg
+                style={{ transform: "rotate(346deg)" }}
                 className="w-10 h-8"
                 stroke="currentColor"
                 strokeLinecap="round"
