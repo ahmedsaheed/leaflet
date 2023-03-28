@@ -1,26 +1,27 @@
-import { getBG, TAGIcon, MATERIALIcon, CLOCKIcon } from "./icons";
+import { getBG, TAGIcon, MATERIALIcon, CLOCKIcon } from './icons'
 
 type IncomingProps = {
-  [key: string]: any;
-};
+  [key: string]: any
+}
 
 const checkIfIncomingIsObject = (incoming: IncomingProps) => {
-  return typeof incoming != undefined;
-};
-
+  return typeof incoming != undefined
+}
+const tagClassName =
+  'material text-black border-transparent flex-none border rounded-sm text-center justify-items-center p-1 text-xs inline overflow-hidden mr-1'
 export const METATAGS = ({ incoming }) => {
-  if (!checkIfIncomingIsObject(incoming) || incoming === undefined) return null;
+  if (!checkIfIncomingIsObject(incoming) || incoming === undefined) return null
   return incoming ? (
-    <div style={{ display: "inline" }}>
-      <div style={{ display: "flex" }}>
+    <div style={{ display: 'inline' }}>
+      <div style={{ display: 'flex' }}>
         <div
           style={{
-            alignItems: "center",
-            padding: "0px 6px 10px",
-            color: "#888888",
-            display: "flex",
-            width: "130px",
-            flex: "0 0 auto",
+            alignItems: 'center',
+            padding: '0px 6px 10px',
+            color: '#888888',
+            display: 'flex',
+            width: '130px',
+            flex: '0 0 auto'
           }}
         >
           <TAGIcon />
@@ -28,32 +29,29 @@ export const METATAGS = ({ incoming }) => {
         </div>
         <div
           style={{
-            display: "flex",
-            flex: "1 1 auto",
-            alignItems: "center",
-            minWidth: "0",
-            paddingBottom: "10px",
+            display: 'flex',
+            flex: '1 1 auto',
+            alignItems: 'center',
+            minWidth: '0',
+            paddingBottom: '10px'
           }}
         >
           <span
             style={{
-              width: "100%",
-              color: "#888888",
-              whiteSpace: "nowrap",
-              overflowX: "scroll",
+              width: '100%',
+              color: '#888888',
+              whiteSpace: 'nowrap'
             }}
+            className='flex overflow-x-auto  no-scrollbar'
           >
             {incoming?.map((tag) => (
               <code
+                className={tagClassName}
                 style={{
-                  marginRight: "1em",
-                  display: "inline",
-                  overflow: "hidden",
-                  color: "#000",
-                  backgroundColor: getBG(),
-                  padding: "5px",
-                  borderRadius: "6px !important",
-                  border: "1px solid transparent",
+                  marginRight: '1em',
+                  display: 'inline',
+                  overflow: 'hidden',
+                  backgroundColor: getBG()
                 }}
               >
                 {tag?.toLowerCase()}
@@ -63,21 +61,21 @@ export const METATAGS = ({ incoming }) => {
         </div>
       </div>
     </div>
-  ) : null;
-};
+  ) : null
+}
 
 export const METAMATERIAL = ({ incoming }) => {
-  if (!checkIfIncomingIsObject(incoming) || incoming === undefined) return null;
+  if (!checkIfIncomingIsObject(incoming) || incoming === undefined) return null
   return incoming ? (
-    <div style={{ display: "flex" }}>
+    <div style={{ display: 'flex' }}>
       <div
         style={{
-          alignItems: "center",
-          padding: "0px 6px 10px",
-          color: "#888888",
-          display: "flex",
-          width: "130px",
-          flex: "0 0 auto",
+          alignItems: 'center',
+          padding: '0px 6px 10px',
+          color: '#888888',
+          display: 'flex',
+          width: '130px',
+          flex: '0 0 auto'
         }}
       >
         <MATERIALIcon />
@@ -85,41 +83,34 @@ export const METAMATERIAL = ({ incoming }) => {
       </div>
       <div
         style={{
-          flex: "1 1 auto",
-          alignItems: "center",
-          minWidth: "0",
-          paddingBottom: "10px",
+          flex: '1 1 auto',
+          alignItems: 'center',
+          minWidth: '0',
+          paddingBottom: '10px'
         }}
       >
         <span
           style={{
-            width: "100%",
-            color: "#888888",
-            whiteSpace: "nowrap",
-            overflowX: "scroll",
+            width: '100%',
+            color: '#888888',
+            whiteSpace: 'nowrap'
           }}
+          className='flex overflow-x-auto  no-scrollbar'
         >
           {incoming?.map((materials) =>
             Object.entries(materials).map(([key, value]) =>
               //TODO: Look for a better way to do this
-              value?.toString().startsWith("http") && key != value ? (
+              value?.toString().startsWith('http') && key != value ? (
                 <code
-                className="material"
+                  className={tagClassName}
                   style={{
-                    marginRight: "1em",
-                    display: "inline",
-                    overflow: "hidden",
-                    color: "#000",
-                    backgroundColor: getBG(),
-                    padding: "5px",
-                    borderRadius: "6px !important",
-                    border: "1px solid transparent",
+                    backgroundColor: getBG()
                   }}
                 >
                   <a
-                    target="_blank"
-                    rel="noreferrer"
-                    style={{ textDecoration: "none", border: "none" }}
+                    target='_blank'
+                    rel='noreferrer'
+                    style={{ textDecoration: 'none', border: 'none' }}
                     href={value?.toString()}
                   >
                     {key?.toLowerCase()}
@@ -131,39 +122,39 @@ export const METAMATERIAL = ({ incoming }) => {
         </span>
       </div>
     </div>
-  ) : null;
-};
+  ) : null
+}
 
 export const METADATE = ({ incoming }) => {
   if (incoming === undefined) {
-    return null;
+    return null
   }
   return (
-    <div style={{ display: "flex" }}>
+    <div style={{ display: 'flex' }}>
       <div
         style={{
-          alignItems: "center",
-          padding: "0px 6px 10px",
-          color: "#888888",
-          display: "flex",
-          width: "130px",
-          flex: "0 0 auto",
+          alignItems: 'center',
+          padding: '0px 6px 10px',
+          color: '#888888',
+          display: 'flex',
+          width: '130px',
+          flex: '0 0 auto'
         }}
       >
         <CLOCKIcon />
-        &nbsp;Created&nbsp;{" "}
+        &nbsp;Created&nbsp;{' '}
       </div>
       <div
         style={{
-          display: "flex",
-          flex: "1 1 auto",
-          alignItems: "center",
-          minWidth: "0",
-          paddingBottom: "10px",
+          display: 'flex',
+          flex: '1 1 auto',
+          alignItems: 'center',
+          minWidth: '0',
+          paddingBottom: '10px'
         }}
       >
-        <span style={{ color: "#888888" }}>{incoming}</span>
+        <span style={{ color: '#888888' }}>{incoming}</span>
       </div>
     </div>
-  );
-};
+  )
+}

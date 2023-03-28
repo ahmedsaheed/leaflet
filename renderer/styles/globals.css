@@ -1,43 +1,52 @@
 @tailwind base;
-/* @tailwind components; */
+@tailwind components;
 @tailwind utilities;
-@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url(https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css);
 
-.drag {
-  -webkit-app-region: drag;
-}
-blockquote {
-  @apply border-l-2 border-gray-200 dark:border-gray-800 pl-4;
-}
-.material a[href^="http"]:after {
-  content: none !important;
-}
-
-.cm-content {
-  @apply font-sans text-gray-900 dark:text-gray-100;
-}
-@media (max-width: 768px) {
-  img {
-    max-width: 70%;
-    margin: auto;
-  }
-}
-a {
-  border-radius: 0.1875rem;
-  -webkit-text-decoration-line: underline;
-  text-decoration-line: underline;
-  -webkit-text-decoration-color: hsl(200deg, 5%, 60%);
-  text-decoration-color: hsl(200deg, 5%, 60%);
-  text-decoration-thickness: 1px;
-  text-underline-offset: 2px;
-}
 @media (prefers-color-scheme: dark) {
   body {
     background: #000000;
     font-variant-numeric: slashed-zero;
     color: #e5e5e5 !important;
   }
+  .cm-panels,
+  .cm-button {
+    background-color: #000000 !important;
+  }
 
+  mark .katex {
+    background-color: transparent !important;
+    border: none !important;
+    color: #e5e5e5 !important;
+  }
+
+  .katex:not(.katex-display .katex),
+  code:not(pre code) {
+    @apply font-mono;
+    background-color: hsla(223, 15%, 20%, 60%);
+    border: 1px solid hsla(222, 15%, 20%);
+    border-radius: 6px;
+    padding: 2px 4px;
+    font-size: smaller;
+    color: hsla(222, calc(89 * 1%), 70%);
+    box-shadow: 0.5px 1px 1px hsl(223deg, 5%, 1%) / 0.333;
+  }
+  pre {
+    background-color: hsl(223deg 5% 12% / 60%) !important;
+    border: 1px solid hsla(222, 15%, 20%);
+    border-radius: 6px;
+    color: hsla(222, calc(89 * 1%), 70%);
+    box-shadow: 0.5px 1px 1px hsl(223deg, 5%, 1%) / 0.333;
+  }
+
+  .katex-display {
+    background-color: hsl(223deg 5% 12% / 60%) !important;
+    border: 1px solid hsla(222, 15%, 20%);
+    border-radius: 6px;
+    padding: 8px 2px;
+    box-shadow: 0.5px 1px 1px hsl(223deg, 5%, 1%) / 0.333;
+  }
   th,
   td {
     border: 1px solid rgb(31 31 31/1) !important;
@@ -63,11 +72,6 @@ a {
     border: 1px solid rgba(64, 64, 64, 0.5) !important;
   }
 
-  pre {
-    background-color: hsl(0 0% 8.5%) !important;
-    box-shadow: 0 0 0 1px hsl(0 0% 8.5%) !important;
-  }
-
   .custom-border {
     border-color: rgb(31 31 31/1) !important;
   }
@@ -86,12 +90,51 @@ a {
     background-color: #000000 !important;
   }
 }
-
 @media (prefers-color-scheme: light) {
   body {
     background: #fff;
     font-variant-numeric: slashed-zero;
     color: rgb(55, 53, 47) !important;
+  }
+  mark .katex {
+    background-color: transparent;
+    border: none;
+    color: rgb(55, 53, 47) !important;
+  }
+  .katex:not(.katex-display .katex),
+  code:not(pre code) {
+    @apply font-mono;
+    background-color: hsla(223, 15%, 95%, 60%);
+    border: 1px solid hsla(222, calc(89 * 1%), 50%, 5%);
+    border-radius: 6px;
+    padding: 2px 4px;
+    font-size: smaller;
+    color: hsla(222, calc(89 * 1%), 50%);
+    box-shadow: 0.5px 1px 1px hsl(223deg, 5%, 80%) / 0.333;
+  }
+
+  pre {
+    background-color: hsla(223, 15%, 95%, 60%);
+    border: 1px solid hsla(222, calc(89 * 1%), 50%, 5%);
+    border-radius: 6px;
+    padding: 2px 4px;
+    color: hsla(222, calc(89 * 1%), 50%);
+    box-shadow: 0.5px 1px 1px hsl(223deg, 5%, 80%) / 0.333;
+  }
+
+  .katex-display {
+    background-color: hsla(223, 15%, 95%, 60%);
+    border: 1px solid hsla(222, calc(89 * 1%), 50%, 5%);
+    border-radius: 6px;
+    padding: 8px 2px;
+    box-shadow: 0.5px 1px 1px hsl(223deg, 5%, 80%) / 0.333;
+  }
+  .cm-panels-bottom {
+    border: none !important;
+  }
+  .cm-panels,
+  .cm-button {
+    background-color: #fff !important;
   }
   .cm-activeLine {
     background-color: #efefef;
@@ -99,9 +142,9 @@ a {
   .topbar {
     background-color: #fff !important;
   }
-  pre {
+  /* pre {
     background-color: #ededed !important;
-  }
+  } */
   .ButtomBar {
     background-color: #fff !important;
   }
@@ -111,18 +154,6 @@ a {
   }
 }
 
-table,
-th,
-td {
-  margin-bottom: 2em;
-  margin-top: 2em;
-  margin-left: auto;
-  margin-right: auto;
-}
-th,
-td {
-  padding: 5px;
-}
 body {
   fill: currentColor;
   font-size: 14px;
@@ -149,25 +180,82 @@ h3 {
   font-size: 18px;
   margin: 15px 0;
 }
+.cm-gutters {
+  @apply hidden !important;
+}
+table,
+th,
+td {
+  margin-bottom: 2em;
+  margin-top: 2em;
+  margin-left: auto;
+  margin-right: auto;
+}
+th,
+td {
+  padding: 5px;
+}
+
+.drag {
+  -webkit-app-region: drag;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+blockquote {
+  @apply border-l-2 border-gray-200 dark:border-gray-800 pl-4;
+}
+.material a[href^='http']:after {
+  content: none !important;
+}
+
+.cm-content {
+  @apply font-sans text-gray-900 dark:text-gray-100;
+}
+
+img {
+  -webkit-user-drag: none;
+  user-drag: none;
+  -webkit-tap-highlight-color: transparent;
+  @apply mx-auto w-fit;
+}
+iframe {
+  -webkit-user-drag: none;
+  -webkit-tap-highlight-color: transparent;
+  @apply mx-auto w-fit;
+  width: 100%;
+  height: 500px;
+  user-drag: none;
+}
+.quickAction {
+  cursor: pointer !important;
+}
+a:hover {
+  -webkit-text-decoration-line: none;
+  text-decoration-line: none;
+}
+a {
+  border-radius: 0.1875rem;
+  -webkit-text-decoration-line: underline;
+  text-decoration-line: underline;
+  -webkit-text-decoration-color: hsl(200deg, 5%, 60%);
+  text-decoration-color: hsl(200deg, 5%, 60%);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
 
 .ͼ1.cm-editor.cm-focused {
   outline: none;
 }
 code {
   white-space: pre-wrap;
-  font-family: JetBrains Mono, ui-monospace, Menlo, Monaco, "Segoe UI Mono",
-    "Roboto Mono", monospace !important;
+  font-size: small;
 }
 pre code {
-  border-radius: 6px;
-  align-items: center;
   overflow-x: auto;
 }
 pre {
-  font-family: JetBrains Mono, ui-monospace, Menlo, Monaco, "Segoe UI Mono",
-    "Roboto Mono", monospace !important;
-  border-radius: 6px;
-  border: 1px solid hsl(0, 0%, 31.2%);
+  @apply font-mono;
   padding: 1rem;
   margin: 1rem 0;
 }
@@ -223,8 +311,8 @@ u {
   display: none;
 }
 
-a[href^="http"]:after {
-  content: "";
+a[href^='http']:after {
+  content: '';
   display: inline-block;
   width: 8px;
   height: 16px;
@@ -233,4 +321,22 @@ a[href^="http"]:after {
   mask-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOCIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDggMTYiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0yIDJoNXY1SDZWMy43MDdsLTQuNSA0LjVMLjc5MyA3LjVsNC41LTQuNUgyVjJaIiBmaWxsPSIjMDAwIi8+PC9zdmc+);
   vertical-align: middle;
   margin-left: 2px;
+}
+
+/* .ButtomBar {
+  display: none !important;
+} */
+
+[name='replace'].cm-textfield,
+[name='replace'].cm-button,
+[name='next'].cm-button,
+[name='prev'].cm-button,
+[name='select'].cm-button,
+.cm-search label,
+[name='replaceAll'].cm-button {
+  @apply hidden;
+}
+
+.cm-textfield {
+  @apply outline-none border-r-2 w-full !important;
 }
