@@ -1,4 +1,3 @@
-import { DOCXIcon, PDFIcon } from './icons'
 import CommandPalette, { filterItems, getItemIndex } from 'react-cmdk'
 import { shell } from 'electron'
 import path from 'path'
@@ -8,28 +7,18 @@ export function CMDK({
   onNewFile,
   onCreatingFolder,
   files,
-  pandocAvailable,
-  name,
-  onDocxConversion,
-  onPdfConversion,
   search,
   setSearch,
   setClick,
   menuOpen,
   page,
-  value
 }) {
   const filteredItems = items(
     onFileSelect,
     onNewFile,
     onCreatingFolder,
     files,
-    pandocAvailable,
-    name,
-    onDocxConversion,
-    onPdfConversion,
     search,
-    value
   )
   return (
     <CommandPalette
@@ -85,12 +74,7 @@ function items(
   onNewFile: () => any,
   onCreatingFolder: () => any,
   files: Array<FileType>,
-  pandocAvailable: Boolean,
-  name: string,
-  onDocxConversion: (value: string, name: string) => void,
-  onPdfConversion: (value: string, name: string) => void,
   search: string,
-  value: string
 ) {
   function mapItems(files: Array<FileType>) {
     return [

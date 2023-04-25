@@ -80,7 +80,7 @@ img .left {
   .ButtomBar {
     background-color: #000000 !important;
   }
-  
+
   .command-palette .bg-gray-900 {
     background-color: rgb(0 0 0/0.9) !important;
   }
@@ -220,8 +220,8 @@ blockquote {
   @apply border-l-2 border-gray-200 dark:border-gray-800 pl-4;
 }
 
-.cm-content {
-  @apply text-gray-900 dark:text-gray-100;
+.cm-content * {
+  @apply font-sans;
 }
 
 video,
@@ -364,43 +364,47 @@ figcaption {
 
 pre code {
   white-space: pre-wrap;
-font-feature-settings: "calt";
-font-variant-ligatures: contextual;
+  font-feature-settings: "calt";
+  font-variant-ligatures: contextual;
 }
 
 @supports (font-variation-settings: normal) {
- pre code { font-family: 'Fira Code VF', monospace; }
+  pre code {
+    font-family: "Fira Code VF", monospace;
+  }
 }
-
 
 .command-palette * {
   font-family: inherit !important;
 }
-.katex .mathnormal {
-    font-family: 'Fira Code' !important;
-}
 /* #root * { */
 /*   font-family: inherit !important; */
 /* } */
-code { font-family: 'Fira Code', monospace; }
+code {
+  font-family: "Fira Code", monospace;
+}
 
 @supports (font-variation-settings: normal) {
-  code { font-family: 'Fira Code VF', monospace; }
+  code {
+    font-family: "Fira Code VF", monospace;
+  }
 }
 
 table {
-  @apply overflow-x-auto relative shadow-md sm:rounded-lg dark:shadow-gray-600 w-full text-sm text-left text-gray-500 dark:text-gray-400;
+  @apply overflow-x-auto relative shadow-md sm:rounded-lg dark:shadow-gray-900 w-full text-sm text-left text-gray-500 dark:text-gray-400;
   border-radius: 6px;
 }
 thead {
   @apply text-gray-700  bg-gray-100 dark:bg-white-10 uppercase dark:text-gray-400 text-center font-medium;
 }
 tr {
-  @apply even:bg-gray-100 dark:even:bg-white-10 ;
+  @apply even:bg-gray-100 dark:even:bg-white-10;
 }
 th,
 td {
   border: 1px solid hsla(0, 0%, 100%, 0.1);
   padding: 0.5rem;
 }
-blockquote{@apply opacity-80 border-l-4 border-gray-300 pl-2 my-2;}
+blockquote {
+  @apply opacity-80 border-l-4 border-gray-300 pl-2 my-2;
+}
