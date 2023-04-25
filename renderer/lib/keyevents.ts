@@ -2,7 +2,6 @@ import { Dispatch, SetStateAction } from 'react'
 import { EditorView } from '@codemirror/view'
 import path from 'path'
 import os from 'os'
-import { undo } from '@codemirror/commands'
 import {
   GETDATE,
   LINK,
@@ -16,24 +15,45 @@ type Dispatcher<S> = Dispatch<SetStateAction<S>>
 const onboardingDIR = path.resolve(os.homedir(), 'leaflet', 'onboarding.md')
 const date = new Date()
 
-export const ListenToKeys = (
-  saveFile: () => void,
-  editor: EditorView,
-  insert: boolean,
-  setInsert: Dispatcher<boolean>,
-  toPDF: (value: string, name: string) => void,
-  toDOCX: (value: string, name: string) => void,
-  value: string,
-  name: string,
-  path: string,
-  fileDialog: () => void,
-  setFileNameBox: Dispatcher<boolean>,
-  setSearch: Dispatcher<string>,
-  setClick: Dispatcher<boolean>,
-  click: boolean,
-  toggleSidebar: () => void,
+export const ListenToKeys = ({
+  saveFile,
+  editor,
+  insert,
+  setInsert,
+  toPDF,
+  toDOCX,
+  value,
+  name,
+  path,
+  toggleFileDialog,
+  setFileNameBox,
+  setSearch,
+  setClick,
+  click,
+  toggleSidebar,
+  navStack,
+  setFiles,
+  Update
+}: {
+  saveFile: () => void
+  editor: EditorView
+  insert: boolean
+  setInsert: Dispatcher<boolean>
+  toPDF: (value: string, name: string) => void
+  toDOCX: (value: string, name: string) => void
+  value: string
+  name: string
+  path: string
+  toggleFileDialog: (setFile: Dispatcher<any>, Update: () => void) => void
+  setFileNameBox: Dispatcher<boolean>
+  setSearch: Dispatcher<string>
+  setClick: Dispatcher<boolean>
+  click: boolean
+  toggleSidebar: () => void
   navStack: NavStack
-) => {
+  setFiles: Dispatcher<Array<any>>
+  Update: () => void
+}) => {
   document.onkeydown = function handleKeysEvent(e: KeyboardEvent) {
     if ((e.ctrlKey || e.metaKey) && e.key === 's') {
       saveFile()
@@ -79,7 +99,7 @@ export const ListenToKeys = (
     }
 
     if (e.key === 'o' && (e.ctrlKey || e.metaKey)) {
-      fileDialog()
+      toggleFileDialog(setFiles, Update)
       e.preventDefault()
       return
     }
@@ -130,10 +150,10 @@ export const ListenToKeys = (
       e.preventDefault()
       return
     }
-    if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
-      if (!insert || !editor) return
-      undo(editor)
-    }
+    // if ((e.ctrlKey || e.metaKey) && e.key === "z") {
+    //   if (!insert || !editor) return;
+    //   undo(editor);
+    // }
 
     if ((e.ctrlKey || e.metaKey) && e.key === '\\') {
       toggleSidebar()

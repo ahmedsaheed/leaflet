@@ -29,12 +29,15 @@ function convertObject(obj: Structure): Array<{}> {
   }
   struct.sort((a, b) => {
     //@ts-ignore
-    if (a?.props?.children[0]?.props?.children[1]) {
-      return 1
+    if (a.type === 'folder' && b.type === 'file') {
+      return -1;
+    //@ts-ignore
+    } else if (a.type === 'file' && b.type === 'folder') {
+      return 1;
     } else {
-      return -1
+      return 0;
     }
-  })
+  });
   return struct
 }
 

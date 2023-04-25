@@ -10,10 +10,12 @@ import {
   toDOCX,
   toPDF,
   revealInFinder,
-  imageUrl
+  imageUrl,
+  toggleFileDialog
 } from './util'
 import { ReactCodeMirrorRef } from '@uiw/react-codemirror'
 import { NavStack, stashToRouter } from './routes/route'
+import { clientStore } from './storage'
 type Dispatcher<S> = Dispatch<SetStateAction<S>>
 type file = {
   path: string
@@ -21,30 +23,57 @@ type file = {
   body: string
   structure: { [key: string]: any }
 }
-export function effects(
-  initialised: boolean,
-  setPandocAvailable: Dispatcher<boolean>,
-  setIsVim: Dispatcher<boolean>,
-  setFiles: Dispatcher<file[]>,
-  setValue: Dispatcher<string>,
-  setName: Dispatcher<string>,
-  setPath: Dispatcher<string>,
-  refs: React.MutableRefObject<ReactCodeMirrorRef>,
-  setEditorView: Dispatcher<EditorView>,
-  files: file[],
-  setStruct: Dispatcher<{ [key: string]: any }>,
-  path: string,
-  name: string,
-  value: string,
-  saveFile: () => void,
-  Update: () => void,
-  onDelete: (path: string, name: string) => void,
-  setInsert: Dispatcher<boolean>,
-  insert: boolean,
-  fileDialog: () => void,
-  setScroll: Dispatcher<number>,
+export function effects({
+  initialised,
+  setPandocAvailable,
+  setIsVim,
+  setFiles,
+  setValue,
+  setName,
+  setPath,
+  refs,
+  setEditorView,
+  files,
+  setStruct,
+  path,
+  name,
+  value,
+  saveFile,
+  Update,
+  onDelete,
+  setInsert,
+  insert,
+  toggleFileDialog,
+  setScroll,
+  navRouter,
+  setOpen,
+  toggleFont
+}: {
+  initialised: boolean
+  setPandocAvailable: Dispatcher<boolean>
+  setIsVim: Dispatcher<boolean>
+  setFiles: Dispatcher<file[]>
+  setValue: Dispatcher<string>
+  setName: Dispatcher<string>
+  setPath: Dispatcher<string>
+  refs: React.MutableRefObject<ReactCodeMirrorRef>
+  setEditorView: Dispatcher<EditorView>
+  files: file[]
+  setStruct: Dispatcher<{ [key: string]: any }>
+  path: string
+  name: string
+  value: string
+  saveFile: () => void
+  Update: () => void
+  onDelete: (path: string, name: string) => void
+  setInsert: Dispatcher<boolean>
+  insert: boolean
+  toggleFileDialog: (setFile: Dispatcher<any>, Update: () => void) => void
+  setScroll: Dispatcher<number>
   navRouter: NavStack
-) {
+  setOpen: Dispatcher<boolean>,
+ toggleFont: any
+}) {
   useEffect(() => {
     if (!initialised) {
       initialised = true
@@ -58,6 +87,8 @@ export function effects(
         setPath(files[0] ? `${files[0].path}` : '')
         setStruct(files[0].structure.children)
         stashToRouter(files[0].path, navRouter)
+        const isSideBarOpen = clientStore.get('sideBarOpen')
+        setOpen(isSideBarOpen ? true : false)
       })
     }
   }, [])
@@ -84,6 +115,7 @@ export function effects(
       ignore = true
     }
   }, [path])
+
 
   useEffect(() => {
     let ignore = false
@@ -143,6 +175,15 @@ export function effects(
   }, [value, name])
 
   useEffect(() => {
+    let ignore = false
+    ipcRenderer.on('in-app-command-togglefont', function () {
+      if (!ignore) {
+       toggleFont() 
+      }
+    })
+  })
+
+  useEffect(() => {
     let save = false
     ipcRenderer.on('save', function () {
       if (!save) {
@@ -157,6 +198,12 @@ export function effects(
   }, [value, path])
 
   useEffect(() => {
+    ipcRenderer.on('open', function () {
+      toggleFileDialog(setFiles, Update)
+    })
+  }, [])
+
+  useEffect(() => {
     ipcRenderer.on('insertClicked', function () {
       insert ? '' : setInsert(true)
     })
@@ -165,12 +212,6 @@ export function effects(
       insert ? setInsert(false) : ''
     })
   }, [insert])
-
-  useEffect(() => {
-    ipcRenderer.on('open', function () {
-      fileDialog()
-    })
-  }, [])
 
   const handleScroll = (event) => {
     let ScrollPercent = 0
@@ -197,7 +238,7 @@ export function effects(
           return ext === '.jpg' || ext === '.jpeg' || ext === '.png'
         })
         imageFiles.map((validImage) =>
-          imageUrl(refs.current?.view, validImage.path)
+          imageUrl({ view: refs.current?.view, url: validImage.path })
         )
         setIsRunning(false)
       })

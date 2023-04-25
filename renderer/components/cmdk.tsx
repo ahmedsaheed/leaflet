@@ -1,11 +1,8 @@
-import {
-  DOCXIcon,
-  PDFIcon,
-} from "./icons";
-import CommandPalette, { filterItems, getItemIndex, } from "react-cmdk";
-import { shell } from "electron";
-import path from "path";
-import {Cmdkfooter}  from "./cmdk-footer";
+import { DOCXIcon, PDFIcon } from './icons'
+import CommandPalette, { filterItems, getItemIndex } from 'react-cmdk'
+import { shell } from 'electron'
+import path from 'path'
+import { Cmdkfooter } from './cmdk-footer'
 export function CMDK({
   onFileSelect,
   onNewFile,
@@ -33,7 +30,7 @@ export function CMDK({
     onPdfConversion,
     search,
     value
-  );
+  )
   return (
     <CommandPalette
       onChangeSearch={setSearch}
@@ -41,13 +38,10 @@ export function CMDK({
       search={search}
       isOpen={menuOpen}
       page={page}
-      placeholder= {  `Search ${filteredItems.length} notes...` }
-      footer={
-
-      <Cmdkfooter />
-      }
+      placeholder={`Search ${files.flat().length} notes...`}
+      footer={<Cmdkfooter />}
     >
-      <CommandPalette.Page id="root">
+      <CommandPalette.Page id='root'>
         {filteredItems.length ? (
           filteredItems.map((list) => (
             <CommandPalette.List key={list.id} heading={list.heading}>
@@ -66,24 +60,24 @@ export function CMDK({
         )}
       </CommandPalette.Page>
     </CommandPalette>
-  );
+  )
 }
 
 const capitalize = (s: string) => {
-  if (typeof s !== "string") return "";
-  const words = s.split(" "); 
+  if (typeof s !== 'string') return ''
+  const words = s.split(' ')
 
   for (let i = 0; i < words.length; i++) {
-    words[i] = words[i][0].toUpperCase() + words[i].substring(1) + " ";
+    words[i] = words[i][0].toUpperCase() + words[i].substring(1) + ' '
   }
-  words.join(" ");
+  words.join(' ')
 
-  return words;
-};
+  return words
+}
 
-type FileType ={
-    name: string;
-    path: string;
+type FileType = {
+  name: string
+  path: string
 }
 
 function items(
@@ -93,118 +87,94 @@ function items(
   files: Array<FileType>,
   pandocAvailable: Boolean,
   name: string,
-  onDocxConversion: (value:string, name:string) => void,
+  onDocxConversion: (value: string, name: string) => void,
   onPdfConversion: (value: string, name: string) => void,
   search: string,
   value: string
 ) {
-
-
-function mapItems (files: Array<FileType>) {
-  return  [...files.map((file) => ({
-            id: file.name,
-            showType: false,
-            children: (
-              <p>
-                {file.name} —{" "}
-                <span style={{ fontSize: "12px", color: "#888888" }}>
-                  {capitalize(
-                    path.basename(path.dirname(file.path)).toLowerCase()
-                  )}
-                </span>
-              </p>
-            ),
-            icon: "DocumentTextIcon",
-            onClick: () => {
-              onFileSelect(file);
-            },
-          }))]
-}
+  function mapItems(files: Array<FileType>) {
+    return [
+      ...files.map((file) => ({
+        id: file.name,
+        showType: false,
+        children: (
+          <p>
+            {file.name} —{' '}
+            <span style={{ fontSize: '12px', color: '#888888' }}>
+              {capitalize(path.basename(path.dirname(file.path)).toLowerCase())}
+            </span>
+          </p>
+        ),
+        icon: 'DocumentTextIcon',
+        onClick: () => {
+          onFileSelect(file)
+        }
+      }))
+    ]
+  }
   const filteredItems = filterItems(
     [
       {
-        heading: "General",
-        id: "general",
+        heading: 'General',
+        id: 'general',
         items: [
           {
-            id: "new",
-            children: "New File",
-            icon: "NewspaperIcon",
+            id: 'new',
+            children: 'New File',
+            icon: 'NewspaperIcon',
             showType: false,
             onClick: () => {
-              onNewFile();
-            },
+              onNewFile()
+            }
           },
           {
-            id: "folder",
-            children: "New Folder",
-            icon: "FolderOpenIcon",
+            id: 'folder',
+            children: 'New Folder',
+            icon: 'FolderOpenIcon',
             showType: false,
             onClick: () => {
-              onCreatingFolder();
-            },
+              onCreatingFolder()
+            }
           },
-          {
-            id: "export",
-            showType: false,
-            disabled: pandocAvailable ? false : true,
-
-            children: `Export current file to pdf`,
-            icon: () => <PDFIcon />,
-            onClick: () => {
-              onPdfConversion(value, name);
-            },
-          },
-          {
-            disabled: pandocAvailable ? false : true,
-            id: "export",
-            showType: false,
-            children: `Export current file to docx`,
-            icon: () => <DOCXIcon />,
-            onClick: () => {
-              onDocxConversion(value, name)
-            },
-          },
-        ],
+        ]
       },
       {
-        heading: "Files",
-        id: "files",
+        heading: 'Files',
+        id: 'files',
         //@ts-ignore
-        items: mapItems(files),
+        items: mapItems(files)
       },
       {
-        heading: "Help",
-        id: "advanced",
+        heading: 'Help',
+        id: 'advanced',
         items: [
-         
           {
-            id: "keys",
+            id: 'keys',
             showType: false,
-            children: "Keyboard Shortcuts",
-            icon: "KeyIcon",
+            children: 'Keyboard Shortcuts',
+            icon: 'KeyIcon',
             onClick: (event: React.MouseEvent<HTMLElement>) => {
-              event.preventDefault();
+              event.preventDefault()
               shell.openExternal(
-                "https://github.com/ahmedsaheed/Leaflet#shortcuts-and-controls"
-              );
-            },
+                'https://github.com/ahmedsaheed/Leaflet#shortcuts-and-controls'
+              )
+            }
           },
-         {
-            id: "help",
+          {
+            id: 'help',
             showType: false,
-            children: "Help & Documentation",
-            icon: "QuestionMarkCircleIcon",
+            children: 'Help & Documentation',
+            icon: 'QuestionMarkCircleIcon',
             onClick: (event: React.MouseEvent<HTMLElement>) => {
-              event.preventDefault();
-              shell.openExternal("https://github.com/ahmedsaheed/Leaflet");
-            },
-          },
-        ],
-      },
+              event.preventDefault()
+              shell.openExternal('https://github.com/ahmedsaheed/Leaflet')
+            }
+          }
+        ]
+      }
     ],
     search
-  );
+  )
 
-  return filteredItems;
+  return filteredItems
 }

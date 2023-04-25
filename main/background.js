@@ -305,14 +305,9 @@ ipcMain.on('show-context-menu', (event, isVim) => {
       }
     },
     {
-      label: 'Vibracy',
-      type: 'checkbox',
-      checked: false,
+      label: 'Font',
       click: () => {
-        //get current browser window and attach vibrancy
-        const win = BrowserWindow.getFocusedWindow()
-        win.setVibrancy('ultra-dark')
-        event.sender.send('in-app-command-vibracy')
+        event.sender.send('in-app-command-togglefont')
       }
     },
     { type: 'separator' },
@@ -559,6 +554,25 @@ ipcMain.handle('creatingDocx', (event, name, body) => {
       event.sender.send('docxPath', null, null)
     }
   })
+})
+
+ipcMain.handle('getIncomingImages', (event) => {
+    dialog.showOpenDialog({
+        properties: ['openFile', 'multiSelections'],
+        filters: [{ name: 'Images', extensions: ['jpg', 'jpeg', 'png', 'gif'] }]
+    }).then((result) => {
+        console.log(result)
+        if (!result.canceled && result.filePaths) {
+            console.log("hi ", result.filePaths)
+            event.sender.send('incomingImages', result.filePaths)
+        } else {
+            console.log("lo")
+            event.sender.send('incomingImages', null)
+        }
+    }).catch((err) => {
+        console.log(err)
+    })
+    
 })
 
 app.on('window-all-closed', () => {

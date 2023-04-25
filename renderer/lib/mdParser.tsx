@@ -2,10 +2,7 @@ import hljs from 'highlight.js'
 import todo from 'markdown-it-task-lists'
 import yaml from 'yaml'
 import metadata_block from 'markdown-it-metadata-block'
-// import mermaid from "mermaid";
 import fs from 'fs-extra'
-import path from 'path'
-import md from 'markdown-it'
 import mime from 'mime'
 import { escapeHtml, unescapeAll } from 'markdown-it/lib/common/utils'
 
@@ -15,6 +12,7 @@ export type Metadata = {
   tags: string[]
   material: {}
 }
+
 /**
  * @param {string} value
  * @returns {string} html
@@ -54,6 +52,7 @@ export const getMarkdown = (value: string) => {
     const token = tokens[idx]
     const srcIndex = token.attrIndex('src')
     const src = token.attrs[srcIndex][1]
+    console.log(src.replace(/\s/g, "\\ "))
     if (fs.existsSync(src)) {
       const fileContents = fs.readFileSync(src)
 
@@ -85,8 +84,14 @@ export const getMarkdown = (value: string) => {
       langAttrs = arr.slice(2).join('')
     }
 
-    if (langName === 'details') {
-      return `<i>${escapeHtml(token.content)}</i>`
+    if (langName === '') {
+      return (
+        '<pre><code' +
+        slf.renderAttrs(token) +
+        '>' +
+        escapeHtml(token.content) +
+        '</code></pre>\n'
+      )
     }
 
     if (options.highlight) {

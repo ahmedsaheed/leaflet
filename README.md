@@ -5,8 +5,7 @@
   Leaflet Markdown Editor is a cross-platform and elegant tool designed<br/> for writing and editing Markdown documents with peace of mind.<br><br><br>
   
 </div>
-
-<img width="1333" alt="Screenshot 2023-03-19 at 18 46 19" src="https://user-images.githubusercontent.com/87912847/226199881-c9afbdc4-f2f6-4835-bcb8-eb96d79e06a5.png">
+<img width="1188" alt="Screenshot 2023-04-14 at 23 06 17" src="https://user-images.githubusercontent.com/87912847/232162786-edd088a1-4b22-4051-9951-9eb818e60a03.png">
 ## Features
 
 - **Editing**: Switch between editing and preview mode seemlessly

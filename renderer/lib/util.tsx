@@ -9,8 +9,6 @@ import { EditorView, highlightActiveLine } from '@codemirror/view'
 import open from 'open'
 import { spawn } from 'child_process'
 import os from 'os'
-const route = os.homedir() + '/columns.lua'
-type Dispatcher<S> = Dispatch<SetStateAction<S>>
 import { ipcRenderer } from 'electron'
 import { Metadata, getMarkdownWithMermaid } from './mdParser'
 import { shell } from 'electron'
@@ -19,94 +17,21 @@ import { indentationMarkers } from '@replit/codemirror-indentation-markers'
 import * as prettier from 'prettier/standalone'
 import * as markdowns from 'prettier/parser-markdown'
 import remarkParse from 'remark-parse'
-import { METADATE, METAMATERIAL, METATAGS } from '../components/metadata'
-import {
-  defaultHighlightStyle,
-  HighlightStyle,
-  tags
-} from '@codemirror/highlight'
-
-import { tags as t, highlightTree } from '@lezer/highlight'
+import { METAMATERIAL, METATAGS } from '../components/metadata'
+import { tags as t } from '@lezer/highlight'
 import { createTheme } from '@uiw/codemirror-themes'
-export const transparentTheme = EditorView.theme({
-  '&': {
-    backgroundColor: 'white',
-    height: '100%'
-  },
-  pre: {
-    backgroundColor: 'red'
-  }
-})
-
-const myTheme = createTheme({
-  theme: 'light',
-  settings: {
-    background: '#ffffff',
-    foreground: '#75baff',
-    caret: '#5d00ff',
-    selection: '#036dd626',
-    selectionMatch: '#036dd626',
-    lineHighlight: '#8a91991a',
-    gutterBackground: '#fff',
-    gutterForeground: '#8a919966'
-  },
-
-  styles: [
-    {
-      tag: t.heading1,
-      fontSize: '1.6em',
-      margin: '15px 0',
-      lineHeight: '1.2'
-    },
-    { tag: t.heading2, fontSize: '20px', margin: '15px 0', lineHeight: '1.2' },
-    { tag: t.heading3, fontSize: '18px', margin: '15px 0', lineHeight: '1.2' },
-    { tag: t.comment, color: '#787b8099' },
-    { tag: t.blockComment, color: '#787b8099' },
-    {
-      tag: t.link,
-      textDecorationColor: 'hsl(200deg, 5%, 60%)',
-      boarderRaduis: '0.1875',
-      // hover
-      '&:hover': {
-        textDecoration: 'underline',
-        color: 'blue'
-      }
-    },
-    { tag: t.atom, class: 'pre', color: 'red' },
-    // style the code blocks
-
-    { tag: [t.string, t.special(t.brace)], color: '#5c6166' },
-    { tag: t.number, color: '#5c6166' },
-    { tag: t.bool, color: '#5c6166' },
-    { tag: t.null, color: '#5c6166' },
-    { tag: t.keyword, color: '#5c6166' },
-    { tag: t.operator, color: '#5c6166' },
-    { tag: t.className, color: '#5c6166' },
-    { tag: t.definition(t.typeName), color: '#5c6166' },
-    { tag: t.typeName, color: '#5c6166' },
-    { tag: t.angleBracket, color: '#5c6166' },
-    { tag: t.tagName, color: '#5c6166' },
-    { tag: t.attributeName, color: '#5c6166' }
-  ]
-})
-
-export const format = (value) =>
-  prettier.format(value, {
-    parser: 'remark',
-    tabWidth: 2,
-    plugins: [markdowns],
-    semi: false,
-    singleQuote: true,
-    bracketSpacing: true,
-    bracketSameLine: false,
-    arrowParens: 'always'
-  })
+import { highlightSelectionMatches } from '@codemirror/search'
+import { basicSetup } from '@uiw/react-codemirror'
+import { clientStore } from './storage'
+const route = os.homedir() + '/columns.lua'
+type Dispatcher<S> = Dispatch<SetStateAction<S>>
 
 /**
  * Bold a text in editor view
- * @param view EditorView
+ * @param {EditorView} view - EditorView
+ * @returns {void}
  */
-export const BOLD = (view: EditorView) => {
+export const BOLD = (view: EditorView): void => {
   if (!view) return
   view.dispatch(
     view.state.changeByRange((range) => ({
@@ -119,32 +44,44 @@ export const BOLD = (view: EditorView) => {
   )
 }
 
-export const imageUrl = (view: EditorView, url: string) => {
+/**
+ * Add an image syntax to current editor view
+ * @param {{view: EditorView, url:string}} view - EditorView
+ * @returns {void}
+ */
+export const imageUrl = ({
+  view,
+  url
+}: {
+  view: EditorView
+  url: string
+}): void => {
   if (!view) return
   const main = view.state.selection.main
   view.dispatch({
     changes: {
       from: main.from,
       to: main.to,
-      insert: `![alt-text](${url})`
+      insert: `![alt-text](${formatPath(url)})`
     }
-    // selection: EditorSelection.range(main.from + 3 + url.length, main.to + 6),
   })
 }
 
-export const revealInFinder = (path: string) => {
-  try {
-    shell.showItemInFolder(path)
-  } catch (e) {
-    console.log(e)
+function formatPath(path: string): string {
+  let splitPath = path.split('/')
+  for (let i = 0; i < splitPath.length; i++) {
+    if (splitPath[i].includes(' ')) {
+      splitPath[i] = splitPath[i].replace(/ /g, '\\ ')
+    }
   }
+  return splitPath.join('/')
 }
 
 /**
  * Adds an italic in editor view
  * @param view EditorView
  */
-export const ITALIC = (view: EditorView) => {
+export const ITALIC = ({ view }: { view: EditorView }) => {
   if (!view) return
   view.dispatch(
     view.state.changeByRange((range) => ({
@@ -213,15 +150,9 @@ export const GETDATE = () => {
   ]
 
   const weekday = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat']
-  const s =
-    weekday[date.getDay()] +
-    ' ' +
-    (date.getDate() <= 9 ? '0' + date.getDate() : date.getDate()) +
-    ' ' +
-    strArray[date.getMonth()] +
-    ' ' +
-    date.getFullYear() +
-    ' '
+  const s = `${weekday[date.getDay()]} ${
+    date.getDate() <= 9 ? '0' + date.getDate() : date.getDate()
+  } ${strArray[date.getMonth()]} ${date.getFullYear()} `
   return s
 }
 
@@ -247,6 +178,13 @@ export const LINK = (view: EditorView) => {
   })
 }
 
+export const revealInFinder = (path: string) => {
+  try {
+    shell.showItemInFolder(path)
+  } catch (e) {
+    console.log(e)
+  }
+}
 /**
  * Insert given text at cursor position in editor view
  * @param view EditorView
@@ -390,21 +328,15 @@ export const STRIKETHROUGH = (view: EditorView) => {
 export const toggleBetweenVimAndNormalMode = (
   setIsVim: Dispatcher<boolean>
 ): void => {
-  const whatMode = localStorage.getItem('writingMode')
-  if (whatMode == undefined) {
-    localStorage.setItem('writingMode', 'normal')
-    setIsVim(false)
-  } else {
-    if (whatMode === 'normal') {
-      localStorage.setItem('writingMode', 'vim')
-      setIsVim(true)
+    const currentMode = clientStore.get('writingMode')
+    if (currentMode === 'normal') {
+        clientStore.set('writingMode', 'vim')
+        setIsVim(true)
     } else {
-      localStorage.setItem('writingMode', 'normal')
-      setIsVim(false)
+        clientStore.set('writingMode', 'normal')
+        setIsVim(false)
     }
   }
-}
-
 /**
  * @description Function opens external links in default browser
  * @returns {void}
@@ -421,21 +353,6 @@ export const openExternalInDefaultBrowser = (): void => {
     }
   })
 }
-
-export const EXTENSIONS: Extension[] = [
-  indentOnInput(),
-  codeFolding(),
-  indentationMarkers(),
-  highlightActiveLine(),
-  myTheme,
-  transparentTheme,
-  markdown({
-    base: markdownLanguage,
-    codeLanguages: languages,
-    addKeymap: true
-  }),
-  [EditorView.lineWrapping]
-]
 
 export const checkForPandoc = (setPandocAvailable: Dispatcher<boolean>) => {
   try {
@@ -492,12 +409,9 @@ export function cleaner(name: string) {
  * @description Function Convert specified file to pdf
  * @param {string} body - content to be converted
  * @param {string} name - name of the file
- * @param {Dispatcher} setSnackbar - displays a snackbar
- * @param {Dispatcher} setSnackBarMessage - Hold the snackbar message and message type i.e success, error, info
  * @returns {void}
  */
-
-export const toPDF = (body: string, name: string) => {
+export const toPDF = (body: string, name: string): void => {
   toast.promise(preparePDF(body, name), {
     loading: 'Preparing PDF',
     error: 'Could not convert to PDF',
@@ -601,6 +515,27 @@ const prepareDOCX = (body: string, name: string) => {
   })
 }
 
+export const getIncomingImages = (view: EditorView) => {
+  ipcRenderer.invoke('getIncomingImages').then(() => {
+    ipcRenderer.on('incomingImages', (event, response) => {
+      if (response == null) {
+        return
+      }
+      const images = response
+      if (images.length > 0) {
+        images.forEach((image: string) => {
+          let param = {
+            view: view,
+            url: image
+          }
+          imageUrl(param)
+          toast.success('Images Imported')
+        })
+      }
+    })
+  })
+}
+
 export const routes = () => {}
 
 /**
@@ -631,12 +566,14 @@ export const docxToMd = (filePath, Update) => {
 
 /**
  * @description Function validate and render yaml metadata
- * @param {object} yaml - yaml object
+ * @param {Metadata} metadata - metadata object
  * @returns {React.ReactNode}
  * @todo - this function doesn't render the body, when yaml is not valid
  *
  */
-export const ValidateYaml = (metadata: Metadata | undefined) => {
+export const ValidateYaml = (
+  metadata: Metadata | undefined
+): React.ReactNode => {
   if (metadata === undefined) {
     return (
       <>
@@ -647,11 +584,156 @@ export const ValidateYaml = (metadata: Metadata | undefined) => {
   }
   return (
     <div className='meta' style={{ userSelect: 'none' }}>
-      <METADATE incoming={metadata.date} />
       <METATAGS incoming={metadata.tags} />
       <METAMATERIAL incoming={metadata?.material} />
     </div>
   )
+}
+
+export const transparentTheme = EditorView.theme({
+  '&': {
+    backgroundColor: 'white',
+    height: '100%'
+  }
+})
+
+const leafletTheme = createTheme({
+  theme: 'light',
+  settings: {
+    background: '#ffffff',
+    foreground: '#75baff',
+    caret: '#5d00ff',
+    selection: '#036dd626',
+    selectionMatch: '#036dd626',
+    lineHighlight: '#8a91991a',
+    gutterBackground: '#fff',
+    gutterForeground: '#8a919966'
+  },
+
+  styles: [
+    {
+      tag: t.heading1,
+      fontSize: '1.6em',
+      margin: '15px 0',
+      lineHeight: '1.2'
+    },
+    { tag: t.heading2, fontSize: '20px', margin: '15px 0', lineHeight: '1.2' },
+    { tag: t.heading3, fontSize: '18px', margin: '15px 0', lineHeight: '1.2' },
+    { tag: t.comment, color: '#787b8099' },
+    { tag: t.blockComment, color: '#787b8099' },
+    {
+      tag: t.link,
+      textDecorationColor: 'hsl(200deg, 5%, 60%)',
+      boarderRaduis: '0.1875',
+      '&:hover': {
+        textDecoration: 'underline',
+        color: 'blue'
+      }
+    },
+    { tag: t.atom, class: 'pre', color: 'red' },
+    { tag: [t.string, t.special(t.brace)], color: '#5c6166' },
+    { tag: t.number, color: '#5c6166' },
+    { tag: t.bool, color: '#5c6166' },
+    { tag: t.null, color: '#5c6166' },
+    { tag: t.keyword, color: '#5c6166' },
+    { tag: t.operator, color: '#5c6166' },
+    { tag: t.className, color: '#5c6166' },
+    { tag: t.definition(t.typeName), color: '#5c6166' },
+    { tag: t.typeName, color: '#5c6166' },
+    { tag: t.angleBracket, color: '#5c6166' },
+    { tag: t.tagName, color: '#5c6166' },
+    { tag: t.attributeName, color: '#5c6166' }
+  ]
+})
+
+export const EXTENSIONS: Extension[] = [
+  indentOnInput(),
+  codeFolding(),
+  indentationMarkers(),
+  highlightActiveLine(),
+  leafletTheme,
+  transparentTheme,
+  markdown({
+    base: markdownLanguage,
+    codeLanguages: languages,
+    addKeymap: true
+  }),
+  highlightSelectionMatches(),
+  basicSetup({
+    lineNumbers: false,
+    highlightActiveLineGutter: false,
+    foldGutter: false
+  }),
+  [EditorView.lineWrapping]
+]
+
+export const toggleFileDialog = (
+  setFiles: Dispatcher<Array<any>>,
+  Update: () => void
+) => {
+  ipcRenderer.invoke('app:on-fs-dialog-open').then(() => {
+    ipcRenderer.invoke('getTheFile').then((files = []) => {
+      setFiles(files)
+      Update()
+    })
+  })
+}
+
+export const format = (value: string) =>
+  prettier.format(value, {
+    parser: 'remark',
+    tabWidth: 2,
+    plugins: [markdowns],
+    semi: false,
+    singleQuote: true,
+    bracketSpacing: true,
+    bracketSameLine: false,
+    arrowParens: 'always'
+  })
+
+export const classnames = {
+  '1st': 'h-screen w-screen',
+  '2nd': 'flex',
+  '3rd': 'hidden md:flex md:flex-row',
+  '4th':
+    'h-screen-fix no-scrollbar flex overflow-y-scroll bg-palette-0 bg-black',
+  '5th':
+    'second-nav custom-border no-scrollbar  flex grow flex-col overflow-y-scroll border-r-[0.5px] bg-transparent',
+  '6th': 'drag flex shrink-0 flex-col justify-center px-4 h-16',
+  '7th': 'flex flex-row justify-between',
+  '8th': 'w-full text-lg font-small text-palette-800',
+  '9th': 'flex flex-row justify-between',
+  '10th':
+    'flex h-[22px] items-center transition-all duration-300 smarthover:hover:text-primary-500 text-palette-600',
+  '11th': 'no-scrollbar mx-2.5 space-y-5 overflow-y-auto pb-32',
+  '12th': 'space-y-1',
+  '13th':
+    'cursor-pointer flex w-full items-center space-x-2.5 rounded-xl px-2.5 py-2.5 transition-all duration-300 smarthover:hover:text-primary-500 bg-palette-100 text-primary-500 dark:bg-palette-50',
+  '14th': 'align-middle font-mono text-sm',
+  '15th': 'space-y-1.5',
+  '16th': 'sticky top-0 bg-palette-0 pb-2',
+  '17th': 'space-y-1',
+  '18th': 'overflow-y-scroll',
+  '19th': 'flex grow flex-col overflow-hidden transition-all duration-150',
+  '20th': 'relative flex grow flex-col overflow-y-auto',
+  '20ths': 'absolute inset-x-0 top-0 z-50',
+  '21th':
+    'topbar drag fixed top-0 z-50 mx-auto flex w-full flex-col bg-palette-0',
+  '22th':
+    'custom-border flex h-14 shrink-0 border-b-[0.5px] bg-transparent md:px-4 md:h-16',
+  '23th': 'custom-border pl-4 text-palette-900 focus:outline-none md:hidden',
+  '24th': 'sr-only',
+  '25th': 'flex flex-1 items-center justify-between px-4 md:px-0',
+  '26th': 'flex w-full items-center',
+  '27th': 'w-full text-lg font-medium lowercase text-palette-800',
+  '28th': 'flex justify-end space-x-5',
+  '29th': 'focus:outline-none',
+  '30th':
+    'h-[22px] font-medium text-palette-900 transition-all duration-300 active:text-palette-500 smarthover:hover:text-palette-500',
+  '31th': 'focus:outline-none',
+  '32th': 'grow pt-[3.5rem] md:pt-[4rem]',
+  '33th': 'virtual-list h-full markdown-content',
+  '34th': 'flex h-[calc(100vh-170px)] w-full flex-col'
 }
 
 /**

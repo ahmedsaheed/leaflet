@@ -1,16 +1,35 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap");
 @import url(https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css);
+@import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
 
+html {
+  font-variant-ligatures: common-ligatures;
+}
+.cm-line {
+  font-size: 17px;
+}
+.right {
+  text-align: right;
+}
+.left {
+  text-align: left;
+}
+img .right {
+  align-self: right;
+}
+img .left {
+  align-self: left;
+}
 @media (prefers-color-scheme: dark) {
   body {
     background: #000000;
     font-variant-numeric: slashed-zero;
     color: #e5e5e5 !important;
   }
-  .cm-panels,
+
   .cm-button {
     background-color: #000000 !important;
   }
@@ -28,9 +47,20 @@
     border: 1px solid hsla(222, 15%, 20%);
     border-radius: 6px;
     padding: 2px 4px;
-    font-size: smaller;
+    word-wrap: break-word;
     color: hsla(222, calc(89 * 1%), 70%);
+    font-size: smaller;
     box-shadow: 0.5px 1px 1px hsl(223deg, 5%, 1%) / 0.333;
+  }
+
+  .material {
+    background-color: hsla(223, 15%, 20%, 60%);
+    border: 1px solid hsla(222, 15%, 20%);
+    color: hsla(222, calc(89 * 1%), 70%);
+  }
+
+  .material a[href^="http"]:after {
+    background-color: hsla(222, calc(89 * 1%), 70%);
   }
   pre {
     background-color: hsl(223deg 5% 12% / 60%) !important;
@@ -47,13 +77,10 @@
     padding: 8px 2px;
     box-shadow: 0.5px 1px 1px hsl(223deg, 5%, 1%) / 0.333;
   }
-  th,
-  td {
-    border: 1px solid rgb(31 31 31/1) !important;
-  }
   .ButtomBar {
     background-color: #000000 !important;
   }
+  
   .command-palette .bg-gray-900 {
     background-color: rgb(0 0 0/0.9) !important;
   }
@@ -82,10 +109,6 @@
     background-color: #000000 !important;
     outline: none;
   }
-  table {
-    border-color: rgb(31 31 31/1) !important;
-    border-radius: 6px;
-  }
   .topbar {
     background-color: #000000 !important;
   }
@@ -93,7 +116,6 @@
 @media (prefers-color-scheme: light) {
   body {
     background: #fff;
-    font-variant-numeric: slashed-zero;
     color: rgb(55, 53, 47) !important;
   }
   mark .katex {
@@ -104,6 +126,7 @@
   .katex:not(.katex-display .katex),
   code:not(pre code) {
     @apply font-mono;
+    word-wrap: break-word;
     background-color: hsla(223, 15%, 95%, 60%);
     border: 1px solid hsla(222, calc(89 * 1%), 50%, 5%);
     border-radius: 6px;
@@ -111,6 +134,15 @@
     font-size: smaller;
     color: hsla(222, calc(89 * 1%), 50%);
     box-shadow: 0.5px 1px 1px hsl(223deg, 5%, 80%) / 0.333;
+  }
+  .material {
+    background-color: hsla(223, 15%, 95%, 60%);
+    color: hsla(222, calc(89 * 1%), 50%);
+    border: 1px solid hsla(222, calc(89 * 1%), 50%, 5%);
+  }
+
+  .material a[href^="http"]:after {
+    background-color: hsla(222, calc(89 * 1%), 50%);
   }
 
   pre {
@@ -142,24 +174,18 @@
   .topbar {
     background-color: #fff !important;
   }
-  /* pre {
-    background-color: #ededed !important;
-  } */
   .ButtomBar {
     background-color: #fff !important;
   }
-  th,
-  td {
-    border: 1px solid #e5e7eb;
-  }
 }
-
 body {
   fill: currentColor;
-  font-size: 14px;
+  font-size: 17px;
   -webkit-font-smoothing: antialiased;
   letter-spacing: 0.05em;
   line-height: 1.6;
+  font-weight: 400;
+  cursor: default;
 }
 h1 {
   font-weight: 600;
@@ -183,18 +209,6 @@ h3 {
 .cm-gutters {
   @apply hidden !important;
 }
-table,
-th,
-td {
-  margin-bottom: 2em;
-  margin-top: 2em;
-  margin-left: auto;
-  margin-right: auto;
-}
-th,
-td {
-  padding: 5px;
-}
 
 .drag {
   -webkit-app-region: drag;
@@ -205,19 +219,17 @@ td {
 blockquote {
   @apply border-l-2 border-gray-200 dark:border-gray-800 pl-4;
 }
-.material a[href^='http']:after {
-  content: none !important;
-}
 
 .cm-content {
-  @apply font-sans text-gray-900 dark:text-gray-100;
+  @apply text-gray-900 dark:text-gray-100;
 }
 
+video,
 img {
   -webkit-user-drag: none;
   user-drag: none;
   -webkit-tap-highlight-color: transparent;
-  @apply mx-auto w-fit;
+  @apply mx-auto;
 }
 iframe {
   -webkit-user-drag: none;
@@ -229,10 +241,6 @@ iframe {
 }
 .quickAction {
   cursor: pointer !important;
-}
-a:hover {
-  -webkit-text-decoration-line: none;
-  text-decoration-line: none;
 }
 a {
   border-radius: 0.1875rem;
@@ -248,11 +256,15 @@ a {
   outline: none;
 }
 code {
-  white-space: pre-wrap;
+  white-space: break;
   font-size: small;
+  overflow-x: auto !important;
 }
-pre code {
-  overflow-x: auto;
+.katex-display {
+  overflow-x: auto !important;
+}
+pre {
+  overflow-x: auto !important;
 }
 pre {
   @apply font-mono;
@@ -311,8 +323,8 @@ u {
   display: none;
 }
 
-a[href^='http']:after {
-  content: '';
+a[href^="http"]:after {
+  content: "";
   display: inline-block;
   width: 8px;
   height: 16px;
@@ -323,20 +335,72 @@ a[href^='http']:after {
   margin-left: 2px;
 }
 
-/* .ButtomBar {
-  display: none !important;
-} */
+.ButtomBar {
+  @apply flex justify-between items-center;
+  margin: 0 auto;
+  color: #999;
+}
 
-[name='replace'].cm-textfield,
-[name='replace'].cm-button,
-[name='next'].cm-button,
-[name='prev'].cm-button,
-[name='select'].cm-button,
+[name="replace"].cm-textfield,
+[name="replace"].cm-button,
+[name="next"].cm-button,
+[name="prev"].cm-button,
+[name="select"].cm-button,
 .cm-search label,
-[name='replaceAll'].cm-button {
+[name="replaceAll"].cm-button {
   @apply hidden;
 }
 
 .cm-textfield {
   @apply outline-none border-r-2 w-full !important;
 }
+
+figcaption {
+  font-size: 0.8em;
+  color: #999;
+  text-align: center;
+  margin-top: 0.5em;
+}
+
+pre code {
+  white-space: pre-wrap;
+font-feature-settings: "calt";
+font-variant-ligatures: contextual;
+}
+
+@supports (font-variation-settings: normal) {
+ pre code { font-family: 'Fira Code VF', monospace; }
+}
+
+
+.command-palette * {
+  font-family: inherit !important;
+}
+.katex .mathnormal {
+    font-family: 'Fira Code' !important;
+}
+/* #root * { */
+/*   font-family: inherit !important; */
+/* } */
+code { font-family: 'Fira Code', monospace; }
+
+@supports (font-variation-settings: normal) {
+  code { font-family: 'Fira Code VF', monospace; }
+}
+
+table {
+  @apply overflow-x-auto relative shadow-md sm:rounded-lg dark:shadow-gray-600 w-full text-sm text-left text-gray-500 dark:text-gray-400;
+  border-radius: 6px;
+}
+thead {
+  @apply text-gray-700  bg-gray-100 dark:bg-white-10 uppercase dark:text-gray-400 text-center font-medium;
+}
+tr {
+  @apply even:bg-gray-100 dark:even:bg-white-10 ;
+}
+th,
+td {
+  border: 1px solid hsla(0, 0%, 100%, 0.1);
+  padding: 0.5rem;
+}
+blockquote{@apply opacity-80 border-l-4 border-gray-300 pl-2 my-2;}

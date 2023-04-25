@@ -47,7 +47,7 @@
     "release": "electron-builder -m -l -w --publish always",
     "release:win32": "electron-builder --publish always --win --ia32",
     "release:win64": "electron-builder --publish always --win --x64",
-    "release:mac": "electron-builder --mac --x64",
+    "release:mac": "electron-builder --publish never --mac --x64",
     "release:linux": "electron-builder --publish always --linux"
   },
   "repository": {
@@ -76,6 +76,7 @@
     "@uiw/react-codemirror": "^4.12.4",
     "chokidar": "^3.5.3",
     "cm6-theme-basic-light": "^0.2.0",
+    "date-fns": "^2.29.3",
     "directory-tree": "^3.3.1",
     "drag-drop": "^7.2.0",
     "electron-is-dev": "^2.0.0",
@@ -87,6 +88,7 @@
     "highlightjs-line-numbers.js": "^2.8.0",
     "katex": "^0.16.3",
     "lodash.clonedeep": "^4.5.0",
+    "log4js": "^6.9.1",
     "markdown-it": "^13.0.1",
     "markdown-it-anchor": "^8.6.5",
     "markdown-it-attrs": "^4.1.4",

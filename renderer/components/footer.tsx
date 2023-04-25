@@ -1,45 +1,83 @@
-import { EditorView } from '@codemirror/view'
-import { EditorUtils } from './editorutils'
-import readingTime from 'reading-time'
-import React, { useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import React, { useState, useEffect } from "react";
+import readingTime from "reading-time";
+import { EditorView } from "@codemirror/view";
+import { EditorUtils } from "./editorutils";
+import { AnimatePresence, motion } from "framer-motion";
+import formatDistance from "date-fns/formatDistance";
+import fs from "fs-extra";
+import { CLOCKIcon } from "./icons";
+
 export type FooterProps = {
-  insert: boolean
-  vimToggler: () => void
-  value: string
-  cursor: string
-  editorview: EditorView
-}
+  insert: boolean;
+  vimToggler: () => void;
+  value: string;
+  cursor: string;
+  editorview: EditorView;
+  path: string;
+};
 
 export const Footer = (prop: FooterProps) => {
-  const [showChild, setShowChild] = useState(false)
-  function handleOnChange(e) {
-    console.log(e.target.value)
+  const [showChild, setShowChild] = useState(true);
+  const [isOn, setIsOn] = useState(false);
+
+  useEffect(() => {
+    const toggleInterval = setTimeout(() => {
+      setIsOn((prevIsOn) => !prevIsOn);
+    }, 7000);
+
+    return () => {
+      clearTimeout(toggleInterval);
+    };
+  }, [isOn]);
+
+  let dateCraeted = "Loading...";
+  if (prop.path) {
+    const lastEdited = fs.statSync(prop.path).mtime;
+    dateCraeted = formatDistance(lastEdited, new Date(), {
+      addSuffix: true,
+    });
   }
+  function animate() {
+    return (
+      <AnimatePresence>
+        {isOn && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <span
+              style={{ marginLeft: "10px", marginRight: "30px" }}
+            >{` last edited ${dateCraeted}`}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    );
+  }
+
   return (
     <div
       className={`fixed inset-x-0 bottom-0 ButtomBar ${
-        prop.insert ? 'insert-util-parent' : ''
+        prop.insert ? "insert-util-parent" : ""
       }`}
-      onMouseEnter={() => (prop.insert ? setShowChild(true) : null)}
-      onMouseLeave={() => (prop.insert ? setShowChild(false) : null)}
+      onMouseEnter={() => setShowChild(true)}
+      // onMouseLeave={() => setShowChild(false)}
       style={{
-        display: 'inline',
-        userSelect: 'none',
-        maxHeight: '10vh',
-        marginTop: '20px',
-        height: prop.insert ? '40px' : undefined
+        display: "inline",
+        userSelect: "none",
+        maxHeight: "10vh",
+        marginTop: "20px",
+        height: "40px",
       }}
     >
       <>
         <div
-          onMouseEnter={() => (prop.insert ? setShowChild(true) : null)}
-          onMouseLeave={() => (prop.insert ? setShowChild(false) : null)}
+          onMouseEnter={() => setShowChild(true)}
           style={{
-            float: 'left',
-            paddingLeft: '10px',
-            paddingTop: '5px',
-            fontSize: '12px !important'
+            float: prop.insert ? "none" : "right",
+            paddingLeft: "10px",
+            paddingTop: "5px",
+            fontSize: "12px !important",
           }}
         >
           <div>
@@ -51,55 +89,33 @@ export const Footer = (prop: FooterProps) => {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                   >
-                    <div className='insert-util'>
-                      <select
-                        style={{
-                          backgroundColor: 'transparent',
-                          border: 'none',
-                          outline: 'none',
-                          cursor: 'pointer',
-                          marginRight: '0.5em',
-                          fontSize: '12px',
-                          appearance: 'none'
-                        }}
-                        onChange={handleOnChange}
-                      >
-                        <option className='bgbgb' value='1'>
-                          Heading 1{' '}
-                        </option>
-                        <option className='bgbgb' value='2'>
-                          Heading 2
-                        </option>
-                        <option className='bgbgb' value='3'>
-                          Heading 3
-                        </option>
-                      </select>
+                    <div className="insert-util">
 
                       {EditorUtils(prop.editorview)}
 
                       <div
                         style={{
-                          float: 'right',
-                          display: 'inline'
+                          float: "right",
+                          display: "inline",
                         }}
                       >
                         <select
                           style={{
-                            float: 'right',
-                            backgroundColor: 'transparent',
-                            border: 'none',
-                            appearance: 'none',
-                            outline: 'none',
-                            cursor: 'pointer',
-                            fontSize: '12px !important'
+                            float: "right",
+                            backgroundColor: "transparent",
+                            border: "none",
+                            appearance: "none",
+                            outline: "none",
+                            cursor: "pointer",
+                            fontSize: "15px !important",
                           }}
                         >
-                          <option value='black'>{prop.cursor}</option>
-                          <option value=''>
-                            {prop.value.toString().split(' ').length} Words
+                          <option>{prop.cursor}</option>
+                          <option>
+                            {prop.value.toString().split(" ").length} Words
                           </option>
-                          <option value='dark'>
-                            {prop.value.toString().length} Character
+                          <option value="dark">
+                            {prop.value.toString().length} Characters
                           </option>
                         </select>
                       </div>
@@ -108,20 +124,57 @@ export const Footer = (prop: FooterProps) => {
                 )}
               </AnimatePresence>
             ) : (
-              <span style={{ display: 'inline' }}>
-                <div className='py-2 flex items-center'>
-                  <div style={{ display: 'inline', marginRight: '20px' }}></div>
-                  <span>{`${prop.value.toString().split(' ').length} words  ${
-                    prop.value.toString().length
-                  } characters `}</span>
-                  <div style={{ display: 'inline', marginRight: '30px' }}></div>
-                  <span>{`${readingTime(prop.value).text}`}</span>
-                </div>
-              </span>
+              <AnimatePresence>
+                {showChild && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="text-sm opacity-50"
+                  >
+                    <span style={{ display: "inline" }}>
+                      <div className="py-2 flex items-center">
+                        <div className="inline-block ml-auto"></div>
+
+                        <CLOCKIcon />
+                        <span style={{ marginLeft: "10px" }}>{`${
+                          readingTime(prop.value).text
+                        }`}</span>
+                        <div
+                          style={{ display: "inline", marginRight: "30px" }}
+                        ></div>
+                        {isOn ? (
+                          animate()
+                        ) : (
+                          <>
+                            <AnimatePresence>
+                              {!isOn && (
+                                <motion.div
+                                  initial={{ opacity: 0 }}
+                                  animate={{ opacity: 1 }}
+                                  exit={{ opacity: 0 }}
+                                >
+                                  <span style={{ marginRight: "30px" }}>{`${
+                                    prop.value.toString().split(" ").length
+                                  } words  ${
+                                    prop.value.toString().length
+                                  } characters `}</span>
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </>
+                        )}
+                      </div>
+                    </span>
+
+                    <div style={{ display: "inline" }}></div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             )}
           </div>
         </div>
       </>
     </div>
-  )
-}
+  );
+};

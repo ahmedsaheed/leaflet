@@ -5,51 +5,53 @@ import {
   ADDCODE,
   TABLE,
   STRIKETHROUGH,
-  ADDYAML
-} from '../lib/util'
-import { QUICKBUTTONS } from './quickies'
-import { EditorView } from '@codemirror/view'
+  ADDYAML,
+  getIncomingImages,
+} from "../lib/util";
+import { QUICKBUTTONS } from "./quickies";
+import { EditorView } from "@codemirror/view";
+import {
+  BiBold,
+  BiItalic,
+  BiStrikethrough,
+  BiCode,
+  BiTable,
+  BiListUl,
+  BiListOl,
+  BiCodeAlt,
+  BiImageAdd
+} from "react-icons/bi";
+import { AiOutlineLink } from "react-icons/ai";
 export const EditorUtils = (view: EditorView) => {
-  return <HandleUtils view={view} />
-}
+  return <HandleUtils view={view} />;
+};
 
 const HandleUtils = ({ view }) => {
   return (
     <div
       style={{
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontSize: '12px',
-        display: 'inline'
+        justifyContent: "center",
+        alignItems: "center",
+        fontSize: "medium",
+        display: "inline",
+        paddingLeft: "1em",
       }}
     >
-      <div
-        style={{
-          display: 'inline',
-          borderRight: '1px solid grey',
-          marginRight: '15px'
-        }}
-      ></div>
-      {QUICKBUTTONS(view, 'Add Bold', <strong>Bold</strong>, () => BOLD(view))}
-      {QUICKBUTTONS(view, 'Add Italic', <em>Italic</em>, () => ITALIC(view))}
-      {QUICKBUTTONS(view, 'Strike Through', <s>Strike</s>, () =>
-        STRIKETHROUGH(view)
-      )}
+        {QUICKBUTTONS(view, "Bold", <BiBold />, () => BOLD(view))}
+        {QUICKBUTTONS(view, "Italic", <BiItalic />, () => ITALIC({ view }))}
+        {QUICKBUTTONS(view, "Strikethrough", <BiStrikethrough />, () =>
+          STRIKETHROUGH(view), true
+        )}
+        {QUICKBUTTONS(view, "Link", <AiOutlineLink />, () => LINK(view), true)}
 
-      <div
-        style={{
-          display: 'inline',
-          borderRight: '1px solid grey',
-          marginRight: '15px'
-        }}
-      ></div>
-
-      {QUICKBUTTONS(view, 'Add Link', 'Link', () => LINK(view))}
-      {QUICKBUTTONS(view, 'Add Code', 'Code', () => ADDCODE(view))}
-      {QUICKBUTTONS(view, 'Add Table', 'Table', () => TABLE(view))}
-
-      {QUICKBUTTONS(view, 'Add Footnote', 'Footnote', () => ADDCODE(view))}
-      {QUICKBUTTONS(view, 'Add Add Metadata', 'Metadata', () => ADDYAML(view))}
+        {QUICKBUTTONS(view, "Bullet List", <BiListUl />, () => ADDCODE(view))}
+        {QUICKBUTTONS(view, "Ordered List", <BiListOl />, () => ADDCODE(view), true)}
+        {QUICKBUTTONS(view, "Code", <BiCodeAlt />, () => ADDCODE(view))}
+        {QUICKBUTTONS(view, "Table", <BiTable />, () => TABLE(view))}
+        {QUICKBUTTONS(view, "image", <BiImageAdd />, () => getIncomingImages(view))}
+        {/*
+        {QUICKBUTTONS(view, "Table", <BiTable />, () => TABLE(view))}
+   */}
     </div>
-  )
-}
+  );
+};

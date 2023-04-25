@@ -1,14 +1,13 @@
 import { Leaflet } from "./leaflet";
 import Head from "next/head";
 import { Toaster } from "react-hot-toast";
-const isDarkMode =()=> {
-  if (typeof window !== "undefined") {
-    return window.matchMedia("(prefers-color-scheme: dark)").matches;
-  }
-  return false;
+import { useFontToggle } from "../hooks/useFontToggle";
+import { usePrefersColorScheme } from "../lib/theme";
 
-} 
 export default function Home() {
+  const [font, toggleFont] = useFontToggle();
+  const prefersColorScheme = usePrefersColorScheme()
+  const isDarkMode = prefersColorScheme === 'dark'
   return (
     <>
       <Head>
@@ -18,6 +17,8 @@ export default function Home() {
           integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X"
           crossOrigin="anonymous"
         />
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css"/>
         <script
           defer
           src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"
@@ -41,9 +42,11 @@ export default function Home() {
           },
         }}
       />
-      <div className="font-sans text-gray-900 dark:text-gray-100 antialiased" 
+      <div
+        id="root"
+        className={`font-${font} prose text-gray-900 dark:text-gray-100 antialiased`}
       >
-      <Leaflet />
+        <Leaflet toggleFont={toggleFont} currentFont={font} />
       </div>
     </>
   );
