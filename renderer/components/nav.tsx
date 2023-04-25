@@ -11,7 +11,7 @@ export const Nav = (prop: Props) => {
   return (
     <nav
       id="menu"
-      className="drag custom-border z-40 flex flex-col justify-between border-r-[0.5px] bg-transparent pt-10"
+      className="drag custom-border  flex flex-col justify-between border-r-[0.5px] bg-transparent pt-10"
     >
       <div className="flex flex-col overflow-y-hidden">
         <ul className="flex w-20 shrink-0 flex-col items-center justify-end bg-transparent px-5 pt-1 pb-px space-y-2.5">
@@ -36,7 +36,7 @@ export const Nav = (prop: Props) => {
                 stroke="currentColor"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                strokeWidth={0.1}
+                strokeWidth={0}
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 28 28"
               >
@@ -44,13 +44,13 @@ export const Nav = (prop: Props) => {
                   fill-rule="evenodd"
                   clip-rule="evenodd"
                   d="M10.809 5.242a1.25 1.25 0 00-1.531.884L6.042 18.2a1.25 1.25 0 00.884 1.53l9.66 2.59a1.25 1.25 0 001.53-.885l3.236-12.074a1.25 1.25 0 00-.884-1.53l-9.66-2.589zm-2.98.496a2.75 2.75 0 013.368-1.945l9.66 2.588A2.75 2.75 0 0122.8 9.75l-3.236 12.074a2.75 2.75 0 01-3.368 1.945L6.538 21.18a2.75 2.75 0 01-1.944-3.368L7.829 5.738z"
-                  fill="white"
+                  fill="currentColor"
                 ></path>
                 <path
                   fill-rule="evenodd"
                   clip-rule="evenodd"
                   d="M10.518 8.27a.75.75 0 01.919-.53l7.241 1.94a.75.75 0 01-.388 1.449l-7.242-1.94a.75.75 0 01-.53-.919zM9.677 11.41a.75.75 0 01.918-.531l7.242 1.94a.75.75 0 11-.388 1.45l-7.242-1.941a.75.75 0 01-.53-.919zM8.836 14.549a.75.75 0 01.918-.53l4.83 1.293a.75.75 0 11-.388 1.45l-4.83-1.295a.75.75 0 01-.53-.918z"
-                  fill="white"
+                  fill="currentColor"
                 ></path>
               </svg>
             </span>
@@ -92,10 +92,6 @@ export const Nav = (prop: Props) => {
         <li className="aspect-w-1 aspect-h-1 relative w-full">
           <div
             className="absolute top-[50%] left-[50%] h-[115%] w-[115%] -translate-y-[50%] -translate-x-[50%] rounded-full"
-            style={{
-              background:
-                "conic-gradient(var(--theme-primary-300) 0%, var(--theme-palette-0) 15%)",
-            }}
           />
           <div className="absolute top-[50%] left-[50%] h-[115%] w-[115%] -translate-y-[50%] -translate-x-[50%] rounded-full bg-primary-400 opacity-5" />
           <span className="flex flex-col items-center justify-center rounded-full transition-all duration-300 bg-palette-0 text-palette-600 smarthover:hover:text-primary-500">

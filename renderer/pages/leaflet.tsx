@@ -1,32 +1,25 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import moment from "moment";
+import fs from "fs-extra";
+import mainPath from "path";
+import "react-cmdk/dist/cmdk.css";
 import { ipcRenderer } from "electron";
 import { vim } from "@replit/codemirror-vim";
-import "react-cmdk/dist/cmdk.css";
-import {
-  GETDATE,
-  EXTENSIONS,
-  toDOCX,
-  toPDF,
-  format,
-  toggleBetweenVimAndNormalMode,
-  ValidateYaml,
-} from "../lib/util";
+import { highlightSelectionMatches } from "@codemirror/search";
 import { effects } from "../lib/effects";
 import { FileTree } from "../components/filetree";
 import { getMarkdown } from "../lib/mdParser";
-import fs from "fs-extra";
-import mainPath from "path";
 import { githubDark } from "@uiw/codemirror-theme-github";
-import CodeMirror from "@uiw/react-codemirror";
+import CodeMirror, { basicSetup } from "@uiw/react-codemirror";
 import { getStatistics, ReactCodeMirrorRef } from "@uiw/react-codemirror";
-import { EditorView, highlightActiveLine } from "@codemirror/view";
+import { EditorView, ViewUpdate } from "@codemirror/view";
 import { usePrefersColorScheme } from "../lib/theme";
 import { basicLight } from "cm6-theme-basic-light";
 import { ListenToKeys } from "../lib/keyevents";
 import { toast } from "react-hot-toast";
-import { ButtomBar } from "../components/bottomBar";
+import { Footer, FooterProps } from "../components/footer";
 import { CMDK } from "../components/cmdk";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useAnimation } from "framer-motion";
 import { Nav } from "../components/nav";
 import {
   MARKDOWNToggler,
@@ -35,8 +28,22 @@ import {
   SLIDERIcon,
   STACKIcon,
 } from "../components/icons";
+import log4js from "log4js";
+import {
+  GETDATE,
+  EXTENSIONS,
+  toDOCX,
+  toPDF,
+  format,
+  toggleBetweenVimAndNormalMode,
+  ValidateYaml,
+  classnames as cn,
+  toggleFileDialog,
+} from "../lib/util";
+import { NavStack, RouteInitializer, stashToRouter } from "../lib/routes/route";
+import { clientStore } from "../lib/storage";
 
-export function Leaflet() {
+export function Leaflet({ toggleFont, currentFont }) {
   type file = {
     path: string;
     name: string;
@@ -65,15 +72,24 @@ export function Leaflet() {
   const [parentDir, setParentDir] = useState<string>(appDir);
   const [editorview, setEditorView] = useState<EditorView>();
   const [isVim, setIsVim] = useState<boolean>(false);
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
+  const [readingSession, setReadingSession] = useState({
+    startTime: null,
+    endTime: null,
+  });
   const refs = React.useRef<ReactCodeMirrorRef>({});
+  const contentRef = React.useRef<HTMLDivElement>(null);
   const prefersColorScheme = usePrefersColorScheme();
   const isDarkMode = prefersColorScheme === "dark";
+  let navStack = RouteInitializer();
   const resolvedMarkdown = getMarkdown(value);
+  const logger = log4js.getLogger();
+  logger.level = "debug";
+
   useEffect(() => {
-    ListenToKeys(
+    ListenToKeys({
       saveFile,
-      editorview,
+      editor: editorview,
       insert,
       setInsert,
       toPDF,
@@ -81,19 +97,37 @@ export function Leaflet() {
       value,
       name,
       path,
-      fileDialog,
+      toggleFileDialog,
       setFileNameBox,
       setSearch,
       setClick,
       click,
-      open ? handleDrawerClose : handleDrawerOpen
-    );
+      toggleSidebar: open ? handleDrawerClose : handleDrawerOpen,
+      navStack,
+      setFiles,
+      Update,
+    });
   });
 
+  function handleStartReading() {
+    const startTime = moment();
+    setReadingSession({ ...readingSession, startTime });
+  }
+
+  function handleStopReading() {
+    const endTime = moment();
+    const durationMs = moment
+      .duration(endTime.diff(readingSession.startTime))
+      .asMilliseconds();
+    setReadingSession({ ...readingSession, endTime });
+  }
+
   const handleDrawerOpen = () => {
+    clientStore.set("sideBarOpen", "true");
     setOpen(true);
   };
   const handleDrawerClose = () => {
+    clientStore.set("sideBarOpen", "true");
     setOpen(false);
   };
 
@@ -114,15 +148,6 @@ export function Leaflet() {
     } catch (e) {
       console.log(e);
     }
-  };
-
-  const fileDialog = () => {
-    ipcRenderer.invoke("app:on-fs-dialog-open").then(() => {
-      ipcRenderer.invoke("getTheFile").then((files = []) => {
-        setFiles(files);
-        Update();
-      });
-    });
   };
 
   /**
@@ -165,8 +190,8 @@ export function Leaflet() {
     });
   };
 
-  effects(
-    false,
+  effects({
+    initialised: false,
     setPandocAvailable,
     setIsVim,
     setFiles,
@@ -185,9 +210,12 @@ export function Leaflet() {
     onDelete,
     setInsert,
     insert,
-    fileDialog,
-    setScroll
-  );
+    toggleFileDialog,
+    setScroll,
+    navRouter: navStack,
+    setOpen,
+    toggleFont,
+  });
 
   const updateCursor = (a, b) => {
     const line = a.number;
@@ -206,15 +234,16 @@ export function Leaflet() {
   /**
    * @description updates cm state on change
    */
-  const onChange = useCallback(
-    (doc, viewUpdate) => {
+  const codeMirrorOnChangeHandler = useCallback(
+    (doc: string, viewUpdate: ViewUpdate) => {
       setValue(doc.toString());
       let offset = getStatistics(viewUpdate).selection.main.head;
       let line = viewUpdate.state.doc.lineAt(offset);
+      let currLine;
       updateCursor(line, offset);
       if (line.number === viewUpdate.state.doc.length) {
-        viewUpdate.state.doc.lineAt(offset).to = offset;
-        viewUpdate.state.scrollIntoView = true;
+        refs.current.editor.scrollTo({ top: offset, behavior: "smooth" });
+        refs.current.editor.scrollIntoView({ block: "end", inline: "nearest" });
       }
 
       checkEdit(doc);
@@ -241,57 +270,69 @@ export function Leaflet() {
     setIsCreatingFolder(false);
   };
 
-  useEffect(() => {
-    ipcRenderer.on("open", function () {
-      fileDialog();
-    });
-  }, []);
+  const contentControls = useAnimation();
+  const containerRef = useRef(null);
 
-  function CommandMenu() {
-    return (
-      click && (
-        <CMDK
-          value={value}
-          onNewFile={() => {
-            setFileNameBox(true);
-          }}
-          onCreatingFolder={() => {
-            try {
-              setIsCreatingFolder(true);
-              setFileNameBox(true);
-            } catch (e) {
-              console.log(e);
-            }
-          }}
-          setSearch={setSearch}
-          files={files}
-          pandocAvailable={pandocAvailable}
-          setClick={setClick}
-          page={page}
-          search={search}
-          onDocxConversion={(value: string, name: string) =>
-            toDOCX(value, name)
-          }
-          onPdfConversion={(value: string, name: string) => toPDF(value, name)}
-          menuOpen={menuOpen}
-          onFileSelect={(file) => {
-            try {
-              onNodeClicked(file.path, file.name);
-            } catch (err) {
-              console.log(err);
-            }
-          }}
-          name={name}
-        />
-      )
-    );
-  }
+  const handleScroll = (e) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.target;
+    const scrollEnd = scrollHeight - clientHeight;
+
+    if (scrollTop >= scrollEnd) {
+      contentControls.start({ y: -20, transition: { type: 'spring', stiffness: 200, damping: 20 } });
+    } else {
+      contentControls.start({ y: 0, transition: { type: 'spring', stiffness: 200, damping: 20 } });
+    }
+  };
+
+  const CommandMenu = click && (
+    <CMDK
+      value={value}
+      onNewFile={() => {
+        setFileNameBox(true);
+      }}
+      onCreatingFolder={() => {
+        try {
+          setIsCreatingFolder(true);
+          setFileNameBox(true);
+        } catch (e) {
+          console.log(e);
+        }
+      }}
+      setSearch={setSearch}
+      files={files}
+      pandocAvailable={pandocAvailable}
+      setClick={setClick}
+      page={page}
+      search={search}
+      onDocxConversion={(value: string, name: string) => toDOCX(value, name)}
+      onPdfConversion={(value: string, name: string) => toPDF(value, name)}
+      menuOpen={menuOpen}
+      onFileSelect={(file) => {
+        try {
+          onNodeClicked(file.path, file.name);
+        } catch (err) {
+          console.log(err);
+        }
+      }}
+      name={name}
+    />
+  );
   useEffect(() => {
     ipcRenderer.on("new", function () {
       setFileNameBox(true);
     });
   }, [fileNameBox]);
 
+  const ScrollToTopOfContentRef = () => {
+    console.log("scrolling to top of content ref");
+    if (!insert) {
+      let ref = document.getElementsByClassName("markdown-content")[0];
+      if (ref) {
+        ref.scrollIntoView({ behavior: "auto", block: "start" });
+      }
+      // contentRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  };
   /**
    * @description handle file selection from the sidebar
    * @param {string} path - path of the file to be selected
@@ -304,12 +345,23 @@ export function Leaflet() {
       setValue(fs.readFileSync(path, "utf8"));
       setName(name);
       setPath(path);
+      stashToRouter(path, navStack as NavStack);
       localStorage.setItem("currPath", path);
       setInsert(false);
+      ScrollToTopOfContentRef();
     } catch (err) {
       console.log(err);
     }
   };
+  const vimToggler = () => toggleBetweenVimAndNormalMode(setIsVim);
+  const footerProps = {
+    insert,
+    vimToggler,
+    value,
+    cursor,
+    editorview,
+    path,
+  } as FooterProps;
 
   return (
     <div className="h-screen w-screen" style={{ overflow: "hidden" }}>
@@ -329,7 +381,7 @@ export function Leaflet() {
                 animate={{ width: 220 }}
                 initial={{ width: 0 }}
                 exit={{ width: 0 }}
-                className="second-nav custom-border no-scrollbar z-30 flex grow flex-col overflow-y-scroll border-r-[0.5px] bg-transparent"
+                className="second-nav custom-border no-scrollbar  flex grow flex-col overflow-y-scroll border-r-[0.5px] bg-transparent"
               >
                 <div className="drag flex shrink-0 flex-col justify-center px-4 h-16">
                   <div className="flex items-center justify-between">
@@ -337,9 +389,7 @@ export function Leaflet() {
                       Notes
                     </span>
                     <span
-                      onClick={() => {
-                        setOpen(false);
-                      }}
+                      onClick={handleDrawerClose}
                       className="flex h-[22px] items-center transition-all duration-300 smarthover:hover:text-primary-500 text-palette-600"
                     >
                       <SLIDERIcon />
@@ -356,9 +406,7 @@ export function Leaflet() {
                           aria-current="page"
                         >
                           <SEARCHIcon />
-                          <span className="align-middle font-mono text-sm">
-                            search
-                          </span>
+                          <span className="align-middle text-sm">search</span>
                         </span>
                       </li>
                     </ul>
@@ -392,11 +440,12 @@ export function Leaflet() {
             data-projection-id={11}
             style={{ transform: "none", opacity: 1 }}
           >
-            <div className="absolute inset-x-0 top-0 z-100">
-              <div className="topbar drag fixed top-0 z-100 mx-auto flex w-full flex-col bg-palette-0">
+            <div className="absolute inset-x-0 top-0 z-50">
+              <div className="topbar drag fixed top-0 z-50 mx-auto flex w-full flex-col bg-palette-0">
                 <div className="custom-border flex h-14 shrink-0 border-b-[0.5px] bg-transparent md:px-4 md:h-16">
                   <button
                     type="button"
+                    onClick={handleDrawerOpen}
                     className="custom-border pl-4 text-palette-900 focus:outline-none md:hidden"
                   >
                     <span className="sr-only">Open sidebar</span>
@@ -422,6 +471,8 @@ export function Leaflet() {
                         <button
                           className="focus:outline-none"
                           onClick={(e) => {
+                            console.log("clicked");
+                            insert ? handleStartReading() : handleStopReading();
                             setInsert(!insert);
                           }}
                         >
@@ -445,36 +496,40 @@ export function Leaflet() {
               </div>
             </div>
             <div className="no-scrollbar grow pt-[3.5rem] md:pt-[4rem]">
-              <div className="virtual-list h-full">
+              <div className="virtual-list h-full markdown-content">
                 <div
                   className="
                 flex h-[calc(100vh-170px)] w-full flex-col 
                 "
                 >
                   {insert ? (
-                    <div
-                      className="markdown-content"
-                      style={{ padding: "40px", zIndex: "-1" }}
-                    >
+                    <div className="" style={{ padding: "40px" }}>
                       <div>
                         <CodeMirror
+                          className={`font-${currentFont} ${
+                            isDarkMode
+                              ? "bg-palette-900 text-palette-100"
+                              : "bg-palette-50 text-palette-900"
+                          }`}
                           ref={refs}
                           value={value}
                           height="100%"
                           width="100%"
                           autoFocus={true}
                           theme={isDarkMode ? githubDark : basicLight}
-                          basicSetup={false}
+                          placeholder="Start your best ideas here..."
+                          indentWithTab={true}
                           extensions={
-                            isVim ? [vim(), ...EXTENSIONS] : EXTENSIONS
+                            isVim ? [...EXTENSIONS, vim()] : EXTENSIONS
                           }
-                          onChange={onChange}
+                          onChange={codeMirrorOnChangeHandler}
                         />
                       </div>
                     </div>
                   ) : (
                     <>
-                      <AnimatePresence>
+                      <AnimatePresence >
+                      <div ref={containerRef} onScroll={handleScroll}>
                         <motion.div
                           key={path}
                           initial={{ opacity: 0, y: -20 }}
@@ -482,8 +537,9 @@ export function Leaflet() {
                           exit={{ opacity: 0, y: 20 }}
                           transition={{ duration: 0.2 }}
                           style={{ paddingTop: "1em" }}
+                          id="content"
                         >
-                          <div id="content" style={{ padding: "40px" }}>
+                          <div ref={contentRef} style={{ padding: "40px" }}>
                             {ValidateYaml(resolvedMarkdown.metadata)}
                             <div>
                               <div
@@ -498,26 +554,18 @@ export function Leaflet() {
                             </div>
                           </div>
                         </motion.div>
+                        </div>
                       </AnimatePresence>
-                      {ButtomBar(
-                        insert,
-                        () => toggleBetweenVimAndNormalMode(setIsVim),
-                        isVim,
-                        value,
-                        cursor,
-                        scroll,
-                        editorview,
-                        open
-                      )}
                     </>
                   )}
+                  {Footer(footerProps)}
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <CommandMenu />
+     {CommandMenu} 
     </div>
   );
 }

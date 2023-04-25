@@ -1,5 +1,4 @@
 import { getBG, TAGIcon, MATERIALIcon, CLOCKIcon } from "./icons";
-
 type IncomingProps = {
   [key: string]: any;
 };
@@ -7,6 +6,8 @@ type IncomingProps = {
 const checkIfIncomingIsObject = (incoming: IncomingProps) => {
   return typeof incoming != undefined;
 };
+const tagClassName =
+  "material border-transparent flex-none border rounded-sm text-center justify-items-center p-1 text-xs inline overflow-hidden mr-1";
 
 export const METATAGS = ({ incoming }) => {
   if (!checkIfIncomingIsObject(incoming) || incoming === undefined) return null;
@@ -17,13 +18,11 @@ export const METATAGS = ({ incoming }) => {
           style={{
             alignItems: "center",
             padding: "0px 6px 10px",
-            color: "#888888",
             display: "flex",
             width: "130px",
             flex: "0 0 auto",
           }}
         >
-          <TAGIcon />
           &nbsp;Tags&nbsp;
         </div>
         <div
@@ -38,22 +37,17 @@ export const METATAGS = ({ incoming }) => {
           <span
             style={{
               width: "100%",
-              color: "#888888",
               whiteSpace: "nowrap",
-              overflowX: "scroll",
             }}
+            className="flex overflow-x-auto  no-scrollbar"
           >
             {incoming?.map((tag) => (
               <code
+                className={tagClassName}
                 style={{
                   marginRight: "1em",
                   display: "inline",
                   overflow: "hidden",
-                  color: "#000",
-                  backgroundColor: getBG(),
-                  padding: "5px",
-                  borderRadius: "6px !important",
-                  border: "1px solid transparent",
                 }}
               >
                 {tag?.toLowerCase()}
@@ -74,13 +68,11 @@ export const METAMATERIAL = ({ incoming }) => {
         style={{
           alignItems: "center",
           padding: "0px 6px 10px",
-          color: "#888888",
           display: "flex",
           width: "130px",
           flex: "0 0 auto",
         }}
       >
-        <MATERIALIcon />
         &nbsp;Materials&nbsp;
       </div>
       <div
@@ -94,27 +86,16 @@ export const METAMATERIAL = ({ incoming }) => {
         <span
           style={{
             width: "100%",
-            color: "#888888",
             whiteSpace: "nowrap",
-            overflowX: "scroll",
           }}
+          className="flex overflow-x-auto  no-scrollbar"
         >
           {incoming?.map((materials) =>
             Object.entries(materials).map(([key, value]) =>
               //TODO: Look for a better way to do this
               value?.toString().startsWith("http") && key != value ? (
                 <code
-                className="material"
-                  style={{
-                    marginRight: "1em",
-                    display: "inline",
-                    overflow: "hidden",
-                    color: "#000",
-                    backgroundColor: getBG(),
-                    padding: "5px",
-                    borderRadius: "6px !important",
-                    border: "1px solid transparent",
-                  }}
+                  className={tagClassName+" material"}
                 >
                   <a
                     target="_blank"
@@ -133,37 +114,7 @@ export const METAMATERIAL = ({ incoming }) => {
     </div>
   ) : null;
 };
-
-export const METADATE = ({ incoming }) => {
-  if (incoming === undefined) {
-    return null;
-  }
-  return (
-    <div style={{ display: "flex" }}>
-      <div
-        style={{
-          alignItems: "center",
-          padding: "0px 6px 10px",
-          color: "#888888",
-          display: "flex",
-          width: "130px",
-          flex: "0 0 auto",
-        }}
-      >
-        <CLOCKIcon />
-        &nbsp;Created&nbsp;{" "}
-      </div>
-      <div
-        style={{
-          display: "flex",
-          flex: "1 1 auto",
-          alignItems: "center",
-          minWidth: "0",
-          paddingBottom: "10px",
-        }}
-      >
-        <span style={{ color: "#888888" }}>{incoming}</span>
-      </div>
-    </div>
-  );
+type Prop = {
+  date: string;
+  path: string;
 };
