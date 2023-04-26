@@ -72,7 +72,7 @@
     "@replit/codemirror-indentation-markers": "^6.3.0",
     "@replit/codemirror-vim": "^6.0.3",
     "@types/markdown-it": "^12.2.3",
-    "@uiw/codemirror-theme-github": "^4.12.4",
+    "@uiw/codemirror-theme-github": "^4.19.11",
     "@uiw/react-codemirror": "^4.12.4",
     "chokidar": "^3.5.3",
     "cm6-theme-basic-light": "^0.2.0",
