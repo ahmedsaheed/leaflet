@@ -422,9 +422,6 @@ pre code {
 .command-palette * {
   font-family: inherit !important;
 }
-/* #root * { */
-/*   font-family: inherit !important; */
-/* } */
 code {
   font-family: 'Fira Code', monospace;
 }
