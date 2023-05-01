@@ -70,7 +70,7 @@ export const images = (): Extension => {
       block: true
     })
 
-  const decorate = (state: EditorState) => {
+  const decorata = (state: EditorState) => {
     const widgets: Range<Decoration>[] = []
 
     syntaxTree(state).iterate({
@@ -101,11 +101,11 @@ export const images = (): Extension => {
 
   const imagesField = StateField.define<DecorationSet>({
     create(state) {
-      return decorate(state)
+      return decorata(state)
     },
     update(images, transaction) {
       if (transaction.docChanged) {
-        return decorate(transaction.state)
+        return decorata(transaction.state)
       }
 
       return images.map(transaction.changes)
