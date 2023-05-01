@@ -130,7 +130,7 @@ export const Footer = (prop: FooterProps) => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="text-sm opacity-50"
+                    className="text-sm "
                   >
                     <span style={{ display: "inline" }}>
                       <div className="py-2 flex items-center">

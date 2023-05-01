@@ -123,11 +123,11 @@ export function Leaflet({ toggleFont, currentFont }) {
   }
 
   const handleDrawerOpen = () => {
-    clientStore.set("sideBarOpen", "true");
+    clientStore.set("sideBarOpen", true);
     setOpen(true);
   };
   const handleDrawerClose = () => {
-    clientStore.set("sideBarOpen", "true");
+    clientStore.set("sideBarOpen", false);
     setOpen(false);
   };
 
@@ -286,7 +286,6 @@ export function Leaflet({ toggleFont, currentFont }) {
 
   const CommandMenu = click && (
     <CMDK
-      value={value}
       onNewFile={() => {
         setFileNameBox(true);
       }}
@@ -300,12 +299,9 @@ export function Leaflet({ toggleFont, currentFont }) {
       }}
       setSearch={setSearch}
       files={files}
-      pandocAvailable={pandocAvailable}
       setClick={setClick}
       page={page}
       search={search}
-      onDocxConversion={(value: string, name: string) => toDOCX(value, name)}
-      onPdfConversion={(value: string, name: string) => toPDF(value, name)}
       menuOpen={menuOpen}
       onFileSelect={(file) => {
         try {
@@ -314,7 +310,6 @@ export function Leaflet({ toggleFont, currentFont }) {
           console.log(err);
         }
       }}
-      name={name}
     />
   );
   useEffect(() => {
@@ -346,7 +341,7 @@ export function Leaflet({ toggleFont, currentFont }) {
       setName(name);
       setPath(path);
       stashToRouter(path, navStack as NavStack);
-      localStorage.setItem("currPath", path);
+      clientStore.set("currentFilePath", path);
       setInsert(false);
       ScrollToTopOfContentRef();
     } catch (err) {
@@ -506,11 +501,6 @@ export function Leaflet({ toggleFont, currentFont }) {
                     <div className="" style={{ padding: "40px" }}>
                       <div>
                         <CodeMirror
-                          className={`font-${currentFont} ${
-                            isDarkMode
-                              ? "bg-palette-900 text-palette-100"
-                              : "bg-palette-50 text-palette-900"
-                          }`}
                           ref={refs}
                           value={value}
                           height="100%"

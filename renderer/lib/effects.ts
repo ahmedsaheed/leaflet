@@ -1,8 +1,8 @@
-import React, { useEffect, Dispatch, SetStateAction } from 'react'
-import { ipcRenderer } from 'electron'
-import { EditorView } from '@codemirror/view'
-import mainPath from 'path'
-import dragDrop from 'drag-drop'
+import React, { useEffect, Dispatch, SetStateAction } from "react";
+import { ipcRenderer } from "electron";
+import { EditorView } from "@codemirror/view";
+import mainPath from "path";
+import dragDrop from "drag-drop";
 import {
   openExternalInDefaultBrowser,
   toggleBetweenVimAndNormalMode,
@@ -11,18 +11,18 @@ import {
   toPDF,
   revealInFinder,
   imageUrl,
-  toggleFileDialog
-} from './util'
-import { ReactCodeMirrorRef } from '@uiw/react-codemirror'
-import { NavStack, stashToRouter } from './routes/route'
-import { clientStore } from './storage'
-type Dispatcher<S> = Dispatch<SetStateAction<S>>
+  toggleFileDialog,
+} from "./util";
+import { ReactCodeMirrorRef } from "@uiw/react-codemirror";
+import { NavStack, stashToRouter } from "./routes/route";
+import { clientStore } from "./storage";
+type Dispatcher<S> = Dispatch<SetStateAction<S>>;
 type file = {
-  path: string
-  name: string
-  body: string
-  structure: { [key: string]: any }
-}
+  path: string;
+  name: string;
+  body: string;
+  structure: { [key: string]: any };
+};
 export function effects({
   initialised,
   setPandocAvailable,
@@ -47,209 +47,222 @@ export function effects({
   setScroll,
   navRouter,
   setOpen,
-  toggleFont
+  toggleFont,
 }: {
-  initialised: boolean
-  setPandocAvailable: Dispatcher<boolean>
-  setIsVim: Dispatcher<boolean>
-  setFiles: Dispatcher<file[]>
-  setValue: Dispatcher<string>
-  setName: Dispatcher<string>
-  setPath: Dispatcher<string>
-  refs: React.MutableRefObject<ReactCodeMirrorRef>
-  setEditorView: Dispatcher<EditorView>
-  files: file[]
-  setStruct: Dispatcher<{ [key: string]: any }>
-  path: string
-  name: string
-  value: string
-  saveFile: () => void
-  Update: () => void
-  onDelete: (path: string, name: string) => void
-  setInsert: Dispatcher<boolean>
-  insert: boolean
-  toggleFileDialog: (setFile: Dispatcher<any>, Update: () => void) => void
-  setScroll: Dispatcher<number>
-  navRouter: NavStack
-  setOpen: Dispatcher<boolean>,
- toggleFont: any
+  initialised: boolean;
+  setPandocAvailable: Dispatcher<boolean>;
+  setIsVim: Dispatcher<boolean>;
+  setFiles: Dispatcher<file[]>;
+  setValue: Dispatcher<string>;
+  setName: Dispatcher<string>;
+  setPath: Dispatcher<string>;
+  refs: React.MutableRefObject<ReactCodeMirrorRef>;
+  setEditorView: Dispatcher<EditorView>;
+  files: file[];
+  setStruct: Dispatcher<{ [key: string]: any }>;
+  path: string;
+  name: string;
+  value: string;
+  saveFile: () => void;
+  Update: () => void;
+  onDelete: (path: string, name: string) => void;
+  setInsert: Dispatcher<boolean>;
+  insert: boolean;
+  toggleFileDialog: (setFile: Dispatcher<any>, Update: () => void) => void;
+  setScroll: Dispatcher<number>;
+  navRouter: NavStack;
+  setOpen: Dispatcher<boolean>;
+  toggleFont: any;
 }) {
   useEffect(() => {
     if (!initialised) {
-      initialised = true
-      openExternalInDefaultBrowser()
-      checkForPandoc(setPandocAvailable)
-      toggleBetweenVimAndNormalMode(setIsVim)
-      ipcRenderer.invoke('getTheFile').then((files = []) => {
-        setFiles(files)
-        setValue(files[0] ? `${files[0].body}` : '')
-        setName(files[0] ? `${files[0].name}` : '')
-        setPath(files[0] ? `${files[0].path}` : '')
-        setStruct(files[0].structure.children)
-        stashToRouter(files[0].path, navRouter)
-        const isSideBarOpen = clientStore.get('sideBarOpen')
-        setOpen(isSideBarOpen ? true : false)
-      })
+      initialised = true;
+      openExternalInDefaultBrowser();
+      checkForPandoc(setPandocAvailable);
+      toggleBetweenVimAndNormalMode(setIsVim);
+      ipcRenderer.invoke("getTheFile").then((files = []) => {
+        setFiles(files);
+        // get where file path is equal clientStore.get('currentFilePath')
+        // if it is equal to clientStore.get('currentFilePath') then set the value to the body of the file
+        // else set the value to the body of the first file
+
+        const currentFilePath = clientStore.get("currentFilePath");
+        const currentFile = files.find((file) => file.path === currentFilePath);
+        if (currentFile) {
+          setValue(currentFile.body);
+          setName(currentFile.name);
+          setPath(currentFile.path);
+          setStruct(currentFile.structure.children);
+          stashToRouter(currentFile.path, navRouter);
+        } else {
+          setValue(files[0] ? `${files[0].body}` : "");
+          setName(files[0] ? `${files[0].name}` : "");
+          setPath(files[0] ? `${files[0].path}` : "");
+          setStruct(files[0].structure.children);
+          stashToRouter(files[0].path, navRouter);
+        }
+        const isSideBarOpen = clientStore.get("sideBarOpen");
+        setOpen(isSideBarOpen);
+      });
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    if (refs.current?.view) setEditorView(refs.current?.view)
-  }, [refs.current])
+    if (refs.current?.view) setEditorView(refs.current?.view);
+  }, [refs.current]);
 
   useEffect(() => {
     if (files.length > 0) {
-      setStruct(files[0].structure.children)
+      setStruct(files[0].structure.children);
     }
-  }, [files])
+  }, [files]);
 
   useEffect(() => {
-    let ignore = false
-    ipcRenderer.on('in-app-command-revealInFinder', function () {
+    let ignore = false;
+    ipcRenderer.on("in-app-command-revealInFinder", function () {
       if (!ignore) {
-        revealInFinder(path)
+        revealInFinder(path);
       }
-    })
+    });
 
     return () => {
-      ignore = true
-    }
-  }, [path])
-
+      ignore = true;
+    };
+  }, [path]);
 
   useEffect(() => {
-    let ignore = false
-    ipcRenderer.on('in-app-command-totrash', function () {
+    let ignore = false;
+    ipcRenderer.on("in-app-command-totrash", function () {
       if (!ignore) {
-        onDelete(path, name)
+        onDelete(path, name);
       }
-    })
+    });
 
     return () => {
-      ignore = true
-    }
-  }, [path, name])
+      ignore = true;
+    };
+  }, [path, name]);
   useEffect(() => {
-    ipcRenderer.on('in-app-command-vibracy', function () {
-      document.body.style.background = 'transparent'
-    })
-  }, [])
+    ipcRenderer.on("in-app-command-vibracy", function () {
+      document.body.style.background = "transparent";
+    });
+  }, []);
 
   useEffect(() => {
-    let ignore = false
-    ipcRenderer.on('in-app-command-togglevim', function () {
+    let ignore = false;
+    ipcRenderer.on("in-app-command-togglevim", function () {
       if (!ignore) {
-        toggleBetweenVimAndNormalMode(setIsVim)
+        toggleBetweenVimAndNormalMode(setIsVim);
       }
-    })
+    });
 
     return () => {
-      ignore = true
-    }
-  }, [path, name])
+      ignore = true;
+    };
+  }, [path, name]);
 
   useEffect(() => {
-    let ignore = false
-    ipcRenderer.on('in-app-command-topdf', function () {
+    let ignore = false;
+    ipcRenderer.on("in-app-command-topdf", function () {
       if (!ignore) {
-        toPDF(value, name)
+        toPDF(value, name);
       }
-    })
+    });
 
     return () => {
-      ignore = true
-    }
-  }, [value, name])
+      ignore = true;
+    };
+  }, [value, name]);
 
   useEffect(() => {
-    let ignore = false
-    ipcRenderer.on('in-app-command-todocx', function () {
+    let ignore = false;
+    ipcRenderer.on("in-app-command-todocx", function () {
       if (!ignore) {
-        toDOCX(value, name)
+        toDOCX(value, name);
       }
-    })
+    });
 
     return () => {
-      ignore = true
-    }
-  }, [value, name])
+      ignore = true;
+    };
+  }, [value, name]);
 
   useEffect(() => {
-    let ignore = false
-    ipcRenderer.on('in-app-command-togglefont', function () {
+    let ignore = false;
+    ipcRenderer.on("in-app-command-togglefont", function () {
       if (!ignore) {
-       toggleFont() 
+        toggleFont();
       }
-    })
-  })
+    });
+  });
 
   useEffect(() => {
-    let save = false
-    ipcRenderer.on('save', function () {
+    let save = false;
+    ipcRenderer.on("save", function () {
       if (!save) {
-        saveFile()
-        Update()
+        saveFile();
+        Update();
       }
-    })
+    });
 
     return () => {
-      save = true
-    }
-  }, [value, path])
+      save = true;
+    };
+  }, [value, path]);
 
   useEffect(() => {
-    ipcRenderer.on('open', function () {
-      toggleFileDialog(setFiles, Update)
-    })
-  }, [])
+    ipcRenderer.on("open", function () {
+      toggleFileDialog(setFiles, Update);
+    });
+  }, []);
 
   useEffect(() => {
-    ipcRenderer.on('insertClicked', function () {
-      insert ? '' : setInsert(true)
-    })
+    ipcRenderer.on("insertClicked", function () {
+      insert ? "" : setInsert(true);
+    });
 
-    ipcRenderer.on('previewClicked', function () {
-      insert ? setInsert(false) : ''
-    })
-  }, [insert])
+    ipcRenderer.on("previewClicked", function () {
+      insert ? setInsert(false) : "";
+    });
+  }, [insert]);
 
   const handleScroll = (event) => {
-    let ScrollPercent = 0
-    const Scrolled = document.documentElement.scrollTop
+    let ScrollPercent = 0;
+    const Scrolled = document.documentElement.scrollTop;
     const MaxHeight =
       document.documentElement.scrollHeight -
-      document.documentElement.clientHeight
-    ScrollPercent = (Scrolled / MaxHeight) * 100
-    setScroll(ScrollPercent)
-  }
+      document.documentElement.clientHeight;
+    ScrollPercent = (Scrolled / MaxHeight) * 100;
+    setScroll(ScrollPercent);
+  };
 
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-  const [isRunning, setIsRunning] = React.useState(false)
+  const [isRunning, setIsRunning] = React.useState(false);
   const dragDropImage = React.useCallback(() => {
     if (!isRunning) {
-      setIsRunning(true)
-      dragDrop('.markdown-content', (images: [File]) => {
+      setIsRunning(true);
+      dragDrop(".markdown-content", (images: [File]) => {
         const imageFiles = images.filter((file) => {
-          const ext = mainPath.extname(file.path)
-          return ext === '.jpg' || ext === '.jpeg' || ext === '.png'
-        })
+          const ext = mainPath.extname(file.path);
+          return ext === ".jpg" || ext === ".jpeg" || ext === ".png";
+        });
         imageFiles.map((validImage) =>
           imageUrl({ view: refs.current?.view, url: validImage.path })
-        )
-        setIsRunning(false)
-      })
+        );
+        setIsRunning(false);
+      });
     }
-  }, [isRunning, refs.current])
-  const dragDropRef = React.useRef(dragDropImage)
-  dragDropRef.current = dragDropImage
+  }, [isRunning, refs.current]);
+  const dragDropRef = React.useRef(dragDropImage);
+  dragDropRef.current = dragDropImage;
 
   useEffect(() => {
     if (insert) {
-      dragDropRef.current()
+      dragDropRef.current();
     }
-  }, [insert, refs.current])
+  }, [insert, refs.current]);
 }
