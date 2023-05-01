@@ -478,3 +478,11 @@ blockquote {
 hr.cm-horizontal-line {
   margin: 0 !important;
 }
+.cm-blockquote {
+  @apply border-l-4 border-gray-300 pl-2 my-2;
+  border-radius: 2px;
+}
+.cm-blockquote span {
+  color: inherit;
+  @apply opacity-80;
+}

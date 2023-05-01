@@ -29,6 +29,7 @@ import { lists } from './extensions/list'
 import { headings } from './extensions/headings'
 import { code } from './extensions/codeblock'
 import { htmlTag } from './extensions/html'
+import { blockquote } from './extensions/blockquote'
 const route = os.homedir() + '/columns.lua'
 type Dispatcher<S> = Dispatch<SetStateAction<S>>
 
@@ -662,6 +663,7 @@ export const EXTENSIONS: Extension[] = [
   lists(),
   headings(),
   code(),
+  blockquote(),
   highlightActiveLine(),
   leafletTheme,
   transparentTheme,
