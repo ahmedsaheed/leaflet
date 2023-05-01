@@ -96,6 +96,7 @@ img .left {
     white-space: pre-wrap;
     font-feature-settings: 'calt';
     font-variant-ligatures: contextual;
+    padding: 2px 10px !important;
   }
 
   .katex-display {
@@ -189,6 +190,7 @@ img .left {
     white-space: pre-wrap;
     font-feature-settings: 'calt';
     font-variant-ligatures: contextual;
+    padding: 2px 20px !important;
   }
   pre {
     background-color: hsla(223, 15%, 95%, 60%);
@@ -449,6 +451,7 @@ td {
 }
 blockquote {
   color: inherit;
+  border-radius: 6px;
   @apply opacity-80 italic leading-relaxed p-4 my-4 border-l-4 border-gray-300 bg-code-light dark:border-gray-500 dark:bg-code-dark;
 }
 
@@ -479,6 +482,7 @@ hr.cm-horizontal-line {
 .cm-blockquote {
   @apply p-4 my-4 border-l-4 border-gray-300 bg-code-light dark:border-gray-500 dark:bg-code-dark;
   padding: 20px 10px !important;
+  border-radius: 6px;
 }
 .cm-blockquote > span {
   color: inherit;
