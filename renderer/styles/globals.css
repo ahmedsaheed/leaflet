@@ -448,7 +448,8 @@ td {
   padding: 0.5rem;
 }
 blockquote {
-  @apply opacity-80 border-l-4 border-gray-300 pl-2 my-2;
+  color: inherit;
+  @apply opacity-80 italic leading-relaxed p-4 my-4 border-l-4 border-gray-300 bg-code-light dark:border-gray-500 dark:bg-code-dark;
 }
 
 .hide-scrollbar::-webkit-scrollbar {
@@ -476,10 +477,11 @@ hr.cm-horizontal-line {
   margin: 0 !important;
 }
 .cm-blockquote {
-  @apply border-l-4 border-gray-300 pl-2 my-2;
-  border-radius: 2px;
+  @apply p-4 my-4 border-l-4 border-gray-300 bg-code-light dark:border-gray-500 dark:bg-code-dark;
+  padding: 20px 10px !important;
 }
-.cm-blockquote span {
+.cm-blockquote > span {
   color: inherit;
   @apply opacity-80;
+  @apply italic leading-relaxed;
 }
