@@ -39,7 +39,7 @@ const htmlDecoration = (content: string) =>
     block: false
   })
 
-const htmlRegex = /<\w+(?:\s+\w+(?:\s*=\s*(?:".*?"|'.*?'|[^'">\s]+))?)*\s*\/?>/
+const htmlRegex = /<[^>]+>/g
 
 const decorator = (state: EditorState) => {
   const widgets: Range<Decoration>[] = []
