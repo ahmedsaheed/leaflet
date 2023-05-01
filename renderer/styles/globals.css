@@ -1,9 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 @import url(https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css);
-@import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+
+@media screen and (min-width: 1024px) {
+  #previewArea,
+  .meta,
+  .cm-theme {
+    margin: auto;
+    width: 70vw;
+  }
+}
 
 html {
   font-variant-ligatures: common-ligatures;
@@ -40,6 +49,16 @@ img .left {
     color: #e5e5e5 !important;
   }
 
+  .cm-code {
+    @apply font-mono;
+    background-color: hsla(223, 15%, 20%, 60%);
+    padding: 2px 4px;
+    word-wrap: break-word;
+    color: hsla(222, calc(89 * 1%), 70%);
+    font-size: smaller;
+    box-shadow: 0.5px 1px 1px hsl(223deg, 5%, 1%) / 0.333;
+  }
+
   .katex:not(.katex-display .katex),
   code:not(pre code) {
     @apply font-mono;
@@ -59,7 +78,7 @@ img .left {
     color: hsla(222, calc(89 * 1%), 70%);
   }
 
-  .material a[href^="http"]:after {
+  .material a[href^='http']:after {
     background-color: hsla(222, calc(89 * 1%), 70%);
   }
   pre {
@@ -68,6 +87,15 @@ img .left {
     border-radius: 6px;
     color: hsla(222, calc(89 * 1%), 70%);
     box-shadow: 0.5px 1px 1px hsl(223deg, 5%, 1%) / 0.333;
+  }
+  .cm-codeblock {
+    @apply font-mono !important;
+    background-color: hsl(223deg 5% 12% / 60%) !important;
+    color: hsla(222, calc(89 * 1%), 70%);
+    box-shadow: 0.5px 1px 1px hsl(223deg, 5%, 1%) / 0.333;
+    white-space: pre-wrap;
+    font-feature-settings: 'calt';
+    font-variant-ligatures: contextual;
   }
 
   .katex-display {
@@ -123,6 +151,14 @@ img .left {
     border: none;
     color: rgb(55, 53, 47) !important;
   }
+  .cm-code {
+    word-wrap: break-word;
+    background-color: hsla(223, 15%, 95%, 60%);
+    padding: 2px 4px;
+    font-size: smaller;
+    color: hsla(222, calc(89 * 1%), 50%);
+    box-shadow: 0.5px 1px 1px hsl(223deg, 5%, 80%) / 0.333;
+  }
   .katex:not(.katex-display .katex),
   code:not(pre code) {
     @apply font-mono;
@@ -141,10 +177,19 @@ img .left {
     border: 1px solid hsla(222, calc(89 * 1%), 50%, 5%);
   }
 
-  .material a[href^="http"]:after {
+  .material a[href^='http']:after {
     background-color: hsla(222, calc(89 * 1%), 50%);
   }
-
+  .cm-codeblock {
+    @apply font-mono !important;
+    background-color: hsla(223, 15%, 95%, 60%);
+    padding: 2px 4px;
+    color: hsla(222, calc(89 * 1%), 50%);
+    box-shadow: 0.5px 1px 1px hsl(223deg, 5%, 80%) / 0.333;
+    white-space: pre-wrap;
+    font-feature-settings: 'calt';
+    font-variant-ligatures: contextual;
+  }
   pre {
     background-color: hsla(223, 15%, 95%, 60%);
     border: 1px solid hsla(222, calc(89 * 1%), 50%, 5%);
@@ -323,8 +368,8 @@ u {
   display: none;
 }
 
-a[href^="http"]:after {
-  content: "";
+a[href^='http']:after {
+  content: '';
   display: inline-block;
   width: 8px;
   height: 16px;
@@ -341,13 +386,13 @@ a[href^="http"]:after {
   color: #999;
 }
 
-[name="replace"].cm-textfield,
-[name="replace"].cm-button,
-[name="next"].cm-button,
-[name="prev"].cm-button,
-[name="select"].cm-button,
+[name='replace'].cm-textfield,
+[name='replace'].cm-button,
+[name='next'].cm-button,
+[name='prev'].cm-button,
+[name='select'].cm-button,
 .cm-search label,
-[name="replaceAll"].cm-button {
+[name='replaceAll'].cm-button {
   @apply hidden;
 }
 
@@ -364,13 +409,13 @@ figcaption {
 
 pre code {
   white-space: pre-wrap;
-  font-feature-settings: "calt";
+  font-feature-settings: 'calt';
   font-variant-ligatures: contextual;
 }
 
 @supports (font-variation-settings: normal) {
   pre code {
-    font-family: "Fira Code VF", monospace;
+    font-family: 'Fira Code VF', monospace;
   }
 }
 
@@ -381,12 +426,12 @@ pre code {
 /*   font-family: inherit !important; */
 /* } */
 code {
-  font-family: "Fira Code", monospace;
+  font-family: 'Fira Code', monospace;
 }
 
 @supports (font-variation-settings: normal) {
   code {
-    font-family: "Fira Code VF", monospace;
+    font-family: 'Fira Code VF', monospace;
   }
 }
 
@@ -407,4 +452,29 @@ td {
 }
 blockquote {
   @apply opacity-80 border-l-4 border-gray-300 pl-2 my-2;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  margin-top: 4rem;
+  margin-bottom: 3rem;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+.root * {
+  font-family: inherit !important;
+}
+hr.cm-horizontal-line {
+  margin: 0 !important;
 }

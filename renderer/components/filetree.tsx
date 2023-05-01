@@ -1,5 +1,4 @@
-import fs from 'fs-extra'
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import Tree from '../lib/Tree/Tree.js'
 type Structure = { [key: string]: any }
 
@@ -30,40 +29,38 @@ function convertObject(obj: Structure): Array<{}> {
   struct.sort((a, b) => {
     //@ts-ignore
     if (a.type === 'folder' && b.type === 'file') {
-      return -1;
-    //@ts-ignore
+      return -1
+      //@ts-ignore
     } else if (a.type === 'file' && b.type === 'folder') {
-      return 1;
+      return 1
     } else {
-      return 0;
+      return 0
     }
-  });
+  })
   return struct
 }
 
 export function FileTree({
   structures,
-  onNodeClicked,
-  path
+  onNodeClicked
 }: {
   structures: Structure
   onNodeClicked: (path: string, name: string) => void
-  path: string
 }) {
   let [data, setData] = useState<Array<{}>>([])
-  React.useEffect(() => {
-    const incoming = convertObject({ structures })
+  const incoming = useMemo(() => convertObject({ structures }), [structures])
+
+  useEffect(() => {
     setData(incoming)
   }, [structures])
-  const handleClick = (node) => {
-    if (node.node.type === 'file') {
-      let path = node.node?.path
-      let name = node.node?.name
-      const value = fs.readFileSync(path, 'utf8')
-      onNodeClicked(path, name)
-    }
-    //Path is not updated
-  }
+  const handleClick = useCallback(
+    (node) => {
+      if (node.node.type === 'file') {
+        onNodeClicked(node.node?.path, node.node?.name)
+      }
+    },
+    [onNodeClicked]
+  )
   const handleUpdate = (state) => {
     localStorage.setItem(
       'tree',
@@ -77,9 +74,7 @@ export function FileTree({
   }
 
   return (
-    //@ts-ignore
     <Tree
-      // children={null}
       data={data}
       onUpdate={handleUpdate}
       onNodeClick={(node) => {

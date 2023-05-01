@@ -23,6 +23,12 @@ import { createTheme } from '@uiw/codemirror-themes'
 import { highlightSelectionMatches } from '@codemirror/search'
 import { basicSetup } from '@uiw/react-codemirror'
 import { clientStore } from './storage'
+import { images } from './extensions/images'
+import { horizontalLines } from './extensions/horizontal-lines'
+import { lists } from './extensions/list'
+import { headings } from './extensions/headings'
+import { code } from './extensions/codeblock'
+import { htmlTag } from './extensions/html'
 const route = os.homedir() + '/columns.lua'
 type Dispatcher<S> = Dispatch<SetStateAction<S>>
 
@@ -328,15 +334,15 @@ export const STRIKETHROUGH = (view: EditorView) => {
 export const toggleBetweenVimAndNormalMode = (
   setIsVim: Dispatcher<boolean>
 ): void => {
-    const currentMode = clientStore.get('writingMode')
-    if (currentMode === 'normal') {
-        clientStore.set('writingMode', 'vim')
-        setIsVim(true)
-    } else {
-        clientStore.set('writingMode', 'normal')
-        setIsVim(false)
-    }
+  const currentMode = clientStore.get('writingMode')
+  if (currentMode === 'normal') {
+    clientStore.set('writingMode', 'vim')
+    setIsVim(true)
+  } else {
+    clientStore.set('writingMode', 'normal')
+    setIsVim(false)
   }
+}
 /**
  * @description Function opens external links in default browser
  * @returns {void}
@@ -650,6 +656,12 @@ export const EXTENSIONS: Extension[] = [
   indentOnInput(),
   codeFolding(),
   indentationMarkers(),
+  htmlTag(),
+  images(),
+  horizontalLines(),
+  lists(),
+  headings(),
+  code(),
   highlightActiveLine(),
   leafletTheme,
   transparentTheme,
@@ -690,51 +702,6 @@ export const format = (value: string) =>
     bracketSameLine: false,
     arrowParens: 'always'
   })
-
-export const classnames = {
-  '1st': 'h-screen w-screen',
-  '2nd': 'flex',
-  '3rd': 'hidden md:flex md:flex-row',
-  '4th':
-    'h-screen-fix no-scrollbar flex overflow-y-scroll bg-palette-0 bg-black',
-  '5th':
-    'second-nav custom-border no-scrollbar  flex grow flex-col overflow-y-scroll border-r-[0.5px] bg-transparent',
-  '6th': 'drag flex shrink-0 flex-col justify-center px-4 h-16',
-  '7th': 'flex flex-row justify-between',
-  '8th': 'w-full text-lg font-small text-palette-800',
-  '9th': 'flex flex-row justify-between',
-  '10th':
-    'flex h-[22px] items-center transition-all duration-300 smarthover:hover:text-primary-500 text-palette-600',
-  '11th': 'no-scrollbar mx-2.5 space-y-5 overflow-y-auto pb-32',
-  '12th': 'space-y-1',
-  '13th':
-    'cursor-pointer flex w-full items-center space-x-2.5 rounded-xl px-2.5 py-2.5 transition-all duration-300 smarthover:hover:text-primary-500 bg-palette-100 text-primary-500 dark:bg-palette-50',
-  '14th': 'align-middle font-mono text-sm',
-  '15th': 'space-y-1.5',
-  '16th': 'sticky top-0 bg-palette-0 pb-2',
-  '17th': 'space-y-1',
-  '18th': 'overflow-y-scroll',
-  '19th': 'flex grow flex-col overflow-hidden transition-all duration-150',
-  '20th': 'relative flex grow flex-col overflow-y-auto',
-  '20ths': 'absolute inset-x-0 top-0 z-50',
-  '21th':
-    'topbar drag fixed top-0 z-50 mx-auto flex w-full flex-col bg-palette-0',
-  '22th':
-    'custom-border flex h-14 shrink-0 border-b-[0.5px] bg-transparent md:px-4 md:h-16',
-  '23th': 'custom-border pl-4 text-palette-900 focus:outline-none md:hidden',
-  '24th': 'sr-only',
-  '25th': 'flex flex-1 items-center justify-between px-4 md:px-0',
-  '26th': 'flex w-full items-center',
-  '27th': 'w-full text-lg font-medium lowercase text-palette-800',
-  '28th': 'flex justify-end space-x-5',
-  '29th': 'focus:outline-none',
-  '30th':
-    'h-[22px] font-medium text-palette-900 transition-all duration-300 active:text-palette-500 smarthover:hover:text-palette-500',
-  '31th': 'focus:outline-none',
-  '32th': 'grow pt-[3.5rem] md:pt-[4rem]',
-  '33th': 'virtual-list h-full markdown-content',
-  '34th': 'flex h-[calc(100vh-170px)] w-full flex-col'
-}
 
 /**
  * @description A lua script that allows manipulation of pandoc pdf
