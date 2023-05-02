@@ -667,6 +667,7 @@ export const EXTENSIONS: Extension[] = [
   highlightActiveLine(),
   leafletTheme,
   transparentTheme,
+
   markdown({
     base: markdownLanguage,
     codeLanguages: languages,

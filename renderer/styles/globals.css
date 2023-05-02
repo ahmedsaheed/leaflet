@@ -10,7 +10,7 @@
   .meta,
   .cm-theme {
     margin: auto;
-    width: 70vw;
+    width: 60vw;
   }
 }
 
@@ -488,4 +488,7 @@ hr.cm-horizontal-line {
   color: inherit;
   @apply opacity-80;
   @apply italic leading-relaxed;
+}
+.nowrap {
+  white-space: nowrap;
 }
