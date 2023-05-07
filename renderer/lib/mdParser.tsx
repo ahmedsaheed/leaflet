@@ -52,7 +52,6 @@ export const getMarkdown = (value: string) => {
     const token = tokens[idx]
     const srcIndex = token.attrIndex('src')
     const src = token.attrs[srcIndex][1]
-    console.log(src.replace(/\s/g, "\\ "))
     if (fs.existsSync(src)) {
       const fileContents = fs.readFileSync(src)
 
@@ -153,9 +152,10 @@ export const getMarkdown = (value: string) => {
   const documents = getMarkdownWithMermaid(value)
   try {
     let result = md.render(documents)
-
+    // console.log(result)
     return {
       document: { __html: result },
+      plainHTML: result,
       metadata: meta
     }
   } catch (err) {

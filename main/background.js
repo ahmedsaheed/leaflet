@@ -367,7 +367,10 @@ var walk = function (dir) {
 const getFiles = () => {
   checkForDir()
   const files = walk(appDir)
-  const structure = dirTree(appDir, { extensions: /\.md/ })
+  const structure = dirTree(appDir, { extensions: /\.md/
+    // excude dotfiles
+    , exclude: /^\./
+  })
   return files
     .filter((file) => file.split('.').pop() === 'md')
     .map((filePath) => {

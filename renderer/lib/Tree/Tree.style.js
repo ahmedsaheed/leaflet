@@ -67,12 +67,11 @@ export const ActionsWrapper = styled.div`
 
 export const StyledName = styled.div`
   background-color: #fff;
-  font-size: 13px;
+    font-size: 14.5px;
     font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
     display: inline;
     width: 90%;
     white-space: nowrap;
-    /* overflow: hidden; */
     text-overflow: ellipsis;
     outline: none;
     display: flex;

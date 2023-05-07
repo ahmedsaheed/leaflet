@@ -16,7 +16,6 @@ import { toast } from 'react-hot-toast'
 import { indentationMarkers } from '@replit/codemirror-indentation-markers'
 import * as prettier from 'prettier/standalone'
 import * as markdowns from 'prettier/parser-markdown'
-import remarkParse from 'remark-parse'
 import { METAMATERIAL, METATAGS } from '../components/metadata'
 import { tags as t } from '@lezer/highlight'
 import { createTheme } from '@uiw/codemirror-themes'
@@ -28,7 +27,7 @@ import { horizontalLines } from './extensions/horizontal-lines'
 import { lists } from './extensions/list'
 import { headings } from './extensions/headings'
 import { code } from './extensions/codeblock'
-import { htmlTag } from './extensions/html'
+import { htmlTag, latexTag } from './extensions/html'
 import { blockquote } from './extensions/blockquote'
 const route = os.homedir() + '/columns.lua'
 type Dispatcher<S> = Dispatch<SetStateAction<S>>
@@ -620,12 +619,25 @@ const leafletTheme = createTheme({
   styles: [
     {
       tag: t.heading1,
-      fontSize: '1.6em',
+      fontSize: '32px',
       margin: '15px 0',
-      lineHeight: '1.2'
+      lineHeight: '1.2',
+      fontWeight: '600'
     },
-    { tag: t.heading2, fontSize: '20px', margin: '15px 0', lineHeight: '1.2' },
-    { tag: t.heading3, fontSize: '18px', margin: '15px 0', lineHeight: '1.2' },
+    {
+      tag: t.heading2,
+      fontSize: '24px',
+      margin: '15px 0',
+      lineHeight: '1.2',
+      fontWeight: '600'
+    },
+    {
+      tag: t.heading3,
+      fontSize: '21px',
+      margin: '15px 0',
+      lineHeight: '1.2',
+      fontWeight: '600'
+    },
     { tag: t.comment, color: '#787b8099' },
     { tag: t.blockComment, color: '#787b8099' },
     {
@@ -633,8 +645,7 @@ const leafletTheme = createTheme({
       textDecorationColor: 'hsl(200deg, 5%, 60%)',
       boarderRaduis: '0.1875',
       '&:hover': {
-        textDecoration: 'underline',
-        color: 'blue'
+        textDecoration: 'underline'
       }
     },
     { tag: t.atom, class: 'pre', color: 'red' },
@@ -664,6 +675,7 @@ export const EXTENSIONS: Extension[] = [
   headings(),
   code(),
   blockquote(),
+  latexTag(),
   highlightActiveLine(),
   leafletTheme,
   transparentTheme,

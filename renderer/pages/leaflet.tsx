@@ -366,7 +366,7 @@ export default function Leaflet({ toggleFont, currentFont }) {
     <div className='h-screen w-screen' style={{ overflow: 'hidden' }}>
       <div className='flex' style={{ minHeight: '100vh' }}>
         <div className='hidden md:flex md:flex-row'>
-          <div className='h-screen-fix no-scrollbar flex overflow-y-scroll bg-palette-0 bg-black'></div>
+          <div className='max-h-screen no-scrollbar flex overflow-y-scroll bg-palette-0 bg-black'></div>
           <Nav
             open={open}
             handleDrawerOpen={handleDrawerOpen}
@@ -380,7 +380,7 @@ export default function Leaflet({ toggleFont, currentFont }) {
                 animate={{ width: 250 }}
                 initial={{ width: 0 }}
                 exit={{ width: 0 }}
-                className='second-nav custom-border no-scrollbar  flex grow flex-col overflow-y-scroll border-r-[0.5px] bg-transparent'
+                className='second-nav h-screen max-h-screen custom-border no-scrollbar flex flex-col border-r-[0.5px] bg-transparent'
               >
                 <div className='drag flex shrink-0 flex-col justify-center px-4 h-16'>
                   <div className='flex items-center justify-between'>
@@ -395,33 +395,34 @@ export default function Leaflet({ toggleFont, currentFont }) {
                     </span>
                   </div>
                 </div>
-                <div className='no-scrollbar mx-2.5 space-y-5 overflow-y-auto pb-32'>
-                  <div>
-                    <ul className='space-y-1'>
-                      <li>
-                        <span
-                          className='cursor-pointer flex w-full items-center space-x-2.5 rounded-xl px-2.5 py-2.5 transition-all duration-300 smarthover:hover:text-primary-500 bg-palette-100 text-primary-500 dark:bg-palette-50'
-                          onClick={() => setClick(!click)}
-                          aria-current='page'
-                        >
-                          <SEARCHIcon />
-                          <span className='align-middle text-sm'>search</span>
-                        </span>
-                      </li>
-                    </ul>
-                  </div>
-                  <div className='space-y-1.5'>
-                    <div className='sticky top-0 bg-palette-0 pb-2'></div>
-                    <ul className='space-y-1'>
-                      <li className='overflow-y-scroll hide-scrollbar'>
+                <div className='sticky px-2'>
+                  <ul className='space-y-1'>
+                    <li>
+                      <span
+                        className='cursor-pointer flex w-full items-center space-x-2.5 rounded-xl px-2.5 py-2.5 transition-all duration-300 smarthover:hover:text-primary-500 bg-palette-100 text-primary-500 dark:bg-palette-50'
+                        onClick={() => setClick(!click)}
+                        aria-current='page'
+                      >
+                        <SEARCHIcon />
+                        <span className='align-middle text-sm'>search</span>
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className='no-scrollbar overflow-y-auto mx-2.5 space-y-5 pb-32'>
+                  <div></div>
+                  <div className='space-y-1.5 overflow-y-scroll hide-scrollbar '>
+                    <div className='space-y-1'>
+                      <div className=''>
                         <FileTree
                           structures={struct}
                           onNodeClicked={(path, name) =>
                             onNodeClicked(path, name)
                           }
                         />
-                      </li>
-                    </ul>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </motion.div>
@@ -434,7 +435,7 @@ export default function Leaflet({ toggleFont, currentFont }) {
         >
           <div
             id='dashboard-view-container'
-            className='relative flex grow flex-col overflow-y-auto'
+            className='relative flex h-screen max-h-screen flex-col overflow-y-auto'
             data-projection-id={11}
             style={{ transform: 'none', opacity: 1 }}
           >
@@ -533,13 +534,9 @@ export default function Leaflet({ toggleFont, currentFont }) {
                             id='content'
                           >
                             <div ref={contentRef} style={{ padding: '40px' }}>
-                              {ValidateYaml(resolvedMarkdown.metadata)}
                               <div>
                                 <div
                                   id='previewArea'
-                                  style={{
-                                    marginBottom: '5em'
-                                  }}
                                   dangerouslySetInnerHTML={
                                     resolvedMarkdown.document
                                   }

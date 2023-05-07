@@ -1,4 +1,4 @@
-import CommandPalette, { filterItems, getItemIndex } from 'react-cmdk'
+import CommandPalette, { filterItems, getItemIndex, JsonStructureItem } from 'react-cmdk'
 import { shell } from 'electron'
 import path from 'path'
 import { Cmdkfooter } from './cmdk-footer'
@@ -36,7 +36,7 @@ export function CMDK({
             <CommandPalette.List key={list.id} heading={list.heading}>
               {list.items.map(({ id, ...rest }) => (
                 <CommandPalette.ListItem
-                  showType={true}
+                  showType={false}
                   key={id}
                   index={getItemIndex(filteredItems, id)}
                   {...rest}
@@ -76,25 +76,26 @@ function items(
   files: Array<FileType>,
   search: string,
 ) {
-  function mapItems(files: Array<FileType>) {
+  function mapItems(files: Array<FileType>) : Array<JsonStructureItem> {
     return [
       ...files.map((file) => ({
         id: file.name,
         showType: false,
-        children: (
-          <p>
-            {file.name} —{' '}
-            <span style={{ fontSize: '12px', color: '#888888' }}>
-              {capitalize(path.basename(path.dirname(file.path)).toLowerCase())}
-            </span>
-          </p>
-        ),
+        children: file.name,
+        // (
+        //   <p>
+        //     {file.name} —{' '}
+        //     <span style={{ fontSize: '12px', color: '#888888' }}>
+        //       {capitalize(path.basename(path.dirname(file.path)).toLowerCase())}
+        //     </span>
+        //   </p>
+        // ),
         icon: 'DocumentTextIcon',
         onClick: () => {
           onFileSelect(file)
         }
       }))
-    ]
+    ] as JsonStructureItem[]
   }
   const filteredItems = filterItems(
     [
@@ -125,7 +126,6 @@ function items(
       {
         heading: 'Files',
         id: 'files',
-        //@ts-ignore
         items: mapItems(files)
       },
       {

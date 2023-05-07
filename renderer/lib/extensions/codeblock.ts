@@ -5,7 +5,6 @@ import { Decoration, EditorView, ViewPlugin } from '@codemirror/view'
 const codeBlockSyntaxNodes = [
   'CodeBlock',
   'FencedCode',
-  'HTMLBlock',
   'CommentBlock'
 ]
 

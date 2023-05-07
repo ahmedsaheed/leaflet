@@ -8,7 +8,7 @@ function convertObject(obj: Structure): Array<{}> {
     for (let i = 0; i < obj[key].length; i++) {
       let node = obj[key][i]
       if (node?.children) {
-        if (node?.name !== 'undefined' && node?.name !== undefined) {
+        if (node?.name !== 'undefined' && node?.name !== undefined && node?.children?.length > 0) {
           struct.push({
             type: 'folder',
             name: node.name,

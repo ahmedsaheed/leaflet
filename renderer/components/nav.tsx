@@ -11,7 +11,7 @@ export const Nav = (prop: Props) => {
   return (
     <nav
       id="menu"
-      className="drag custom-border  flex flex-col justify-between border-r-[0.5px] bg-transparent pt-10"
+      className="drag custom-border max-h-screen flex flex-col justify-between border-r-[0.5px] bg-transparent pt-10"
     >
       <div className="flex flex-col overflow-y-hidden">
         <ul className="flex w-20 shrink-0 flex-col items-center justify-end bg-transparent px-5 pt-1 pb-px space-y-2.5">
